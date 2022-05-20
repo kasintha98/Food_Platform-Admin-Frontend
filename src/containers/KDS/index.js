@@ -1,5 +1,5 @@
 import React from "react";
-import Layout from "../../components/Layouts";
+import Layout from "../NewLayout";
 import {} from "react-bootstrap";
 
 export const KDS = () => {

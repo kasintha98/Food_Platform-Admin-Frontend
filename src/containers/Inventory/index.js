@@ -7,6 +7,7 @@ import NewModal from "../../components/UI/Modal";
 import Input from "../../components/UI/Input";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import NewLayout from "../NewLayout";
 
 export default function Inventory(props) {
   const inventory = useSelector((state) => state.inventory);
@@ -211,7 +212,7 @@ export default function Inventory(props) {
   };
 
   return (
-    <Layout sidebar>
+    <NewLayout sidebar>
       <ToastContainer />
       {inventory.loading ? (
         <div class="d-flex justify-content-center">
@@ -249,6 +250,6 @@ export default function Inventory(props) {
           {renderDeleteInventoryModal()}
         </>
       )}
-    </Layout>
+    </NewLayout>
   );
 }

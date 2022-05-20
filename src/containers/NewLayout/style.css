@@ -1,0 +1,28 @@
+.sidebar2 ul {
+  margin: 0;
+  padding: 0;
+}
+
+.sidebar2 ul li {
+  list-style: none;
+}
+
+.sidebar2 ul li a {
+  color: #333;
+  padding: 5px 10px;
+  box-sizing: border-box;
+  border-radius: 5px;
+  text-decoration: none;
+  width: 100%;
+}
+
+.sidebar2 ul li a.active {
+  background: #333;
+  color: #fff;
+}
+
+.sidebar2 {
+  background-image: linear-gradient(#0052d4, #65c7f7, #9cecfb);
+  box-shadow: 0 0 5px gray;
+  min-height: 100%;
+}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Layout from "../../components/Layouts";
+import Layout from "../NewLayout";
 import { Table, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { getPurchase, addPurchase, deletePurchase } from "../../actions";

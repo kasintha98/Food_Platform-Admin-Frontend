@@ -9,7 +9,7 @@ import {
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { addCategory, updateCategory, deleteCategory } from "../../actions";
-import Layout from "../../components/Layouts";
+import NewLayout from "../NewLayout";
 import Input from "../../components/UI/Input";
 import NewModal from "../../components/UI/Modal";
 import { generatePublicUrl } from "../../urlConfig";
@@ -428,7 +428,7 @@ function Category(props) {
   };
 
   return (
-    <Layout sidebar>
+    <NewLayout sidebar>
       <ToastContainer />
       {category.loading ? (
         <div class="d-flex justify-content-center">
@@ -476,7 +476,7 @@ function Category(props) {
           {renderCategoryDetailsModal()}
         </>
       )}
-    </Layout>
+    </NewLayout>
   );
 }
 

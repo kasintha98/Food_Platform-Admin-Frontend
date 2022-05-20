@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Layout from "../../components/Layouts";
+import Layout from "../NewLayout";
 import {
   Container,
   Row,

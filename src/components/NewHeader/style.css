@@ -1,0 +1,25 @@
+.NavStyle {
+  background-color: #0052d4;
+}
+
+.NavStyle li {
+  color: #fff;
+}
+
+.NavStyle li:hover {
+  cursor: pointer;
+}
+
+.newLink {
+  color: #fff;
+  text-decoration: none;
+}
+
+.newLink:hover {
+  color: #fff;
+  text-decoration: none;
+}
+
+.pointer {
+  cursor: pointer !important;
+}

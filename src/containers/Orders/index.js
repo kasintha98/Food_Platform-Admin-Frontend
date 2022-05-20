@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Layout from "../../components/Layouts";
+import Layout from "../NewLayout";
 import { useDispatch, useSelector } from "react-redux";
 import { Row, Card, Button, Form, Table, FormControl } from "react-bootstrap";
 import CurrencyFormat from "react-currency-format";

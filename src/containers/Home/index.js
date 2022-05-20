@@ -1,7 +1,7 @@
 import React from "react";
 import { Jumbotron } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import Layout from "../../components/Layouts";
+import Layout from "../NewLayout";
 
 function Home(props) {
   const auth = useSelector((state) => state.auth);

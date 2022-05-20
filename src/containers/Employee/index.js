@@ -4,7 +4,7 @@ import filterFactory, {
   textFilter,
   selectFilter,
 } from "react-bootstrap-table2-filter";
-import Layout from "../../components/Layouts";
+import Layout from "../NewLayout";
 import { Container, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { getEmployees } from "../../actions";
