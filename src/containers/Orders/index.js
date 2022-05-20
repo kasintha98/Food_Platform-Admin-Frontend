@@ -18,13 +18,46 @@ function Orders(props) {
   const [searchedOrders, setSearchedOrders] = useState();
   const dispatch = useDispatch();
 
+  //test data
+  order.orders = [
+    {
+      _id: 1,
+      createdAt: "Fri May 20 2022 13:44:29 GMT+0530 (India Standard Time)",
+      items: [
+        {
+          productId: { name: "Test Burger" },
+        },
+      ],
+      totalAmount: 100,
+      paymentType: "cod",
+      paymentStatus: "Not Paid",
+      location: "Home: test, test, test, test, 10200, Assam",
+      orderStatus: [
+        {
+          type: "SUBMITTED",
+          isCompleted: true,
+          date: "Fri May 20 2022 13:44:29 GMT+0530 (India Standard Time)",
+        },
+        {
+          type: "ACCEPTED",
+          isCompleted: true,
+          date: "Fri May 20 2022 13:44:29 GMT+0530 (India Standard Time)",
+        },
+        { type: "PROCESSING", isCompleted: false, date: null },
+        { type: "FOOD READY", isCompleted: false, date: null },
+        { type: "OUT FOR DELIVERY", isCompleted: false, date: null },
+        { type: "DELIVERED", isCompleted: false, date: null },
+      ],
+    },
+  ];
+
   //calling the action to update order
   const onOrderUpdate = (orderId) => {
     const payload = {
       orderId,
       type,
     };
-    dispatch(updateOrder(payload));
+    /* dispatch(updateOrder(payload)); */
   };
 
   const search = (e) => {
@@ -160,7 +193,7 @@ function Orders(props) {
                               value={orderItem.totalAmount}
                               displayType={"text"}
                               thousandSeparator={true}
-                              prefix={"Rs. "}
+                              prefix={"₹. "}
                               suffix={".00"}
                             />
                           </td>
@@ -187,16 +220,20 @@ function Orders(props) {
                         <div
                           style={{
                             boxSizing: "border-box",
-                            padding: "100px",
+                            paddingTop: "80px",
+                            paddingBottom: "80px",
+                            paddingLeft: "50px",
+                            paddingRight: "50px",
                             display: "flex",
                           }}
                         >
                           <div className="orderTrack">
-                            {orderItem.orderStatus.map((status) => (
+                            {orderItem.orderStatus.map((status, index) => (
                               <div
                                 className={`orderStatus ${
                                   status.isCompleted ? "active" : ""
                                 }`}
+                                key={index}
                               >
                                 <div
                                   className={`point ${
