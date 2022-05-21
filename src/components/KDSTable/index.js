@@ -106,17 +106,26 @@ export const KDSTable = (props) => {
         <TableBody>
           {filterByCounter(props.orders, props.counter).map((order) => (
             <TableRow>
-              <TableCell align="center">{order.orderId}</TableCell>
-              <TableCell align="center">{order.time}</TableCell>
-              <TableCell align="center">{order.orderInfo}</TableCell>
-              <TableCell align="center">{order.customerName}</TableCell>
-              <TableCell align="left">
+              <TableCell align="center" sx={{ border: "1px solid #000" }}>
+                {order.orderId}
+              </TableCell>
+              <TableCell align="center" sx={{ border: "1px solid #000" }}>
+                {order.time}
+              </TableCell>
+              <TableCell align="center" sx={{ border: "1px solid #000" }}>
+                {order.orderInfo}
+              </TableCell>
+              <TableCell align="center" sx={{ border: "1px solid #000" }}>
+                {order.customerName}
+              </TableCell>
+              <TableCell align="left" sx={{ border: "1px solid #000" }}>
                 {order.items.map((item) => (
                   <>
                     {item.itemName}
                     {item.choice ? (
                       <>
                         <br></br>
+                        {/* <hr></hr> */}
                         {item.choice.map((ch) => (
                           <p
                             style={{
@@ -147,16 +156,18 @@ export const KDSTable = (props) => {
                       </>
                     ) : null}
                     <br></br>
+                    {/* <hr></hr> */}
                   </>
                 ))}
               </TableCell>
-              <TableCell align="center">
+              <TableCell align="center" sx={{ border: "1px solid #000" }}>
                 {order.items.map((item) => (
                   <>
                     {item.qty}
                     {item.choice ? (
                       <>
                         <br></br>
+                        {/* <hr></hr> */}
                         {item.choice.map((ch) => (
                           <p style={{ margin: 0 }}>{ch.qty}</p>
                         ))}
@@ -171,16 +182,18 @@ export const KDSTable = (props) => {
                       </>
                     ) : null}
                     <br></br>
+                    {/* <hr></hr> */}
                   </>
                 ))}
               </TableCell>
-              <TableCell align="center">
+              <TableCell align="center" sx={{ border: "1px solid #000" }}>
                 {order.items.map((item) => (
                   <>
                     {item.remarks}
                     {item.choice ? (
                       <>
                         <br></br>
+                        {/* <hr></hr> */}
                         {item.choice.map((ch) => (
                           <p style={{ margin: 0 }}>{ch.remarks}</p>
                         ))}
@@ -195,10 +208,11 @@ export const KDSTable = (props) => {
                       </>
                     ) : null}
                     <br></br>
+                    {/* <hr></hr> */}
                   </>
                 ))}
               </TableCell>
-              <TableCell align="center">
+              <TableCell align="center" sx={{ border: "1px solid #000" }}>
                 {order.items.map((item) => (
                   <div
                     className={
@@ -212,6 +226,7 @@ export const KDSTable = (props) => {
                     {item.choice ? (
                       <>
                         <br></br>
+                        {/* <hr></hr> */}
                         {item.choice.map((ch) => (
                           <p style={{ margin: 0 }}>
                             {ch.status} <br></br>
@@ -223,6 +238,7 @@ export const KDSTable = (props) => {
                     {item.extra ? (
                       <>
                         <br></br>
+                        {/* <hr></hr> */}
                         {item.extra.map((ch) => (
                           <p style={{ margin: 0 }}>
                             {ch.status} <br></br>
