@@ -1,4 +1,4 @@
-export const api = "http://localhost:2000/api";
+export const api = "https://hangariesapp-okfvqdwi7q-el.a.run.app/api";
 export const generatePublicUrl = (filename) => {
-  return `http://localhost:2000/public/${filename}`;
+  return `hangariesapp-okfvqdwi7q-el.a.run.app/public/${filename}`;
 };

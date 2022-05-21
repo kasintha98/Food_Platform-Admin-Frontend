@@ -9,6 +9,7 @@ import orderReducer from "./order.reducer";
 import employeeReducer from "./employee.reducer";
 import inventoryReducer from "./inventory.reducer";
 import purchaseReducer from "./purchase.reducer";
+import storeReducer from "./store.reducer";
 import { combineReducers } from "redux";
 
 const rootReducer = combineReducers({
@@ -20,6 +21,7 @@ const rootReducer = combineReducers({
   employees: employeeReducer,
   inventory: inventoryReducer,
   purchase: purchaseReducer,
+  store: storeReducer,
 });
 
 export default rootReducer;

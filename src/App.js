@@ -1,6 +1,6 @@
 import { Route, Switch } from "react-router-dom";
 import React, { useEffect } from "react";
-import { isUserLoggedIn, getInitialData } from "./actions";
+import { isUserLoggedIn, getInitialData, getAllStores } from "./actions";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Home from "./containers/Home";
@@ -33,6 +33,7 @@ function App() {
       dispatch(isUserLoggedIn());
     }
     dispatch(getInitialData());
+    dispatch(getAllStores());
   }, []);
 
   return (
