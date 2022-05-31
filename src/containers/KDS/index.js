@@ -401,7 +401,7 @@ export const KDS = () => {
           </TabPanel>
           <TabPanel value="PIZZA COUNTER">
             <div>
-              <Row>
+              {/* <Row>
                 <div
                   className="w-100 text-center p-3 mb-3"
                   style={{
@@ -413,8 +413,8 @@ export const KDS = () => {
                     KDS – PIZZA COUNTER
                   </Typography>
                 </div>
-              </Row>
-              <Row className="align-items-center">
+              </Row> */}
+              {/* <Row className="align-items-center">
                 <Col sm={2} style={{ maxWidth: "125px !important" }}>
                   <div>
                     <Typography sx={{ color: "#7F7F7F", fontWeight: "bold" }}>
@@ -482,13 +482,13 @@ export const KDS = () => {
                   </FormControl>
                 </Col>
                 <Col sm={4}></Col>
-              </Row>
+              </Row> */}
               <KDSTable orders={orders} counter={"Pizza"}></KDSTable>
             </div>
           </TabPanel>
           <TabPanel value="CHINESE COUNTER">
             <div>
-              <Row>
+              {/* <Row>
                 <div
                   className="w-100 text-center p-3 mb-3"
                   style={{
@@ -500,8 +500,8 @@ export const KDS = () => {
                     KDS – CHINESE COUNTER
                   </Typography>
                 </div>
-              </Row>
-              <Row className="align-items-center">
+              </Row> */}
+              {/* <Row className="align-items-center">
                 <Col sm={2} style={{ maxWidth: "125px !important" }}>
                   <div>
                     <Typography sx={{ color: "#7F7F7F", fontWeight: "bold" }}>
@@ -569,13 +569,13 @@ export const KDS = () => {
                   </FormControl>
                 </Col>
                 <Col sm={4}></Col>
-              </Row>
+              </Row> */}
               <KDSTable orders={orders} counter="Chinese"></KDSTable>
             </div>
           </TabPanel>
           <TabPanel value="DRINK &amp; DESERTS COUNTER">
             <div>
-              <Row>
+              {/* <Row>
                 <div
                   className="w-100 text-center p-3 mb-3"
                   style={{
@@ -587,8 +587,8 @@ export const KDS = () => {
                     KDS – DRINK &amp; DESERTS COUNTER
                   </Typography>
                 </div>
-              </Row>
-              <Row className="align-items-center">
+              </Row> */}
+              {/* <Row className="align-items-center">
                 <Col sm={2} style={{ maxWidth: "125px !important" }}>
                   <div>
                     <Typography sx={{ color: "#7F7F7F", fontWeight: "bold" }}>
@@ -656,13 +656,13 @@ export const KDS = () => {
                   </FormControl>
                 </Col>
                 <Col sm={4}></Col>
-              </Row>
+              </Row> */}
               <KDSTable orders={orders} counter="Drinks"></KDSTable>
             </div>
           </TabPanel>
           <TabPanel value="BURGER COUNTER">
             <div>
-              <Row>
+              {/* <Row>
                 <div
                   className="w-100 text-center p-3 mb-3"
                   style={{
@@ -674,8 +674,8 @@ export const KDS = () => {
                     KDS – BURGER COUNTER
                   </Typography>
                 </div>
-              </Row>
-              <Row className="align-items-center">
+              </Row> */}
+              {/* <Row className="align-items-center">
                 <Col sm={2} style={{ maxWidth: "125px !important" }}>
                   <div>
                     <Typography sx={{ color: "#7F7F7F", fontWeight: "bold" }}>
@@ -743,7 +743,7 @@ export const KDS = () => {
                   </FormControl>
                 </Col>
                 <Col sm={4}></Col>
-              </Row>
+              </Row> */}
               <KDSTable orders={orders} counter="Burger"></KDSTable>
             </div>
           </TabPanel>
