@@ -56,8 +56,8 @@ export const NewHeader = (props) => {
     <AppBar
       position="fixed"
       sx={{
-        width: { sm: `calc(100% - ${drawerWidth}px)` },
-        ml: { sm: `${drawerWidth}px` },
+        width: { xxl: `calc(100% - ${drawerWidth}px)` },
+        ml: { xxl: `${drawerWidth}px` },
       }}
     >
       <Toolbar>
@@ -67,7 +67,7 @@ export const NewHeader = (props) => {
             aria-label="open drawer"
             edge="start"
             onClick={props.handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: "none" } }}
+            sx={{ mr: 2, display: { xxl: "none" } }}
           >
             <MenuIcon />
           </IconButton>

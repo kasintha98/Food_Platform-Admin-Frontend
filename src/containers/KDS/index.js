@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "@emotion/styled";
 import Layout from "../NewLayout";
@@ -11,10 +11,10 @@ import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-
 import { Row, Col } from "react-bootstrap";
 import { Typography } from "@mui/material";
 import { KDSTable } from "../../components/KDSTable";
+import { getCustomerOrders } from "../../actions";
 
 const CusMenuItem = styled(MenuItem)``;
 
@@ -25,7 +25,7 @@ export const KDS = () => {
     {
       orderId: 126,
       time: "2:34",
-      orderInfo: "Web | Delivery",
+      orderInfo: "Delivery",
       customerName: "Gurmeet",
       items: [
         {
@@ -43,7 +43,7 @@ export const KDS = () => {
     {
       orderId: 127,
       time: ":34",
-      orderInfo: "Mobile | Pick-up",
+      orderInfo: "Pick-up",
       customerName: "Aniket",
       "": "",
       __1: "",
@@ -74,7 +74,7 @@ export const KDS = () => {
     {
       orderId: 127,
       time: ":34",
-      orderInfo: "Mobile | Pick-up",
+      orderInfo: "Pick-up",
       customerName: "Aniket",
 
       "": "",
@@ -99,7 +99,7 @@ export const KDS = () => {
     {
       orderId: 128,
       time: "16:26",
-      orderInfo: "Swiggy | Delivery",
+      orderInfo: "Delivery",
       customerName: "Abhishek",
       "": "",
       __1: "",
@@ -125,7 +125,7 @@ export const KDS = () => {
     {
       orderId: 129,
       time: "2:34",
-      orderInfo: "Dine-In | Up-Tab1",
+      orderInfo: "Up-Tab1",
       customerName: "Chakri",
 
       "": "",
@@ -143,7 +143,7 @@ export const KDS = () => {
     {
       orderId: 130,
       time: "2:48",
-      orderInfo: "Web | Delivery",
+      orderInfo: "Delivery",
       customerName: "Gurmeet",
 
       "": "",
@@ -161,7 +161,7 @@ export const KDS = () => {
     {
       orderId: 131,
       time: ":3",
-      orderInfo: "Mobile | Delivery",
+      orderInfo: "Delivery",
       customerName: "Aniket",
 
       "": "",
@@ -210,7 +210,7 @@ export const KDS = () => {
     {
       orderId: 132,
       time: "16:26",
-      orderInfo: "Swiggy | Delivery",
+      orderInfo: "Delivery",
       customerName: "Abhishek",
 
       "": "",
@@ -242,7 +242,7 @@ export const KDS = () => {
     {
       orderId: 133,
       time: "2:34",
-      orderInfo: "Web | Delivery",
+      orderInfo: "Delivery",
       customerName: "Gurmeet",
 
       "": "",
@@ -262,6 +262,12 @@ export const KDS = () => {
   const [selectedStore, setSelectedStore] = useState("");
   const [selectedStoreObj, setSelectedStoreObj] = useState(null);
 
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getCustomerOrders("R001", "S001", "SUBMITTED"));
+  }, []);
+
   const handleChangeTab = (event, newValue) => {
     setTabValue(newValue);
   };
@@ -280,42 +286,37 @@ export const KDS = () => {
     <Layout sidebar>
       <Box sx={{ width: "100%", marginTop: "-20px" }}>
         <TabContext value={tabValue}>
-          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-            <TabList onChange={handleChangeTab}>
-              <Tab label="ORDER ROUTING SCREEN" value="ORDER ROUTING SCREEN" />
-              <Tab label="PIZZA COUNTER" value="PIZZA COUNTER" />
-              <Tab label="CHINESE COUNTER" value="CHINESE COUNTER" />
-              <Tab
-                label="DRINK &amp; DESERTS COUNTER"
-                value="DRINK &amp; DESERTS COUNTER"
-              />
-              <Tab label="BURGER COUNTER" value="BURGER COUNTER" />
-            </TabList>
-          </Box>
-          <TabPanel value="ORDER ROUTING SCREEN">
-            <div>
-              <Row>
-                <div
-                  className="w-100 text-center p-3 mb-3"
-                  style={{
-                    color: "#2E75B6",
-                    backgroundColor: "#F2F2F2",
-                  }}
-                >
-                  <Typography sx={{ fontWeight: "bold !important" }}>
-                    KDS – ORDER ROUTING SCREEN
+          <Row>
+            <Col className="col-8">
+              <Box
+                sx={{
+                  borderBottom: 1,
+                  borderColor: "divider",
+                }}
+              >
+                <TabList onChange={handleChangeTab} variant="scrollable">
+                  <Tab
+                    label="ORDER ROUTING SCREEN"
+                    value="ORDER ROUTING SCREEN"
+                  />
+                  <Tab label="PIZZA COUNTER" value="PIZZA COUNTER" />
+                  <Tab label="CHINESE COUNTER" value="CHINESE COUNTER" />
+                  <Tab
+                    label="DRINK &amp; DESERTS COUNTER"
+                    value="DRINK &amp; DESERTS COUNTER"
+                  />
+                  <Tab label="BURGER COUNTER" value="BURGER COUNTER" />
+                </TabList>
+              </Box>
+            </Col>
+            <Col className="col-4">
+              <Row className="align-items-center">
+                <div style={{ maxWidth: "125px !important" }}>
+                  <Typography sx={{ color: "#7F7F7F", fontWeight: "bold" }}>
+                    Select Store
                   </Typography>
                 </div>
-              </Row>
-              <Row className="align-items-center">
-                <Col sm={2} style={{ maxWidth: "125px !important" }}>
-                  <div>
-                    <Typography sx={{ color: "#7F7F7F", fontWeight: "bold" }}>
-                      Select Store
-                    </Typography>
-                  </div>
-                </Col>
-                <Col sm={6} style={{ display: "flex" }}>
+                <Col className="col-8 " style={{ display: "flex" }}>
                   <FormControl fullWidth>
                     <InputLabel id="demo-simple-select-label">
                       Please select the store
@@ -376,6 +377,25 @@ export const KDS = () => {
                 </Col>
                 <Col sm={4}></Col>
               </Row>
+            </Col>
+          </Row>
+
+          <TabPanel value="ORDER ROUTING SCREEN">
+            <div>
+              {/* <Row>
+                <div
+                  className="w-100 text-center p-3 mb-3"
+                  style={{
+                    color: "#2E75B6",
+                    backgroundColor: "#F2F2F2",
+                  }}
+                >
+                  <Typography sx={{ fontWeight: "bold !important" }}>
+                    KDS – ORDER ROUTING SCREEN
+                  </Typography>
+                </div>
+              </Row> */}
+
               <KDSTable orders={orders} counter={null}></KDSTable>
             </div>
           </TabPanel>

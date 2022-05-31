@@ -1,4 +1,5 @@
 import * as React from "react";
+import styled from "@emotion/styled";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import Drawer from "@mui/material/Drawer";
@@ -10,6 +11,12 @@ import "./style.css";
 import { NewHeader } from "../../components/NewHeader";
 
 const drawerWidth = 240;
+
+const CustToolbar = styled(Toolbar)`
+  @media screen and (max-width: 450px) {
+    margin-top: 0px;
+  }
+`;
 
 function NewLayout(props) {
   const { window } = props;
@@ -118,7 +125,7 @@ function NewLayout(props) {
         <>
           <Box
             component="nav"
-            sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+            sx={{ width: { xxl: drawerWidth }, flexShrink: { xxl: 0 } }}
             aria-label="mailbox folders"
           >
             {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
@@ -131,7 +138,7 @@ function NewLayout(props) {
                 keepMounted: true, // Better open performance on mobile.
               }}
               sx={{
-                display: { xs: "block", sm: "none" },
+                display: { xs: "block", xxl: "none" },
                 "& .MuiDrawer-paper": {
                   boxSizing: "border-box",
                   width: drawerWidth,
@@ -143,7 +150,7 @@ function NewLayout(props) {
             <Drawer
               variant="permanent"
               sx={{
-                display: { xs: "none", sm: "block" },
+                display: { xs: "none", xxl: "block" },
                 "& .MuiDrawer-paper": {
                   boxSizing: "border-box",
                   width: drawerWidth,
@@ -159,16 +166,16 @@ function NewLayout(props) {
             sx={{
               flexGrow: 1,
               p: 3,
-              width: { sm: `calc(100% - ${drawerWidth}px)` },
+              width: { xxl: `calc(100% - ${drawerWidth}px)` },
             }}
           >
-            <Toolbar />
+            <CustToolbar />
             {props.children ? props.children : null}
           </Box>
         </>
       ) : (
         <Box sx={{ width: "99%" }}>
-          <Toolbar />
+          <CustToolbar />
           {props.children ? props.children : null}
         </Box>
       )}

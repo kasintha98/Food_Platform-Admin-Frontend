@@ -3,22 +3,27 @@ import { orderConstants } from "./constants";
 import { toast } from "react-toastify";
 
 //action to get customer orders from the database
-export const getCustomerOrders = () => {
+export const getCustomerOrders = (restaurantId, storeId, orderStatus) => {
   return async (dispatch) => {
     dispatch({ type: orderConstants.GET_CUSTOMER_ORDER_REQUEST });
     try {
-      const res = await axios.post("/order/getCustomerOrders");
+      const body = {
+        restaurantId,
+        storeId,
+        orderStatus,
+      };
+
+      const res = await axios.get("/queryOrderViewByParams", body);
+
       if (res.status === 200) {
-        const { orders } = res.data;
         dispatch({
           type: orderConstants.GET_CUSTOMER_ORDER_SUCCESS,
-          payload: { orders },
+          payload: res.data,
         });
       } else {
-        const { error } = res.data;
         dispatch({
           type: orderConstants.GET_CUSTOMER_ORDER_FAILURE,
-          payload: { error },
+          payload: res.data,
         });
       }
     } catch (error) {

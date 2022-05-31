@@ -24,10 +24,10 @@ export const KDSTable = (props) => {
   };
 
   return (
-    <div className="mt-3">
+    <div className="mt-0">
       <Table sx={{ minWidth: 800 }} aria-label="simple table">
         <TableHead>
-          <TableRow sx={{ backgroundColor: "#203764" }}>
+          {/* <TableRow sx={{ backgroundColor: "#203764" }}>
             <TableCell
               component="th"
               scope="row"
@@ -47,7 +47,7 @@ export const KDSTable = (props) => {
             >
               # of Pending Orders: 3
             </TableCell>
-          </TableRow>
+          </TableRow> */}
           <TableRow
             sx={{
               backgroundColor: "#595959",
@@ -64,6 +64,12 @@ export const KDSTable = (props) => {
               align="center"
             >
               Time
+            </TableCell>
+            <TableCell
+              sx={{ color: "#fff", border: "1px solid #fff" }}
+              align="center"
+            >
+              Order Type
             </TableCell>
             <TableCell
               sx={{ color: "#fff", border: "1px solid #fff" }}
@@ -111,6 +117,9 @@ export const KDSTable = (props) => {
               </TableCell>
               <TableCell align="center" sx={{ border: "1px solid #000" }}>
                 {order.time}
+              </TableCell>
+              <TableCell align="center" sx={{ border: "1px solid #000" }}>
+                Web
               </TableCell>
               <TableCell align="center" sx={{ border: "1px solid #000" }}>
                 {order.orderInfo}
