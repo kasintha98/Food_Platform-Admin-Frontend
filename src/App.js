@@ -3,6 +3,8 @@ import React, { useEffect } from "react";
 import { isUserLoggedIn, getInitialData, getAllStores } from "./actions";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "react-date-range/dist/styles.css"; // main css file
+import "react-date-range/dist/theme/default.css"; // theme css file
 import Home from "./containers/Home";
 import Signin from "./containers/Signin";
 import Signup from "./containers/Signup";
@@ -22,6 +24,7 @@ import { OrderAutomation } from "./containers/OrderAutomation";
 import { UserEntitlement } from "./containers/UserEntitlement";
 import { Customer } from "./containers/Customer";
 import { DeliveryBoy } from "./containers/DeliveryBoy";
+import { AdminDashboard } from "./containers/AdminDashboard";
 
 function App() {
   const dispatch = useDispatch();
@@ -39,7 +42,7 @@ function App() {
   return (
     <div>
       <Switch>
-        <PrivateRoute path="/" exact component={Home}></PrivateRoute>
+        <PrivateRoute path="/" exact component={AdminDashboard}></PrivateRoute>
         <PrivateRoute path="/products" component={Products}></PrivateRoute>
         <PrivateRoute path="/orders" component={Orders}></PrivateRoute>
         <PrivateRoute path="/kds" component={KDS}></PrivateRoute>

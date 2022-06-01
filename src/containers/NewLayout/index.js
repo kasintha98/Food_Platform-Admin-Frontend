@@ -32,7 +32,7 @@ function NewLayout(props) {
         <ListItem>
           <NavLink exact to={"/"}>
             <i class="fa fa-home"></i>
-            &nbsp; Home
+            &nbsp; Admin Dashboard
           </NavLink>
         </ListItem>
         <ListItem>
