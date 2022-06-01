@@ -9,11 +9,18 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
-import { Typography, TextField, Button } from "@mui/material";
+import {
+  Typography,
+  Button,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from "@mui/material";
 import styled from "@emotion/styled";
 
-const SaveButton = styled(Button)`
-  background-color: #92d050;
+const DeleteButton = styled(Button)`
+  background-color: #ff0000;
   width: 150px;
   color: #fff;
   border-radius: 10px;
@@ -24,13 +31,24 @@ const SaveButton = styled(Button)`
   }
 `;
 
-export const CreateNewRole = () => {
+export const DeleteRole = (props) => {
   const modules = useSelector((state) => state.user.modules);
+  const roles = useSelector((state) => state.user.roles);
   const [checked, setChecked] = useState(true);
-  const [roleName, setRoleName] = useState("");
+  const [selectedRole, setSelectedRole] = useState("");
+  const [selectedRoleObj, setSelectedRoleObj] = useState(null);
+
+  const handleRoleChange = (event) => {
+    setSelectedRole(event.target.value);
+  };
 
   const handleChange = (event) => {
     setChecked(event.target.checked);
+  };
+
+  const shoAddNewRolePage = () => {
+    props.setDecision("newRole");
+    props.setShowActionPage(true);
   };
 
   return (
@@ -40,18 +58,37 @@ export const CreateNewRole = () => {
           <Typography
             sx={{ color: "#7F7F7F", fontWeight: "bold", textAlign: "right" }}
           >
-            Define New Roles
+            Select Role
           </Typography>
         </Col>
         <Col className="col-6">
-          <TextField
-            label="Enter new role"
-            value={roleName}
-            onChange={(e) => {
-              setRoleName(e.target.value);
-            }}
-            fullWidth
-          />
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label2">Role</InputLabel>
+            <Select
+              labelId="demo-simple-select-label2"
+              id="demo-simple-select2"
+              value={selectedRole}
+              label="Role"
+              onChange={handleRoleChange}
+            >
+              {roles.map((role) => (
+                <MenuItem
+                  key={role.roleId}
+                  value={role.roleId}
+                  onClick={() => {
+                    setSelectedRoleObj(role);
+                  }}
+                >
+                  {role.roleCategory}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Col>
+        <Col className="col-3 p-0">
+          <Button variant="text" onClick={shoAddNewRolePage}>
+            Add New Role
+          </Button>
         </Col>
       </Row>
       <Row className="align-items-center">
@@ -90,7 +127,7 @@ export const CreateNewRole = () => {
         </Col>
       </Row>
       <div className="text-center mt-4">
-        <SaveButton>Save</SaveButton>
+        <DeleteButton>DELETE</DeleteButton>
       </div>
     </div>
   );

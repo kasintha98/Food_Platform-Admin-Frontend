@@ -12,6 +12,9 @@ import {
 } from "@mui/material";
 import { getModules, getRoles } from "../../actions";
 import { CreateNewRole } from "../../components/CreateNewRole";
+import { UpdateEntitlements } from "../../components/UpdateEntitlements";
+import { DeleteRole } from "../../components/DeleteRole";
+import { AssignRole } from "../../components/AssignRole";
 
 export const UserEntitlement = () => {
   const roles = useSelector((state) => state.user.roles);
@@ -36,10 +39,25 @@ export const UserEntitlement = () => {
     if (showActionPage) {
       return (
         <div className="mt-3">
-          {decision === "assignRole" && <div>assignRole</div>}
+          {decision === "assignRole" && (
+            <AssignRole
+              setDecision={setDecision}
+              setShowActionPage={setShowActionPage}
+            ></AssignRole>
+          )}
           {decision === "newRole" && <CreateNewRole></CreateNewRole>}
-          {decision === "updateEntitlements" && <div>updateEntitlements</div>}
-          {decision === "deleteRole" && <div>deleteRole</div>}
+          {decision === "updateEntitlements" && (
+            <UpdateEntitlements
+              setDecision={setDecision}
+              setShowActionPage={setShowActionPage}
+            ></UpdateEntitlements>
+          )}
+          {decision === "deleteRole" && (
+            <DeleteRole
+              setDecision={setDecision}
+              setShowActionPage={setShowActionPage}
+            ></DeleteRole>
+          )}
         </div>
       );
     } else {
