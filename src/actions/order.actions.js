@@ -13,7 +13,7 @@ export const getCustomerOrders = (restaurantId, storeId, orderStatus) => {
         orderStatus,
       };
 
-      const res = await axios.get("/queryOrderViewByParams", body);
+      const res = await axios.post("/queryOrderViewByParams", body);
 
       if (res.status === 200) {
         dispatch({
