@@ -30,3 +30,61 @@ export const signup = (user) => {
     }
   };
 };
+
+//action get roles
+export const getRoles = () => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: userConstants.GET_ROLES_REQUEST });
+
+      const res = await axios.get(`/getAllRoles`);
+
+      if (res.status === 200) {
+        dispatch({
+          type: userConstants.GET_ROLES_SUCCESS,
+          payload: res.data,
+        });
+      } else {
+        dispatch({
+          type: userConstants.GET_ROLES_FAILURE,
+          payload: { error: "Error fetching data!" },
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch({
+        type: userConstants.GET_ROLES_FAILURE,
+        payload: { error: "Error fetching data!" },
+      });
+    }
+  };
+};
+
+//action get modules
+export const getModules = () => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: userConstants.GET_MODULES_REQUEST });
+
+      const res = await axios.get(`/getAllModule`);
+
+      if (res.status === 200) {
+        dispatch({
+          type: userConstants.GET_MODULES_SUCCESS,
+          payload: res.data,
+        });
+      } else {
+        dispatch({
+          type: userConstants.GET_MODULES_FAILURE,
+          payload: { error: "Error fetching data!" },
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch({
+        type: userConstants.GET_MODULES_FAILURE,
+        payload: { error: "Error fetching data!" },
+      });
+    }
+  };
+};

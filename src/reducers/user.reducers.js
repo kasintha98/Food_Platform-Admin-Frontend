@@ -5,6 +5,8 @@ const initState = {
   message: "",
   loading: false,
   errormsg: null,
+  roles: [],
+  modules: [],
 };
 
 export default (state = initState, action) => {
@@ -28,6 +30,48 @@ export default (state = initState, action) => {
         loading: false,
         error: action.payload.error,
         errormsg: action.payload.errormsg,
+      };
+      break;
+    case userConstants.GET_ROLES_REQUEST:
+      state = {
+        ...state,
+        loading: true,
+      };
+      break;
+    case userConstants.GET_ROLES_SUCCESS:
+      state = {
+        ...state,
+        loading: false,
+        roles: action.payload,
+      };
+      break;
+    case userConstants.GET_ROLES_FAILURE:
+      state = {
+        ...state,
+        loading: false,
+        error: action.payload,
+        roles: [],
+      };
+      break;
+    case userConstants.GET_MODULES_REQUEST:
+      state = {
+        ...state,
+        loading: true,
+      };
+      break;
+    case userConstants.GET_MODULES_SUCCESS:
+      state = {
+        ...state,
+        loading: false,
+        modules: action.payload,
+      };
+      break;
+    case userConstants.GET_MODULES_FAILURE:
+      state = {
+        ...state,
+        loading: false,
+        error: action.payload,
+        modules: [],
       };
       break;
   }
