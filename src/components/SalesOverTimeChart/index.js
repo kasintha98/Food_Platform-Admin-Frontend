@@ -9,7 +9,7 @@ import {
   Legend,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
-import { Typography } from "@mui/material";
+import { Typography, Button } from "@mui/material";
 
 ChartJS.register(
   CategoryScale,
@@ -48,13 +48,16 @@ export const data = {
 
 export const SalesOverTimeChart = () => {
   return (
-    <div className="mt-3">
+    <div className="mt-3 p-3">
       <div className="mb-3">
         <Typography sx={{ fontWeight: "bold", color: "#7F7F7F" }}>
           Sales Over Time
         </Typography>
       </div>
-      <Bar options={options} data={data} />
+      <Bar options={options} data={data} height="100px" />
+      <div>
+        <Button variant="text">Download Full Report</Button>
+      </div>
     </div>
   );
 };

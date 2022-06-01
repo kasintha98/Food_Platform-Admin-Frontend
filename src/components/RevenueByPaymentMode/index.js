@@ -6,7 +6,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Typography } from "@mui/material";
+import { Typography, Button } from "@mui/material";
 
 function createData(name, calories, fat, carbs, protein) {
   return { name, calories, fat, carbs, protein };
@@ -22,7 +22,7 @@ const rows = [
 
 export const RevenueByPaymentMode = () => {
   return (
-    <div className="mt-3">
+    <div className="mt-3 p-3">
       <div className="mb-3">
         <Typography sx={{ fontWeight: "bold", color: "#7F7F7F" }}>
           Revenue By Payment Mode
@@ -58,6 +58,9 @@ export const RevenueByPaymentMode = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      <div>
+        <Button variant="text">Download Full Report</Button>
+      </div>
     </div>
   );
 };

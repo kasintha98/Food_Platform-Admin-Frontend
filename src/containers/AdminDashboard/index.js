@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { addDays } from "date-fns";
 import Layout from "../NewLayout";
 import MenuItem from "@mui/material/MenuItem";
-import { Row, Col, DropdownButton, Dropdown } from "react-bootstrap";
+import { Row, Col, Dropdown } from "react-bootstrap";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import FormGroup from "@mui/material/FormGroup";
@@ -11,6 +11,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import Select from "@mui/material/Select";
 import styled from "@emotion/styled";
+import { Button, Menu } from "@mui/material";
 import { Typography } from "@mui/material";
 import { DateRangePicker, DefinedRange } from "react-date-range";
 import { TopSellingDishTable } from "../../components/TopSellingDishTable";
@@ -18,8 +19,28 @@ import { TopPayingCustomerTable } from "../../components/TopPayingCustomerTable"
 import { SalesOverTimeChart } from "../../components/SalesOverTimeChart";
 import { SalesRevenueByChanelChart } from "../../components/SalesRevenueByChanelChart";
 import { RevenueByPaymentMode } from "../../components/RevenueByPaymentMode";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 const CusMenuItem = styled(MenuItem)``;
+
+const CusDDT = styled(Dropdown.Toggle)`
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.75;
+`;
+
+const DRButton = styled(Button)`
+  color: #fff;
+  background-color: #6c757d;
+  border-color: #6c757d;
+  text-transform: none;
+
+  &:hover {
+    color: #fff;
+    background-color: #5a6268;
+    border-color: #5a6268;
+  }
+`;
 
 const CusDateRangePicker = styled(DateRangePicker)`
   & .rdrDefinedRangesWrapper {
@@ -38,14 +59,23 @@ export const AdminDashboard = () => {
   const stores = useSelector((state) => state.store.stores);
   const [selectedStore, setSelectedStore] = useState("");
   const [selectedStoreObj, setSelectedStoreObj] = useState(null);
-  const [checked, setChecked] = React.useState(false);
-  const [state, setState] = useState([
+  const [checked, setChecked] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [dateState, setDateState] = useState([
     {
       startDate: new Date(),
       endDate: addDays(new Date(), 7),
       key: "selection",
     },
   ]);
+
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const handleChange = (event) => {
     setChecked(event.target.checked);
@@ -71,29 +101,59 @@ export const AdminDashboard = () => {
               autoClose="outside"
               variant="secondary"
             >
-              <Dropdown.Toggle variant="secondary">Presets</Dropdown.Toggle>
+              <CusDDT variant="secondary">Presets</CusDDT>
               <Dropdown.Menu>
                 <Dropdown.Item>
                   <DefinedRange
-                    onChange={(item) => setState([item.selection])}
-                    ranges={state}
+                    onChange={(item) => setDateState([item.selection])}
+                    ranges={dateState}
                   />
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
 
-            <DropdownButton title="Custom" className="ml-2" variant="secondary">
-              <Dropdown.Item>
-                <CusDateRangePicker
-                  editableDateInputs={true}
-                  onChange={(item) => setState([item.selection])}
-                  moveRangeOnFirstSelection={false}
-                  ranges={state}
-                />
-              </Dropdown.Item>
-            </DropdownButton>
+            <div>
+              <DRButton
+                className="btn btn-secondary"
+                id="demo-positioned-button"
+                aria-controls={open ? "demo-positioned-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}
+                onClick={handleClick}
+              >
+                Dashboard{" "}
+                <ArrowDropDownIcon
+                  sx={{ width: "20px", height: "20px" }}
+                ></ArrowDropDownIcon>
+              </DRButton>
+              <Menu
+                id="demo-positioned-menu"
+                aria-labelledby="demo-positioned-button"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "left",
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "left",
+                }}
+              >
+                <MenuItem>
+                  <CusDateRangePicker
+                    editableDateInputs={true}
+                    onChange={(item) => setDateState([item.selection])}
+                    moveRangeOnFirstSelection={false}
+                    ranges={dateState}
+                  />
+                </MenuItem>
+              </Menu>
+            </div>
           </Row>
         </div>
+
         <div className="mt-3">
           <Row className="align-items-center">
             <Col sm={3} className="m-0 p-0">
