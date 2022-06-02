@@ -9,3 +9,4 @@ export * from "./employee.actions";
 export * from "./inventory.action";
 export * from "./purchase.actions";
 export * from "./store.actions";
+export * from "./report.actions";

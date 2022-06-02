@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { addDays } from "date-fns";
 import Layout from "../NewLayout";
 import MenuItem from "@mui/material/MenuItem";
@@ -8,6 +8,7 @@ import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import Alert from "@mui/material/Alert";
 import Checkbox from "@mui/material/Checkbox";
 import Select from "@mui/material/Select";
 import styled from "@emotion/styled";
@@ -20,6 +21,7 @@ import { SalesOverTimeChart } from "../../components/SalesOverTimeChart";
 import { SalesRevenueByChanelChart } from "../../components/SalesRevenueByChanelChart";
 import { RevenueByPaymentMode } from "../../components/RevenueByPaymentMode";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { getAllReports } from "../../actions";
 
 const CusMenuItem = styled(MenuItem)``;
 
@@ -57,6 +59,7 @@ const NumberDiv = styled.div`
 
 export const AdminDashboard = () => {
   const stores = useSelector((state) => state.store.stores);
+  const allReports = useSelector((state) => state.report.allReports);
   const [selectedStore, setSelectedStore] = useState("");
   const [selectedStoreObj, setSelectedStoreObj] = useState(null);
   const [checked, setChecked] = useState(false);
@@ -68,6 +71,21 @@ export const AdminDashboard = () => {
       key: "selection",
     },
   ]);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (selectedStoreObj) {
+      dispatch(
+        getAllReports(
+          selectedStoreObj.restaurantId,
+          selectedStoreObj.storeId,
+          "2021-05-01",
+          "2022-12-06"
+        )
+      );
+    }
+  }, []);
 
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -89,6 +107,14 @@ export const AdminDashboard = () => {
   const handleSelectedStore = (store) => {
     setSelectedStoreObj(store);
     console.log(store);
+    dispatch(
+      getAllReports(
+        store.restaurantId,
+        store.storeId,
+        "2021-05-01",
+        "2022-12-06"
+      )
+    );
   };
 
   return (
@@ -229,56 +255,73 @@ export const AdminDashboard = () => {
             </Col>
           </Row>
         </div>
-        <div className="mt-2">
-          <Row>
-            <Col sm={2} className="pl-0">
-              <NumberDiv>
-                <Typography sx={{ color: "#595959" }}>Total Sales</Typography>
-                <Typography sx={{ fontWeight: "bold" }}>
-                  Rs 109922.98
-                </Typography>
-              </NumberDiv>
-            </Col>
-            <Col sm={2} className="pl-0">
-              <NumberDiv>
-                <Typography sx={{ color: "#595959" }}>
-                  Avg. Order Value
-                </Typography>
-                <Typography sx={{ fontWeight: "bold" }}>Rs 500.65</Typography>
-              </NumberDiv>
-            </Col>
-            <Col sm={2} className="pl-0">
-              <NumberDiv>
-                <Typography sx={{ color: "#595959" }}>Total Orders</Typography>
-                <Typography sx={{ fontWeight: "bold" }}>509</Typography>
-              </NumberDiv>
-            </Col>
-          </Row>
-        </div>
-        <div>
-          <Row>
-            <Col sm={6} className="pl-0">
-              <SalesOverTimeChart></SalesOverTimeChart>
-            </Col>
-            <Col sm={6} className="pl-0">
-              <SalesRevenueByChanelChart></SalesRevenueByChanelChart>
-            </Col>
-          </Row>
-          <Row>
-            <Col sm={6} className="pl-0">
-              <TopSellingDishTable></TopSellingDishTable>
-            </Col>
-            <Col sm={6} className="pl-0">
-              <TopPayingCustomerTable></TopPayingCustomerTable>
-            </Col>
-          </Row>
-          <Row>
-            <Col sm={6} className="pl-0">
-              <RevenueByPaymentMode></RevenueByPaymentMode>
-            </Col>
-            <Col sm={6} className="pl-0"></Col>
-          </Row>
-        </div>
+
+        {allReports && selectedStoreObj ? (
+          <>
+            <div className="mt-2">
+              <Row>
+                <Col sm={2} className="pl-0">
+                  <NumberDiv>
+                    <Typography sx={{ color: "#595959" }}>
+                      Total Sales
+                    </Typography>
+                    <Typography sx={{ fontWeight: "bold" }}>
+                      Rs 109922.98
+                    </Typography>
+                  </NumberDiv>
+                </Col>
+                <Col sm={2} className="pl-0">
+                  <NumberDiv>
+                    <Typography sx={{ color: "#595959" }}>
+                      Avg. Order Value
+                    </Typography>
+                    <Typography sx={{ fontWeight: "bold" }}>
+                      Rs 500.65
+                    </Typography>
+                  </NumberDiv>
+                </Col>
+                <Col sm={2} className="pl-0">
+                  <NumberDiv>
+                    <Typography sx={{ color: "#595959" }}>
+                      Total Orders
+                    </Typography>
+                    <Typography sx={{ fontWeight: "bold" }}>509</Typography>
+                  </NumberDiv>
+                </Col>
+              </Row>
+            </div>
+            <div>
+              <Row>
+                <Col sm={6} className="pl-0">
+                  <SalesOverTimeChart></SalesOverTimeChart>
+                </Col>
+                <Col sm={6} className="pl-0">
+                  <SalesRevenueByChanelChart></SalesRevenueByChanelChart>
+                </Col>
+              </Row>
+              <Row>
+                <Col sm={6} className="pl-0">
+                  <TopSellingDishTable></TopSellingDishTable>
+                </Col>
+                <Col sm={6} className="pl-0">
+                  <TopPayingCustomerTable></TopPayingCustomerTable>
+                </Col>
+              </Row>
+              <Row>
+                <Col sm={6} className="pl-0">
+                  <RevenueByPaymentMode></RevenueByPaymentMode>
+                </Col>
+                <Col sm={6} className="pl-0"></Col>
+              </Row>
+            </div>
+          </>
+        ) : (
+          <>
+            <Alert severity="warning" className="mt-4">
+              No reports to show! Please select a store!
+            </Alert>
+          </>
+        )}
       </Layout>
     </div>
   );
