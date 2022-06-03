@@ -18,6 +18,7 @@ import Layout from "../NewLayout";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { TopSellingDishTable } from "../../components/TopSellingDishTable";
 import { TopPayingCustomerTable } from "../../components/TopPayingCustomerTable";
+import { getAllReports } from "../../actions";
 
 const CusDDT = styled(Dropdown.Toggle)`
   font-weight: 500;
@@ -52,6 +53,7 @@ const NumberDiv = styled.div`
 `;
 
 export const NewReports = () => {
+  const allReports = useSelector((state) => state.report.allReports);
   const [anchorEl, setAnchorEl] = useState(null);
   const [dateState, setDateState] = useState([
     {
@@ -60,6 +62,23 @@ export const NewReports = () => {
       key: "selection",
     },
   ]);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(
+      getAllReports(
+        "R001",
+        "S001",
+        `${dateState[0].startDate.getFullYear()}-${
+          dateState[0].startDate.getMonth() + 1
+        }-${dateState[0].startDate.getDate()}`,
+        `${dateState[0].endDate.getFullYear()}-${
+          dateState[0].endDate.getMonth() + 1
+        }-${dateState[0].endDate.getDate()}`
+      )
+    );
+  }, [dateState]);
 
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -175,7 +194,16 @@ export const NewReports = () => {
             <Col sm={3}>
               <NumberDiv className="mt-3">
                 <Typography sx={{ color: "#595959" }}>Total Orders</Typography>
-                <Typography sx={{ fontWeight: "bold" }}>509</Typography>
+                {allReports.salesSummeryByDateList &&
+                allReports.salesSummeryByDateList.length ? (
+                  <Typography sx={{ fontWeight: "bold" }}>
+                    {allReports.salesSummeryByDateList
+                      .map((a) => a.noOfOrders)
+                      .reduce((a, b) => a + b, 0)}
+                  </Typography>
+                ) : (
+                  <Typography sx={{ fontWeight: "bold" }}>0</Typography>
+                )}
               </NumberDiv>
             </Col>
           </Row>
@@ -183,10 +211,34 @@ export const NewReports = () => {
         <div>
           <Row>
             <Col sm={6}>
-              <TopSellingDishTable></TopSellingDishTable>
+              {allReports.salesSummeryByDishType &&
+              allReports.salesSummeryByDishType.length > 0 ? (
+                <TopSellingDishTable></TopSellingDishTable>
+              ) : (
+                <div className="mb-3 pl-3 pt-3">
+                  <Typography sx={{ fontWeight: "bold", color: "#7F7F7F" }}>
+                    Top Selling Dish
+                  </Typography>
+                  <Alert severity="warning" className="mt-4">
+                    No reports to show!
+                  </Alert>
+                </div>
+              )}
             </Col>
             <Col sm={6}>
-              <TopPayingCustomerTable></TopPayingCustomerTable>
+              {allReports.salesSummeryByCustomer &&
+              allReports.salesSummeryByCustomer.length > 0 ? (
+                <TopPayingCustomerTable></TopPayingCustomerTable>
+              ) : (
+                <div className="mb-3 pl-3 pt-3">
+                  <Typography sx={{ fontWeight: "bold", color: "#7F7F7F" }}>
+                    Top Paying Customer
+                  </Typography>
+                  <Alert severity="warning" className="mt-4">
+                    No reports to show!
+                  </Alert>
+                </div>
+              )}
             </Col>
           </Row>
         </div>
