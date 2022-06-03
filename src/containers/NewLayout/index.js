@@ -31,79 +31,79 @@ function NewLayout(props) {
       <List>
         <ListItem>
           <NavLink exact to={"/"}>
-            <i class="fa fa-home"></i>
+            <i className="fa fa-home"></i>
             &nbsp; Admin Dashboard
           </NavLink>
         </ListItem>
         <ListItem>
           <NavLink to={"/orders"}>
-            <i class="fa fa-info-circle"></i>
+            <i className="fa fa-info-circle"></i>
             &nbsp; Orders
           </NavLink>
         </ListItem>
         <ListItem>
           <NavLink to={"/restaurants"}>
-            <i class="fa fa-coffee"></i>
+            <i className="fa fa-coffee"></i>
             &nbsp; Restaurants
           </NavLink>
         </ListItem>
         <ListItem>
           <NavLink to={"/products"}>
-            <i class="fa fa-cutlery"></i>
+            <i className="fa fa-cutlery"></i>
             &nbsp; Menu
           </NavLink>
         </ListItem>
         <ListItem>
           <NavLink to={"/delivery-charges"}>
-            <i class="fa fa-motorcycle"></i>
+            <i className="fa fa-motorcycle"></i>
             &nbsp; Delivery Charges
           </NavLink>
         </ListItem>
         <ListItem>
           <NavLink exact to={"/employee"}>
-            <i class="fa fa-user"></i>
+            <i className="fa fa-user"></i>
             &nbsp; Employee
           </NavLink>
         </ListItem>
         <ListItem>
           <NavLink exact to={"/order-auto"}>
-            <i class="fa fa-sort"></i>
+            <i className="fa fa-sort"></i>
             &nbsp; Order Automation
           </NavLink>
         </ListItem>
         <ListItem>
           <NavLink exact to={"/user-entitle"}>
-            <i class="fa fa-address-card"></i>
+            <i className="fa fa-address-card"></i>
             &nbsp; User Entitlement
           </NavLink>
         </ListItem>
         <ListItem>
           <NavLink to={"/reports"}>
-            <i class="fa fa-pie-chart"></i>
+            <i className="fa fa-pie-chart"></i>
             &nbsp; Reports
           </NavLink>
         </ListItem>
         <ListItem>
           <NavLink to={"/inventory"}>
-            <i class="fa fa-suitcase"></i>
+            <i className="fa fa-suitcase"></i>
             &nbsp; Inventory Mgmt
           </NavLink>
         </ListItem>
         <ListItem>
           <NavLink to={"/customer"}>
-            <i class="fa fa-child"></i>
+            <i className="fa fa-child"></i>
             &nbsp; Customer
           </NavLink>
         </ListItem>
         <ListItem>
           <NavLink to={"/kds"}>
-            <i class="fa fa-clone"></i>
+            <i className="fa fa-clone"></i>
             &nbsp; KDS
           </NavLink>
         </ListItem>
         <ListItem>
           <NavLink to={"/delivery-boy"}>
-            <i class=" 	fa fa-flash"></i>
+            <i className=" 	fa fa-flash"></i>
             &nbsp; Delivery Boy
           </NavLink>
         </ListItem>

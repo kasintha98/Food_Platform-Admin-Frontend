@@ -270,9 +270,9 @@ export const KDSTable = (props) => {
                 <TableRow>
                   <CusTableCell scope="row" colspan="9">
                     {loading ? (
-                      <div class="d-flex justify-content-center">
+                      <div className="d-flex justify-content-center">
                         <div
-                          class="spinner-border text-primary"
+                          className="spinner-border text-primary"
                           role="status"
                         ></div>
                       </div>

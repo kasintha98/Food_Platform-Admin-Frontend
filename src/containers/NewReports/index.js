@@ -19,6 +19,8 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { TopSellingDishTable } from "../../components/TopSellingDishTable";
 import { TopPayingCustomerTable } from "../../components/TopPayingCustomerTable";
 import { getAllReports } from "../../actions";
+import DropdownMenu from "@atlaskit/dropdown-menu";
+import "./style.css";
 
 const CusDDT = styled(Dropdown.Toggle)`
   font-weight: 500;
@@ -58,18 +60,19 @@ export const NewReports = () => {
   const [dateState, setDateState] = useState([
     {
       startDate: new Date(),
-      endDate: addDays(new Date(), 7),
+      endDate: addDays(new Date(), 0),
       key: "selection",
     },
   ]);
+  const [isOpen, setIsOpen] = useState(false);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(
       getAllReports(
-        "R001",
-        "S001",
+        "ALL",
+        "ALL",
         `${dateState[0].startDate.getFullYear()}-${
           dateState[0].startDate.getMonth() + 1
         }-${dateState[0].startDate.getDate()}`,
@@ -122,45 +125,20 @@ export const NewReports = () => {
               </Dropdown.Menu>
             </Dropdown>
 
-            <div>
-              <DRButton
-                className="btn btn-secondary"
-                id="demo-positioned-button"
-                aria-controls={open ? "demo-positioned-menu" : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? "true" : undefined}
-                onClick={handleClick}
-              >
-                Custom{" "}
-                <ArrowDropDownIcon
-                  sx={{ width: "20px", height: "20px" }}
-                ></ArrowDropDownIcon>
-              </DRButton>
-              <Menu
-                id="demo-positioned-menu"
-                aria-labelledby="demo-positioned-button"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "left",
-                }}
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "left",
-                }}
-              >
-                <MenuItem>
-                  <CusDateRangePicker
-                    editableDateInputs={true}
-                    onChange={(item) => setDateState([item.selection])}
-                    moveRangeOnFirstSelection={false}
-                    ranges={dateState}
-                  />
-                </MenuItem>
-              </Menu>
-            </div>
+            <DropdownMenu
+              isOpen={isOpen}
+              onOpenChange={(attrs) => {
+                setIsOpen(attrs.isOpen);
+              }}
+              trigger="Custom"
+            >
+              <CusDateRangePicker
+                editableDateInputs={true}
+                onChange={(item) => setDateState([item.selection])}
+                moveRangeOnFirstSelection={false}
+                ranges={dateState}
+              />
+            </DropdownMenu>
           </Row>
         </div>
         <div className="mt-3">

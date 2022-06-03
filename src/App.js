@@ -34,7 +34,7 @@ function App() {
     if (!auth.authenticate) {
       dispatch(isUserLoggedIn());
     }
-    dispatch(getInitialData());
+    /* dispatch(getInitialData()); */
     dispatch(getAllStores());
   }, []);
 

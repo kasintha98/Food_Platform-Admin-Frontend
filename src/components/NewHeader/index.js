@@ -27,7 +27,7 @@ export const NewHeader = (props) => {
       <Nav>
         <li className="nav-item">
           <span className="nav-link pointer" onClick={logout}>
-            <i class="fa fa-sign-out"></i>&nbsp; Sign Out
+            <i className="fa fa-sign-out"></i>&nbsp; Sign Out
           </span>
         </li>
       </Nav>
@@ -40,12 +40,12 @@ export const NewHeader = (props) => {
       <Nav>
         <li className="nav-item">
           <NavLink to="/signin" className="nav-link pointer newLink">
-            <i class="fa fa-sign-in"></i>&nbsp; Sign In
+            <i className="fa fa-sign-in"></i>&nbsp; Sign In
           </NavLink>
         </li>
         <li className="nav-item">
           <NavLink to="/signup" className="nav-link pointer newLink">
-            <i class="fa fa-user-plus"></i>&nbsp; Sign Up
+            <i className="fa fa-user-plus"></i>&nbsp; Sign Up
           </NavLink>
         </li>
       </Nav>

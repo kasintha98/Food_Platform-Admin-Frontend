@@ -8,7 +8,7 @@
 }
 
 .sidebar2 ul li a {
-  color: #333;
+  color: #fff;
   padding: 5px 10px;
   box-sizing: border-box;
   border-radius: 5px;
@@ -18,11 +18,11 @@
 
 .sidebar2 ul li a.active {
   background: #333;
-  color: #fff;
+  color: #ffc000;
 }
 
 .sidebar2 {
-  background-image: linear-gradient(#0052d4, #65c7f7, #9cecfb);
+  background-color: #595959;
   box-shadow: 0 0 5px gray;
   min-height: 100%;
 }

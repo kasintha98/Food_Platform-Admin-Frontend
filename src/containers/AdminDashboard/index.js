@@ -22,6 +22,8 @@ import { SalesRevenueByChanelChart } from "../../components/SalesRevenueByChanel
 import { RevenueByPaymentMode } from "../../components/RevenueByPaymentMode";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { getAllReports } from "../../actions";
+import DropdownMenu from "@atlaskit/dropdown-menu";
+import "./style.css";
 
 const CusMenuItem = styled(MenuItem)``;
 
@@ -60,17 +62,21 @@ const NumberDiv = styled.div`
 export const AdminDashboard = () => {
   const stores = useSelector((state) => state.store.stores);
   const allReports = useSelector((state) => state.report.allReports);
-  const [selectedStore, setSelectedStore] = useState("");
-  const [selectedStoreObj, setSelectedStoreObj] = useState(null);
-  const [checked, setChecked] = useState(false);
+  const [selectedStore, setSelectedStore] = useState("ALL");
+  const [selectedStoreObj, setSelectedStoreObj] = useState({
+    restaurantId: "ALL",
+    storeId: "ALL",
+  });
+  const [checked, setChecked] = useState(true);
   const [anchorEl, setAnchorEl] = useState(null);
   const [dateState, setDateState] = useState([
     {
       startDate: new Date(),
-      endDate: addDays(new Date(), 7),
+      endDate: addDays(new Date(), 0),
       key: "selection",
     },
   ]);
+  const [isOpen, setIsOpen] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -101,16 +107,30 @@ export const AdminDashboard = () => {
 
   const handleChange = (event) => {
     setChecked(event.target.checked);
+    console.log(event.target.checked);
+    if (event.target.checked) {
+      handleSelectedStore({
+        restaurantId: "ALL",
+        storeId: "ALL",
+      });
+      setSelectedStore("ALL");
+    } else {
+      setSelectedStoreObj(null);
+      setSelectedStore("");
+    }
   };
 
   const handleChangeStore = (event) => {
     setSelectedStore(event.target.value);
-    console.log(event.target.value);
   };
 
   const handleSelectedStore = (store) => {
     setSelectedStoreObj(store);
-    console.log(store);
+
+    if (store.restaurantId === "ALL") {
+      setChecked(true);
+      console.log(true);
+    }
     dispatch(
       getAllReports(
         store.restaurantId,
@@ -155,45 +175,20 @@ export const AdminDashboard = () => {
               </Dropdown.Menu>
             </Dropdown>
 
-            <div>
-              <DRButton
-                className="btn btn-secondary"
-                id="demo-positioned-button"
-                aria-controls={open ? "demo-positioned-menu" : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? "true" : undefined}
-                onClick={handleClick}
-              >
-                Custom{" "}
-                <ArrowDropDownIcon
-                  sx={{ width: "20px", height: "20px" }}
-                ></ArrowDropDownIcon>
-              </DRButton>
-              <Menu
-                id="demo-positioned-menu"
-                aria-labelledby="demo-positioned-button"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "left",
-                }}
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "left",
-                }}
-              >
-                <MenuItem>
-                  <CusDateRangePicker
-                    editableDateInputs={true}
-                    onChange={(item) => setDateState([item.selection])}
-                    moveRangeOnFirstSelection={false}
-                    ranges={dateState}
-                  />
-                </MenuItem>
-              </Menu>
-            </div>
+            <DropdownMenu
+              isOpen={isOpen}
+              onOpenChange={(attrs) => {
+                setIsOpen(attrs.isOpen);
+              }}
+              trigger="Custom"
+            >
+              <CusDateRangePicker
+                editableDateInputs={true}
+                onChange={(item) => setDateState([item.selection])}
+                moveRangeOnFirstSelection={false}
+                ranges={dateState}
+              />
+            </DropdownMenu>
           </Row>
         </div>
 
@@ -211,6 +206,17 @@ export const AdminDashboard = () => {
                   label="Please select the store"
                   onChange={handleChangeStore}
                 >
+                  <CusMenuItem
+                    onClick={() => {
+                      handleSelectedStore({
+                        restaurantId: "ALL",
+                        storeId: "ALL",
+                      });
+                    }}
+                    value={"ALL"}
+                  >
+                    All Stores
+                  </CusMenuItem>
                   {stores.map((store) => (
                     <CusMenuItem
                       onClick={() => {
