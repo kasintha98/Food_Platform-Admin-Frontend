@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import styled from "@emotion/styled";
 import Layout from "../NewLayout";
 import Box from "@mui/material/Box";
@@ -21,252 +21,12 @@ const CusMenuItem = styled(MenuItem)``;
 export const KDS = () => {
   const stores = useSelector((state) => state.store.stores);
 
-  const orders = [
-    {
-      orderId: 126,
-      time: "2:34",
-      orderInfo: "Delivery",
-      customerName: "Gurmeet",
-      items: [
-        {
-          itemName: "Aloo Tikki Burger",
-          qty: 2,
-          remarks: "",
-          status: "FOOD READY",
-          counter: "Burger",
-        },
-      ],
-
-      "": "",
-      __1: "",
-    },
-    {
-      orderId: 127,
-      time: ":34",
-      orderInfo: "Pick-up",
-      customerName: "Aniket",
-      "": "",
-      __1: "",
-      items: [
-        {
-          itemName: "Mexican Pizza",
-          qty: 1,
-          remarks: "",
-          status: "PROCESSING",
-          counter: "Pizza",
-          extra: [
-            {
-              itemName: "Extra Olives (Small)",
-              qty: 1,
-              remarks: "",
-              status: "PROCESSING",
-            },
-            {
-              itemName: "Extra Mushroom",
-              qty: 1,
-              remarks: "",
-              status: "PROCESSING",
-            },
-          ],
-        },
-      ],
-    },
-    {
-      orderId: 127,
-      time: ":34",
-      orderInfo: "Pick-up",
-      customerName: "Aniket",
-
-      "": "",
-      __1: "",
-      items: [
-        {
-          itemName: "Cheese Burger",
-          qty: 1,
-          remarks: "",
-          counter: "Burger",
-          status: "PROCESSING",
-        },
-        {
-          itemName: "French Fries (Large)",
-          qty: 1,
-          remarks: "",
-          counter: "Burger",
-          status: "FOOD READY",
-        },
-      ],
-    },
-    {
-      orderId: 128,
-      time: "16:26",
-      orderInfo: "Delivery",
-      customerName: "Abhishek",
-      "": "",
-      __1: "",
-      items: [
-        {
-          itemName: "Chilli Cheese Toast",
-          qty: 1,
-          remarks: "",
-          counter: "Chinese",
-          status: "PROCESSING",
-        },
-        {
-          customerName: "Abhishek",
-          itemName: "Vanila Shake",
-          qty: 2,
-          remarks: "",
-          counter: "Drinks",
-          status: "Completed",
-        },
-      ],
-    },
-
-    {
-      orderId: 129,
-      time: "2:34",
-      orderInfo: "Up-Tab1",
-      customerName: "Chakri",
-
-      "": "",
-      __1: "",
-      items: [
-        {
-          itemName: "Aloo Tikki Burger",
-          qty: 1,
-          remarks: "No Lettuce",
-          counter: "Burger",
-          status: "Completed",
-        },
-      ],
-    },
-    {
-      orderId: 130,
-      time: "2:48",
-      orderInfo: "Delivery",
-      customerName: "Gurmeet",
-
-      "": "",
-      __1: "",
-      items: [
-        {
-          itemName: "Aloo Tikki Burger",
-          qty: 1,
-          remarks: "",
-          counter: "Burger",
-          status: "Completed",
-        },
-      ],
-    },
-    {
-      orderId: 131,
-      time: ":3",
-      orderInfo: "Delivery",
-      customerName: "Aniket",
-
-      "": "",
-      __1: "",
-      items: [
-        {
-          itemName: "Cheese Pizza",
-          qty: 2,
-          remarks: "",
-          status: "PROCESSING",
-          counter: "Pizza",
-          choice: [
-            {
-              itemName: "Cheezy Crust",
-              qty: 1,
-              remarks: "",
-              status: "PROCESSING",
-            },
-          ],
-          extra: [
-            {
-              itemName: "Extra Paneer",
-              qty: 1,
-              remarks: "",
-              status: "PROCESSING",
-            },
-          ],
-        },
-        {
-          itemName: "Cheese Burger",
-          qty: 1,
-          remarks: "",
-          counter: "Burger",
-          status: "PROCESSING",
-        },
-        {
-          itemName: "French Fries (Large)",
-          qty: 1,
-          remarks: "",
-          counter: "Burger",
-          status: "FOOD READY",
-        },
-      ],
-    },
-
-    {
-      orderId: 132,
-      time: "16:26",
-      orderInfo: "Delivery",
-      customerName: "Abhishek",
-
-      "": "",
-      __1: "",
-      items: [
-        {
-          itemName: "Chilli Cheese Toast",
-          qty: 1,
-          remarks: "",
-          counter: "Chinese",
-          status: "PROCESSING",
-        },
-        {
-          itemName: "Soft Drink",
-          qty: 2,
-          remarks: "Pepsi",
-          counter: "Drinks",
-          status: "FOOD READY",
-        },
-        {
-          itemName: "Aloo Tikki Burger",
-          qty: 3,
-          remarks: "No Lettuce",
-          counter: "Burger",
-          status: "FOOD READY",
-        },
-      ],
-    },
-    {
-      orderId: 133,
-      time: "2:34",
-      orderInfo: "Delivery",
-      customerName: "Gurmeet",
-
-      "": "",
-      __1: "",
-      items: [
-        {
-          itemName: "Aloo Tikki Burger",
-          qty: 5,
-          remarks: "",
-          counter: "Burger",
-          status: "FOOD READY",
-        },
-      ],
-    },
-  ];
   const [tabValue, setTabValue] = React.useState("ORDER ROUTING SCREEN");
   const [selectedStore, setSelectedStore] = useState("");
-  const [selectedStoreObj, setSelectedStoreObj] = useState(null);
-
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(getCustomerOrders("R001", "S001", "SUBMITTED"));
-  }, []);
+  const [selectedStoreObj, setSelectedStoreObj] = useState({
+    restaurantId: "ALL",
+    storeId: "ALL",
+  });
 
   const handleChangeTab = (event, newValue) => {
     setTabValue(newValue);
@@ -279,7 +39,6 @@ export const KDS = () => {
 
   const handleSelectedStore = (store) => {
     setSelectedStoreObj(store);
-    console.log(store);
   };
 
   return (
@@ -310,7 +69,7 @@ export const KDS = () => {
               </Box>
             </Col>
             <Col className="col-4">
-              <Row className="align-items-center">
+              <Row className="align-items-center pt-2">
                 <div style={{ maxWidth: "125px !important" }}>
                   <Typography sx={{ color: "#7F7F7F", fontWeight: "bold" }}>
                     Select Store
@@ -396,7 +155,11 @@ export const KDS = () => {
                 </div>
               </Row> */}
 
-              <KDSTable orders={orders} counter={null}></KDSTable>
+              <KDSTable
+                counter={null}
+                restaurantId={selectedStoreObj.restaurantId}
+                storeId={selectedStoreObj.storeId}
+              ></KDSTable>
             </div>
           </TabPanel>
           <TabPanel value="PIZZA COUNTER">
@@ -483,7 +246,11 @@ export const KDS = () => {
                 </Col>
                 <Col sm={4}></Col>
               </Row> */}
-              <KDSTable orders={orders} counter={"Pizza"}></KDSTable>
+              <KDSTable
+                restaurantId={selectedStoreObj.restaurantId}
+                storeId={selectedStoreObj.storeId}
+                counter={"PIZZA"}
+              ></KDSTable>
             </div>
           </TabPanel>
           <TabPanel value="CHINESE COUNTER">
@@ -570,7 +337,11 @@ export const KDS = () => {
                 </Col>
                 <Col sm={4}></Col>
               </Row> */}
-              <KDSTable orders={orders} counter="Chinese"></KDSTable>
+              <KDSTable
+                restaurantId={selectedStoreObj.restaurantId}
+                storeId={selectedStoreObj.storeId}
+                counter="CHINESE"
+              ></KDSTable>
             </div>
           </TabPanel>
           <TabPanel value="DRINK &amp; DESERTS COUNTER">
@@ -657,7 +428,11 @@ export const KDS = () => {
                 </Col>
                 <Col sm={4}></Col>
               </Row> */}
-              <KDSTable orders={orders} counter="Drinks"></KDSTable>
+              <KDSTable
+                restaurantId={selectedStoreObj.restaurantId}
+                storeId={selectedStoreObj.storeId}
+                counter="DRINKS"
+              ></KDSTable>
             </div>
           </TabPanel>
           <TabPanel value="BURGER COUNTER">
@@ -744,7 +519,11 @@ export const KDS = () => {
                 </Col>
                 <Col sm={4}></Col>
               </Row> */}
-              <KDSTable orders={orders} counter="Burger"></KDSTable>
+              <KDSTable
+                restaurantId={selectedStoreObj.restaurantId}
+                storeId={selectedStoreObj.storeId}
+                counter="FAST FOOD"
+              ></KDSTable>
             </div>
           </TabPanel>
         </TabContext>

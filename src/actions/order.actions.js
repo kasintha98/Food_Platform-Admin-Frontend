@@ -20,11 +20,13 @@ export const getCustomerOrders = (restaurantId, storeId, orderStatus) => {
           type: orderConstants.GET_CUSTOMER_ORDER_SUCCESS,
           payload: res.data,
         });
+        return res.data;
       } else {
         dispatch({
           type: orderConstants.GET_CUSTOMER_ORDER_FAILURE,
           payload: res.data,
         });
+        return false;
       }
     } catch (error) {
       console.log(error);
