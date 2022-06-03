@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -10,6 +11,7 @@ import {
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import { Typography, Button } from "@mui/material";
+import Pdf from "react-to-pdf";
 
 ChartJS.register(
   CategoryScale,
@@ -33,20 +35,25 @@ export const options = {
   },
 };
 
-const labels = ["January", "February", "March", "April", "May", "June", "July"];
-
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: "Sales",
-      data: labels.map(() => Math.floor(Math.random() * 1000)),
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
-    },
-  ],
-};
-
 export const SalesOverTimeChart = () => {
+  const allReports = useSelector((state) => state.report.allReports);
+  const ref = React.createRef();
+
+  const labels = allReports?.salesSummeryByDateList?.map(
+    (a) => `${a.month} ${new Date(a.orderDate).getDate()}`
+  );
+
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: "Sales",
+        data: allReports.salesSummeryByDateList.map((a) => a.orderValue),
+        backgroundColor: "rgba(255, 99, 132, 0.5)",
+      },
+    ],
+  };
+
   return (
     <div className="mt-3 p-3">
       <div className="mb-3">
@@ -54,9 +61,17 @@ export const SalesOverTimeChart = () => {
           Sales Over Time
         </Typography>
       </div>
-      <Bar options={options} data={data} height="100px" />
+      <div ref={ref}>
+        <Bar options={options} data={data} height="100px" />
+      </div>
       <div>
-        <Button variant="text">Download Full Report</Button>
+        <Pdf targetRef={ref} filename="Sales Over Time.pdf">
+          {({ toPdf }) => (
+            <Button onClick={toPdf} variant="text">
+              Download Full Report
+            </Button>
+          )}
+        </Pdf>
       </div>
     </div>
   );

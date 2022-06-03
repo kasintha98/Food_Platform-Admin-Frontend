@@ -13,6 +13,8 @@ export const getAllReports = (restaurantId, storeId, fromDate, toDate) => {
         toDate,
       };
 
+      console.log(reqBody);
+
       const res = await axios.post(`/getReports`, reqBody);
 
       if (res.status === 200) {

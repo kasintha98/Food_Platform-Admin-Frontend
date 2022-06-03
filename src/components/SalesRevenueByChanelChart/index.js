@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -10,6 +11,7 @@ import {
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import { Typography, Button } from "@mui/material";
+import Pdf from "react-to-pdf";
 
 ChartJS.register(
   CategoryScale,
@@ -33,25 +35,105 @@ export const options = {
   },
 };
 
-const labels = ["MOBILE", "WEB", "SELF-COLLECT", "DINE-IN", "ZOMATO", "SWIZY"];
-
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: "Sale",
-      data: labels.map(() => Math.floor(Math.random() * 1000)),
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
-    },
-    {
-      label: "Order",
-      data: labels.map(() => Math.floor(Math.random() * 1000)),
-      backgroundColor: "rgba(53, 162, 235, 0.5)",
-    },
-  ],
-};
-
 export const SalesRevenueByChanelChart = () => {
+  const allReports = useSelector((state) => state.report.allReports);
+  const [webOrders, setWebOrders] = useState([]);
+  const [mobileOrders, setMobileOrders] = useState([]);
+  const [selfOrders, setSelfOrders] = useState([]);
+  const [dineOrders, setDineOrders] = useState([]);
+  const [zomatoOrders, setZomatoOrders] = useState([]);
+  const [swizyOrders, setSwizyOrders] = useState([]);
+
+  const ref = React.createRef();
+
+  const labels = [
+    "MOBILE",
+    "WEB",
+    "SELF-COLLECT",
+    "DINE-IN",
+    "ZOMATO",
+    "SWIZY",
+  ];
+
+  useEffect(() => {
+    setWebOrders(
+      allReports.salesSummeryByOrderSource
+        .filter(function (el) {
+          return el.orderSource === "W";
+        })
+        .map((a) => a.orderValue)
+        .reduce((a, b) => a + b, 0)
+    );
+
+    setMobileOrders(
+      allReports.salesSummeryByOrderSource
+        .filter(function (el) {
+          return el.orderSource === "M";
+        })
+        .map((a) => a.orderValue)
+        .reduce((a, b) => a + b, 0)
+    );
+
+    setSelfOrders(
+      allReports.salesSummeryByOrderSource
+        .filter(function (el) {
+          return el.orderSource === "S";
+        })
+        .map((a) => a.orderValue)
+        .reduce((a, b) => a + b, 0)
+    );
+
+    setDineOrders(
+      allReports.salesSummeryByOrderSource
+        .filter(function (el) {
+          return el.orderSource === "D";
+        })
+        .map((a) => a.orderValue)
+        .reduce((a, b) => a + b, 0)
+    );
+
+    setZomatoOrders(
+      allReports.salesSummeryByOrderSource
+        .filter(function (el) {
+          return el.orderSource === "Z";
+        })
+        .map((a) => a.orderValue)
+        .reduce((a, b) => a + b, 0)
+    );
+
+    setSwizyOrders(
+      allReports.salesSummeryByOrderSource
+        .filter(function (el) {
+          return el.orderSource === "SWIZY";
+        })
+        .map((a) => a.orderValue)
+        .reduce((a, b) => a + b, 0)
+    );
+  }, [allReports]);
+
+  const data = {
+    labels,
+    datasets: [
+      /* {
+        label: "Sale",
+        data: labels.map(() => Math.floor(Math.random() * 1000)),
+        backgroundColor: "rgba(255, 99, 132, 0.5)",
+      }, */
+      {
+        label: "Order",
+        data: [
+          mobileOrders,
+          webOrders,
+          selfOrders,
+          dineOrders,
+          zomatoOrders,
+          swizyOrders,
+        ],
+        backgroundColor: "rgba(53, 162, 235, 0.5)",
+      },
+    ],
+  };
+
   return (
     <div className="mt-3 p-3">
       <div className="mb-3">
@@ -59,9 +141,17 @@ export const SalesRevenueByChanelChart = () => {
           Sales Revenue by Channels
         </Typography>
       </div>
-      <Bar options={options} data={data} height="100px" />
+      <div ref={ref}>
+        <Bar options={options} data={data} height="100px" />
+      </div>
       <div>
-        <Button variant="text">Download Full Report</Button>
+        <Pdf targetRef={ref} filename="Sales Revenue by Channels.pdf">
+          {({ toPdf }) => (
+            <Button onClick={toPdf} variant="text">
+              Download Full Report
+            </Button>
+          )}
+        </Pdf>
       </div>
     </div>
   );

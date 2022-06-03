@@ -80,12 +80,12 @@ export const AdminDashboard = () => {
         getAllReports(
           selectedStoreObj.restaurantId,
           selectedStoreObj.storeId,
-          "2021-05-01",
-          "2022-12-06"
+          dateState[0].startDate.toISOString().slice(0, 10),
+          dateState[0].endDate.toISOString().slice(0, 10)
         )
       );
     }
-  }, []);
+  }, [dateState]);
 
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -111,8 +111,8 @@ export const AdminDashboard = () => {
       getAllReports(
         store.restaurantId,
         store.storeId,
-        "2021-05-01",
-        "2022-12-06"
+        dateState[0].startDate.toISOString().slice(0, 10),
+        dateState[0].endDate.toISOString().slice(0, 10)
       )
     );
   };
@@ -121,6 +121,19 @@ export const AdminDashboard = () => {
     <div>
       <Layout sidebar>
         <div>
+          <Row>
+            <div
+              className="w-100 text-center p-3 mb-3"
+              style={{
+                color: "#2E75B6",
+                backgroundColor: "#F2F2F2",
+              }}
+            >
+              <Typography sx={{ fontWeight: "bold !important" }}>
+                ADMIN DASHBOARD
+              </Typography>
+            </div>
+          </Row>
           <Row>
             <Dropdown
               className="d-inline mx-2"
@@ -147,7 +160,7 @@ export const AdminDashboard = () => {
                 aria-expanded={open ? "true" : undefined}
                 onClick={handleClick}
               >
-                Dashboard{" "}
+                Custom{" "}
                 <ArrowDropDownIcon
                   sx={{ width: "20px", height: "20px" }}
                 ></ArrowDropDownIcon>
@@ -265,9 +278,20 @@ export const AdminDashboard = () => {
                     <Typography sx={{ color: "#595959" }}>
                       Total Sales
                     </Typography>
-                    <Typography sx={{ fontWeight: "bold" }}>
-                      Rs 109922.98
-                    </Typography>
+                    {allReports.salesSummeryByDateList &&
+                    allReports.salesSummeryByDateList.length ? (
+                      <Typography sx={{ fontWeight: "bold" }}>
+                        Rs{" "}
+                        {allReports.salesSummeryByDateList
+                          .map((a) => a.orderValue)
+                          .reduce((a, b) => a + b, 0)
+                          .toFixed(2)}
+                      </Typography>
+                    ) : (
+                      <Typography sx={{ fontWeight: "bold" }}>
+                        Rs 0.00
+                      </Typography>
+                    )}
                   </NumberDiv>
                 </Col>
                 <Col sm={2} className="pl-0">
@@ -275,9 +299,28 @@ export const AdminDashboard = () => {
                     <Typography sx={{ color: "#595959" }}>
                       Avg. Order Value
                     </Typography>
-                    <Typography sx={{ fontWeight: "bold" }}>
-                      Rs 500.65
-                    </Typography>
+                    {allReports.salesSummeryByDateList &&
+                    allReports.salesSummeryByDateList.length ? (
+                      <Typography sx={{ fontWeight: "bold" }}>
+                        Rs{" "}
+                        {Number(
+                          Number(
+                            allReports.salesSummeryByDateList
+                              .map((a) => a.orderValue)
+                              .reduce((a, b) => a + b, 0)
+                          ) /
+                            Number(
+                              allReports.salesSummeryByDateList
+                                .map((a) => a.noOfOrders)
+                                .reduce((a, b) => a + b, 0)
+                            )
+                        ).toFixed(2)}
+                      </Typography>
+                    ) : (
+                      <Typography sx={{ fontWeight: "bold" }}>
+                        Rs 0.00
+                      </Typography>
+                    )}
                   </NumberDiv>
                 </Col>
                 <Col sm={2} className="pl-0">
@@ -285,7 +328,16 @@ export const AdminDashboard = () => {
                     <Typography sx={{ color: "#595959" }}>
                       Total Orders
                     </Typography>
-                    <Typography sx={{ fontWeight: "bold" }}>509</Typography>
+                    {allReports.salesSummeryByDateList &&
+                    allReports.salesSummeryByDateList.length ? (
+                      <Typography sx={{ fontWeight: "bold" }}>
+                        {allReports.salesSummeryByDateList
+                          .map((a) => a.noOfOrders)
+                          .reduce((a, b) => a + b, 0)}
+                      </Typography>
+                    ) : (
+                      <Typography sx={{ fontWeight: "bold" }}>0</Typography>
+                    )}
                   </NumberDiv>
                 </Col>
               </Row>
@@ -293,23 +345,94 @@ export const AdminDashboard = () => {
             <div>
               <Row>
                 <Col sm={6} className="pl-0">
-                  <SalesOverTimeChart></SalesOverTimeChart>
+                  {allReports.salesSummeryByDateList &&
+                  allReports.salesSummeryByDateList.length > 0 ? (
+                    <SalesOverTimeChart></SalesOverTimeChart>
+                  ) : (
+                    <div className="mb-3 pl-3 pt-3">
+                      <Typography sx={{ fontWeight: "bold", color: "#7F7F7F" }}>
+                        Sales Over Time
+                      </Typography>
+                      <Alert severity="warning" className="mt-4">
+                        No reports to show!
+                      </Alert>
+                    </div>
+                  )}
                 </Col>
                 <Col sm={6} className="pl-0">
-                  <SalesRevenueByChanelChart></SalesRevenueByChanelChart>
+                  {allReports.salesSummeryByOrderSource &&
+                  allReports.salesSummeryByOrderSource.length > 0 ? (
+                    <SalesRevenueByChanelChart></SalesRevenueByChanelChart>
+                  ) : (
+                    <div className="mb-3 pl-3 pt-3">
+                      <Typography sx={{ fontWeight: "bold", color: "#7F7F7F" }}>
+                        Sales Revenue by Channels
+                      </Typography>
+                      <Alert severity="warning" className="mt-4">
+                        No reports to show!
+                      </Alert>
+                    </div>
+                  )}
                 </Col>
               </Row>
               <Row>
                 <Col sm={6} className="pl-0">
-                  <TopSellingDishTable></TopSellingDishTable>
+                  {allReports.salesSummeryByDishType &&
+                  allReports.salesSummeryByDishType.length > 0 ? (
+                    <TopSellingDishTable></TopSellingDishTable>
+                  ) : (
+                    <div className="mb-3 pl-3 pt-3">
+                      <Typography sx={{ fontWeight: "bold", color: "#7F7F7F" }}>
+                        Top Selling Dish
+                      </Typography>
+                      <Alert severity="warning" className="mt-4">
+                        No reports to show!
+                      </Alert>
+                    </div>
+                  )}
                 </Col>
                 <Col sm={6} className="pl-0">
-                  <TopPayingCustomerTable></TopPayingCustomerTable>
+                  {allReports.salesSummeryByCustomer &&
+                  allReports.salesSummeryByCustomer.length > 0 ? (
+                    <TopPayingCustomerTable></TopPayingCustomerTable>
+                  ) : (
+                    <div className="mb-3 pl-3 pt-3">
+                      <Typography sx={{ fontWeight: "bold", color: "#7F7F7F" }}>
+                        Top Paying Customer
+                      </Typography>
+                      <Alert severity="warning" className="mt-4">
+                        No reports to show!
+                      </Alert>
+                    </div>
+                  )}
                 </Col>
               </Row>
               <Row>
                 <Col sm={6} className="pl-0">
-                  <RevenueByPaymentMode></RevenueByPaymentMode>
+                  {allReports.salesSummeryByPaymentMode &&
+                  allReports.salesSummeryByPaymentMode.length > 0 ? (
+                    <RevenueByPaymentMode
+                      totalOrders={
+                        allReports.salesSummeryByDateList &&
+                        allReports.salesSummeryByDateList.length
+                          ? Number(
+                              allReports.salesSummeryByDateList
+                                .map((a) => a.noOfOrders)
+                                .reduce((a, b) => a + b, 0)
+                            )
+                          : 0
+                      }
+                    ></RevenueByPaymentMode>
+                  ) : (
+                    <div className="mb-3 pl-3 pt-3">
+                      <Typography sx={{ fontWeight: "bold", color: "#7F7F7F" }}>
+                        Revenue By Payment Mode
+                      </Typography>
+                      <Alert severity="warning" className="mt-4">
+                        No reports to show!
+                      </Alert>
+                    </div>
+                  )}
                 </Col>
                 <Col sm={6} className="pl-0"></Col>
               </Row>

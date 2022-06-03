@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -21,6 +22,8 @@ const rows = [
 ];
 
 export const TopSellingDishTable = () => {
+  const allReports = useSelector((state) => state.report.allReports);
+
   return (
     <div className="mt-3 p-3">
       <div className="mb-3">

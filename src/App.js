@@ -5,7 +5,6 @@ import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css file
-import Home from "./containers/Home";
 import Signin from "./containers/Signin";
 import Signup from "./containers/Signup";
 import Products from "./containers/Products";
@@ -13,7 +12,6 @@ import Orders from "./containers/Orders";
 import Employee from "./containers/Employee";
 import Inventory from "./containers/Inventory";
 import Purchases from "./containers/Purchases";
-import Reports from "./containers/Reports";
 import PrivateRoute from "./HOC/PrivateRoute";
 import { useDispatch, useSelector } from "react-redux";
 import Category from "./containers/Category";
@@ -25,6 +23,7 @@ import { UserEntitlement } from "./containers/UserEntitlement";
 import { Customer } from "./containers/Customer";
 import { DeliveryBoy } from "./containers/DeliveryBoy";
 import { AdminDashboard } from "./containers/AdminDashboard";
+import { NewReports } from "./containers/NewReports";
 
 function App() {
   const dispatch = useDispatch();
@@ -69,7 +68,7 @@ function App() {
           path="/delivery-boy"
           component={DeliveryBoy}
         ></PrivateRoute>
-        <PrivateRoute path="/reports" component={Reports}></PrivateRoute>
+        <PrivateRoute path="/reports" component={NewReports}></PrivateRoute>
         <PrivateRoute path="/inventory" component={Inventory}></PrivateRoute>
         <PrivateRoute path="/purchases" component={Purchases}></PrivateRoute>
         <Route path="/signin" component={Signin}></Route>
