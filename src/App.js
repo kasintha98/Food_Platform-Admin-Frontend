@@ -5,10 +5,11 @@ import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css file
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Signin from "./containers/Signin";
 import Signup from "./containers/Signup";
 import Products from "./containers/Products";
-import Orders from "./containers/Orders";
 import Employee from "./containers/Employee";
 import Inventory from "./containers/Inventory";
 import Purchases from "./containers/Purchases";
@@ -24,6 +25,7 @@ import { Customer } from "./containers/Customer";
 import { DeliveryBoy } from "./containers/DeliveryBoy";
 import { AdminDashboard } from "./containers/AdminDashboard";
 import { NewReports } from "./containers/NewReports";
+import { NewOrders } from "./containers/NewOrders";
 
 function App() {
   const dispatch = useDispatch();
@@ -40,10 +42,11 @@ function App() {
 
   return (
     <div>
+      <ToastContainer theme="dark" />
       <Switch>
         <PrivateRoute path="/" exact component={AdminDashboard}></PrivateRoute>
         <PrivateRoute path="/products" component={Products}></PrivateRoute>
-        <PrivateRoute path="/orders" component={Orders}></PrivateRoute>
+        <PrivateRoute path="/orders" component={NewOrders}></PrivateRoute>
         <PrivateRoute path="/kds" component={KDS}></PrivateRoute>
         <PrivateRoute
           path="/restaurants"

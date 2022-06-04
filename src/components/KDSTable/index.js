@@ -15,6 +15,7 @@ import { getCustomerOrders } from "../../actions";
 
 const CusTableCell = styled(TableCell)`
   padding: 0;
+  font-size: 10px;
 `;
 
 export const KDSTable = (props) => {
@@ -27,8 +28,14 @@ export const KDSTable = (props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    const today = new Date();
     dispatch(
-      getCustomerOrders(props.restaurantId, props.storeId, "SUBMITTED")
+      getCustomerOrders(
+        props.restaurantId,
+        props.storeId,
+        "ACCEPTED",
+        `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
+      )
     ).then((res) => {
       if (res) {
         setFilteredData(filterByCounter(res, props.counter));
@@ -67,8 +74,12 @@ export const KDSTable = (props) => {
   return (
     <div className="mt-0">
       <Row>
-        <Col md={6} className="pl-0 ms-0" style={{ overflowX: "auto" }}>
-          <Table sx={{ minWidth: 750 }} aria-label="simple table">
+        <Col
+          md={6}
+          className="pl-0 ms-0"
+          style={{ overflowX: "auto", paddingRight: "5px" }}
+        >
+          <Table sx={{ minWidth: 703 }} aria-label="simple table">
             <TableHead>
               <TableRow
                 sx={{
@@ -287,8 +298,12 @@ export const KDSTable = (props) => {
             </TableBody>
           </Table>
         </Col>
-        <Col md={6} className="pr-0 me-0" style={{ overflowX: "auto" }}>
-          <Table sx={{ minWidth: 750 }} aria-label="simple table">
+        <Col
+          md={6}
+          className="pr-0 me-0"
+          style={{ overflowX: "auto", paddingLeft: "5px" }}
+        >
+          <Table sx={{ minWidth: 703 }} aria-label="simple table">
             <TableHead>
               <TableRow
                 sx={{

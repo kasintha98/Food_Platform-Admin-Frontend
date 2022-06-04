@@ -22,10 +22,10 @@ export const KDS = () => {
   const stores = useSelector((state) => state.store.stores);
 
   const [tabValue, setTabValue] = React.useState("ORDER ROUTING SCREEN");
-  const [selectedStore, setSelectedStore] = useState("");
+  const [selectedStore, setSelectedStore] = useState("ALL");
   const [selectedStoreObj, setSelectedStoreObj] = useState({
-    restaurantId: "ALL",
-    storeId: "ALL",
+    restaurantId: null,
+    storeId: null,
   });
 
   const handleChangeTab = (event, newValue) => {
@@ -87,6 +87,17 @@ export const KDS = () => {
                       label="Please select the store"
                       onChange={handleChangeStore}
                     >
+                      <CusMenuItem
+                        onClick={() => {
+                          handleSelectedStore({
+                            restaurantId: null,
+                            storeId: null,
+                          });
+                        }}
+                        value={"ALL"}
+                      >
+                        All Stores
+                      </CusMenuItem>
                       {stores.map((store) => (
                         <CusMenuItem
                           onClick={() => {
@@ -141,20 +152,6 @@ export const KDS = () => {
 
           <TabPanel value="ORDER ROUTING SCREEN">
             <div>
-              {/* <Row>
-                <div
-                  className="w-100 text-center p-3 mb-3"
-                  style={{
-                    color: "#2E75B6",
-                    backgroundColor: "#F2F2F2",
-                  }}
-                >
-                  <Typography sx={{ fontWeight: "bold !important" }}>
-                    KDS – ORDER ROUTING SCREEN
-                  </Typography>
-                </div>
-              </Row> */}
-
               <KDSTable
                 counter={null}
                 restaurantId={selectedStoreObj.restaurantId}
@@ -164,88 +161,6 @@ export const KDS = () => {
           </TabPanel>
           <TabPanel value="PIZZA COUNTER">
             <div>
-              {/* <Row>
-                <div
-                  className="w-100 text-center p-3 mb-3"
-                  style={{
-                    color: "#2E75B6",
-                    backgroundColor: "#F2F2F2",
-                  }}
-                >
-                  <Typography sx={{ fontWeight: "bold !important" }}>
-                    KDS – PIZZA COUNTER
-                  </Typography>
-                </div>
-              </Row> */}
-              {/* <Row className="align-items-center">
-                <Col sm={2} style={{ maxWidth: "125px !important" }}>
-                  <div>
-                    <Typography sx={{ color: "#7F7F7F", fontWeight: "bold" }}>
-                      Select Store
-                    </Typography>
-                  </div>
-                </Col>
-                <Col sm={6} style={{ display: "flex" }}>
-                  <FormControl fullWidth>
-                    <InputLabel id="demo-simple-select-label">
-                      Please select the store
-                    </InputLabel>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      value={selectedStore}
-                      label="Please select the store"
-                      onChange={handleChangeStore}
-                    >
-                      {stores.map((store) => (
-                        <CusMenuItem
-                          onClick={() => {
-                            handleSelectedStore(store);
-                          }}
-                          value={store.resturantName}
-                        >
-                          <span>
-                            {store.resturantName}
-                            <br></br>
-                            <span
-                              style={{ fontSize: "0.70rem", color: "#767171" }}
-                            >
-                              {store.address1}
-                            </span>
-                            {store.address2 ? (
-                              <>
-                                ,{" "}
-                                <span
-                                  style={{
-                                    fontSize: "0.70rem",
-                                    color: "#767171",
-                                  }}
-                                >
-                                  {store.address2}
-                                </span>
-                              </>
-                            ) : null}
-                            {store.address3 ? (
-                              <>
-                                ,{" "}
-                                <span
-                                  style={{
-                                    fontSize: "0.70rem",
-                                    color: "#767171",
-                                  }}
-                                >
-                                  {store.address3}
-                                </span>
-                              </>
-                            ) : null}
-                          </span>
-                        </CusMenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Col>
-                <Col sm={4}></Col>
-              </Row> */}
               <KDSTable
                 restaurantId={selectedStoreObj.restaurantId}
                 storeId={selectedStoreObj.storeId}
@@ -255,88 +170,6 @@ export const KDS = () => {
           </TabPanel>
           <TabPanel value="CHINESE COUNTER">
             <div>
-              {/* <Row>
-                <div
-                  className="w-100 text-center p-3 mb-3"
-                  style={{
-                    color: "#2E75B6",
-                    backgroundColor: "#F2F2F2",
-                  }}
-                >
-                  <Typography sx={{ fontWeight: "bold !important" }}>
-                    KDS – CHINESE COUNTER
-                  </Typography>
-                </div>
-              </Row> */}
-              {/* <Row className="align-items-center">
-                <Col sm={2} style={{ maxWidth: "125px !important" }}>
-                  <div>
-                    <Typography sx={{ color: "#7F7F7F", fontWeight: "bold" }}>
-                      Select Store
-                    </Typography>
-                  </div>
-                </Col>
-                <Col sm={6} style={{ display: "flex" }}>
-                  <FormControl fullWidth>
-                    <InputLabel id="demo-simple-select-label">
-                      Please select the store
-                    </InputLabel>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      value={selectedStore}
-                      label="Please select the store"
-                      onChange={handleChangeStore}
-                    >
-                      {stores.map((store) => (
-                        <CusMenuItem
-                          onClick={() => {
-                            handleSelectedStore(store);
-                          }}
-                          value={store.resturantName}
-                        >
-                          <span>
-                            {store.resturantName}
-                            <br></br>
-                            <span
-                              style={{ fontSize: "0.70rem", color: "#767171" }}
-                            >
-                              {store.address1}
-                            </span>
-                            {store.address2 ? (
-                              <>
-                                ,{" "}
-                                <span
-                                  style={{
-                                    fontSize: "0.70rem",
-                                    color: "#767171",
-                                  }}
-                                >
-                                  {store.address2}
-                                </span>
-                              </>
-                            ) : null}
-                            {store.address3 ? (
-                              <>
-                                ,{" "}
-                                <span
-                                  style={{
-                                    fontSize: "0.70rem",
-                                    color: "#767171",
-                                  }}
-                                >
-                                  {store.address3}
-                                </span>
-                              </>
-                            ) : null}
-                          </span>
-                        </CusMenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Col>
-                <Col sm={4}></Col>
-              </Row> */}
               <KDSTable
                 restaurantId={selectedStoreObj.restaurantId}
                 storeId={selectedStoreObj.storeId}
@@ -346,88 +179,6 @@ export const KDS = () => {
           </TabPanel>
           <TabPanel value="DRINK &amp; DESERTS COUNTER">
             <div>
-              {/* <Row>
-                <div
-                  className="w-100 text-center p-3 mb-3"
-                  style={{
-                    color: "#2E75B6",
-                    backgroundColor: "#F2F2F2",
-                  }}
-                >
-                  <Typography sx={{ fontWeight: "bold !important" }}>
-                    KDS – DRINK &amp; DESERTS COUNTER
-                  </Typography>
-                </div>
-              </Row> */}
-              {/* <Row className="align-items-center">
-                <Col sm={2} style={{ maxWidth: "125px !important" }}>
-                  <div>
-                    <Typography sx={{ color: "#7F7F7F", fontWeight: "bold" }}>
-                      Select Store
-                    </Typography>
-                  </div>
-                </Col>
-                <Col sm={6} style={{ display: "flex" }}>
-                  <FormControl fullWidth>
-                    <InputLabel id="demo-simple-select-label">
-                      Please select the store
-                    </InputLabel>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      value={selectedStore}
-                      label="Please select the store"
-                      onChange={handleChangeStore}
-                    >
-                      {stores.map((store) => (
-                        <CusMenuItem
-                          onClick={() => {
-                            handleSelectedStore(store);
-                          }}
-                          value={store.resturantName}
-                        >
-                          <span>
-                            {store.resturantName}
-                            <br></br>
-                            <span
-                              style={{ fontSize: "0.70rem", color: "#767171" }}
-                            >
-                              {store.address1}
-                            </span>
-                            {store.address2 ? (
-                              <>
-                                ,{" "}
-                                <span
-                                  style={{
-                                    fontSize: "0.70rem",
-                                    color: "#767171",
-                                  }}
-                                >
-                                  {store.address2}
-                                </span>
-                              </>
-                            ) : null}
-                            {store.address3 ? (
-                              <>
-                                ,{" "}
-                                <span
-                                  style={{
-                                    fontSize: "0.70rem",
-                                    color: "#767171",
-                                  }}
-                                >
-                                  {store.address3}
-                                </span>
-                              </>
-                            ) : null}
-                          </span>
-                        </CusMenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Col>
-                <Col sm={4}></Col>
-              </Row> */}
               <KDSTable
                 restaurantId={selectedStoreObj.restaurantId}
                 storeId={selectedStoreObj.storeId}
@@ -437,88 +188,6 @@ export const KDS = () => {
           </TabPanel>
           <TabPanel value="BURGER COUNTER">
             <div>
-              {/* <Row>
-                <div
-                  className="w-100 text-center p-3 mb-3"
-                  style={{
-                    color: "#2E75B6",
-                    backgroundColor: "#F2F2F2",
-                  }}
-                >
-                  <Typography sx={{ fontWeight: "bold !important" }}>
-                    KDS – BURGER COUNTER
-                  </Typography>
-                </div>
-              </Row> */}
-              {/* <Row className="align-items-center">
-                <Col sm={2} style={{ maxWidth: "125px !important" }}>
-                  <div>
-                    <Typography sx={{ color: "#7F7F7F", fontWeight: "bold" }}>
-                      Select Store
-                    </Typography>
-                  </div>
-                </Col>
-                <Col sm={6} style={{ display: "flex" }}>
-                  <FormControl fullWidth>
-                    <InputLabel id="demo-simple-select-label">
-                      Please select the store
-                    </InputLabel>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      value={selectedStore}
-                      label="Please select the store"
-                      onChange={handleChangeStore}
-                    >
-                      {stores.map((store) => (
-                        <CusMenuItem
-                          onClick={() => {
-                            handleSelectedStore(store);
-                          }}
-                          value={store.resturantName}
-                        >
-                          <span>
-                            {store.resturantName}
-                            <br></br>
-                            <span
-                              style={{ fontSize: "0.70rem", color: "#767171" }}
-                            >
-                              {store.address1}
-                            </span>
-                            {store.address2 ? (
-                              <>
-                                ,{" "}
-                                <span
-                                  style={{
-                                    fontSize: "0.70rem",
-                                    color: "#767171",
-                                  }}
-                                >
-                                  {store.address2}
-                                </span>
-                              </>
-                            ) : null}
-                            {store.address3 ? (
-                              <>
-                                ,{" "}
-                                <span
-                                  style={{
-                                    fontSize: "0.70rem",
-                                    color: "#767171",
-                                  }}
-                                >
-                                  {store.address3}
-                                </span>
-                              </>
-                            ) : null}
-                          </span>
-                        </CusMenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Col>
-                <Col sm={4}></Col>
-              </Row> */}
               <KDSTable
                 restaurantId={selectedStoreObj.restaurantId}
                 storeId={selectedStoreObj.storeId}

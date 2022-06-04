@@ -3,7 +3,12 @@ import { orderConstants } from "./constants";
 import { toast } from "react-toastify";
 
 //action to get customer orders from the database
-export const getCustomerOrders = (restaurantId, storeId, orderStatus) => {
+export const getCustomerOrders = (
+  restaurantId,
+  storeId,
+  orderStatus,
+  orderReceivedDate
+) => {
   return async (dispatch) => {
     dispatch({ type: orderConstants.GET_CUSTOMER_ORDER_REQUEST });
     try {
@@ -11,6 +16,7 @@ export const getCustomerOrders = (restaurantId, storeId, orderStatus) => {
         restaurantId,
         storeId,
         orderStatus,
+        orderReceivedDate,
       };
 
       const res = await axios.post("/queryOrderViewByParams", body);
@@ -35,27 +41,35 @@ export const getCustomerOrders = (restaurantId, storeId, orderStatus) => {
 };
 
 //action to update order status
-export const updateOrder = (payload) => {
+export const updateOrder = (orderId, orderStatus, tabType) => {
   return async (dispatch) => {
     dispatch({ type: orderConstants.UPDATE_CUSTOMER_ORDER_REQUEST });
 
     try {
-      const res = await axios.post("order/update", payload);
+      const res = await axios.post("/updateStatusByOrderId", null, {
+        params: {
+          orderId,
+          orderStatus,
+        },
+      });
 
-      if (res.status === 201) {
+      const today = new Date();
+
+      if (res.status === 200) {
         dispatch({
           type: orderConstants.UPDATE_CUSTOMER_ORDER_SUCCESS,
         });
-        dispatch(getCustomerOrders());
-        toast.success("Order status updated successfully!", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
+
+        dispatch(
+          getCustomerOrders(
+            null,
+            null,
+            tabType,
+            `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
+          )
+        );
+
+        toast.success("Order status updated successfully!");
       } else {
         const { error } = res.data;
         dispatch({
