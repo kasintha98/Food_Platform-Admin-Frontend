@@ -11,37 +11,41 @@ import styled from "@emotion/styled";
 import Alert from "@mui/material/Alert";
 import { Row, Col } from "react-bootstrap";
 import "./style.css";
-import { getCustomerOrders } from "../../actions";
+import { getCustomerOrders, updateOrderSubProdStatus } from "../../actions";
 
 const CusTableCell = styled(TableCell)`
   padding: 0;
-  font-size: 10px;
+  font-size: 14px;
 `;
 
 export const KDSTable = (props) => {
   const orders = useSelector((state) => state.order.orders);
   const loading = useSelector((state) => state.order.loading);
   const [filteredData, setFilteredData] = useState([]);
+  const [newSubStatus, setNewSubStatus] = useState(false);
   const [tableOneData, setTableOneData] = useState([]);
   const [tableTwoData, setTableTwoData] = useState([]);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const today = new Date();
-    dispatch(
-      getCustomerOrders(
-        props.restaurantId,
-        props.storeId,
-        "ACCEPTED",
-        `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
-      )
-    ).then((res) => {
-      if (res) {
-        setFilteredData(filterByCounter(res, props.counter));
-      }
-    });
-  }, [props.counter, props.restaurantId, props.storeId]);
+    const interval = setInterval(() => {
+      const today = new Date();
+      dispatch(
+        getCustomerOrders(
+          props.restaurantId,
+          props.storeId,
+          "ACCEPTED",
+          `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
+        )
+      ).then((res) => {
+        if (res) {
+          setFilteredData(filterByCounter(res, props.counter));
+        }
+      });
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [props.counter, props.restaurantId, props.storeId, newSubStatus]);
 
   const filterByCounter = (orders, counter) => {
     if (counter) {
@@ -56,7 +60,7 @@ export const KDSTable = (props) => {
       });
     }
 
-    let odd = [];
+    /* let odd = [];
     let even = [];
     orders.forEach((x, i) => {
       if (i % 2 === 0) {
@@ -66,17 +70,51 @@ export const KDSTable = (props) => {
         odd.push(x);
         setTableTwoData(odd);
       }
-    });
+    }); */
 
     return orders;
+  };
+
+  const handleUpdateOrderItemStatus = (
+    orderId,
+    productId,
+    subProductId,
+    currentOrderDetailStatus
+  ) => {
+    if (currentOrderDetailStatus === "SUBMITTED") {
+      dispatch(
+        updateOrderSubProdStatus(orderId, productId, subProductId, "ACCEPTED")
+      ).then((res) => {
+        if (res) {
+          newSubStatus ? setNewSubStatus(false) : setNewSubStatus(true);
+        }
+      });
+    }
+    if (currentOrderDetailStatus === "ACCEPTED") {
+      dispatch(
+        updateOrderSubProdStatus(orderId, productId, subProductId, "PROCESSING")
+      ).then((res) => {
+        if (res) {
+          newSubStatus ? setNewSubStatus(false) : setNewSubStatus(true);
+        }
+      });
+    }
+    if (currentOrderDetailStatus === "PROCESSING") {
+      dispatch(
+        updateOrderSubProdStatus(orderId, productId, subProductId, "FOOD READY")
+      ).then((res) => {
+        if (res) {
+          newSubStatus ? setNewSubStatus(false) : setNewSubStatus(true);
+        }
+      });
+    }
   };
 
   return (
     <div className="mt-0">
       <Row>
         <Col
-          md={6}
-          className="pl-0 ms-0"
+          className="p-0 m-0 col-12"
           style={{ overflowX: "auto", paddingRight: "5px" }}
         >
           <Table sx={{ minWidth: 703 }} aria-label="simple table">
@@ -143,9 +181,9 @@ export const KDSTable = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {tableOneData && tableOneData.length > 0 && !loading ? (
+              {filteredData && filteredData.length > 0 && !loading ? (
                 <>
-                  {tableOneData.map((order) => (
+                  {filteredData.map((order) => (
                     <TableRow>
                       <CusTableCell
                         align="center"
@@ -160,7 +198,7 @@ export const KDSTable = (props) => {
                         <Timer
                           active
                           duration={null}
-                          time={new Date(order.createdDate)}
+                          time={new Date() - new Date(order.createdDate)}
                         >
                           <Timecode />
                         </Timer>
@@ -181,7 +219,7 @@ export const KDSTable = (props) => {
                         align="center"
                         sx={{ border: "1px solid #000" }}
                       >
-                        {order.customerId}
+                        {order.customerName}
                       </CusTableCell>
                       <CusTableCell
                         align="left"
@@ -243,34 +281,18 @@ export const KDSTable = (props) => {
                                 ? "back-green"
                                 : "back-orange"
                             }
+                            onClick={() => {
+                              handleUpdateOrderItemStatus(
+                                item.orderId,
+                                item.productId,
+                                item.subProductId,
+                                item.orderDetailStatus
+                              );
+                            }}
                           >
                             <div style={{ borderBottom: "1px solid #000" }}>
                               {item.orderDetailStatus}
                             </div>
-
-                            {item.choice ? (
-                              <>
-                                <br></br>
-                                {/* <hr></hr> */}
-                                {item.choice.map((ch) => (
-                                  <p style={{ margin: 0 }}>
-                                    {ch.status} <br></br>
-                                  </p>
-                                ))}
-                              </>
-                            ) : null}
-
-                            {item.extra ? (
-                              <>
-                                <br></br>
-                                {/* <hr></hr> */}
-                                {item.extra.map((ch) => (
-                                  <p style={{ margin: 0 }}>
-                                    {ch.status} <br></br>
-                                  </p>
-                                ))}
-                              </>
-                            ) : null}
                           </div>
                         ))}
                       </CusTableCell>
@@ -298,7 +320,7 @@ export const KDSTable = (props) => {
             </TableBody>
           </Table>
         </Col>
-        <Col
+        {/* <Col
           md={6}
           className="pr-0 me-0"
           style={{ overflowX: "auto", paddingLeft: "5px" }}
@@ -471,30 +493,6 @@ export const KDSTable = (props) => {
                             <div style={{ borderBottom: "1px solid #000" }}>
                               {item.orderDetailStatus}
                             </div>
-
-                            {item.choice ? (
-                              <>
-                                <br></br>
-                                {/* <hr></hr> */}
-                                {item.choice.map((ch) => (
-                                  <p style={{ margin: 0 }}>
-                                    {ch.status} <br></br>
-                                  </p>
-                                ))}
-                              </>
-                            ) : null}
-
-                            {item.extra ? (
-                              <>
-                                <br></br>
-                                {/* <hr></hr> */}
-                                {item.extra.map((ch) => (
-                                  <p style={{ margin: 0 }}>
-                                    {ch.status} <br></br>
-                                  </p>
-                                ))}
-                              </>
-                            ) : null}
                           </div>
                         ))}
                       </CusTableCell>
@@ -521,7 +519,7 @@ export const KDSTable = (props) => {
               )}
             </TableBody>
           </Table>
-        </Col>
+        </Col> */}
       </Row>
     </div>
   );

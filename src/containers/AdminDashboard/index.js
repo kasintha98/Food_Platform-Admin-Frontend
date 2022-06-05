@@ -226,7 +226,7 @@ export const AdminDashboard = () => {
                     >
                       <span>
                         {store.resturantName}
-                        <br></br>
+                        {/* <br></br>
                         <span style={{ fontSize: "0.70rem", color: "#767171" }}>
                           {store.address1}
                         </span>
@@ -255,7 +255,7 @@ export const AdminDashboard = () => {
                               {store.address3}
                             </span>
                           </>
-                        ) : null}
+                        ) : null} */}
                       </span>
                     </CusMenuItem>
                   ))}

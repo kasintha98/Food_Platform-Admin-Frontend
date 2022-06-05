@@ -82,3 +82,48 @@ export const updateOrder = (orderId, orderStatus, tabType) => {
     }
   };
 };
+
+//action to update order sub prod status status
+export const updateOrderSubProdStatus = (
+  orderId,
+  productId,
+  subProductId,
+  orderStatus,
+  tabType
+) => {
+  return async (dispatch) => {
+    dispatch({ type: orderConstants.UPDATE_ORDER_SUBPROD_STATUS_REQUEST });
+
+    try {
+      const res = await axios.post(
+        "/updateOrderDetailsStatusBySubProductId",
+        null,
+        {
+          params: {
+            orderId,
+            productId,
+            subProductId,
+            status: orderStatus,
+          },
+        }
+      );
+
+      if (res.status === 200) {
+        dispatch({
+          type: orderConstants.UPDATE_ORDER_SUBPROD_STATUS_SUCCESS,
+        });
+
+        toast.success("Order item status updated successfully!");
+        return res.data;
+      } else {
+        const { error } = res.data;
+        dispatch({
+          type: orderConstants.UPDATE_ORDER_SUBPROD_STATUS_FAILURE,
+          payload: { error },
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};

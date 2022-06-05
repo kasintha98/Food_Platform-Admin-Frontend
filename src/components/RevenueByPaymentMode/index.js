@@ -9,6 +9,10 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Typography, Button } from "@mui/material";
 import Pdf from "react-to-pdf";
+import ReactExport from "react-export-excel";
+const ExcelFile = ReactExport.ExcelFile;
+const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
+const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
 export const RevenueByPaymentMode = (props) => {
   const allReports = useSelector((state) => state.report.allReports);
@@ -327,13 +331,34 @@ export const RevenueByPaymentMode = (props) => {
         </Table>
       </TableContainer>
       <div>
-        <Pdf targetRef={ref} filename="Revenue By Payment Mode.pdf">
+        {/* <Pdf targetRef={ref} filename="Revenue By Payment Mode.pdf">
           {({ toPdf }) => (
             <Button onClick={toPdf} variant="text">
               Download Full Report
             </Button>
           )}
-        </Pdf>
+        </Pdf> */}
+        <ExcelFile
+          element={<Button variant="text">Download Full Report</Button>}
+        >
+          <ExcelSheet
+            data={allReports.salesSummeryByPaymentMode}
+            name="Revenue By Payment Mode"
+          >
+            <ExcelColumn label="Year" value="year" />
+            <ExcelColumn label="Month" value="month" />
+            <ExcelColumn label="Full Date" value="orderDate" />
+            <ExcelColumn label="Restaurant ID" value="restaurantId" />
+            <ExcelColumn label="Store ID" value="storeId" />
+            <ExcelColumn label="Restaurant Name" value="restaurantName" />
+            <ExcelColumn label="Number Of Orders" value="noOfOrders" />
+            <ExcelColumn label="Total Order Value" value="orderValue" />
+            <ExcelColumn label="Payment Mode" value="paymentMode" />
+            <ExcelColumn label="Report Name" value="reportName" />
+            {/* <ExcelColumn label="Marital Status"
+                                 value={(col) => col.is_married ? "Married" : "Single"}/> */}
+          </ExcelSheet>
+        </ExcelFile>
       </div>
     </div>
   );

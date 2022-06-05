@@ -12,6 +12,10 @@ import {
 import { Bar } from "react-chartjs-2";
 import { Typography, Button } from "@mui/material";
 import Pdf from "react-to-pdf";
+import ReactExport from "react-export-excel";
+const ExcelFile = ReactExport.ExcelFile;
+const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
+const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
 ChartJS.register(
   CategoryScale,
@@ -145,13 +149,34 @@ export const SalesRevenueByChanelChart = () => {
         <Bar options={options} data={data} height="100px" />
       </div>
       <div>
-        <Pdf targetRef={ref} filename="Sales Revenue by Channels.pdf">
+        {/* <Pdf targetRef={ref} filename="Sales Revenue by Channels.pdf">
           {({ toPdf }) => (
             <Button onClick={toPdf} variant="text">
               Download Full Report
             </Button>
           )}
-        </Pdf>
+        </Pdf> */}
+        <ExcelFile
+          element={<Button variant="text">Download Full Report</Button>}
+        >
+          <ExcelSheet
+            data={allReports.salesSummeryByOrderSource}
+            name="Sales Over Time"
+          >
+            <ExcelColumn label="Year" value="year" />
+            <ExcelColumn label="Month" value="month" />
+            <ExcelColumn label="Full Date" value="orderDate" />
+            <ExcelColumn label="Restaurant ID" value="restaurantId" />
+            <ExcelColumn label="Store ID" value="storeId" />
+            <ExcelColumn label="Restaurant Name" value="restaurantName" />
+            <ExcelColumn label="Number Of Orders" value="noOfOrders" />
+            <ExcelColumn label="Total Order Value" value="orderValue" />
+            <ExcelColumn label="Order Source" value="orderSource" />
+            <ExcelColumn label="Report Name" value="reportName" />
+            {/* <ExcelColumn label="Marital Status"
+                                 value={(col) => col.is_married ? "Married" : "Single"}/> */}
+          </ExcelSheet>
+        </ExcelFile>
       </div>
     </div>
   );

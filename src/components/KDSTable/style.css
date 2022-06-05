@@ -5,3 +5,13 @@
 .back-orange {
   background-color: #fff2cc;
 }
+
+.back-green:hover {
+  cursor: pointer;
+  background-color: #c7eeb0;
+}
+
+.back-orange:hover {
+  cursor: pointer;
+  background-color: #f7db86;
+}

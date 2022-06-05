@@ -107,7 +107,7 @@ export const KDS = () => {
                         >
                           <span>
                             {store.resturantName}
-                            <br></br>
+                            {/* <br></br>
                             <span
                               style={{ fontSize: "0.70rem", color: "#767171" }}
                             >
@@ -138,7 +138,7 @@ export const KDS = () => {
                                   {store.address3}
                                 </span>
                               </>
-                            ) : null}
+                            ) : null} */}
                           </span>
                         </CusMenuItem>
                       ))}
