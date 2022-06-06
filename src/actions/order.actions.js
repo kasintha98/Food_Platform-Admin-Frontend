@@ -26,10 +26,41 @@ export const getCustomerOrders = (
           type: orderConstants.GET_CUSTOMER_ORDER_SUCCESS,
           payload: res.data,
         });
+        dispatch(getAllOrders(orderReceivedDate));
         return res.data;
       } else {
         dispatch({
           type: orderConstants.GET_CUSTOMER_ORDER_FAILURE,
+          payload: res.data,
+        });
+        return false;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+//action to get all orders from the database
+export const getAllOrders = (orderReceivedDate) => {
+  return async (dispatch) => {
+    dispatch({ type: orderConstants.GET_ALL_ORDER_REQUEST });
+    try {
+      const body = {
+        orderReceivedDate,
+      };
+
+      const res = await axios.post("/queryOrderViewByParams", body);
+
+      if (res.status === 200) {
+        dispatch({
+          type: orderConstants.GET_ALL_ORDER_SUCCESS,
+          payload: res.data,
+        });
+        return res.data;
+      } else {
+        dispatch({
+          type: orderConstants.GET_ALL_ORDER_FAILURE,
           payload: res.data,
         });
         return false;

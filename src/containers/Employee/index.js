@@ -83,7 +83,7 @@ export default function Employee(props) {
   ];
 
   return (
-    <Layout sidebar>
+    <Layout sidebar headerTitle="Employee">
       <Container>
         <Row>
           <Col md={12}>

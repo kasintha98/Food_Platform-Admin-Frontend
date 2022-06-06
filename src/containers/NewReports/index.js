@@ -92,10 +92,10 @@ export const NewReports = () => {
   };
 
   return (
-    <Layout sidebar>
+    <Layout sidebar headerTitle="Reports">
       <div>
         <div>
-          <Row>
+          {/* <Row>
             <div
               className="w-100 text-center p-3 mb-3"
               style={{
@@ -107,7 +107,7 @@ export const NewReports = () => {
                 REPORTS
               </Typography>
             </div>
-          </Row>
+          </Row> */}
           <Row>
             <Dropdown
               className="d-inline mx-2"

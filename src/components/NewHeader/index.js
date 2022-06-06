@@ -81,7 +81,8 @@ export const NewHeader = (props) => {
             height="30"
             className="d-inline-block align-top"
           />
-          &nbsp; &nbsp; Admin Dashboard
+          &nbsp; &nbsp;{" "}
+          {props.headerTitle ? props.headerTitle : "Admin Dashboard"}
         </Link>
         <Nav className="mr-auto"></Nav>
         {auth.authenticate ? renderLoggedInLinks() : renderNonLoggedInLinks()}

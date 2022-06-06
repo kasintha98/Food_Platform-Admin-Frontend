@@ -212,7 +212,7 @@ export default function Inventory(props) {
   };
 
   return (
-    <NewLayout sidebar>
+    <NewLayout sidebar headerTitle="Inventory Management">
       <ToastContainer />
       {inventory.loading ? (
         <div class="d-flex justify-content-center">

@@ -774,7 +774,7 @@ function Products(props) {
   };
 
   return (
-    <Layout sidebar>
+    <Layout sidebar headerTitle="Menu">
       <ToastContainer />
       <Container>
         <Row>

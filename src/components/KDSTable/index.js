@@ -1,4 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, {
+  useEffect,
+  useState,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Timer from "react-timer-wrapper";
 import Timecode from "react-timecode";
@@ -11,14 +16,18 @@ import styled from "@emotion/styled";
 import Alert from "@mui/material/Alert";
 import { Row, Col } from "react-bootstrap";
 import "./style.css";
-import { getCustomerOrders, updateOrderSubProdStatus } from "../../actions";
+import {
+  getAllOrders,
+  getCustomerOrders,
+  updateOrderSubProdStatus,
+} from "../../actions";
 
 const CusTableCell = styled(TableCell)`
   padding: 0;
   font-size: 14px;
 `;
 
-export const KDSTable = (props) => {
+export const KDSTable = forwardRef((props, ref) => {
   const orders = useSelector((state) => state.order.orders);
   const loading = useSelector((state) => state.order.loading);
   const [filteredData, setFilteredData] = useState([]);
@@ -29,23 +38,24 @@ export const KDSTable = (props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      const today = new Date();
-      dispatch(
-        getCustomerOrders(
-          props.restaurantId,
-          props.storeId,
-          "ACCEPTED",
-          `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
-        )
-      ).then((res) => {
-        if (res) {
-          setFilteredData(filterByCounter(res, props.counter));
-        }
-      });
-    }, 5000);
-    return () => clearInterval(interval);
+    const today = new Date();
+    dispatch(
+      getCustomerOrders(
+        props.restaurantId,
+        props.storeId,
+        "ACCEPTED",
+        `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
+      )
+    ).then((res) => {
+      if (res) {
+        setFilteredData(filterByCounter(res, props.counter));
+      }
+    });
   }, [props.counter, props.restaurantId, props.storeId, newSubStatus]);
+
+  useImperativeHandle(ref, () => ({
+    handleRefresh,
+  }));
 
   const filterByCounter = (orders, counter) => {
     if (counter) {
@@ -73,6 +83,14 @@ export const KDSTable = (props) => {
     }); */
 
     return orders;
+  };
+
+  const handleRefresh = () => {
+    if (newSubStatus) {
+      setNewSubStatus(false);
+    } else {
+      setNewSubStatus(true);
+    }
   };
 
   const handleUpdateOrderItemStatus = (
@@ -523,4 +541,4 @@ export const KDSTable = (props) => {
       </Row>
     </div>
   );
-};
+});

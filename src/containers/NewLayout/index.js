@@ -120,6 +120,7 @@ function NewLayout(props) {
       <NewHeader
         handleDrawerToggle={handleDrawerToggle}
         drawerWidth={props.sidebar ? 240 : 0}
+        headerTitle={props.headerTitle}
       ></NewHeader>
       {props.sidebar ? (
         <>

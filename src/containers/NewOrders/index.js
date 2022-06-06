@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import NewLayout from "../NewLayout";
 import { Row } from "react-bootstrap";
 import { Typography, Box, Tab } from "@mui/material";
@@ -31,15 +32,16 @@ const CusTabList = styled(TabList)`
 `;
 
 export const NewOrders = () => {
-  const [tabValue, setTabValue] = React.useState("SUBMITTED");
+  const allOrders = useSelector((state) => state.order.allOrders);
+  const [tabValue, setTabValue] = useState("SUBMITTED");
 
   const handleChangeTab = (event, newValue) => {
     setTabValue(newValue);
   };
 
   return (
-    <NewLayout sidebar>
-      <Row>
+    <NewLayout sidebar headerTitle="Orders">
+      {/* <Row>
         <div
           className="w-100 text-center p-3 mb-3"
           style={{
@@ -49,7 +51,7 @@ export const NewOrders = () => {
         >
           <Typography sx={{ fontWeight: "bold !important" }}>ORDERS</Typography>
         </div>
-      </Row>
+      </Row> */}
       <TabContext value={tabValue}>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
           <CusTabList
@@ -59,13 +61,104 @@ export const NewOrders = () => {
               style: { background: "transparent" },
             }}
           >
-            <CusTab label="SUBMITTED" value="SUBMITTED" />
-            <CusTab label="ACCEPTED" value="ACCEPTED" />
-            <CusTab label="PROCESSING" value="PROCESSING" />
-            <CusTab label="FOOD READY" value="FOOD READY" />
-            <CusTab label="OUT FOR DELIVERY" value="OUT FOR DELIVERY" />
-            <CusTab label="DELIVERED" value="DELIVERED" />
-            <CusTab label="CANCELLED" value="CANCELLED" />
+            <CusTab
+              label={
+                <span>
+                  SUBMITTED <br></br> (
+                  {
+                    allOrders.filter(function (el) {
+                      return el.orderStatus === "SUBMITTED";
+                    }).length
+                  }
+                  )
+                </span>
+              }
+              value="SUBMITTED"
+            />
+            <CusTab
+              label={
+                <span>
+                  ACCEPTED <br></br> (
+                  {
+                    allOrders.filter(function (el) {
+                      return el.orderStatus === "ACCEPTED";
+                    }).length
+                  }
+                  )
+                </span>
+              }
+              value="ACCEPTED"
+            />
+            <CusTab
+              label={
+                <span>
+                  ACCEPTED <br></br> (
+                  {
+                    allOrders.filter(function (el) {
+                      return el.orderStatus === "PROCESSING";
+                    }).length
+                  }
+                  )
+                </span>
+              }
+              value="PROCESSING"
+            />
+            <CusTab
+              label={
+                <span>
+                  ACCEPTED <br></br> (
+                  {
+                    allOrders.filter(function (el) {
+                      return el.orderStatus === "FOOD READY";
+                    }).length
+                  }
+                  )
+                </span>
+              }
+              value="FOOD READY"
+            />
+            <CusTab
+              label={
+                <span>
+                  ACCEPTED <br></br> (
+                  {
+                    allOrders.filter(function (el) {
+                      return el.orderStatus === "OUT FOR DELIVERY";
+                    }).length
+                  }
+                  )
+                </span>
+              }
+              value="OUT FOR DELIVERY"
+            />
+            <CusTab
+              label={
+                <span>
+                  ACCEPTED <br></br> (
+                  {
+                    allOrders.filter(function (el) {
+                      return el.orderStatus === "DELIVERED";
+                    }).length
+                  }
+                  )
+                </span>
+              }
+              value="DELIVERED"
+            />
+            <CusTab
+              label={
+                <span>
+                  ACCEPTED <br></br> (
+                  {
+                    allOrders.filter(function (el) {
+                      return el.orderStatus === "CANCELLED";
+                    }).length
+                  }
+                  )
+                </span>
+              }
+              value="CANCELLED"
+            />
           </CusTabList>
         </Box>
         <CusTabPanel value="SUBMITTED">

@@ -66,9 +66,9 @@ export const UserEntitlement = () => {
   };
 
   return (
-    <Layout sidebar>
+    <Layout sidebar headerTitle="User Entitlements">
       <div>
-        <Row>
+        {/* <Row>
           <div
             className="w-100 text-center p-3 mb-3"
             style={{
@@ -80,7 +80,7 @@ export const UserEntitlement = () => {
               USER ENTITLEMENTS
             </Typography>
           </div>
-        </Row>
+        </Row> */}
       </div>
       <div>
         <Row className="align-items-center">

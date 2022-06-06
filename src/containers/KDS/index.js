@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import styled from "@emotion/styled";
 import Layout from "../NewLayout";
@@ -12,14 +12,16 @@ import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { Row, Col } from "react-bootstrap";
-import { Typography } from "@mui/material";
+import { Typography, IconButton } from "@mui/material";
 import { KDSTable } from "../../components/KDSTable";
 import { getCustomerOrders } from "../../actions";
+import RefreshIcon from "@mui/icons-material/Refresh";
 
 const CusMenuItem = styled(MenuItem)``;
 
 export const KDS = () => {
   const stores = useSelector((state) => state.store.stores);
+  const refreshRef = useRef();
 
   const [tabValue, setTabValue] = React.useState("ORDER ROUTING SCREEN");
   const [selectedStore, setSelectedStore] = useState("ALL");
@@ -42,7 +44,7 @@ export const KDS = () => {
   };
 
   return (
-    <Layout sidebar>
+    <Layout sidebar headerTitle="KDS">
       <Box sx={{ width: "100%", marginTop: "-20px" }}>
         <TabContext value={tabValue}>
           <Row>
@@ -75,7 +77,7 @@ export const KDS = () => {
                     Select Store
                   </Typography>
                 </div>
-                <Col className="col-8 " style={{ display: "flex" }}>
+                <Col className="col-6" style={{ display: "flex" }}>
                   <FormControl fullWidth>
                     <InputLabel id="demo-simple-select-label">
                       Please select the store
@@ -145,7 +147,15 @@ export const KDS = () => {
                     </Select>
                   </FormControl>
                 </Col>
-                <Col sm={4}></Col>
+                <Col className="col-3">
+                  <IconButton
+                    onClick={() => {
+                      refreshRef.current.handleRefresh();
+                    }}
+                  >
+                    <RefreshIcon />
+                  </IconButton>
+                </Col>
               </Row>
             </Col>
           </Row>
@@ -156,6 +166,7 @@ export const KDS = () => {
                 counter={null}
                 restaurantId={selectedStoreObj.restaurantId}
                 storeId={selectedStoreObj.storeId}
+                ref={refreshRef}
               ></KDSTable>
             </div>
           </TabPanel>

@@ -41,7 +41,7 @@ export default function Reports(props) {
   };
 
   return (
-    <Layout sidebar>
+    <Layout sidebar headerTitle="Reports">
       <Row>
         <Col>
           <select

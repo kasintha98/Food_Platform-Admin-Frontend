@@ -143,9 +143,9 @@ export const AdminDashboard = () => {
 
   return (
     <div>
-      <Layout sidebar>
+      <Layout sidebar headerTitle="Admin Dashboard">
         <div>
-          <Row>
+          {/* <Row>
             <div
               className="w-100 text-center p-3 mb-3"
               style={{
@@ -157,7 +157,7 @@ export const AdminDashboard = () => {
                 ADMIN DASHBOARD
               </Typography>
             </div>
-          </Row>
+          </Row> */}
           <Row>
             <Dropdown
               className="d-inline mx-2"

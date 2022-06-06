@@ -2,6 +2,7 @@ import { orderConstants } from "../actions/constants";
 
 const initState = {
   orders: [],
+  allOrders: [],
   loading: false,
 };
 
@@ -24,6 +25,22 @@ export default (state = initState, action) => {
       state = {
         ...state,
         loading: false,
+      };
+      break;
+    case orderConstants.GET_ALL_ORDER_REQUEST:
+      state = {
+        ...state,
+      };
+      break;
+    case orderConstants.GET_ALL_ORDER_SUCCESS:
+      state = {
+        ...state,
+        allOrders: action.payload,
+      };
+      break;
+    case orderConstants.GET_ALL_ORDER_FAILURE:
+      state = {
+        ...state,
       };
       break;
   }

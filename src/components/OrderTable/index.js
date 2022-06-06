@@ -107,7 +107,7 @@ export const OrderTable = (props) => {
               <CusTableCell1 align="center">CUSTOMER NAME</CusTableCell1>
               <CusTableCell1 align="center">CUSTOMER ADDRESS</CusTableCell1>
               <CusTableCell1 align="center">CUSTOMER PHONE NO</CusTableCell1>
-              <CusTableCell1 align="center">AMT</CusTableCell1>
+              <CusTableCell1 align="center">AMOUNT</CusTableCell1>
               <CusTableCell1 align="center">ITEM ORDERED</CusTableCell1>
               <CusTableCell1 align="center">CURRENT STATUS</CusTableCell1>
               <CusTableCell1 align="center">ACTION</CusTableCell1>
@@ -118,7 +118,13 @@ export const OrderTable = (props) => {
               <>
                 {orders.map((row) => (
                   <TableRow key={row.orderId}>
-                    <CusTableCell2 align="center">{row.orderId}</CusTableCell2>
+                    <CusTableCell2 align="center">
+                      {row.orderId.slice(0, 11)} <br></br>
+                      {row.orderId.slice(11, 19)}
+                      <span style={{ color: "#4472c4" }}>
+                        {row.orderId.slice(19, 23)}
+                      </span>
+                    </CusTableCell2>
                     <CusTableCell2 align="center">
                       {new Date(row.createdDate).getFullYear()}-
                       {new Date(row.createdDate).getMonth() + 1}-
@@ -143,7 +149,10 @@ export const OrderTable = (props) => {
                     <CusTableCell2 align="center">
                       {row.mobileNumber}
                     </CusTableCell2>
-                    <CusTableCell2 align="center">
+                    <CusTableCell2
+                      align="center"
+                      sx={{ paddingLeft: 0, paddingRight: 0 }}
+                    >
                       Rs. {row.overallPriceWithTax}
                     </CusTableCell2>
                     <CusTableCell2 align="center">

@@ -3,7 +3,7 @@ import Layout from "../NewLayout";
 
 export const DeliveryCharges = () => {
   return (
-    <Layout sidebar>
+    <Layout sidebar headerTitle="Delivery Charges">
       <div>DeliveryCharges</div>
     </Layout>
   );
