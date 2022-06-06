@@ -176,6 +176,7 @@ export const KDS = () => {
                 restaurantId={selectedStoreObj.restaurantId}
                 storeId={selectedStoreObj.storeId}
                 counter={"PIZZA"}
+                ref={refreshRef}
               ></KDSTable>
             </div>
           </TabPanel>
@@ -185,6 +186,7 @@ export const KDS = () => {
                 restaurantId={selectedStoreObj.restaurantId}
                 storeId={selectedStoreObj.storeId}
                 counter="CHINESE"
+                ref={refreshRef}
               ></KDSTable>
             </div>
           </TabPanel>
@@ -194,6 +196,7 @@ export const KDS = () => {
                 restaurantId={selectedStoreObj.restaurantId}
                 storeId={selectedStoreObj.storeId}
                 counter="DRINKS"
+                ref={refreshRef}
               ></KDSTable>
             </div>
           </TabPanel>
@@ -203,6 +206,7 @@ export const KDS = () => {
                 restaurantId={selectedStoreObj.restaurantId}
                 storeId={selectedStoreObj.storeId}
                 counter="FAST FOOD"
+                ref={refreshRef}
               ></KDSTable>
             </div>
           </TabPanel>

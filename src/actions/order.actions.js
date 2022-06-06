@@ -72,7 +72,7 @@ export const getAllOrders = (orderReceivedDate) => {
 };
 
 //action to update order status
-export const updateOrder = (orderId, orderStatus, tabType) => {
+export const updateOrder = (orderId, orderStatus, tabType, hideToast) => {
   return async (dispatch) => {
     dispatch({ type: orderConstants.UPDATE_CUSTOMER_ORDER_REQUEST });
 
@@ -91,16 +91,24 @@ export const updateOrder = (orderId, orderStatus, tabType) => {
           type: orderConstants.UPDATE_CUSTOMER_ORDER_SUCCESS,
         });
 
-        dispatch(
-          getCustomerOrders(
-            null,
-            null,
-            tabType,
-            `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
-          )
-        );
+        if (tabType) {
+          dispatch(
+            getCustomerOrders(
+              null,
+              null,
+              tabType,
+              `${today.getFullYear()}-${
+                today.getMonth() + 1
+              }-${today.getDate()}`
+            )
+          );
+        }
 
-        toast.success("Order status updated successfully!");
+        if (!hideToast) {
+          toast.success("Order status updated successfully!");
+        }
+
+        return res.data;
       } else {
         const { error } = res.data;
         dispatch({

@@ -1,17 +1,25 @@
 .back-green {
-  background-color: #e2efda;
+  background-color: #08ff08;
 }
 
 .back-orange {
-  background-color: #fff2cc;
+  background-color: #ffa500;
+}
+
+.back-yellow {
+  background-color: #f6bd00f7;
 }
 
 .back-green:hover {
   cursor: pointer;
-  background-color: #c7eeb0;
+  background-color: #a2f572;
 }
 
 .back-orange:hover {
   cursor: pointer;
-  background-color: #f7db86;
+  background-color: #feb938;
+}
+
+.back-yellow:hover {
+  background-color: #ffd95b;
 }

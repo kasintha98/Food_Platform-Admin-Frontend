@@ -20,6 +20,7 @@ import {
   getAllOrders,
   getCustomerOrders,
   updateOrderSubProdStatus,
+  updateOrder,
 } from "../../actions";
 
 const CusTableCell = styled(TableCell)`
@@ -43,7 +44,7 @@ export const KDSTable = forwardRef((props, ref) => {
       getCustomerOrders(
         props.restaurantId,
         props.storeId,
-        "ACCEPTED",
+        null,
         `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
       )
     ).then((res) => {
@@ -63,12 +64,22 @@ export const KDSTable = forwardRef((props, ref) => {
         orders[i].orderDetails = orders[i].orderDetails.filter(function (el) {
           return el.kdsRoutingName === counter;
         });
+
+        if (props.counter) {
+          orders[i].orderDetails = orders[i].orderDetails.filter(function (el) {
+            return el.orderDetailStatus !== "FOOD READY";
+          });
+        }
       }
 
       orders = orders.filter(function (el) {
         return el.orderDetails.length > 0;
       });
     }
+
+    orders = orders.filter(function (el) {
+      return el.orderStatus === "ACCEPTED" || el.orderStatus === "PROCESSING";
+    });
 
     /* let odd = [];
     let even = [];
@@ -97,7 +108,8 @@ export const KDSTable = forwardRef((props, ref) => {
     orderId,
     productId,
     subProductId,
-    currentOrderDetailStatus
+    currentOrderDetailStatus,
+    order
   ) => {
     if (currentOrderDetailStatus === "SUBMITTED") {
       dispatch(
@@ -116,11 +128,27 @@ export const KDSTable = forwardRef((props, ref) => {
           newSubStatus ? setNewSubStatus(false) : setNewSubStatus(true);
         }
       });
+
+      if (order.orderStatus === "ACCEPTED") {
+        dispatch(updateOrder(orderId, "PROCESSING", null, true));
+      }
     }
     if (currentOrderDetailStatus === "PROCESSING") {
       dispatch(
         updateOrderSubProdStatus(orderId, productId, subProductId, "FOOD READY")
       ).then((res) => {
+        if (res) {
+          newSubStatus ? setNewSubStatus(false) : setNewSubStatus(true);
+        }
+      });
+    }
+
+    //If all order items are food ready then whole order is food ready
+    if (
+      order.orderDetails.filter((e) => e.orderDetailStatus === "FOOD READY")
+        .length === order.orderDetails.length
+    ) {
+      dispatch(updateOrder(orderId, "FOOD READY", null, true)).then((res) => {
         if (res) {
           newSubStatus ? setNewSubStatus(false) : setNewSubStatus(true);
         }
@@ -294,17 +322,21 @@ export const KDSTable = forwardRef((props, ref) => {
                         {order.orderDetails.map((item) => (
                           <div
                             className={
-                              item.orderDetailStatus === "FOOD READY" ||
-                              item.orderDetailStatus === "Completed"
+                              item.orderDetailStatus === "FOOD READY"
                                 ? "back-green"
-                                : "back-orange"
+                                : item.orderDetailStatus === "PROCESSING"
+                                ? "back-yellow"
+                                : item.orderDetailStatus === "ACCEPTED"
+                                ? "back-orange"
+                                : ""
                             }
                             onClick={() => {
                               handleUpdateOrderItemStatus(
                                 item.orderId,
                                 item.productId,
                                 item.subProductId,
-                                item.orderDetailStatus
+                                item.orderDetailStatus,
+                                order
                               );
                             }}
                           >

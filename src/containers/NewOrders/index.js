@@ -92,7 +92,7 @@ export const NewOrders = () => {
             <CusTab
               label={
                 <span>
-                  ACCEPTED <br></br> (
+                  PROCESSING <br></br> (
                   {
                     allOrders.filter(function (el) {
                       return el.orderStatus === "PROCESSING";
@@ -106,7 +106,7 @@ export const NewOrders = () => {
             <CusTab
               label={
                 <span>
-                  ACCEPTED <br></br> (
+                  FOOD READY <br></br> (
                   {
                     allOrders.filter(function (el) {
                       return el.orderStatus === "FOOD READY";
@@ -120,7 +120,7 @@ export const NewOrders = () => {
             <CusTab
               label={
                 <span>
-                  ACCEPTED <br></br> (
+                  OUT FOR DELIVERY <br></br> (
                   {
                     allOrders.filter(function (el) {
                       return el.orderStatus === "OUT FOR DELIVERY";
@@ -134,7 +134,7 @@ export const NewOrders = () => {
             <CusTab
               label={
                 <span>
-                  ACCEPTED <br></br> (
+                  DELIVERED <br></br> (
                   {
                     allOrders.filter(function (el) {
                       return el.orderStatus === "DELIVERED";
@@ -148,7 +148,7 @@ export const NewOrders = () => {
             <CusTab
               label={
                 <span>
-                  ACCEPTED <br></br> (
+                  CANCELLED <br></br> (
                   {
                     allOrders.filter(function (el) {
                       return el.orderStatus === "CANCELLED";
