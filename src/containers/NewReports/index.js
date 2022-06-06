@@ -21,6 +21,7 @@ import { TopPayingCustomerTable } from "../../components/TopPayingCustomerTable"
 import { getAllReports } from "../../actions";
 import DropdownMenu from "@atlaskit/dropdown-menu";
 import "./style.css";
+import { ReportTable } from "../../components/ReportTable";
 
 const CusDDT = styled(Dropdown.Toggle)`
   font-weight: 500;
@@ -41,6 +42,8 @@ const DRButton = styled(Button)`
   }
 `;
 
+const CusMenuItem = styled(MenuItem)``;
+
 const CusDateRangePicker = styled(DateRangePicker)`
   & .rdrDefinedRangesWrapper {
     display: none;
@@ -54,9 +57,11 @@ const NumberDiv = styled.div`
   padding: 10px;
 `;
 
+const reportTypes = ["one", "two", "three"];
+
 export const NewReports = () => {
   const allReports = useSelector((state) => state.report.allReports);
-  const [anchorEl, setAnchorEl] = useState(null);
+  const stores = useSelector((state) => state.store.stores);
   const [dateState, setDateState] = useState([
     {
       startDate: new Date(),
@@ -65,6 +70,12 @@ export const NewReports = () => {
     },
   ]);
   const [isOpen, setIsOpen] = useState(false);
+  const [selectedStore, setSelectedStore] = useState("ALL");
+  const [selectedReport, setSelectedReport] = useState("");
+  const [selectedStoreObj, setSelectedStoreObj] = useState({
+    restaurantId: null,
+    storeId: null,
+  });
 
   const dispatch = useDispatch();
 
@@ -83,142 +94,145 @@ export const NewReports = () => {
     );
   }, [dateState]);
 
-  const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+  const handleChangeStore = (event) => {
+    setSelectedStore(event.target.value);
+    console.log(event.target.value);
   };
-  const handleClose = () => {
-    setAnchorEl(null);
+
+  const handleSelectedStore = (store) => {
+    setSelectedStoreObj(store);
+  };
+
+  const handleChangeReport = (event) => {
+    setSelectedReport(event.target.value);
+    console.log(event.target.value);
   };
 
   return (
     <Layout sidebar headerTitle="Reports">
       <div>
         <div>
-          {/* <Row>
-            <div
-              className="w-100 text-center p-3 mb-3"
-              style={{
-                color: "#2E75B6",
-                backgroundColor: "#F2F2F2",
-              }}
-            >
-              <Typography sx={{ fontWeight: "bold !important" }}>
-                REPORTS
-              </Typography>
-            </div>
-          </Row> */}
           <Row>
-            <Dropdown
-              className="d-inline mx-2"
-              autoClose="outside"
-              variant="secondary"
-            >
-              <CusDDT variant="secondary">Presets</CusDDT>
-              <Dropdown.Menu>
-                <Dropdown.Item>
-                  <DefinedRange
-                    onChange={(item) => setDateState([item.selection])}
-                    ranges={dateState}
-                  />
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
+            <Col md={4}>
+              <Row className="align-items-center">
+                <div style={{ maxWidth: "125px !important" }}>
+                  <Typography sx={{ color: "#7F7F7F", fontWeight: "bold" }}>
+                    Select Date Range
+                  </Typography>
+                </div>
+                <Col className="col-8 p-0">
+                  <Dropdown
+                    className="d-inline mx-2"
+                    autoClose="outside"
+                    variant="secondary"
+                  >
+                    <CusDDT variant="secondary">Presets</CusDDT>
+                    <Dropdown.Menu>
+                      <Dropdown.Item>
+                        <DefinedRange
+                          onChange={(item) => setDateState([item.selection])}
+                          ranges={dateState}
+                        />
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
 
-            <DropdownMenu
-              isOpen={isOpen}
-              onOpenChange={(attrs) => {
-                setIsOpen(attrs.isOpen);
-              }}
-              trigger="Custom"
-            >
-              <CusDateRangePicker
-                editableDateInputs={true}
-                onChange={(item) => setDateState([item.selection])}
-                moveRangeOnFirstSelection={false}
-                ranges={dateState}
-              />
-            </DropdownMenu>
+                  <DropdownMenu
+                    isOpen={isOpen}
+                    onOpenChange={(attrs) => {
+                      setIsOpen(attrs.isOpen);
+                    }}
+                    trigger="Custom"
+                  >
+                    <CusDateRangePicker
+                      editableDateInputs={true}
+                      onChange={(item) => setDateState([item.selection])}
+                      moveRangeOnFirstSelection={false}
+                      ranges={dateState}
+                    />
+                  </DropdownMenu>
+                </Col>
+              </Row>
+            </Col>
+            <Col md={4}>
+              <Row className="align-items-center">
+                <div style={{ maxWidth: "125px !important" }}>
+                  <Typography sx={{ color: "#7F7F7F", fontWeight: "bold" }}>
+                    Select Store
+                  </Typography>
+                </div>
+                <Col className="col-8" style={{ display: "flex" }}>
+                  <FormControl fullWidth>
+                    <InputLabel id="demo-simple-select-label">
+                      Please select the store
+                    </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={selectedStore}
+                      label="Please select the store"
+                      onChange={handleChangeStore}
+                    >
+                      <CusMenuItem
+                        onClick={() => {
+                          handleSelectedStore({
+                            restaurantId: null,
+                            storeId: null,
+                          });
+                        }}
+                        value={"ALL"}
+                      >
+                        All Stores
+                      </CusMenuItem>
+                      {stores.map((store) => (
+                        <CusMenuItem
+                          onClick={() => {
+                            handleSelectedStore(store);
+                          }}
+                          value={store.resturantName}
+                        >
+                          <span>{store.resturantName}</span>
+                        </CusMenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Col>
+              </Row>
+            </Col>
+            <Col md={4}>
+              <Row className="align-items-center">
+                <div style={{ maxWidth: "125px !important" }}>
+                  <Typography sx={{ color: "#7F7F7F", fontWeight: "bold" }}>
+                    Select Report
+                  </Typography>
+                </div>
+                <Col className="col-8" style={{ display: "flex" }}>
+                  <FormControl fullWidth>
+                    <InputLabel id="demo-simple-select-label">
+                      Please select the report
+                    </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={selectedReport}
+                      label="Please select the store"
+                      onChange={handleChangeReport}
+                    >
+                      {reportTypes.map((type) => (
+                        <CusMenuItem value={type}>
+                          <span>{type}</span>
+                        </CusMenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Col>
+              </Row>
+            </Col>
           </Row>
         </div>
+
         <div className="mt-3">
-          <Row>
-            <Col sm={3}>
-              <Typography sx={{ fontWeight: "bold", color: "#595959" }}>
-                Role
-              </Typography>
-            </Col>
-            <Col sm={3}>
-              <Typography sx={{ fontWeight: "bold", color: "#595959" }}>
-                : XXXXX
-              </Typography>
-            </Col>
-          </Row>
-          <Row>
-            <Col sm={3}>
-              <Typography sx={{ fontWeight: "bold", color: "#595959" }}>
-                Store Name
-              </Typography>
-            </Col>
-            <Col sm={3}>
-              <Typography sx={{ fontWeight: "bold", color: "#595959" }}>
-                : Hangries YamunaNagar
-              </Typography>
-            </Col>
-          </Row>
-        </div>
-        <div>
-          <Row>
-            <Col sm={3}>
-              <NumberDiv className="mt-3">
-                <Typography sx={{ color: "#595959" }}>Total Orders</Typography>
-                {allReports.salesSummeryByDateList &&
-                allReports.salesSummeryByDateList.length ? (
-                  <Typography sx={{ fontWeight: "bold" }}>
-                    {allReports.salesSummeryByDateList
-                      .map((a) => a.noOfOrders)
-                      .reduce((a, b) => a + b, 0)}
-                  </Typography>
-                ) : (
-                  <Typography sx={{ fontWeight: "bold" }}>0</Typography>
-                )}
-              </NumberDiv>
-            </Col>
-          </Row>
-        </div>
-        <div>
-          <Row>
-            <Col sm={6}>
-              {allReports.salesSummeryByDishType &&
-              allReports.salesSummeryByDishType.length > 0 ? (
-                <TopSellingDishTable></TopSellingDishTable>
-              ) : (
-                <div className="mb-3 pl-3 pt-3">
-                  <Typography sx={{ fontWeight: "bold", color: "#7F7F7F" }}>
-                    Top Selling Dish
-                  </Typography>
-                  <Alert severity="warning" className="mt-4">
-                    No reports to show!
-                  </Alert>
-                </div>
-              )}
-            </Col>
-            <Col sm={6}>
-              {allReports.salesSummeryByCustomer &&
-              allReports.salesSummeryByCustomer.length > 0 ? (
-                <TopPayingCustomerTable></TopPayingCustomerTable>
-              ) : (
-                <div className="mb-3 pl-3 pt-3">
-                  <Typography sx={{ fontWeight: "bold", color: "#7F7F7F" }}>
-                    Top Paying Customer
-                  </Typography>
-                  <Alert severity="warning" className="mt-4">
-                    No reports to show!
-                  </Alert>
-                </div>
-              )}
-            </Col>
-          </Row>
+          <ReportTable></ReportTable>
         </div>
       </div>
     </Layout>
