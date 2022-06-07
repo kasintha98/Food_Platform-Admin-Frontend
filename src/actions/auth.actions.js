@@ -56,6 +56,28 @@ export const login = (user) => {
   };
 };
 
+export const loginTest = (user) => {
+  return async (dispatch) => {
+    dispatch({ type: authConstants.LOGIN_REQUEST });
+    //post request from front end to signin with the data from frontend
+
+    //if respond is 200 (user successfully login)
+
+    localStorage.setItem("token", user);
+    localStorage.setItem("user", JSON.stringify(user));
+    dispatch({
+      type: authConstants.LOGIN_SUCCESS,
+      payload: {
+        token: user,
+        user,
+      },
+    });
+
+    //show success notification
+    toast.success("Login Success!");
+  };
+};
+
 //action for signup
 export const signup = (user) => {
   return async (dispatch) => {

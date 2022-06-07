@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Layout from "../NewLayout";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import Input from "../../components/UI/Input";
-import { login } from "../../actions";
+import { login, loginTest } from "../../actions";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect, useHistory } from "react-router-dom";
 import "./style.css";
@@ -29,12 +29,11 @@ function Signin(props) {
     const user = { email, password };
 
     console.log(user);
-    //remove - for test
-    localStorage.setItem("token", JSON.stringify(user));
-    //dispatch(login(user));
+
+    dispatch(loginTest(user));
 
     //remove - for test
-    history.push("/");
+    //history.push("/");
   };
 
   if (auth.authenticate === true) {
