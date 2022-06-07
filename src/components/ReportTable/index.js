@@ -1,8 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getCustomerOrders } from "../../actions";
 import styled from "@emotion/styled";
-
 import {
   TableContainer,
   Paper,
@@ -16,8 +15,15 @@ import {
   FormControl,
   InputLabel,
   NativeSelect,
+  Typography,
 } from "@mui/material";
 import { Row, Col, Modal } from "react-bootstrap";
+import Pdf from "react-to-pdf";
+import { InvoiceTable } from "../InvoiceTable";
+import ReactExport from "react-export-excel";
+const ExcelFile = ReactExport.ExcelFile;
+const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
+const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
 const CusTableCell1 = styled(TableCell)`
   font-size: 0.75rem;
@@ -26,31 +32,207 @@ const CusTableCell1 = styled(TableCell)`
 
 const CusTableCell2 = styled(TableCell)`
   font-size: 0.75rem;
+  padding: 0;
 `;
 
 export const ReportTable = (props) => {
   const orders = useSelector((state) => state.order.orders);
   const loading = useSelector((state) => state.order.loading);
+  const [showInvoice, setShowInvoice] = useState(false);
+  const [currentOrder, setCurrentOrder] = useState(false);
 
   const dispatch = useDispatch();
+  const ref = React.createRef();
 
   useEffect(() => {
     const today = new Date();
     dispatch(
       getCustomerOrders(
-        null,
-        null,
+        props.restaurantId,
+        props.storeId,
         null,
         `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
       )
     );
-  }, []);
+  }, [props.restaurantId, props.storeId]);
+
+  const handleCloseInvoice = () => {
+    setShowInvoice(false);
+  };
+  const handleShowInvoice = () => setShowInvoice(true);
+
+  const renderNowDate = (date) => {
+    const dateObj = new Date(date);
+    const month = dateObj.toLocaleString("default", { month: "short" });
+    const day = dateObj.getDate();
+    const year = dateObj.getFullYear();
+    return (
+      <span>
+        {day}/{month.toUpperCase()}/{year}
+      </span>
+    );
+  };
+
+  const renderNowTime = (date) => {
+    const dateObj = new Date(date);
+    const time = dateObj.toLocaleString("en-US", {
+      hour: "numeric",
+      hour12: true,
+      minute: "numeric",
+    });
+
+    return <span>{time}</span>;
+  };
+
+  const getItemString = (items) => {
+    let str = "";
+
+    for (let i = 0; i < items.length; i++) {
+      str = str + `${items[i].productName}-${items[i].ingredient}, \n`;
+    }
+
+    return str;
+  };
+
+  const renderInvoiceModal = () => {
+    return (
+      <Modal
+        show={showInvoice}
+        onHide={handleCloseInvoice}
+        style={{ marginTop: "40px" }}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>
+            <Typography>Invoice</Typography>
+          </Modal.Title>
+        </Modal.Header>
+        {currentOrder ? (
+          <Modal.Body style={{ maxHeight: "75vh", overflowY: "auto" }}>
+            {currentOrder ? (
+              <div ref={ref}>
+                <div className="text-center">
+                  <Typography sx={{ fontWeight: "600" }}>Hangries</Typography>
+
+                  <Typography sx={{ fontWeight: "600" }}>
+                    Order ID: {currentOrder ? currentOrder.orderId : null}
+                  </Typography>
+
+                  <Typography sx={{ fontWeight: "600" }}>
+                    <span>{currentOrder.orderDeliveryType}</span>
+                    <span> [{currentOrder.paymentStatus}]</span>
+                  </Typography>
+                </div>
+                <hr></hr>
+                <div>
+                  <Typography>Name: {currentOrder.customerName}</Typography>
+                  <Typography>Address: {currentOrder.address}</Typography>
+                  <Typography>Mob No: {currentOrder.mobileNumber}</Typography>
+                </div>
+                <hr></hr>
+                <div>
+                  <Typography>
+                    <Row>
+                      <Col>Time: {renderNowTime(currentOrder.createdDate)}</Col>
+                      <Col>Date: {renderNowDate(currentOrder.createdDate)}</Col>
+                    </Row>
+                  </Typography>
+                </div>
+                <hr></hr>
+                <div>
+                  <InvoiceTable
+                    allProducts={currentOrder.orderDetails}
+                    grandTot={currentOrder.totalPrice}
+                    cgst={currentOrder.cgstCalculatedValue}
+                    sgst={currentOrder.sgstCalculatedValue}
+                    overallPriceWithTax={currentOrder.overallPriceWithTax}
+                    delCharge={currentOrder.deliveryCharges}
+                    fullResp={currentOrder}
+                  ></InvoiceTable>
+                </div>
+              </div>
+            ) : null}
+          </Modal.Body>
+        ) : null}
+
+        <Modal.Footer>
+          <Row className="w-100">
+            <Col className="col-6">
+              <Button
+                color="secondary"
+                onClick={handleCloseInvoice}
+                className="w-100"
+                variant="contained"
+              >
+                Close
+              </Button>
+            </Col>
+            <Col className="col-6">
+              <Pdf targetRef={ref} filename="invoice.pdf">
+                {({ toPdf }) => (
+                  <Button
+                    color="primary"
+                    onClick={toPdf}
+                    className="w-100"
+                    variant="contained"
+                  >
+                    Download Invoice
+                  </Button>
+                )}
+              </Pdf>
+            </Col>
+          </Row>
+        </Modal.Footer>
+      </Modal>
+    );
+  };
 
   return (
     <div>
-      <Button>Download Full Report</Button>
+      <ExcelFile element={<Button variant="text">Download Full Report</Button>}>
+        <ExcelSheet data={orders} name="Orders">
+          <ExcelColumn label="restaurantId" value="restaurantId" />
+          <ExcelColumn label="orderStatus" value="orderStatus" />
+          <ExcelColumn label="orderId" value="orderId" />
+          <ExcelColumn label="createdDate" value="createdDate" />
+          <ExcelColumn label="orderSource" value="orderSource" />
+          <ExcelColumn label="orderDeliveryType" value="orderDeliveryType" />
+          <ExcelColumn label="paymentStatus" value="paymentStatus" />
+          <ExcelColumn label="paymentMode" value="paymentMode" />
+          <ExcelColumn label="customerName" value="customerName" />
+          <ExcelColumn label="mobileNumber" value="mobileNumber" />
+          <ExcelColumn
+            label="overallPriceWithTax"
+            value="overallPriceWithTax"
+          />
+          <ExcelColumn
+            label="cgstCalculatedValue"
+            value="cgstCalculatedValue"
+          />
+          <ExcelColumn
+            label="sgstCalculatedValue"
+            value="sgstCalculatedValue"
+          />
+          <ExcelColumn label="deliveryCharges" value="deliveryCharges" />
+          {/* <ExcelColumn
+            label="orderDetails"
+            value={(col) => {
+              col.orderDetails.map(
+                (item) => `${item.productName}-${item.ingredient}\n`
+              );
+            }}
+          /> */}
+          <ExcelColumn
+            label="orderDetails"
+            value={(col) => getItemString(col.orderDetails)}
+          />
+          <ExcelColumn label="orderStatus" value="orderStatus" />
+          <ExcelColumn label="createdBy" value="createdBy" />
+          {/* <ExcelColumn label="Marital Status"
+                                 value={(col) => col.is_married ? "Married" : "Single"}/> */}
+        </ExcelSheet>
+      </ExcelFile>
       <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <Table sx={{ minWidth: 3000 }} aria-label="simple table">
           <TableHead>
             <TableRow>
               <CusTableCell1 align="center">NO</CusTableCell1>
@@ -148,18 +330,18 @@ export const ReportTable = (props) => {
                     >
                       Rs. {row.deliveryCharges}
                     </CusTableCell2>
-                    <CusTableCell2 align="center">
+                    <CusTableCell2 align="left">
                       {row.orderDetails.map((item) => (
                         <>
                           {item.ingredient === "No Ingredient" ? (
                             <div>
-                              {item.productName} X {item.quantity} Rs.
+                              {item.productName} X ({item.quantity}) Rs.
                               {Number(item.quantity) * Number(item.price)}
                               <br></br>
                             </div>
                           ) : (
                             <div style={{}}>
-                              {item.ingredient} X {item.quantity} Rs.
+                              {item.ingredient} X ({item.quantity}) Rs.
                               {Number(item.quantity) * Number(item.price)}
                               <br></br>
                             </div>
@@ -171,7 +353,14 @@ export const ReportTable = (props) => {
                       {row.orderStatus}
                     </CusTableCell2>
                     <CusTableCell2 align="center">
-                      <Button>Invoice</Button>
+                      <Button
+                        onClick={() => {
+                          setCurrentOrder(row);
+                          handleShowInvoice();
+                        }}
+                      >
+                        Invoice
+                      </Button>
                     </CusTableCell2>
                     <CusTableCell2 align="center">
                       {row.createdBy}
@@ -198,6 +387,7 @@ export const ReportTable = (props) => {
           </TableBody>
         </Table>
       </TableContainer>
+      {renderInvoiceModal()}
     </div>
   );
 };

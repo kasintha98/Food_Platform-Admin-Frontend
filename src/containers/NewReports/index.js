@@ -57,7 +57,7 @@ const NumberDiv = styled.div`
   padding: 10px;
 `;
 
-const reportTypes = ["one", "two", "three"];
+const reportTypes = ["Order Report"];
 
 export const NewReports = () => {
   const allReports = useSelector((state) => state.report.allReports);
@@ -71,7 +71,7 @@ export const NewReports = () => {
   ]);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedStore, setSelectedStore] = useState("ALL");
-  const [selectedReport, setSelectedReport] = useState("");
+  const [selectedReport, setSelectedReport] = useState("Order Report");
   const [selectedStoreObj, setSelectedStoreObj] = useState({
     restaurantId: null,
     storeId: null,
@@ -79,7 +79,7 @@ export const NewReports = () => {
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
+  /* useEffect(() => {
     dispatch(
       getAllReports(
         "ALL",
@@ -92,7 +92,7 @@ export const NewReports = () => {
         }-${dateState[0].endDate.getDate()}`
       )
     );
-  }, [dateState]);
+  }, [dateState]); */
 
   const handleChangeStore = (event) => {
     setSelectedStore(event.target.value);
@@ -232,7 +232,14 @@ export const NewReports = () => {
         </div>
 
         <div className="mt-3">
-          <ReportTable></ReportTable>
+          {selectedReport === "Order Report" && (
+            <ReportTable
+              startDate={dateState[0].startDate}
+              endDate={dateState[0].endDate}
+              storeId={selectedStoreObj.storeId}
+              restaurantId={selectedStoreObj.restaurantId}
+            ></ReportTable>
+          )}
         </div>
       </div>
     </Layout>
