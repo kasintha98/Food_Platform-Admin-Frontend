@@ -7,7 +7,8 @@ export const getCustomerOrders = (
   restaurantId,
   storeId,
   orderStatus,
-  orderReceivedDate
+  orderReceivedDate,
+  orderId
 ) => {
   return async (dispatch) => {
     dispatch({ type: orderConstants.GET_CUSTOMER_ORDER_REQUEST });
@@ -17,6 +18,7 @@ export const getCustomerOrders = (
         storeId,
         orderStatus,
         orderReceivedDate,
+        orderId,
       };
 
       const res = await axios.post("/queryOrderViewByParams", body);

@@ -23,3 +23,24 @@
 .pointer {
   cursor: pointer !important;
 }
+
+.top-module a {
+  color: black;
+  padding: 5px 10px;
+  box-sizing: border-box;
+  border-radius: 5px;
+  text-decoration: none;
+  width: 100%;
+  background: #fff;
+  display: block;
+}
+
+.top-module a.active {
+  background: #ffc000;
+}
+
+.top-module {
+  margin-right: 5px;
+  min-width: 110px;
+  text-align: center;
+}

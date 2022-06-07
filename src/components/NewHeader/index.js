@@ -1,5 +1,5 @@
 import React from "react";
-import { Nav } from "react-bootstrap";
+import { Nav, DropdownButton, Dropdown } from "react-bootstrap";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
@@ -9,10 +9,41 @@ import { useSelector, useDispatch } from "react-redux";
 import logo from "../../img/logo.png";
 import { signout } from "../../actions";
 import "./style.css";
+import styled from "@emotion/styled";
+import { useMediaQuery } from "react-responsive";
+
+const CusDropdownButton = styled(DropdownButton)`
+  & button {
+    background-color: #fff;
+    color: black;
+    height: 35px;
+    border-radius: 5px;
+  }
+
+  & button:hover {
+    background-color: #ffc000;
+    color: black;
+  }
+
+  & .dropdown-toggle:active {
+    background-color: #ffc000;
+    color: black;
+  }
+
+  & .dropdown-toggle:focus {
+    background-color: #ffc000;
+    color: black;
+  }
+
+  background-color: #fff;
+  border-radius: 5px;
+  height: 35px;
+`;
 
 export const NewHeader = (props) => {
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+  const isMobile = useMediaQuery({ query: `(max-width: 1240px)` });
 
   const drawerWidth = props.drawerWidth;
 
@@ -25,6 +56,58 @@ export const NewHeader = (props) => {
   const renderLoggedInLinks = () => {
     return (
       <Nav>
+        {!isMobile ? (
+          <>
+            <li className="nav-item top-module">
+              <NavLink exact to={"/"}>
+                Dashboard
+              </NavLink>
+            </li>
+            <li className="nav-item top-module">
+              <NavLink exact to={"/orders"}>
+                Orders
+              </NavLink>
+            </li>
+            <li className="nav-item top-module">
+              <NavLink exact to={"/kds"}>
+                KDS
+              </NavLink>
+            </li>
+            <li className="nav-item top-module">
+              <NavLink exact to={"/inventory"}>
+                Inventory Mgmt
+              </NavLink>
+            </li>
+            <li className="nav-item top-module">
+              <NavLink exact to={"/delivery-boy"}>
+                Delivery Boy
+              </NavLink>
+            </li>
+            <li className="nav-item top-module">
+              <NavLink exact to={"/reports"}>
+                Reports
+              </NavLink>
+            </li>
+            <li className="nav-item top-module">
+              <CusDropdownButton title="Admin Functions">
+                <NavLink exact to={"/employee"}>
+                  Employee
+                </NavLink>
+                <NavLink to={"/products"}>Menu</NavLink>
+                <NavLink exact to={"/order-auto"}>
+                  Order Automation
+                </NavLink>
+                <NavLink to={"/delivery-charges"}>Delivery Charges</NavLink>
+                <NavLink exact to={"/user-entitle"}>
+                  User Entitlement
+                </NavLink>
+                <NavLink to={"/customer"}>Customer</NavLink>
+                <NavLink to={"/restaurants"}>Restaurants</NavLink>
+              </CusDropdownButton>
+            </li>
+          </>
+        ) : null}
+
         <li className="nav-item">
           <span className="nav-link pointer" onClick={logout}>
             <i className="fa fa-sign-out"></i>&nbsp; Sign Out

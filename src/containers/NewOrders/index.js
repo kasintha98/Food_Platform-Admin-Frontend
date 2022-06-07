@@ -13,7 +13,7 @@ const CusTab = styled(Tab)`
   font-family: Arial; */
   color: #fff;
   background-color: #4472c4;
-  width: 14.28%;
+  width: 12.5%;
 `;
 
 const CusTabPanel = styled(TabPanel)`
@@ -33,7 +33,7 @@ const CusTabList = styled(TabList)`
 
 export const NewOrders = () => {
   const allOrders = useSelector((state) => state.order.allOrders);
-  const [tabValue, setTabValue] = useState("SUBMITTED");
+  const [tabValue, setTabValue] = useState("ALL");
 
   const handleChangeTab = (event, newValue) => {
     setTabValue(newValue);
@@ -61,6 +61,15 @@ export const NewOrders = () => {
               style: { background: "transparent" },
             }}
           >
+            <CusTab
+              label={
+                <span>
+                  ALL <br></br> ({allOrders.length})
+                </span>
+              }
+              value="ALL"
+            />
+
             <CusTab
               label={
                 <span>
@@ -161,6 +170,9 @@ export const NewOrders = () => {
             />
           </CusTabList>
         </Box>
+        <CusTabPanel value="ALL">
+          <OrderTable type={null}></OrderTable>
+        </CusTabPanel>
         <CusTabPanel value="SUBMITTED">
           <OrderTable type="SUBMITTED"></OrderTable>
         </CusTabPanel>

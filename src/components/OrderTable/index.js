@@ -14,10 +14,12 @@ import {
   Button,
   FormControl,
   InputLabel,
+  TextField,
   NativeSelect,
 } from "@mui/material";
 import { Row, Col, Modal } from "react-bootstrap";
 import { OrderDetailsTable } from "../OrderDetailsTable";
+import { toast } from "react-toastify";
 
 const CusTableCell1 = styled(TableCell)`
   font-size: 0.75rem;
@@ -44,6 +46,8 @@ export const OrderTable = (props) => {
   const [status, setStatus] = useState("");
   const [currentOrder, setCurrentOrder] = useState(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [keywords, setKeywords] = useState("");
+  const [isReset, setIsReset] = useState(false);
 
   const handleCloseDetailsModal = () => setShowDetailsModal(false);
   const handleShowDetailsModal = () => setShowDetailsModal(true);
@@ -60,7 +64,7 @@ export const OrderTable = (props) => {
         `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
       )
     );
-  }, [props.type]);
+  }, [props.type, isReset]);
 
   const handleStatusUpdate = (event) => {
     setStatus(event.target.value);
@@ -72,6 +76,10 @@ export const OrderTable = (props) => {
       dispatch(updateOrder(id, status, props.type));
       setStatus("");
     }
+  };
+
+  const handleChangeKeywords = (event) => {
+    setKeywords(event.target.value);
   };
 
   const renderDetailsModal = () => {
@@ -92,8 +100,60 @@ export const OrderTable = (props) => {
     );
   };
 
+  const searchOrder = () => {
+    const today = new Date();
+    dispatch(
+      getCustomerOrders(
+        null,
+        null,
+        props.type,
+        `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,
+        keywords
+      )
+    );
+  };
+
+  const resetSearch = () => {
+    setKeywords("");
+    if (isReset) {
+      setIsReset(false);
+    } else {
+      setIsReset(true);
+    }
+    toast.success("Reset Orders!");
+  };
+
   return (
     <div>
+      <div>
+        {!props.type ? (
+          <div className="mb-3">
+            <TextField
+              label="Search Order By ID"
+              variant="standard"
+              value={keywords}
+              onChange={handleChangeKeywords}
+              className="mr-3"
+            />
+            <Button
+              variant="contained"
+              color="success"
+              disabled={!keywords}
+              onClick={searchOrder}
+            >
+              Search
+            </Button>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={resetSearch}
+              className="ml-3"
+            >
+              Reset
+            </Button>
+          </div>
+        ) : null}
+      </div>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
