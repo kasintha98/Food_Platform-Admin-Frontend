@@ -112,7 +112,7 @@ export const NewReports = () => {
     <Layout sidebar headerTitle="Reports">
       <div>
         <div>
-          <Row>
+          <Row style={{ maxWidth: "100vw" }}>
             <Col md={4}>
               <Row className="align-items-center">
                 <div style={{ maxWidth: "125px !important" }}>

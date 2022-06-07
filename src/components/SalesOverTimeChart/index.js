@@ -44,7 +44,7 @@ export const SalesOverTimeChart = () => {
   const ref = React.createRef();
 
   const labels = allReports?.salesSummeryByDateList?.map(
-    (a) => `${a.month} ${new Date(a.orderDate).getDate()}`
+    (a) => `${a.month} ${new Date(a.orderDate).getDate()} - ${a.restaurantName}`
   );
 
   const data = {
