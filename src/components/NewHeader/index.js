@@ -16,8 +16,9 @@ const CusDropdownButton = styled(DropdownButton)`
   & button {
     background-color: #fff;
     color: black;
-    height: 35px;
+    height: 29px;
     border-radius: 5px;
+    font-size: 12px;
   }
 
   & button:hover {
@@ -37,13 +38,13 @@ const CusDropdownButton = styled(DropdownButton)`
 
   background-color: #fff;
   border-radius: 5px;
-  height: 35px;
+  height: 29px;
 `;
 
 export const NewHeader = (props) => {
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const isMobile = useMediaQuery({ query: `(max-width: 1240px)` });
+  const isMobile = useMediaQuery({ query: `(max-width: 1100px)` });
 
   const drawerWidth = props.drawerWidth;
 
@@ -74,9 +75,7 @@ export const NewHeader = (props) => {
               </NavLink>
             </li>
             <li className="nav-item top-module">
-              <NavLink exact to={"/inventory"}>
-                Inventory Mgmt
-              </NavLink>
+              <NavLink to={"/delivery-management"}>Delivery Mgmt</NavLink>
             </li>
             <li className="nav-item top-module">
               <NavLink exact to={"/delivery-boy"}>
@@ -103,6 +102,9 @@ export const NewHeader = (props) => {
                 </NavLink>
                 <NavLink to={"/customer"}>Customer</NavLink>
                 <NavLink to={"/restaurants"}>Restaurants</NavLink>
+                <NavLink exact to={"/inventory"}>
+                  Inventory Mgmt
+                </NavLink>
               </CusDropdownButton>
             </li>
           </>
@@ -164,8 +166,8 @@ export const NewHeader = (props) => {
             height="30"
             className="d-inline-block align-top"
           />
-          &nbsp; &nbsp;{" "}
-          {props.headerTitle ? props.headerTitle : "Admin Dashboard"}
+          {/* &nbsp; &nbsp;{" "}
+          {props.headerTitle ? props.headerTitle : "Admin Dashboard"} */}
         </Link>
         <Nav className="mr-auto"></Nav>
         {auth.authenticate ? renderLoggedInLinks() : renderNonLoggedInLinks()}

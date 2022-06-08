@@ -12,6 +12,7 @@ import {
 import { Bar } from "react-chartjs-2";
 import { Typography, Button } from "@mui/material";
 import Pdf from "react-to-pdf";
+import randomColor from "randomcolor";
 import ReactExport from "react-export-excel";
 const ExcelFile = ReactExport.ExcelFile;
 const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
@@ -37,6 +38,13 @@ export const options = {
       text: "Chart.js Bar Chart",
     }, */
   },
+  scales: {
+    x: {
+      ticks: {
+        display: false,
+      },
+    },
+  },
 };
 
 export const SalesOverTimeChart = () => {
@@ -53,7 +61,13 @@ export const SalesOverTimeChart = () => {
       {
         label: "Sales",
         data: allReports.salesSummeryByDateList.map((a) => a.orderValue),
-        backgroundColor: "rgba(255, 99, 132, 0.5)",
+        backgroundColor: allReports.salesSummeryByDateList.map((a) =>
+          randomColor({
+            luminosity: "dark",
+            format: "rgba",
+            alpha: 0.5,
+          })
+        ),
       },
     ],
   };

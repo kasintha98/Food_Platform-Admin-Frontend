@@ -9,7 +9,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { Bar } from "react-chartjs-2";
+import { Bar, defaults } from "react-chartjs-2";
 import { Typography, Button } from "@mui/material";
 import Pdf from "react-to-pdf";
 import ReactExport from "react-export-excel";
@@ -37,6 +37,15 @@ export const options = {
       text: "Chart.js Bar Chart",
     }, */
   },
+  scales: {
+    x: {
+      ticks: {
+        font: {
+          size: 10,
+        },
+      },
+    },
+  },
 };
 
 export const SalesRevenueByChanelChart = () => {
@@ -47,6 +56,8 @@ export const SalesRevenueByChanelChart = () => {
   const [dineOrders, setDineOrders] = useState([]);
   const [zomatoOrders, setZomatoOrders] = useState([]);
   const [swizyOrders, setSwizyOrders] = useState([]);
+
+  /* defaults.font.size = "10px"; */
 
   const ref = React.createRef();
 

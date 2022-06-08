@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getCustomerOrders, updateOrder } from "../../actions";
+import { getCustomerOrders } from "../../actions";
 import Layout from "../NewLayout";
 import { Row, Col, Modal } from "react-bootstrap";
 import styled from "@emotion/styled";
@@ -14,10 +14,7 @@ import {
   TableBody,
   Alert,
   Button,
-  FormControl,
-  InputLabel,
   TextField,
-  NativeSelect,
   Typography,
 } from "@mui/material";
 import { toast } from "react-toastify";
@@ -32,24 +29,13 @@ const CusTableCell2 = styled(TableCell)`
   font-size: 0.75rem;
 `;
 
-const statuses = [
-  "SUBMITTED",
-  "ACCEPTED",
-  "PROCESSING",
-  "FOOD READY",
-  "OUT FOR DELIVERY",
-  "DELIVERED",
-  "CANCELLED",
-];
-
-export const DeliveryBoy = (props) => {
+export const DeliveryManagement = () => {
   const orders = useSelector((state) => state.order.orders);
   const loading = useSelector((state) => state.order.loading);
   const [currentOrder, setCurrentOrder] = useState(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [keywords, setKeywords] = useState("");
   const [isReset, setIsReset] = useState(false);
-  const [status, setStatus] = useState("");
 
   const dispatch = useDispatch();
 
@@ -59,11 +45,11 @@ export const DeliveryBoy = (props) => {
       getCustomerOrders(
         null,
         null,
-        props.type,
+        null,
         `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
       )
     );
-  }, [props.type, isReset]);
+  }, [isReset]);
 
   const handleCloseDetailsModal = () => setShowDetailsModal(false);
   const handleShowDetailsModal = () => setShowDetailsModal(true);
@@ -78,10 +64,10 @@ export const DeliveryBoy = (props) => {
       getCustomerOrders(
         "R001",
         "S001",
-        props.type,
+        null,
         `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,
         keywords,
-        "rahul"
+        null
       )
     );
   };
@@ -94,18 +80,6 @@ export const DeliveryBoy = (props) => {
       setIsReset(true);
     }
     toast.success("Reset Orders!");
-  };
-
-  const onClickUpdateStatus = (id) => {
-    if (status) {
-      dispatch(updateOrder(id, status, props.type));
-      setStatus("");
-    }
-  };
-
-  const handleStatusUpdate = (event) => {
-    setStatus(event.target.value);
-    console.log(event.target.value);
   };
 
   const renderDetailsModal = () => {
@@ -127,7 +101,7 @@ export const DeliveryBoy = (props) => {
   };
 
   return (
-    <Layout sidebar headerTitle="Delivery Boy">
+    <Layout sidebar headerTitle="Delivery Mgmt">
       <Row>
         <Col sm={6}>
           <div className="mb-3">
@@ -158,7 +132,7 @@ export const DeliveryBoy = (props) => {
         </Col>
         <Col sm={6}>
           <Typography sx={{ color: "#595959", fontWeight: "bold" }}>
-            Role: Delivery Boy (rahul)
+            Role: Store Manager
           </Typography>
           <Typography sx={{ color: "#595959", fontWeight: "bold" }}>
             Store Name: Hangries YamunaNagar
@@ -180,7 +154,7 @@ export const DeliveryBoy = (props) => {
               <CusTableCell1 align="center">AMOUNT</CusTableCell1>
               <CusTableCell1 align="center">ITEM ORDERED</CusTableCell1>
               <CusTableCell1 align="center">ACCEPT ORDER</CusTableCell1>
-              <CusTableCell1 align="center">ACTION</CusTableCell1>
+
               <CusTableCell1 align="center">STATUS</CusTableCell1>
             </TableRow>
           </TableHead>
@@ -236,72 +210,9 @@ export const DeliveryBoy = (props) => {
                       </Button>
                     </CusTableCell2>
                     <CusTableCell2 align="center">
-                      <Button
-                        variant="contained"
-                        fullWidth
-                        disabled={
-                          row.orderStatus === "FOOD READY" ? false : true
-                        }
-                        onClick={() => {
-                          dispatch(
-                            updateOrder(
-                              row.orderId,
-                              "OUT FOR DELIVERY",
-                              props.type
-                            )
-                          );
-                        }}
-                      >
-                        Accept
-                      </Button>
+                      <Button>Accept</Button>
                     </CusTableCell2>
-                    <CusTableCell2 align="center">
-                      <Row>
-                        <Col className="m-0 p-0 col-12">
-                          <FormControl fullWidth>
-                            <InputLabel
-                              id="demo-simple-select-label"
-                              sx={{ fontSize: "0.75rem" }}
-                            >
-                              Status
-                            </InputLabel>
-                            <NativeSelect
-                              defaultValue={row.orderStatus}
-                              inputProps={{
-                                name: "status",
-                                id: "uncontrolled-native",
-                              }}
-                              onChange={handleStatusUpdate}
-                              sx={{ fontSize: "0.75rem" }}
-                            >
-                              {statuses.map((status) => (
-                                <option
-                                  key={status}
-                                  value={status}
-                                  style={{ fontSize: "0.75rem" }}
-                                >
-                                  {status}
-                                </option>
-                              ))}
-                            </NativeSelect>
-                          </FormControl>
-                        </Col>
-                        <Col className="m-0 p-0 col-12">
-                          <Button
-                            variant="contained"
-                            color="success"
-                            fullWidth
-                            className="mt-2"
-                            sx={{ fontSize: "0.75rem" }}
-                            onClick={() => {
-                              onClickUpdateStatus(row.orderId);
-                            }}
-                          >
-                            Confirm
-                          </Button>
-                        </Col>
-                      </Row>
-                    </CusTableCell2>
+
                     <CusTableCell2 align="center">
                       {row.orderStatus}
                     </CusTableCell2>
@@ -319,9 +230,7 @@ export const DeliveryBoy = (props) => {
                       ></div>
                     </div>
                   ) : (
-                    <Alert severity="warning">
-                      No {props.type} orders to show today!
-                    </Alert>
+                    <Alert severity="warning">No orders to show today!</Alert>
                   )}
                 </CusTableCell2>
               </TableRow>
