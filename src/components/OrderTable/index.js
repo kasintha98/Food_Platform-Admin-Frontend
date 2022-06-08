@@ -168,7 +168,7 @@ export const OrderTable = (props) => {
               <CusTableCell1 align="center">CUSTOMER ADDRESS</CusTableCell1>
               <CusTableCell1 align="center">CUSTOMER PHONE NO</CusTableCell1>
               <CusTableCell1 align="center">AMOUNT</CusTableCell1>
-              <CusTableCell1 align="center">ITEM ORDERED</CusTableCell1>
+              {/* <CusTableCell1 align="center">ITEM ORDERED</CusTableCell1> */}
               <CusTableCell1 align="center">CURRENT STATUS</CusTableCell1>
               <CusTableCell1 align="center">ACTION</CusTableCell1>
             </TableRow>
@@ -178,7 +178,14 @@ export const OrderTable = (props) => {
               <>
                 {orders.map((row) => (
                   <TableRow key={row.orderId}>
-                    <CusTableCell2 align="center">
+                    <CusTableCell2
+                      align="center"
+                      onClick={() => {
+                        setCurrentOrder(row);
+                        handleShowDetailsModal();
+                      }}
+                      sx={{ cursor: "pointer" }}
+                    >
                       {row.orderId.slice(0, 11)} <br></br>
                       {row.orderId.slice(11, 19)}
                       <span style={{ color: "#4472c4" }}>
@@ -215,7 +222,7 @@ export const OrderTable = (props) => {
                     >
                       Rs. {row.overallPriceWithTax}
                     </CusTableCell2>
-                    <CusTableCell2 align="center">
+                    {/* <CusTableCell2 align="center">
                       <Button
                         sx={{ fontSize: "0.75rem" }}
                         fullWidth
@@ -226,7 +233,7 @@ export const OrderTable = (props) => {
                       >
                         View details
                       </Button>
-                    </CusTableCell2>
+                    </CusTableCell2> */}
                     <CusTableCell2 align="center">
                       {row.orderStatus}
                     </CusTableCell2>

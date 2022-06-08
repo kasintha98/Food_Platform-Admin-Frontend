@@ -42,7 +42,7 @@ const statuses = [
   "CANCELLED",
 ];
 
-export const DeliveryBoy = (props) => {
+export const DeliveryBoy = () => {
   const orders = useSelector((state) => state.order.orders);
   const loading = useSelector((state) => state.order.loading);
   const [currentOrder, setCurrentOrder] = useState(null);
@@ -50,6 +50,7 @@ export const DeliveryBoy = (props) => {
   const [keywords, setKeywords] = useState("");
   const [isReset, setIsReset] = useState(false);
   const [status, setStatus] = useState("");
+  const [filteredData, setFilteredData] = useState([]);
 
   const dispatch = useDispatch();
 
@@ -57,13 +58,32 @@ export const DeliveryBoy = (props) => {
     const today = new Date();
     dispatch(
       getCustomerOrders(
+        "R001",
+        "S001",
         null,
+        `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,
         null,
-        props.type,
-        `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
+        "rahul"
       )
-    );
-  }, [props.type, isReset]);
+    ).then((res) => {
+      if (res) {
+        setFilteredData(filterByStatus(res));
+      }
+    });
+  }, [isReset]);
+
+  const filterByStatus = (orders) => {
+    orders = orders.filter(function (el) {
+      return (
+        el.orderStatus === "FOOD READY" ||
+        el.orderStatus === "OUT FOR DELIVERY" ||
+        el.orderStatus === "DELIVERED" ||
+        el.orderStatus === "CANCELLED"
+      );
+    });
+
+    return orders;
+  };
 
   const handleCloseDetailsModal = () => setShowDetailsModal(false);
   const handleShowDetailsModal = () => setShowDetailsModal(true);
@@ -72,18 +92,26 @@ export const DeliveryBoy = (props) => {
     setKeywords(event.target.value);
   };
 
+  const resetState = () => {
+    isReset ? setIsReset(false) : setIsReset(true);
+  };
+
   const searchOrder = () => {
     const today = new Date();
     dispatch(
       getCustomerOrders(
         "R001",
         "S001",
-        props.type,
+        null,
         `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,
         keywords,
         "rahul"
       )
-    );
+    ).then((res) => {
+      if (res) {
+        setFilteredData(filterByStatus(res));
+      }
+    });
   };
 
   const resetSearch = () => {
@@ -98,7 +126,11 @@ export const DeliveryBoy = (props) => {
 
   const onClickUpdateStatus = (id) => {
     if (status) {
-      dispatch(updateOrder(id, status, props.type));
+      dispatch(updateOrder(id, status, null)).then((res) => {
+        if (res) {
+          resetState();
+        }
+      });
       setStatus("");
     }
   };
@@ -178,18 +210,25 @@ export const DeliveryBoy = (props) => {
               <CusTableCell1 align="center">CUSTOMER NAME</CusTableCell1>
               <CusTableCell1 align="center">CUSTOMER ADDRESS</CusTableCell1>
               <CusTableCell1 align="center">AMOUNT</CusTableCell1>
-              <CusTableCell1 align="center">ITEM ORDERED</CusTableCell1>
+              {/* <CusTableCell1 align="center">ITEM ORDERED</CusTableCell1> */}
               <CusTableCell1 align="center">ACCEPT ORDER</CusTableCell1>
               <CusTableCell1 align="center">ACTION</CusTableCell1>
               <CusTableCell1 align="center">STATUS</CusTableCell1>
             </TableRow>
           </TableHead>
           <TableBody>
-            {orders && orders.length > 0 ? (
+            {filteredData && filteredData.length > 0 ? (
               <>
-                {orders.map((row) => (
+                {filteredData.map((row) => (
                   <TableRow key={row.orderId}>
-                    <CusTableCell2 align="center">
+                    <CusTableCell2
+                      align="center"
+                      onClick={() => {
+                        setCurrentOrder(row);
+                        handleShowDetailsModal();
+                      }}
+                      sx={{ cursor: "pointer" }}
+                    >
                       {row.orderId.slice(0, 11)} <br></br>
                       {row.orderId.slice(11, 19)}
                       <span style={{ color: "#4472c4" }}>
@@ -223,7 +262,7 @@ export const DeliveryBoy = (props) => {
                     >
                       Rs. {row.overallPriceWithTax}
                     </CusTableCell2>
-                    <CusTableCell2 align="center">
+                    {/* <CusTableCell2 align="center">
                       <Button
                         sx={{ fontSize: "0.75rem" }}
                         fullWidth
@@ -234,7 +273,7 @@ export const DeliveryBoy = (props) => {
                       >
                         View details
                       </Button>
-                    </CusTableCell2>
+                    </CusTableCell2> */}
                     <CusTableCell2 align="center">
                       <Button
                         variant="contained"
@@ -244,12 +283,12 @@ export const DeliveryBoy = (props) => {
                         }
                         onClick={() => {
                           dispatch(
-                            updateOrder(
-                              row.orderId,
-                              "OUT FOR DELIVERY",
-                              props.type
-                            )
-                          );
+                            updateOrder(row.orderId, "OUT FOR DELIVERY", null)
+                          ).then((res) => {
+                            if (res) {
+                              resetState();
+                            }
+                          });
                         }}
                       >
                         Accept
@@ -303,7 +342,13 @@ export const DeliveryBoy = (props) => {
                       </Row>
                     </CusTableCell2>
                     <CusTableCell2 align="center">
-                      {row.orderStatus}
+                      {row.orderStatus === "DELIVERED" ? (
+                        <span style={{ color: "green" }}>
+                          {row.orderStatus}
+                        </span>
+                      ) : (
+                        <span>{row.orderStatus}</span>
+                      )}
                     </CusTableCell2>
                   </TableRow>
                 ))}
@@ -320,7 +365,8 @@ export const DeliveryBoy = (props) => {
                     </div>
                   ) : (
                     <Alert severity="warning">
-                      No {props.type} orders to show today!
+                      No orders in "FOOD READY" / "OUT FOR DELIVERY" /
+                      "DELIVERED" / "CANCELLED" status to show today!
                     </Alert>
                   )}
                 </CusTableCell2>
