@@ -27,6 +27,7 @@ import { AdminDashboard } from "./containers/AdminDashboard";
 import { NewReports } from "./containers/NewReports";
 import { NewOrders } from "./containers/NewOrders";
 import { DeliveryManagement } from "./containers/DeliveryManagement";
+import { DeliveryTracking } from "./containers/DeliveryTracking";
 
 function App() {
   const dispatch = useDispatch();
@@ -50,6 +51,10 @@ function App() {
         <PrivateRoute
           path="/delivery-management"
           component={DeliveryManagement}
+        ></PrivateRoute>
+        <PrivateRoute
+          path="/delivery-tracking"
+          component={DeliveryTracking}
         ></PrivateRoute>
         <PrivateRoute path="/orders" component={NewOrders}></PrivateRoute>
         <PrivateRoute path="/kds" component={KDS}></PrivateRoute>

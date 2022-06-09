@@ -108,6 +108,12 @@ function NewLayout(props) {
           </NavLink>
         </ListItem>
         <ListItem>
+          <NavLink to={"/delivery-tracking"}>
+            <i className=" 	fa fa-map-marker"></i>
+            &nbsp; Delivery Tracking
+          </NavLink>
+        </ListItem>
+        <ListItem>
           <NavLink to={"/delivery-boy"}>
             <i className=" 	fa fa-flash"></i>
             &nbsp; Delivery Boy

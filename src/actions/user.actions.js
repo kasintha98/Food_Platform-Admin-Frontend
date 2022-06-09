@@ -1,5 +1,6 @@
 import axios from "../helpers/axios";
 import { userConstants } from "./constants";
+import { toast } from "react-toastify";
 
 //action to signup
 export const signup = (user) => {
@@ -85,6 +86,40 @@ export const getModules = () => {
         type: userConstants.GET_MODULES_FAILURE,
         payload: { error: "Error fetching data!" },
       });
+    }
+  };
+};
+
+//action save modules
+export const saveRoleWithModules = (payload) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: userConstants.SAVE_ROLE_WITH_MODULES_REQUEST });
+
+      const res = await axios.post(`/saveNewRoleWithModuleAccess`, payload);
+
+      if (res.status === 200) {
+        dispatch({
+          type: userConstants.SAVE_ROLE_WITH_MODULES_SUCCESS,
+          payload: res.data,
+        });
+        toast.success("Role saved successfully!");
+        dispatch(getRoles());
+        return true;
+      } else {
+        dispatch({
+          type: userConstants.SAVE_ROLE_WITH_MODULES_FAILURE,
+          payload: { error: "Error saving data data!" },
+        });
+        toast.success("Failed to save role successfully!");
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch({
+        type: userConstants.SAVE_ROLE_WITH_MODULES_FAILURE,
+        payload: { error: "Error saving data!" },
+      });
+      toast.success("Failed to save role successfully!");
     }
   };
 };

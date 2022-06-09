@@ -11,6 +11,8 @@ import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
 import { Typography, TextField, Button } from "@mui/material";
 import styled from "@emotion/styled";
+import { saveRoleWithModules } from "../../actions";
+import { toast } from "react-toastify";
 
 const SaveButton = styled(Button)`
   background-color: #92d050;
@@ -28,9 +30,45 @@ export const CreateNewRole = () => {
   const modules = useSelector((state) => state.user.modules);
   const [checked, setChecked] = useState(true);
   const [roleName, setRoleName] = useState("");
+  const [checkedRoles, setCheckedRoles] = useState({});
+
+  const dispatch = useDispatch();
 
   const handleChange = (event) => {
-    setChecked(event.target.checked);
+    setCheckedRoles({
+      ...checkedRoles,
+      [event.target.name]: event.target.checked,
+    });
+    console.log(checkedRoles);
+  };
+
+  const saveRole = () => {
+    if (!roleName) {
+      toast.error("Role name is needed!");
+      return;
+    }
+    if (Object.keys(checkedRoles).length < 1) {
+      toast.error("Please select at least 1 module!");
+      return;
+    }
+
+    const role = {
+      restaurantId: "R001",
+      storeId: "S001",
+      roleCategory: roleName.toLocaleUpperCase(),
+      roleDescription: roleName,
+      roleStatus: "ACTIVE",
+      moduleIds: Object.keys(checkedRoles).filter(function (key) {
+        return checkedRoles[key] === true;
+      }),
+    };
+    console.log(role);
+    dispatch(saveRoleWithModules(role)).then((res) => {
+      if (res) {
+        setRoleName("");
+        setCheckedRoles({});
+      }
+    });
   };
 
   return (
@@ -80,7 +118,11 @@ export const CreateNewRole = () => {
                   <TableRow key={row.moduleId}>
                     <TableCell align="center">{row.moduleName}</TableCell>
                     <TableCell align="center">
-                      <Checkbox checked={checked} onChange={handleChange} />
+                      <Checkbox
+                        checked={checkedRoles[row.moduleId] ? true : false}
+                        onChange={handleChange}
+                        name={row.moduleId}
+                      />
                     </TableCell>
                   </TableRow>
                 ))}
@@ -90,7 +132,7 @@ export const CreateNewRole = () => {
         </Col>
       </Row>
       <div className="text-center mt-4">
-        <SaveButton>Save</SaveButton>
+        <SaveButton onClick={saveRole}>Save</SaveButton>
       </div>
     </div>
   );

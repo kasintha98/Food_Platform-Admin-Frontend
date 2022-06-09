@@ -1,0 +1,11 @@
+.pending {
+  background-color: #e2f0d9;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.delivered {
+  background-color: #ffe699;
+  padding: 10px;
+  border-radius: 5px;
+}
