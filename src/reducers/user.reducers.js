@@ -7,6 +7,7 @@ const initState = {
   errormsg: null,
   roles: [],
   modules: [],
+  usersByRole: [],
 };
 
 export default (state = initState, action) => {
@@ -72,6 +73,12 @@ export default (state = initState, action) => {
         loading: false,
         error: action.payload,
         modules: [],
+      };
+      break;
+    case userConstants.GET_USERS_BY_ROLE_SUCCESS:
+      state = {
+        ...state,
+        usersByRole: action.payload,
       };
       break;
   }

@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getCustomerOrders } from "../../actions";
+import {
+  getCustomerOrders,
+  getUsersByRole,
+  updateOrderDeliBoy,
+} from "../../actions";
 import Layout from "../NewLayout";
 import { Row, Col, Modal } from "react-bootstrap";
 import styled from "@emotion/styled";
@@ -16,6 +20,9 @@ import {
   Button,
   TextField,
   Typography,
+  NativeSelect,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
 import { toast } from "react-toastify";
 import { OrderDetailsTable } from "../../components/OrderDetailsTable";
@@ -31,10 +38,12 @@ const CusTableCell2 = styled(TableCell)`
 
 export const DeliveryManagement = () => {
   const orders = useSelector((state) => state.order.orders);
+  const usersByRole = useSelector((state) => state.user.usersByRole);
   const loading = useSelector((state) => state.order.loading);
   const [currentOrder, setCurrentOrder] = useState(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [keywords, setKeywords] = useState("");
+  const [selectedDeliBoy, setSelectedDeliBoy] = useState("");
   const [isReset, setIsReset] = useState(false);
 
   const dispatch = useDispatch();
@@ -49,6 +58,8 @@ export const DeliveryManagement = () => {
         `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
       )
     );
+
+    dispatch(getUsersByRole("DELIVERY_BOY"));
   }, [isReset]);
 
   const handleCloseDetailsModal = () => setShowDetailsModal(false);
@@ -80,6 +91,20 @@ export const DeliveryManagement = () => {
       setIsReset(true);
     }
     toast.success("Reset Orders!");
+  };
+
+  const handleDeliveryBoyUpdate = (event) => {
+    setSelectedDeliBoy(event.target.value);
+    console.log(event.target.value);
+  };
+
+  const onClickSelectDeliBoy = (id) => {
+    if (selectedDeliBoy) {
+      dispatch(updateOrderDeliBoy(id, selectedDeliBoy));
+      setSelectedDeliBoy("");
+    } else {
+      toast.error("Please select a new delivery boy!");
+    }
   };
 
   const renderDetailsModal = () => {
@@ -221,7 +246,56 @@ export const DeliveryManagement = () => {
                       {row.orderStatus}
                     </CusTableCell2>
                     <CusTableCell2 align="center">
-                      <Button>ASSIGN</Button>
+                      <Row>
+                        <Col className="m-0 p-0 col-12">
+                          <FormControl fullWidth>
+                            {/* <InputLabel
+                              id="demo-simple-select-label"
+                              sx={{ fontSize: "0.75rem" }}
+                            >
+                              Delivery Boy
+                            </InputLabel> */}
+                            <NativeSelect
+                              defaultValue={
+                                row.deliveryUserId ? row.deliveryUserId : ""
+                              }
+                              inputProps={{
+                                name: "status",
+                                id: "uncontrolled-native",
+                              }}
+                              onChange={handleDeliveryBoyUpdate}
+                              sx={{ fontSize: "0.75rem" }}
+                            >
+                              {/* <option value="" style={{ fontSize: "0.75rem" }}>
+                                Select Delivery Boy
+                              </option> */}
+                              {usersByRole.map((user) => (
+                                <option
+                                  key={user.userSeqNo}
+                                  value={user.firstName}
+                                  style={{ fontSize: "0.75rem" }}
+                                >
+                                  {user.firstName}
+                                </option>
+                              ))}
+                            </NativeSelect>
+                          </FormControl>
+                        </Col>
+                        <Col className="m-0 p-0 col-12">
+                          <Button
+                            variant="contained"
+                            color="success"
+                            fullWidth
+                            className="mt-2"
+                            sx={{ fontSize: "0.75rem" }}
+                            onClick={() => {
+                              onClickSelectDeliBoy(row.orderId);
+                            }}
+                          >
+                            Confirm
+                          </Button>
+                        </Col>
+                      </Row>
                     </CusTableCell2>
                   </TableRow>
                 ))}

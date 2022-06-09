@@ -123,3 +123,33 @@ export const saveRoleWithModules = (payload) => {
     }
   };
 };
+
+export const getUsersByRole = (roleCategory) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: userConstants.GET_USERS_BY_ROLE_REQUEST });
+
+      const res = await axios.get(`/getUsersByRoleCategory`, {
+        params: { roleCategory },
+      });
+
+      if (res.status === 200) {
+        dispatch({
+          type: userConstants.GET_USERS_BY_ROLE_SUCCESS,
+          payload: res.data,
+        });
+      } else {
+        dispatch({
+          type: userConstants.GET_USERS_BY_ROLE_FAILURE,
+          payload: { error: "Error fetching data!" },
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch({
+        type: userConstants.GET_USERS_BY_ROLE_FAILURE,
+        payload: { error: "Error fetching data!" },
+      });
+    }
+  };
+};

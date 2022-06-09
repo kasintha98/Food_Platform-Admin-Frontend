@@ -170,3 +170,46 @@ export const updateOrderSubProdStatus = (
     }
   };
 };
+
+export const updateOrderDeliBoy = (orderId, deliveryUser) => {
+  return async (dispatch) => {
+    dispatch({ type: orderConstants.UPDATE_ORDER_DELI_BOY_REQUEST });
+
+    try {
+      const res = await axios.post("/updateDeliveryUserByOrderId", null, {
+        params: {
+          orderId,
+          deliveryUser,
+        },
+      });
+
+      if (res.status === 200) {
+        dispatch({
+          type: orderConstants.UPDATE_ORDER_DELI_BOY_SUCCESS,
+        });
+
+        const today = new Date();
+        dispatch(
+          getCustomerOrders(
+            null,
+            null,
+            null,
+            `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
+          )
+        );
+
+        toast.success("Order delivery boy updated successfully!");
+
+        return res.data;
+      } else {
+        const { error } = res.data;
+        dispatch({
+          type: orderConstants.UPDATE_ORDER_DELI_BOY_FAILURE,
+          payload: { error },
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};

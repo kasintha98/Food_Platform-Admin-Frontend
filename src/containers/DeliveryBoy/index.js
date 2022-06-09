@@ -33,9 +33,9 @@ const CusTableCell2 = styled(TableCell)`
 `;
 
 const statuses = [
-  "SUBMITTED",
+  /* "SUBMITTED",
   "ACCEPTED",
-  "PROCESSING",
+  "PROCESSING", */
   "FOOD READY",
   "OUT FOR DELIVERY",
   "DELIVERED",
