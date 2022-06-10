@@ -28,6 +28,7 @@ const SaveButton = styled(Button)`
 
 export const CreateNewRole = () => {
   const modules = useSelector((state) => state.user.modules);
+  const user = useSelector((state) => state.auth.user);
   const [checked, setChecked] = useState(true);
   const [roleName, setRoleName] = useState("");
   const [checkedRoles, setCheckedRoles] = useState({});
@@ -53,8 +54,8 @@ export const CreateNewRole = () => {
     }
 
     const role = {
-      restaurantId: "R001",
-      storeId: "S001",
+      restaurantId: user.restaurantId,
+      storeId: user.storeId,
       roleCategory: roleName.toLocaleUpperCase(),
       roleDescription: roleName,
       roleStatus: "ACTIVE",

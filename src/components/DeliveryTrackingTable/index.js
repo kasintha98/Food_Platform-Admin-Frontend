@@ -37,6 +37,7 @@ const CusTableCell2 = styled(TableCell)`
 `;
 
 export const DeliveryTrackingTable = (props) => {
+  const user = useSelector((state) => state.auth.user);
   const orders = useSelector((state) => state.order.orders);
   const loading = useSelector((state) => state.order.loading);
   const [currentOrder, setCurrentOrder] = useState(null);
@@ -52,8 +53,8 @@ export const DeliveryTrackingTable = (props) => {
     const today = new Date();
     dispatch(
       getCustomerOrders(
-        "R001",
-        "S001",
+        user.restaurantId,
+        user.storeId,
         null,
         `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,
         null,
@@ -94,8 +95,8 @@ export const DeliveryTrackingTable = (props) => {
     const today = new Date();
     dispatch(
       getCustomerOrders(
-        "R001",
-        "S001",
+        user.restaurantId,
+        user.storeId,
         null,
         `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,
         keywords,

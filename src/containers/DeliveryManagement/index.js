@@ -37,6 +37,7 @@ const CusTableCell2 = styled(TableCell)`
 `;
 
 export const DeliveryManagement = () => {
+  const user = useSelector((state) => state.auth.user);
   const orders = useSelector((state) => state.order.orders);
   const usersByRole = useSelector((state) => state.user.usersByRole);
   const loading = useSelector((state) => state.order.loading);
@@ -73,8 +74,8 @@ export const DeliveryManagement = () => {
     const today = new Date();
     dispatch(
       getCustomerOrders(
-        "R001",
-        "S001",
+        user.restaurantId,
+        user.storeId,
         null,
         `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,
         keywords,

@@ -78,6 +78,51 @@ export const loginTest = (user) => {
   };
 };
 
+export const newLogin = (user) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: authConstants.LOGIN_REQUEST });
+
+      const res = await axios.post(`/employeeLogin`, {
+        ...user,
+      });
+
+      if (res.status === 200) {
+        if (res.data.loginResponse === "SUCCESS") {
+          const { user } = res.data;
+          localStorage.setItem("token", user);
+          localStorage.setItem("user", JSON.stringify(user));
+          dispatch({
+            type: authConstants.LOGIN_SUCCESS,
+            payload: {
+              token: user,
+              user,
+            },
+          });
+          //show success notification
+          toast.success("Login Success!");
+        }
+        if (res.data.loginResponse === "INCORRECT_ID") {
+          dispatch({
+            type: authConstants.LOGIN_FAILURE,
+            payload: { errormsg: "Login ID is incorrect!" },
+          });
+          toast.error("Login ID is incorrect!");
+        }
+        if (res.data.loginResponse === "INCORRECT_PASSWORD") {
+          dispatch({
+            type: authConstants.LOGIN_FAILURE,
+            payload: { errormsg: "Password is incorrect!" },
+          });
+          toast.error("Password is incorrect!");
+        }
+      }
+    } catch (error) {
+      toast.error("There was an error, please try again!");
+    }
+  };
+};
+
 //action for signup
 export const signup = (user) => {
   return async (dispatch) => {

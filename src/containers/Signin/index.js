@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Layout from "../NewLayout";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import Input from "../../components/UI/Input";
-import { login, loginTest } from "../../actions";
+import { login, loginTest, newLogin } from "../../actions";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect, useHistory } from "react-router-dom";
 import "./style.css";
@@ -13,7 +13,7 @@ import TextField from "@mui/material/TextField";
 
 function Signin(props) {
   //initial state of email
-  const [email, setEmail] = useState("");
+  const [loginId, setLoginId] = useState("");
   //initial state of password
   const [password, setPassword] = useState("");
 
@@ -25,15 +25,8 @@ function Signin(props) {
 
   const userLogin = (e) => {
     e.preventDefault();
-
-    const user = { email, password };
-
-    console.log(user);
-
-    dispatch(loginTest(user));
-
-    //remove - for test
-    //history.push("/");
+    const user = { loginId, password };
+    dispatch(newLogin(user));
   };
 
   if (auth.authenticate === true) {
@@ -62,12 +55,12 @@ function Signin(props) {
                 <Form onSubmit={userLogin}>
                   <TextField
                     variant="standard"
-                    label="Email"
-                    type="email"
-                    value={email}
+                    label="Login ID"
+                    type="text"
+                    value={loginId}
                     className="w-100"
                     onChange={(e) => {
-                      setEmail(e.target.value);
+                      setLoginId(e.target.value);
                     }}
                   />
 

@@ -43,6 +43,7 @@ const statuses = [
 ];
 
 export const DeliveryBoy = () => {
+  const user = useSelector((state) => state.auth.user);
   const orders = useSelector((state) => state.order.orders);
   const loading = useSelector((state) => state.order.loading);
   const [currentOrder, setCurrentOrder] = useState(null);
@@ -58,8 +59,8 @@ export const DeliveryBoy = () => {
     const today = new Date();
     dispatch(
       getCustomerOrders(
-        "R001",
-        "S001",
+        user.restaurantId,
+        user.storeId,
         null,
         `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,
         null,
@@ -100,8 +101,8 @@ export const DeliveryBoy = () => {
     const today = new Date();
     dispatch(
       getCustomerOrders(
-        "R001",
-        "S001",
+        user.restaurantId,
+        user.storeId,
         null,
         `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,
         keywords,
