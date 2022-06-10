@@ -82,6 +82,17 @@ export const OrderTable = (props) => {
     setKeywords(event.target.value);
   };
 
+  const hidePrevStatus = (curStatus) => {
+    const index = statuses.indexOf(curStatus);
+
+    if (index) {
+      const newArr = statuses.slice(index, statuses.length);
+      return newArr;
+    } else {
+      return statuses;
+    }
+  };
+
   const renderDetailsModal = () => {
     return (
       <Modal
@@ -256,7 +267,7 @@ export const OrderTable = (props) => {
                               onChange={handleStatusUpdate}
                               sx={{ fontSize: "0.75rem" }}
                             >
-                              {statuses.map((status) => (
+                              {hidePrevStatus(row.orderStatus).map((status) => (
                                 <option
                                   key={status}
                                   value={status}

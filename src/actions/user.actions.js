@@ -138,6 +138,7 @@ export const getUsersByRole = (roleCategory) => {
           type: userConstants.GET_USERS_BY_ROLE_SUCCESS,
           payload: res.data,
         });
+        return true;
       } else {
         dispatch({
           type: userConstants.GET_USERS_BY_ROLE_FAILURE,

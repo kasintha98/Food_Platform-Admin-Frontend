@@ -101,7 +101,6 @@ export const DeliveryManagement = () => {
   const onClickSelectDeliBoy = (id) => {
     if (selectedDeliBoy) {
       dispatch(updateOrderDeliBoy(id, selectedDeliBoy));
-      setSelectedDeliBoy("");
     } else {
       toast.error("Please select a new delivery boy!");
     }
@@ -266,9 +265,9 @@ export const DeliveryManagement = () => {
                               onChange={handleDeliveryBoyUpdate}
                               sx={{ fontSize: "0.75rem" }}
                             >
-                              {/* <option value="" style={{ fontSize: "0.75rem" }}>
+                              <option value="" style={{ fontSize: "0.75rem" }}>
                                 Select Delivery Boy
-                              </option> */}
+                              </option>
                               {usersByRole.map((user) => (
                                 <option
                                   key={user.userSeqNo}

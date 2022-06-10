@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getUsersByRole } from "../../actions";
 import Layout from "../NewLayout";
 import styled from "@emotion/styled";
-import { Box, Tabs, Typography } from "@mui/material";
+import { Box, Tabs, Typography, Alert } from "@mui/material";
 import Tab from "@mui/material/Tab";
 import PropTypes from "prop-types";
 import { DeliveryTrackingTable } from "../../components/DeliveryTrackingTable";
@@ -58,67 +60,111 @@ function a11yProps(index) {
 }
 
 export const DeliveryTracking = () => {
-  const [tabValue, setTabValue] = React.useState(0);
+  const allOrders = useSelector((state) => state.order.allOrders);
+  const usersByRole = useSelector((state) => state.user.usersByRole);
+  const userRoleLoading = useSelector((state) => state.user.userRoleLoading);
+  const [tabValue, setTabValue] = React.useState(5);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getUsersByRole("DELIVERY_BOY")).then((res) => {
+      if (res) {
+        document
+          .querySelector(".MuiTabs-scroller")
+          .classList.add("Mui-selected");
+      }
+    });
+  }, []);
 
   const handleChangeTab = (event, newValue) => {
+    document.querySelector(".MuiTabs-scroller").classList.add("Mui-selected");
     setTabValue(newValue);
+  };
+
+  const calcAllOrderCount = (userName) => {
+    let arr = allOrders;
+    const count = arr.filter(function (el) {
+      return (
+        (el.orderStatus === "FOOD READY" ||
+          el.orderStatus === "OUT FOR DELIVERY" ||
+          el.orderStatus === "CANCELLED" ||
+          el.orderStatus === "DELIVERED") &&
+        el.deliveryUserId === userName
+      );
+    }).length;
+
+    return <span>{count}</span>;
   };
 
   return (
     <Layout sidebar headerTitle="Delivery Boy">
-      <Box
-        sx={{
-          flexGrow: 1,
-          bgcolor: "background.paper",
-          display: "flex",
-        }}
-      >
-        <CusTabs
-          orientation="vertical"
-          variant="scrollable"
-          value={tabValue}
-          onChange={handleChangeTab}
-          aria-label="Vertical tabs example"
-          sx={{ borderRight: 1, borderColor: "divider", textAlign: "left" }}
+      {!userRoleLoading && usersByRole.length > 0 ? (
+        <Box
+          sx={{
+            flexGrow: 1,
+            bgcolor: "background.paper",
+            display: "flex",
+          }}
         >
-          <CusTab
-            label={
-              <Typography>
-                <span>Rajesh</span>
-                <span className="count-d">4</span>
-              </Typography>
-            }
-            {...a11yProps(0)}
-          />
-          <CusTab
-            label={
-              <Typography>
-                <span>Rahul</span>
-                <span className="count-d">4</span>
-              </Typography>
-            }
-            {...a11yProps(1)}
-          />
-          <CusTab
-            label={
-              <Typography>
-                <span>Virat</span>
-                <span className="count-d">4</span>
-              </Typography>
-            }
-            {...a11yProps(2)}
-          />
-        </CusTabs>
-        <TabPanel value={tabValue} index={0} style={{ width: "100%" }}>
-          <DeliveryTrackingTable boyName={"Rajesh"}></DeliveryTrackingTable>
-        </TabPanel>
-        <TabPanel value={tabValue} index={1} style={{ width: "100%" }}>
-          <DeliveryTrackingTable boyName={"Rahul"}></DeliveryTrackingTable>
-        </TabPanel>
-        <TabPanel value={tabValue} index={2} style={{ width: "100%" }}>
-          <DeliveryTrackingTable boyName={"Virat"}></DeliveryTrackingTable>
-        </TabPanel>
-      </Box>
+          <CusTabs
+            orientation="vertical"
+            variant="scrollable"
+            value={tabValue}
+            aria-label="Vertical tabs example"
+            sx={{ borderRight: 1, borderColor: "divider", textAlign: "left" }}
+          >
+            {usersByRole.map((user) => (
+              <CusTab
+                onClick={(e) => {
+                  handleChangeTab(e, user.userSeqNo);
+                }}
+                label={
+                  <Typography>
+                    <span>{user.firstName}</span>
+                    <span className="count-d">
+                      {calcAllOrderCount(user.firstName)}
+                    </span>
+                  </Typography>
+                }
+                {...a11yProps(user.userSeqNo)}
+              />
+            ))}
+          </CusTabs>
+          {usersByRole.map((user) => (
+            <TabPanel
+              value={tabValue}
+              index={user.userSeqNo}
+              style={{ width: "100%" }}
+            >
+              <DeliveryTrackingTable
+                boyName={user.firstName}
+              ></DeliveryTrackingTable>
+            </TabPanel>
+          ))}
+        </Box>
+      ) : (
+        <>
+          {!userRoleLoading && usersByRole.length < 1 ? (
+            <Alert severity="warning">
+              No delivery boy user data recieved!
+            </Alert>
+          ) : (
+            <>
+              <div className="d-flex justify-content-center">
+                <div
+                  className="spinner-border text-primary"
+                  role="status"
+                ></div>
+              </div>
+              <br></br>
+              <div className="text-center">
+                <Typography>Getting data...</Typography>
+              </div>
+            </>
+          )}
+        </>
+      )}
     </Layout>
   );
 };

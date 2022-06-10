@@ -57,7 +57,7 @@ export const DeliveryTrackingTable = (props) => {
         null,
         `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,
         null,
-        "rahul"
+        props.boyName
       )
     ).then((res) => {
       if (res) {
@@ -99,7 +99,7 @@ export const DeliveryTrackingTable = (props) => {
         null,
         `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,
         keywords,
-        "rahul"
+        props.boyName
       )
     ).then((res) => {
       if (res) {
@@ -132,6 +132,26 @@ export const DeliveryTrackingTable = (props) => {
   const handleStatusUpdate = (event) => {
     setStatus(event.target.value);
     console.log(event.target.value);
+  };
+
+  const calcOrdersDelivered = () => {
+    let arr = filteredData;
+    const count = arr.filter(function (el) {
+      return el.orderStatus === "DELIVERED";
+    }).length;
+    return <span>{count}</span>;
+  };
+
+  const calcOrdersPending = () => {
+    let arr = filteredData;
+    const count = arr.filter(function (el) {
+      return (
+        el.orderStatus === "FOOD READY" ||
+        el.orderStatus === "OUT FOR DELIVERY" ||
+        el.orderStatus === "CANCELLED"
+      );
+    }).length;
+    return <span>{count}</span>;
   };
 
   const renderDetailsModal = () => {
@@ -205,12 +225,14 @@ export const DeliveryTrackingTable = (props) => {
         </Col>
         <Col sm={4}>
           <Typography sx={{ color: "#7F7F7F", fontWeight: "bold" }}>
-            ORDERS DELIVERED: <span className="delivered">3</span>
+            ORDERS DELIVERED:{" "}
+            <span className="delivered">{calcOrdersDelivered()}</span>
           </Typography>
         </Col>
         <Col sm={4}>
           <Typography sx={{ color: "#7F7F7F", fontWeight: "bold" }}>
-            PENDING DELIVERED: <span className="pending">1</span>
+            PENDING DELIVERED:{" "}
+            <span className="pending">{calcOrdersPending()}</span>
           </Typography>
         </Col>
       </Row>
