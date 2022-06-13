@@ -9,6 +9,8 @@ const initState = {
   modules: [],
   usersByRole: [],
   userRoleLoading: false,
+  rolesWithModules: [],
+  loadingRWM: false,
 };
 
 export default (state = initState, action) => {
@@ -93,6 +95,26 @@ export default (state = initState, action) => {
       state = {
         ...state,
         userRoleLoading: false,
+      };
+      break;
+    case userConstants.GET_ROLES_WITH_MODULE_REQUEST:
+      state = {
+        ...state,
+        loadingRWM: true,
+      };
+      break;
+    case userConstants.GET_ROLES_WITH_MODULE_SUCCESS:
+      state = {
+        ...state,
+        loadingRWM: false,
+        rolesWithModules: action.payload,
+      };
+      break;
+    case userConstants.GET_ROLES_WITH_MODULE_FAILURE:
+      state = {
+        ...state,
+        loadingRWM: false,
+        rolesWithModules: [],
       };
       break;
   }

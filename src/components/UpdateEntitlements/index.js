@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Row, Col } from "react-bootstrap";
 import Table from "@mui/material/Table";
@@ -18,6 +18,8 @@ import {
   MenuItem,
 } from "@mui/material";
 import styled from "@emotion/styled";
+import { getRoleWithModuleAccess, saveRoleWithModules } from "../../actions";
+import { toast } from "react-toastify";
 
 const SaveButton = styled(Button)`
   background-color: #92d050;
@@ -33,22 +35,67 @@ const SaveButton = styled(Button)`
 
 export const UpdateEntitlements = (props) => {
   const modules = useSelector((state) => state.user.modules);
-  const roles = useSelector((state) => state.user.roles);
-  const [checked, setChecked] = useState(true);
+  const user = useSelector((state) => state.auth.user);
+  const rolesWithModules = useSelector((state) => state.user.rolesWithModules);
   const [selectedRole, setSelectedRole] = useState("");
   const [selectedRoleObj, setSelectedRoleObj] = useState(null);
+  const [checkedRoles, setCheckedRoles] = useState({});
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getRoleWithModuleAccess(user.restaurantId, user.storeId, "ALL"));
+  }, []);
 
   const handleRoleChange = (event) => {
     setSelectedRole(event.target.value);
   };
 
+  const handleRoleObj = (role) => {
+    setSelectedRoleObj(role);
+    let ob = {};
+    if (role) {
+      for (let i = 0; i < role.modules.length; i++) {
+        Object.assign(ob, { [role.modules[i].moduleId]: true });
+      }
+    }
+    setCheckedRoles(ob);
+  };
+
   const handleChange = (event) => {
-    setChecked(event.target.checked);
+    setCheckedRoles({
+      ...checkedRoles,
+      [event.target.name]: event.target.checked,
+    });
+    console.log(checkedRoles);
   };
 
   const shoAddNewRolePage = () => {
     props.setDecision("newRole");
     props.setShowActionPage(true);
+  };
+
+  const updateRole = () => {
+    if (selectedRoleObj) {
+      const obj = {
+        restaurantId: selectedRoleObj.role.restaurantId,
+        storeId: selectedRoleObj.role.storeId,
+        roleCategory: selectedRoleObj.role.roleCategory,
+        roleDescription: selectedRoleObj.role.roleDescription,
+        roleStatus: selectedRoleObj.role.roleStatus,
+        moduleIds: Object.keys(checkedRoles),
+      };
+      dispatch(saveRoleWithModules(selectedRoleObj.role)).then((res) => {
+        if (res) {
+          setSelectedRole("");
+          setSelectedRoleObj(null);
+          setCheckedRoles({});
+        }
+      });
+      console.log(obj);
+    } else {
+      toast.error("Please select a role first!");
+    }
   };
 
   return (
@@ -71,15 +118,15 @@ export const UpdateEntitlements = (props) => {
               label="Role"
               onChange={handleRoleChange}
             >
-              {roles.map((role) => (
+              {rolesWithModules.map((role) => (
                 <MenuItem
-                  key={role.roleId}
-                  value={role.roleId}
+                  key={role.role.roleId}
+                  value={role.role.roleId}
                   onClick={() => {
-                    setSelectedRoleObj(role);
+                    handleRoleObj(role);
                   }}
                 >
-                  {role.roleCategory}
+                  {role.role.roleCategory}
                 </MenuItem>
               ))}
             </Select>
@@ -117,7 +164,11 @@ export const UpdateEntitlements = (props) => {
                   <TableRow key={row.moduleId}>
                     <TableCell align="center">{row.moduleName}</TableCell>
                     <TableCell align="center">
-                      <Checkbox checked={checked} onChange={handleChange} />
+                      <Checkbox
+                        checked={checkedRoles[row.moduleId] ? true : false}
+                        onChange={handleChange}
+                        name={row.moduleId}
+                      />
                     </TableCell>
                   </TableRow>
                 ))}
@@ -127,7 +178,7 @@ export const UpdateEntitlements = (props) => {
         </Col>
       </Row>
       <div className="text-center mt-4">
-        <SaveButton>SAVE &amp; UPDATE</SaveButton>
+        <SaveButton onClick={updateRole}>SAVE &amp; UPDATE</SaveButton>
       </div>
     </div>
   );

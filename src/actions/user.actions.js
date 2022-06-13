@@ -111,7 +111,7 @@ export const saveRoleWithModules = (payload) => {
           type: userConstants.SAVE_ROLE_WITH_MODULES_FAILURE,
           payload: { error: "Error saving data data!" },
         });
-        toast.success("Failed to save role successfully!");
+        toast.error("Failed to save role!");
       }
     } catch (error) {
       console.log(error);
@@ -119,7 +119,7 @@ export const saveRoleWithModules = (payload) => {
         type: userConstants.SAVE_ROLE_WITH_MODULES_FAILURE,
         payload: { error: "Error saving data!" },
       });
-      toast.success("Failed to save role successfully!");
+      toast.error("Failed to save role!");
     }
   };
 };
@@ -151,6 +151,73 @@ export const getUsersByRole = (roleCategory) => {
         type: userConstants.GET_USERS_BY_ROLE_FAILURE,
         payload: { error: "Error fetching data!" },
       });
+    }
+  };
+};
+
+export const getRoleWithModuleAccess = (
+  restaurantId,
+  storeId,
+  roleCategory
+) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: userConstants.GET_ROLES_WITH_MODULE_REQUEST });
+
+      const res = await axios.get(`/getRoleWithModuleAccess`, {
+        params: { restaurantId, storeId, roleCategory },
+      });
+
+      if (res.status === 200) {
+        dispatch({
+          type: userConstants.GET_ROLES_WITH_MODULE_SUCCESS,
+          payload: res.data,
+        });
+      } else {
+        dispatch({
+          type: userConstants.GET_ROLES_WITH_MODULE_FAILURE,
+          payload: { error: "Error fetching data!" },
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch({
+        type: userConstants.GET_ROLES_WITH_MODULE_FAILURE,
+        payload: { error: "Error fetching data!" },
+      });
+    }
+  };
+};
+
+export const deleteRoleWithModuleAccess = (payload) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: userConstants.DELETE_ROLE_WITH_MODULES_REQUEST });
+
+      const res = await axios.post(`/deleteRoleWithModuleAccess`, payload);
+
+      if (res.status === 200) {
+        dispatch({
+          type: userConstants.DELETE_ROLE_WITH_MODULES_SUCCESS,
+          payload: res.data,
+        });
+        toast.success("Role deleted successfully!");
+        dispatch(getRoles());
+        return true;
+      } else {
+        dispatch({
+          type: userConstants.DELETE_ROLE_WITH_MODULES_FAILURE,
+          payload: { error: "Error deleting data!" },
+        });
+        toast.error("Failed to delete role!");
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch({
+        type: userConstants.DELETE_ROLE_WITH_MODULES_FAILURE,
+        payload: { error: "Error saving data!" },
+      });
+      toast.error("Failed to delete role!");
     }
   };
 };

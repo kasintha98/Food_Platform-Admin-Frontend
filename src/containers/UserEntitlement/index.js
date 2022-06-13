@@ -10,16 +10,13 @@ import {
   MenuItem,
   Button,
 } from "@mui/material";
-import { getModules, getRoles } from "../../actions";
+import { getModules, getRoles, getRoleWithModuleAccess } from "../../actions";
 import { CreateNewRole } from "../../components/CreateNewRole";
 import { UpdateEntitlements } from "../../components/UpdateEntitlements";
 import { DeleteRole } from "../../components/DeleteRole";
 import { AssignRole } from "../../components/AssignRole";
 
 export const UserEntitlement = () => {
-  const roles = useSelector((state) => state.user.roles);
-  const modules = useSelector((state) => state.user.modules);
-
   const [decision, setDecision] = useState("");
   const [showActionPage, setShowActionPage] = useState(false);
 
@@ -104,9 +101,9 @@ export const UserEntitlement = () => {
                 <MenuItem value={"assignRole"}>
                   assign role to an Employee
                 </MenuItem>
-                <MenuItem value={"newRole"}>
+                {/*  <MenuItem value={"newRole"}>
                   create new role and entitlements
-                </MenuItem>
+                </MenuItem> */}
                 <MenuItem value={"updateEntitlements"}>
                   view and update entitlements to an existing role
                 </MenuItem>

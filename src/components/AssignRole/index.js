@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Row, Col } from "react-bootstrap";
 import Table from "@mui/material/Table";
@@ -18,6 +18,7 @@ import {
   MenuItem,
 } from "@mui/material";
 import styled from "@emotion/styled";
+import { getUsersByRole } from "../../actions";
 
 const SaveButton = styled(Button)`
   background-color: #92d050;
@@ -40,8 +41,9 @@ const employees = [
 ];
 
 export const AssignRole = (props) => {
+  const usersByRole = useSelector((state) => state.user.usersByRole);
   const modules = useSelector((state) => state.user.modules);
-  const roles = useSelector((state) => state.user.roles);
+  const rolesWithModules = useSelector((state) => state.user.rolesWithModules);
   const stores = useSelector((state) => state.store.stores);
 
   const [checked, setChecked] = useState(true);
@@ -51,6 +53,13 @@ export const AssignRole = (props) => {
   const [selectedEmployeeObj, setSelectedEmployeeObj] = useState(null);
   const [selectedStore, setSelectedStore] = useState("");
   const [selectedStoreObj, setSelectedStoreObj] = useState(null);
+  const [checkedRoles, setCheckedRoles] = useState({});
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getUsersByRole("ALL"));
+  }, []);
 
   const handleRoleChange = (event) => {
     setSelectedRole(event.target.value);
@@ -61,7 +70,11 @@ export const AssignRole = (props) => {
   };
 
   const handleChange = (event) => {
-    setChecked(event.target.checked);
+    setCheckedRoles({
+      ...checkedRoles,
+      [event.target.name]: event.target.checked,
+    });
+    console.log(checkedRoles);
   };
 
   const shoAddNewRolePage = () => {
@@ -77,6 +90,21 @@ export const AssignRole = (props) => {
   const handleSelectedStore = (store) => {
     setSelectedStoreObj(store);
     console.log(store);
+  };
+
+  const handleRoleObj = (role) => {
+    setSelectedRoleObj(role);
+    let ob = {};
+    if (role) {
+      for (let i = 0; i < role.modules.length; i++) {
+        Object.assign(ob, { [role.modules[i].moduleId]: true });
+      }
+    }
+    setCheckedRoles(ob);
+  };
+
+  const addRoleToEmp = () => {
+    console.log(checkedRoles);
   };
 
   return (
@@ -165,15 +193,15 @@ export const AssignRole = (props) => {
               label="Employee"
               onChange={handleEmployeeChange}
             >
-              {employees.map((employee) => (
+              {usersByRole.map((user) => (
                 <MenuItem
-                  key={employee.employeeId}
-                  value={employee.employeeId}
+                  key={user.userSeqNo}
+                  value={user.userSeqNo}
                   onClick={() => {
-                    setSelectedEmployeeObj(employee);
+                    setSelectedEmployeeObj(user);
                   }}
                 >
-                  {employee.name}
+                  {user.firstName}
                 </MenuItem>
               ))}
             </Select>
@@ -201,15 +229,15 @@ export const AssignRole = (props) => {
               label="Role"
               onChange={handleRoleChange}
             >
-              {roles.map((role) => (
+              {rolesWithModules.map((role) => (
                 <MenuItem
-                  key={role.roleId}
-                  value={role.roleId}
+                  key={role.role.roleId}
+                  value={role.role.roleId}
                   onClick={() => {
-                    setSelectedRoleObj(role);
+                    handleRoleObj(role);
                   }}
                 >
-                  {role.roleCategory}
+                  {role.role.roleCategory}
                 </MenuItem>
               ))}
             </Select>
@@ -248,9 +276,9 @@ export const AssignRole = (props) => {
                     <TableCell align="center">{row.moduleName}</TableCell>
                     <TableCell align="center">
                       <Checkbox
-                        checked={checked}
+                        checked={checkedRoles[row.moduleId] ? true : false}
                         onChange={handleChange}
-                        disabled={true}
+                        name={row.moduleId}
                       />
                     </TableCell>
                   </TableRow>
@@ -261,7 +289,7 @@ export const AssignRole = (props) => {
         </Col>
       </Row>
       <div className="text-center mt-4">
-        <SaveButton>SAVE</SaveButton>
+        <SaveButton onClick={addRoleToEmp}>SAVE</SaveButton>
       </div>
     </div>
   );
