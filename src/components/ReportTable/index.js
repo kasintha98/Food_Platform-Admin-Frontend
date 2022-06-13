@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getCustomerOrders } from "../../actions";
 import styled from "@emotion/styled";
@@ -12,9 +12,6 @@ import {
   TableBody,
   Alert,
   Button,
-  FormControl,
-  InputLabel,
-  NativeSelect,
   Typography,
 } from "@mui/material";
 import { Row, Col, Modal } from "react-bootstrap";
@@ -41,9 +38,11 @@ export const ReportTable = (props) => {
   const loading = useSelector((state) => state.order.loading);
   const [showInvoice, setShowInvoice] = useState(false);
   const [currentOrder, setCurrentOrder] = useState(false);
+  const [height, setHeight] = useState(0);
 
   const dispatch = useDispatch();
   const ref = React.createRef();
+  const refH = useRef(null);
 
   useEffect(() => {
     const today = new Date();
@@ -56,6 +55,17 @@ export const ReportTable = (props) => {
       )
     );
   }, [props.restaurantId, props.storeId]);
+
+  useEffect(() => {
+    if (refH.current) {
+      setHeight(refH.current.clientHeight * 0.58);
+    }
+  });
+
+  const options = {
+    unit: "px",
+    format: [255, height],
+  };
 
   const handleCloseInvoice = () => {
     setShowInvoice(false);
@@ -111,44 +121,50 @@ export const ReportTable = (props) => {
           <Modal.Body style={{ maxHeight: "75vh", overflowY: "auto" }}>
             {currentOrder ? (
               <div ref={ref}>
-                <div className="text-center">
-                  <Typography sx={{ fontWeight: "600" }}>Hangries</Typography>
+                <div ref={refH}>
+                  <div className="text-center">
+                    <Typography sx={{ fontWeight: "600" }}>Hangries</Typography>
 
-                  <Typography sx={{ fontWeight: "600" }}>
-                    Order ID: {currentOrder ? currentOrder.orderId : null}
-                  </Typography>
+                    <Typography sx={{ fontWeight: "600" }}>
+                      Order ID: {currentOrder ? currentOrder.orderId : null}
+                    </Typography>
 
-                  <Typography sx={{ fontWeight: "600" }}>
-                    <span>{currentOrder.orderDeliveryType}</span>
-                    <span> [{currentOrder.paymentStatus}]</span>
-                  </Typography>
-                </div>
-                <hr></hr>
-                <div>
-                  <Typography>Name: {currentOrder.customerName}</Typography>
-                  <Typography>Address: {currentOrder.address}</Typography>
-                  <Typography>Mob No: {currentOrder.mobileNumber}</Typography>
-                </div>
-                <hr></hr>
-                <div>
-                  <Typography>
-                    <Row>
-                      <Col>Time: {renderNowTime(currentOrder.createdDate)}</Col>
-                      <Col>Date: {renderNowDate(currentOrder.createdDate)}</Col>
-                    </Row>
-                  </Typography>
-                </div>
-                <hr></hr>
-                <div>
-                  <InvoiceTable
-                    allProducts={currentOrder.orderDetails}
-                    grandTot={currentOrder.totalPrice}
-                    cgst={currentOrder.cgstCalculatedValue}
-                    sgst={currentOrder.sgstCalculatedValue}
-                    overallPriceWithTax={currentOrder.overallPriceWithTax}
-                    delCharge={currentOrder.deliveryCharges}
-                    fullResp={currentOrder}
-                  ></InvoiceTable>
+                    <Typography sx={{ fontWeight: "600" }}>
+                      <span>{currentOrder.orderDeliveryType}</span>
+                      <span> [{currentOrder.paymentStatus}]</span>
+                    </Typography>
+                  </div>
+                  <hr></hr>
+                  <div>
+                    <Typography>Name: {currentOrder.customerName}</Typography>
+                    <Typography>Address: {currentOrder.address}</Typography>
+                    <Typography>Mob No: {currentOrder.mobileNumber}</Typography>
+                  </div>
+                  <hr></hr>
+                  <div>
+                    <Typography>
+                      <Row>
+                        <Col>
+                          Time: {renderNowTime(currentOrder.createdDate)}
+                        </Col>
+                        <Col>
+                          Date: {renderNowDate(currentOrder.createdDate)}
+                        </Col>
+                      </Row>
+                    </Typography>
+                  </div>
+                  <hr></hr>
+                  <div>
+                    <InvoiceTable
+                      allProducts={currentOrder.orderDetails}
+                      grandTot={currentOrder.totalPrice}
+                      cgst={currentOrder.cgstCalculatedValue}
+                      sgst={currentOrder.sgstCalculatedValue}
+                      overallPriceWithTax={currentOrder.overallPriceWithTax}
+                      delCharge={currentOrder.deliveryCharges}
+                      fullResp={currentOrder}
+                    ></InvoiceTable>
+                  </div>
                 </div>
               </div>
             ) : null}
@@ -168,7 +184,12 @@ export const ReportTable = (props) => {
               </Button>
             </Col>
             <Col className="col-6">
-              <Pdf targetRef={ref} filename="invoice.pdf">
+              <Pdf
+                targetRef={ref}
+                filename="invoice.pdf"
+                options={options}
+                x={0.8}
+              >
                 {({ toPdf }) => (
                   <Button
                     color="primary"

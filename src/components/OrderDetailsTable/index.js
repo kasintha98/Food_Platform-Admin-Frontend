@@ -4,6 +4,11 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import styled from "@emotion/styled";
+
+const CusTableCell = styled(TableCell)`
+  color: black;
+`;
 
 export const OrderDetailsTable = (props) => {
   return (
@@ -24,63 +29,91 @@ export const OrderDetailsTable = (props) => {
           <TableBody>
             {props.fullResp.orderDetails.map((row) => (
               <>
-                <TableRow key={row.orderId}>
-                  <TableCell>
-                    {row.productName}
-                    {row.subProductId !== "NAA" && (
-                      <span>
-                        {" - "}
+                <TableRow
+                  key={row.orderId}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <CusTableCell>
+                    {row.subProductId !== "NAA" ? (
+                      <span style={{ marginLeft: "15px" }}>
                         {row.ingredient}
                       </span>
+                    ) : (
+                      <span> {row.productName}</span>
                     )}
-                  </TableCell>
-                  <TableCell>{row.quantity}</TableCell>
-                  <TableCell>{row.price}.00</TableCell>
-                  <TableCell>
-                    {Number(row.quantity) * Number(row.price)}.00
-                  </TableCell>
+                  </CusTableCell>
+                  <CusTableCell>{row.quantity}</CusTableCell>
+                  <CusTableCell>Rs. {row.price}.00</CusTableCell>
+                  <CusTableCell>
+                    Rs. {Number(row.quantity) * Number(row.price)}.00
+                  </CusTableCell>
                 </TableRow>
               </>
             ))}
-            <TableRow>
-              <TableCell component="th" scope="row" colspan="3">
+            <TableRow sx={{ borderTop: "2px solid black" }}>
+              <CusTableCell component="th" scope="row" colspan="3">
                 Total
-              </TableCell>
-              <TableCell component="th" scope="row" colspan="1">
-                {props.fullResp.totalPrice}
-              </TableCell>
+              </CusTableCell>
+              <CusTableCell
+                component="th"
+                scope="row"
+                colspan="1"
+                sx={{ fontStyle: "italic" }}
+              >
+                Rs. {props.fullResp.totalPrice}
+              </CusTableCell>
             </TableRow>
             <TableRow>
-              <TableCell component="th" scope="row" colspan="3">
+              <CusTableCell component="th" scope="row" colspan="3">
                 CGST
-              </TableCell>
-              <TableCell component="th" scope="row" colspan="1">
-                {props.fullResp.cgstCalculatedValue}
-              </TableCell>
+              </CusTableCell>
+              <CusTableCell
+                component="th"
+                scope="row"
+                colspan="1"
+                sx={{ fontStyle: "italic" }}
+              >
+                Rs. {props.fullResp.cgstCalculatedValue}
+              </CusTableCell>
             </TableRow>
             <TableRow>
-              <TableCell component="th" scope="row" colspan="3">
+              <CusTableCell component="th" scope="row" colspan="3">
                 SGST
-              </TableCell>
-              <TableCell component="th" scope="row" colspan="1">
-                {props.fullResp.sgstCalculatedValue}
-              </TableCell>
+              </CusTableCell>
+              <CusTableCell
+                component="th"
+                scope="row"
+                colspan="1"
+                sx={{ fontStyle: "italic" }}
+              >
+                Rs. {props.fullResp.sgstCalculatedValue}
+              </CusTableCell>
             </TableRow>
             <TableRow>
-              <TableCell component="th" scope="row" colspan="3">
+              <CusTableCell component="th" scope="row" colspan="3">
                 Delivery Charges
-              </TableCell>
-              <TableCell component="th" scope="row" colspan="1">
-                {props.fullResp.deliveryCharges}
-              </TableCell>
+              </CusTableCell>
+              <CusTableCell
+                component="th"
+                scope="row"
+                colspan="1"
+                sx={{ fontStyle: "italic" }}
+              >
+                Rs. {props.fullResp.deliveryCharges}
+              </CusTableCell>
             </TableRow>
-            <TableRow>
-              <TableCell component="th" scope="row" colspan="3">
+            <TableRow
+              sx={{
+                borderTop: "2px solid black",
+                borderBottom: "2px solid black",
+              }}
+            >
+              <CusTableCell component="th" scope="row" colspan="3">
                 Grand Total
-              </TableCell>
-              <TableCell component="th" scope="row" colspan="1">
-                {props.fullResp.overallPriceWithTax}
-              </TableCell>
+              </CusTableCell>
+              <CusTableCell component="th" scope="row" colspan="1">
+                Rs. {props.fullResp.overallPriceWithTax}
+              </CusTableCell>
             </TableRow>
           </TableBody>
         </Table>

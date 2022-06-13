@@ -137,23 +137,29 @@ export const KDSTable = forwardRef((props, ref) => {
       dispatch(
         updateOrderSubProdStatus(orderId, productId, subProductId, "FOOD READY")
       ).then((res) => {
-        if (res) {
+        //If all order items are food ready then whole order is food ready
+        if (
+          order.orderDetails.filter((e) => e.orderDetailStatus === "FOOD READY")
+            .length === order.orderDetails.length
+        ) {
+          dispatch(updateOrder(orderId, "FOOD READY", null, true)).then(
+            (res) => {
+              if (res) {
+                newSubStatus ? setNewSubStatus(false) : setNewSubStatus(true);
+              }
+            }
+          );
+        } else {
           newSubStatus ? setNewSubStatus(false) : setNewSubStatus(true);
         }
       });
     }
 
-    //If all order items are food ready then whole order is food ready
-    if (
+    console.log(
       order.orderDetails.filter((e) => e.orderDetailStatus === "FOOD READY")
-        .length === order.orderDetails.length
-    ) {
-      dispatch(updateOrder(orderId, "FOOD READY", null, true)).then((res) => {
-        if (res) {
-          newSubStatus ? setNewSubStatus(false) : setNewSubStatus(true);
-        }
-      });
-    }
+        .length
+    );
+    console.log(order.orderDetails.length);
   };
 
   return (

@@ -26,6 +26,7 @@ import {
 } from "@mui/material";
 import { toast } from "react-toastify";
 import { OrderDetailsTable } from "../../components/OrderDetailsTable";
+import "./style.css";
 
 const CusTableCell1 = styled(TableCell)`
   font-size: 0.75rem;
@@ -188,7 +189,10 @@ export const DeliveryManagement = () => {
             {orders && orders.length > 0 ? (
               <>
                 {orders.map((row) => (
-                  <TableRow key={row.orderId}>
+                  <TableRow
+                    key={row.orderId}
+                    className={row.orderStatus === "DELIVERED" ? "gr" : ""}
+                  >
                     <CusTableCell2
                       align="center"
                       onClick={() => {
@@ -230,7 +234,7 @@ export const DeliveryManagement = () => {
                     >
                       Rs. {row.overallPriceWithTax}
                     </CusTableCell2>
-                    {/* <CusTableCell2 align="center">
+                    {/* <CusTableCell2 align="center"         >
                       <Button
                         sx={{ fontSize: "0.75rem" }}
                         fullWidth
@@ -246,56 +250,63 @@ export const DeliveryManagement = () => {
                       {row.orderStatus}
                     </CusTableCell2>
                     <CusTableCell2 align="center">
-                      <Row>
-                        <Col className="m-0 p-0 col-12">
-                          <FormControl fullWidth>
-                            {/* <InputLabel
+                      {row.orderStatus === "DELIVERED" ? (
+                        <span>{row.deliveryUserId}</span>
+                      ) : (
+                        <Row>
+                          <Col className="m-0 p-0 col-12">
+                            <FormControl fullWidth>
+                              {/* <InputLabel
                               id="demo-simple-select-label"
                               sx={{ fontSize: "0.75rem" }}
                             >
                               Delivery Boy
                             </InputLabel> */}
-                            <NativeSelect
-                              defaultValue={
-                                row.deliveryUserId ? row.deliveryUserId : ""
-                              }
-                              inputProps={{
-                                name: "status",
-                                id: "uncontrolled-native",
-                              }}
-                              onChange={handleDeliveryBoyUpdate}
-                              sx={{ fontSize: "0.75rem" }}
-                            >
-                              <option value="" style={{ fontSize: "0.75rem" }}>
-                                Select Delivery Boy
-                              </option>
-                              {usersByRole.map((user) => (
+                              <NativeSelect
+                                defaultValue={
+                                  row.deliveryUserId ? row.deliveryUserId : ""
+                                }
+                                inputProps={{
+                                  name: "status",
+                                  id: "uncontrolled-native",
+                                }}
+                                onChange={handleDeliveryBoyUpdate}
+                                sx={{ fontSize: "0.75rem" }}
+                              >
                                 <option
-                                  key={user.userSeqNo}
-                                  value={user.firstName}
+                                  value=""
                                   style={{ fontSize: "0.75rem" }}
                                 >
-                                  {user.firstName}
+                                  Select Delivery Boy
                                 </option>
-                              ))}
-                            </NativeSelect>
-                          </FormControl>
-                        </Col>
-                        <Col className="m-0 p-0 col-12">
-                          <Button
-                            variant="contained"
-                            color="success"
-                            fullWidth
-                            className="mt-2"
-                            sx={{ fontSize: "0.75rem" }}
-                            onClick={() => {
-                              onClickSelectDeliBoy(row.orderId);
-                            }}
-                          >
-                            Confirm
-                          </Button>
-                        </Col>
-                      </Row>
+                                {usersByRole.map((user) => (
+                                  <option
+                                    key={user.userSeqNo}
+                                    value={user.firstName}
+                                    style={{ fontSize: "0.75rem" }}
+                                  >
+                                    {user.firstName}
+                                  </option>
+                                ))}
+                              </NativeSelect>
+                            </FormControl>
+                          </Col>
+                          <Col className="m-0 p-0 col-12">
+                            <Button
+                              variant="contained"
+                              color={row.deliveryUserId ? "primary" : "success"}
+                              fullWidth
+                              className="mt-2"
+                              sx={{ fontSize: "0.75rem" }}
+                              onClick={() => {
+                                onClickSelectDeliBoy(row.orderId);
+                              }}
+                            >
+                              Confirm
+                            </Button>
+                          </Col>
+                        </Row>
+                      )}
                     </CusTableCell2>
                   </TableRow>
                 ))}

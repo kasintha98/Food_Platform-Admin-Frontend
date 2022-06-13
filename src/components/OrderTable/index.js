@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getCustomerOrders, updateOrder } from "../../actions";
 import styled from "@emotion/styled";
@@ -16,10 +16,12 @@ import {
   InputLabel,
   TextField,
   NativeSelect,
+  Typography,
 } from "@mui/material";
 import { Row, Col, Modal } from "react-bootstrap";
 import { OrderDetailsTable } from "../OrderDetailsTable";
 import { toast } from "react-toastify";
+import Pdf from "react-to-pdf";
 
 const CusTableCell1 = styled(TableCell)`
   font-size: 0.75rem;
@@ -48,6 +50,7 @@ export const OrderTable = (props) => {
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [keywords, setKeywords] = useState("");
   const [isReset, setIsReset] = useState(false);
+  const [height, setHeight] = useState(0);
 
   const handleCloseDetailsModal = () => setShowDetailsModal(false);
   const handleShowDetailsModal = () => setShowDetailsModal(true);
@@ -65,6 +68,20 @@ export const OrderTable = (props) => {
       )
     );
   }, [props.type, isReset]);
+
+  const ref = React.createRef();
+  const refH = useRef(null);
+
+  useEffect(() => {
+    if (refH.current) {
+      setHeight(refH.current.clientHeight * 0.58);
+    }
+  });
+
+  const options = {
+    unit: "px",
+    format: [265, height],
+  };
 
   const handleStatusUpdate = (event) => {
     setStatus(event.target.value);
@@ -93,6 +110,29 @@ export const OrderTable = (props) => {
     }
   };
 
+  const renderNowDate = (date) => {
+    const dateObj = new Date(date);
+    const month = dateObj.toLocaleString("default", { month: "short" });
+    const day = dateObj.getDate();
+    const year = dateObj.getFullYear();
+    return (
+      <span>
+        {day}/{month.toUpperCase()}/{year}
+      </span>
+    );
+  };
+
+  const renderNowTime = (date) => {
+    const dateObj = new Date(date);
+    const time = dateObj.toLocaleString("en-US", {
+      hour: "numeric",
+      hour12: true,
+      minute: "numeric",
+    });
+
+    return <span>{time}</span>;
+  };
+
   const renderDetailsModal = () => {
     return (
       <Modal
@@ -105,8 +145,84 @@ export const OrderTable = (props) => {
           <Modal.Title>OrderDetails</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <OrderDetailsTable fullResp={currentOrder}></OrderDetailsTable>
+          {currentOrder ? (
+            <>
+              {" "}
+              <div ref={ref}>
+                <div ref={refH}>
+                  <div className="text-center">
+                    <Typography sx={{ fontWeight: "600" }}>Hangries</Typography>
+
+                    <Typography sx={{ fontWeight: "600" }}>
+                      Order ID: {currentOrder ? currentOrder.orderId : null}
+                    </Typography>
+
+                    <Typography sx={{ fontWeight: "600" }}>
+                      <span>{currentOrder.orderDeliveryType}</span>
+                      <span> [{currentOrder.paymentStatus}]</span>
+                    </Typography>
+                  </div>
+                  <hr></hr>
+                  <div>
+                    <Typography>Name: {currentOrder.customerName}</Typography>
+                    <Typography>Address: {currentOrder.address}</Typography>
+                    <Typography>Mob No: {currentOrder.mobileNumber}</Typography>
+                  </div>
+                  <hr></hr>
+                  <div>
+                    <Typography>
+                      <Row>
+                        <Col>
+                          Time: {renderNowTime(currentOrder.createdDate)}
+                        </Col>
+                        <Col>
+                          Date: {renderNowDate(currentOrder.createdDate)}
+                        </Col>
+                      </Row>
+                    </Typography>
+                  </div>
+                  <hr></hr>
+                  <OrderDetailsTable
+                    fullResp={currentOrder}
+                  ></OrderDetailsTable>
+                </div>
+              </div>
+            </>
+          ) : null}
         </Modal.Body>
+        <Modal.Footer>
+          <Row className="w-100">
+            <Col className="col-6">
+              <Button
+                color="secondary"
+                onClick={handleCloseDetailsModal}
+                className="w-100"
+                variant="contained"
+              >
+                Close
+              </Button>
+            </Col>
+            <Col className="col-6">
+              <Pdf
+                targetRef={ref}
+                filename="invoice.pdf"
+                options={options}
+                x={0.8}
+              >
+                {({ toPdf }) => (
+                  <Button
+                    color="primary"
+                    onClick={toPdf}
+                    className="w-100"
+                    variant="contained"
+                  >
+                    Download Invoice
+                  </Button>
+                )}
+              </Pdf>
+            </Col>
+          </Row>
+        </Modal.Footer>
       </Modal>
     );
   };
