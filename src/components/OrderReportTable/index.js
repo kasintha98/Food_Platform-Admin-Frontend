@@ -33,7 +33,7 @@ const CusTableCell2 = styled(TableCell)`
   padding: 0;
 `;
 
-export const ReportTable = (props) => {
+export const OrderReportTable = (props) => {
   const orders = useSelector((state) => state.order.orders);
   const loading = useSelector((state) => state.order.loading);
   const [showInvoice, setShowInvoice] = useState(false);

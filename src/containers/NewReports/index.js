@@ -21,7 +21,8 @@ import { TopPayingCustomerTable } from "../../components/TopPayingCustomerTable"
 import { getAllReports } from "../../actions";
 import DropdownMenu from "@atlaskit/dropdown-menu";
 import "./style.css";
-import { ReportTable } from "../../components/ReportTable";
+import { OrderReportTable } from "../../components/OrderReportTable";
+import { SalesByDishReportTable } from "../../components/SalesByDishReportTable";
 
 const CusDDT = styled(Dropdown.Toggle)`
   font-weight: 500;
@@ -57,7 +58,7 @@ const NumberDiv = styled.div`
   padding: 10px;
 `;
 
-const reportTypes = ["Order Report"];
+const reportTypes = ["Order Report", "Sales By Dish Item"];
 
 export const NewReports = () => {
   const allReports = useSelector((state) => state.report.allReports);
@@ -233,12 +234,20 @@ export const NewReports = () => {
 
         <div className="mt-3">
           {selectedReport === "Order Report" && (
-            <ReportTable
+            <OrderReportTable
               startDate={dateState[0].startDate}
               endDate={dateState[0].endDate}
               storeId={selectedStoreObj.storeId}
               restaurantId={selectedStoreObj.restaurantId}
-            ></ReportTable>
+            ></OrderReportTable>
+          )}
+          {selectedReport === "Sales By Dish Item" && (
+            <SalesByDishReportTable
+              startDate={dateState[0].startDate}
+              endDate={dateState[0].endDate}
+              storeId={selectedStoreObj.storeId}
+              restaurantId={selectedStoreObj.restaurantId}
+            ></SalesByDishReportTable>
           )}
         </div>
       </div>
