@@ -40,6 +40,7 @@ export const UpdateEntitlements = (props) => {
   const [selectedRole, setSelectedRole] = useState("");
   const [selectedRoleObj, setSelectedRoleObj] = useState(null);
   const [checkedRoles, setCheckedRoles] = useState({});
+  const [prevCheckedRoles, setPrevCheckedRoles] = useState({});
 
   const dispatch = useDispatch();
 
@@ -59,7 +60,8 @@ export const UpdateEntitlements = (props) => {
         Object.assign(ob, { [role.modules[i].moduleId]: true });
       }
     }
-    setCheckedRoles(ob);
+    //setCheckedRoles(ob);
+    setPrevCheckedRoles(ob);
   };
 
   const handleChange = (event) => {
@@ -76,7 +78,7 @@ export const UpdateEntitlements = (props) => {
   };
 
   const updateRole = () => {
-    if (selectedRoleObj) {
+    if (selectedRoleObj && Object.keys(checkedRoles).length > 0) {
       const obj = {
         restaurantId: selectedRoleObj.role.restaurantId,
         storeId: selectedRoleObj.role.storeId,
@@ -85,16 +87,25 @@ export const UpdateEntitlements = (props) => {
         roleStatus: selectedRoleObj.role.roleStatus,
         moduleIds: Object.keys(checkedRoles),
       };
-      dispatch(saveRoleWithModules(selectedRoleObj.role)).then((res) => {
+      dispatch(saveRoleWithModules(obj)).then((res) => {
         if (res) {
+          dispatch(
+            getRoleWithModuleAccess(user.restaurantId, user.storeId, "ALL")
+          );
           setSelectedRole("");
           setSelectedRoleObj(null);
           setCheckedRoles({});
+          setPrevCheckedRoles({});
         }
       });
-      console.log(obj);
+      //console.log(obj);
     } else {
-      toast.error("Please select a role first!");
+      if (!selectedRoleObj) {
+        toast.error("Please select a role first!");
+      }
+      if (selectedRoleObj && Object.keys(checkedRoles).length < 1) {
+        toast.error("Please select new modules to add!");
+      }
     }
   };
 
@@ -165,9 +176,15 @@ export const UpdateEntitlements = (props) => {
                     <TableCell align="center">{row.moduleName}</TableCell>
                     <TableCell align="center">
                       <Checkbox
-                        checked={checkedRoles[row.moduleId] ? true : false}
+                        checked={
+                          prevCheckedRoles[row.moduleId] ||
+                          checkedRoles[row.moduleId]
+                            ? true
+                            : false
+                        }
                         onChange={handleChange}
                         name={row.moduleId}
+                        disabled={prevCheckedRoles[row.moduleId] ? true : false}
                       />
                     </TableCell>
                   </TableRow>

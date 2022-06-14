@@ -43,6 +43,7 @@ export const DeleteRole = (props) => {
   const [selectedRole, setSelectedRole] = useState("");
   const [selectedRoleObj, setSelectedRoleObj] = useState(null);
   const [checkedRoles, setCheckedRoles] = useState({});
+  const [prevCheckedRoles, setPrevCheckedRoles] = useState({});
 
   const dispatch = useDispatch();
 
@@ -62,7 +63,7 @@ export const DeleteRole = (props) => {
         Object.assign(ob, { [role.modules[i].moduleId]: true });
       }
     }
-    setCheckedRoles(ob);
+    setPrevCheckedRoles(ob);
   };
 
   const handleChange = (event) => {
@@ -80,11 +81,23 @@ export const DeleteRole = (props) => {
 
   const deleteRole = () => {
     if (selectedRoleObj) {
-      dispatch(deleteRoleWithModuleAccess(selectedRoleObj.role)).then((res) => {
+      const obj = {
+        restaurantId: selectedRoleObj.role.restaurantId,
+        storeId: selectedRoleObj.role.storeId,
+        roleCategory: selectedRoleObj.role.roleCategory,
+        roleDescription: selectedRoleObj.role.roleDescription,
+        roleStatus: selectedRoleObj.role.roleStatus,
+        moduleIds: Object.keys(checkedRoles),
+      };
+      dispatch(deleteRoleWithModuleAccess(obj)).then((res) => {
         if (res) {
+          dispatch(
+            getRoleWithModuleAccess(user.restaurantId, user.storeId, "ALL")
+          );
           setSelectedRole("");
           setSelectedRoleObj(null);
           setCheckedRoles({});
+          setPrevCheckedRoles({});
         }
       });
     } else {
@@ -137,7 +150,7 @@ export const DeleteRole = (props) => {
           <Typography
             sx={{ color: "#7F7F7F", fontWeight: "bold", textAlign: "right" }}
           >
-            Check Modules for Access
+            Check Modules for Delete
           </Typography>
         </Col>
         <Col className="col-6">
@@ -162,7 +175,7 @@ export const DeleteRole = (props) => {
                         checked={checkedRoles[row.moduleId] ? true : false}
                         onChange={handleChange}
                         name={row.moduleId}
-                        disabled={true}
+                        disabled={prevCheckedRoles[row.moduleId] ? false : true}
                       />
                     </TableCell>
                   </TableRow>
