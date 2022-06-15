@@ -139,8 +139,9 @@ export const KDSTable = forwardRef((props, ref) => {
       ).then((res) => {
         //If all order items are food ready then whole order is food ready
         if (
-          order.orderDetails.filter((e) => e.orderDetailStatus === "FOOD READY")
-            .length === order.orderDetails.length
+          res[0].orderDetails.filter(
+            (e) => e.orderDetailStatus === "FOOD READY"
+          ).length === res[0].orderDetails.length
         ) {
           dispatch(updateOrder(orderId, "FOOD READY", null, true)).then(
             (res) => {
@@ -154,12 +155,6 @@ export const KDSTable = forwardRef((props, ref) => {
         }
       });
     }
-
-    console.log(
-      order.orderDetails.filter((e) => e.orderDetailStatus === "FOOD READY")
-        .length
-    );
-    console.log(order.orderDetails.length);
   };
 
   return (

@@ -244,9 +244,9 @@ export const AssignRole = (props) => {
           </FormControl>
         </Col>
         <Col className="col-3 p-0">
-          <Button variant="text" onClick={shoAddNewRolePage}>
+          {/* <Button variant="text" onClick={shoAddNewRolePage}>
             Add New Role
-          </Button>
+          </Button> */}
         </Col>
       </Row>
       <Row className="align-items-center">
