@@ -258,8 +258,8 @@ export const OrderReportTable = (props) => {
           <TableHead>
             <TableRow>
               <CusTableCell1 align="center">NO</CusTableCell1>
-              <CusTableCell1 align="center">RESTAURANT ID</CusTableCell1>
               <CusTableCell1 align="center">RESTAURANT NAME</CusTableCell1>
+              <CusTableCell1 align="center">STORE NAME</CusTableCell1>
               <CusTableCell1 align="center">ORDER STATUS</CusTableCell1>
               <CusTableCell1 align="center">ORDER NO</CusTableCell1>
               <CusTableCell1 align="center">ORDER DATE</CusTableCell1>
@@ -289,10 +289,10 @@ export const OrderReportTable = (props) => {
                   <TableRow key={row.orderId}>
                     <CusTableCell2 align="center">{index + 1}</CusTableCell2>
                     <CusTableCell2 align="center">
-                      {row.restaurantId}
+                      {row.restaurantName}
                     </CusTableCell2>
                     <CusTableCell2 align="center">
-                      {row.restaurantId}
+                      {row.storeName}
                     </CusTableCell2>
                     <CusTableCell2 align="center">
                       {row.orderStatus}

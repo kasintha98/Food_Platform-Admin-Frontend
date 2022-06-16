@@ -9,7 +9,8 @@ export const getCustomerOrders = (
   orderStatus,
   orderReceivedDate,
   orderId,
-  deliveryUserId
+  deliveryUserId,
+  orderDeliveryType
 ) => {
   return async (dispatch) => {
     dispatch({ type: orderConstants.GET_CUSTOMER_ORDER_REQUEST });
@@ -21,7 +22,10 @@ export const getCustomerOrders = (
         orderReceivedDate,
         orderId,
         deliveryUserId,
+        orderDeliveryType,
       };
+
+      console.log(body);
 
       const res = await axios.post("/queryOrderViewByParams", body);
 
@@ -194,7 +198,10 @@ export const updateOrderDeliBoy = (orderId, deliveryUser) => {
             null,
             null,
             null,
-            `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
+            `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,
+            null,
+            null,
+            "DELIVERY"
           )
         );
 

@@ -57,7 +57,10 @@ export const DeliveryManagement = () => {
         null,
         null,
         null,
-        `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
+        `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,
+        null,
+        null,
+        "DELIVERY"
       )
     );
 
@@ -80,7 +83,8 @@ export const DeliveryManagement = () => {
         null,
         `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,
         keywords,
-        null
+        null,
+        "DELIVERY"
       )
     );
   };
