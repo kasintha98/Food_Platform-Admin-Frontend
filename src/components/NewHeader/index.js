@@ -44,7 +44,7 @@ const CusDropdownButton = styled(DropdownButton)`
 export const NewHeader = (props) => {
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const isMobile = useMediaQuery({ query: `(max-width: 1100px)` });
+  const isMobile = useMediaQuery({ query: `(max-width: 1210px)` });
 
   const drawerWidth = props.drawerWidth;
 
@@ -80,6 +80,11 @@ export const NewHeader = (props) => {
             <li className="nav-item top-module">
               <NavLink exact to={"/delivery-boy"}>
                 Delivery Boy
+              </NavLink>
+            </li>
+            <li className="nav-item top-module">
+              <NavLink exact to={"/delivery-tracking"}>
+                Delivery Tracking
               </NavLink>
             </li>
             <li className="nav-item top-module">
