@@ -28,6 +28,7 @@ import { NewReports } from "./containers/NewReports";
 import { NewOrders } from "./containers/NewOrders";
 import { DeliveryManagement } from "./containers/DeliveryManagement";
 import { DeliveryTracking } from "./containers/DeliveryTracking";
+import { NewTrack } from "./containers/NewTrack";
 
 function App() {
   const dispatch = useDispatch();
@@ -47,6 +48,11 @@ function App() {
       <ToastContainer theme="dark" />
       <Switch>
         <PrivateRoute path="/" exact component={AdminDashboard}></PrivateRoute>
+        <PrivateRoute
+          path="/newtrack"
+          exact
+          component={NewTrack}
+        ></PrivateRoute>
         <PrivateRoute path="/products" component={Products}></PrivateRoute>
         <PrivateRoute
           path="/delivery-management"
