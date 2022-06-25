@@ -180,6 +180,7 @@ function NewLayout(props) {
               flexGrow: 1,
               p: 3,
               width: { xxl: `calc(100% - ${drawerWidth}px)` },
+              backgroundColor: `${props.bgColor ? props.bgColor : "#fff"}`,
             }}
           >
             <CustToolbar />
@@ -187,7 +188,12 @@ function NewLayout(props) {
           </Box>
         </>
       ) : (
-        <Box sx={{ width: "99%" }}>
+        <Box
+          sx={{
+            width: "99%",
+            backgroundColor: `${props.bgColor ? props.bgColor : "#fff"}`,
+          }}
+        >
           <CustToolbar />
           {props.children ? props.children : null}
         </Box>
