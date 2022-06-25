@@ -8,11 +8,10 @@ import {
   MenuItem,
   Button,
   TextField,
-  Experimental_CssVarsProvider,
 } from "@mui/material";
 import { Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { getUsersByRole } from "../../actions";
+import { getUsersByRole, getRoles } from "../../actions";
 import styled from "@emotion/styled";
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
@@ -40,6 +39,7 @@ export default function Employee(props) {
   const stores = useSelector((state) => state.store.stores);
   const usersByRole = useSelector((state) => state.user.usersByRole);
   const rolesWithModules = useSelector((state) => state.user.rolesWithModules);
+  const allRoles = useSelector((state) => state.user.roles);
 
   const [selectedStore, setSelectedStore] = useState("");
   const [selectedStoreObj, setSelectedStoreObj] = useState(null);
@@ -70,6 +70,7 @@ export default function Employee(props) {
 
   useEffect(() => {
     dispatch(getUsersByRole("ALL"));
+    dispatch(getRoles());
   }, []);
 
   const handleChangeStore = (event) => {
@@ -111,6 +112,7 @@ export default function Employee(props) {
       setDob(employee.dob);
       setStartDate(new Date(employee.effectiveStartDate));
       setEndDate(new Date(employee.effectiveEndDate));
+      setSelectedRole(employee.roleCategory);
     } else {
       setFirstName("");
       setMiddleName("");
@@ -130,6 +132,7 @@ export default function Employee(props) {
       setDob(new Date());
       setStartDate(new Date());
       setEndDate(new Date());
+      setSelectedRole("");
     }
   };
 
@@ -554,15 +557,9 @@ export default function Employee(props) {
                     label="Select Role"
                     onChange={handleRoleChange}
                   >
-                    {rolesWithModules.map((role) => (
-                      <MenuItem
-                        key={role.role.roleId}
-                        value={role.role.roleId}
-                        onClick={() => {
-                          setSelectedRoleObj(role.role);
-                        }}
-                      >
-                        {role.role.roleCategory}
+                    {allRoles.map((role) => (
+                      <MenuItem key={role.roleId} value={role.roleCategory}>
+                        {role.roleCategory}
                       </MenuItem>
                     ))}
                   </Select>
