@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getUsersByRole } from "../../actions";
+import { getUsersByRole, getAllRiderLocations } from "../../actions";
 import Layout from "../NewLayout";
 import styled from "@emotion/styled";
 import { Box, Tabs, Typography, Alert } from "@mui/material";
@@ -75,6 +75,7 @@ export const DeliveryTracking = () => {
           .classList.add("Mui-selected");
       }
     });
+    dispatch(getAllRiderLocations());
   }, []);
 
   const handleChangeTab = (event, newValue) => {

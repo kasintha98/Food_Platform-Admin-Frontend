@@ -1,0 +1,18 @@
+{
+  "riderLocations": [
+    {
+      "id": 1,
+      "name": "rahul",
+      "latitude": 6.972559699999995,
+      "longitude": 79.91585280000004,
+      "time": ""
+    },
+    {
+      "id": 2,
+      "name": "virat",
+      "latitude": 6.9725999,
+      "longitude": 79.919999,
+      "time": "2:12:13 PM"
+    }
+  ]
+}

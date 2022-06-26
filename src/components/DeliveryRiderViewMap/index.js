@@ -5,14 +5,18 @@ import {
   withScriptjs,
   withGoogleMap,
   Marker,
+  DirectionsRenderer,
 } from "react-google-maps";
+import { updateRiderLocations } from "../../actions";
 require("dotenv").config();
 
 function Map(props) {
   const [pos, setPos] = useState(null);
+  const [directions, setDirections] = useState(null);
   const [orderAddresses, setOrderAddresses] = useState([]);
   const [geoAddresses, setGeoAddresses] = useState([]);
   let geocoder = new window.google.maps.Geocoder();
+  const DirectionsService = new window.google.maps.DirectionsService();
   const orders = useSelector((state) => state.order.orders);
   const allRiderLocations = useSelector((state) => state.rider.allLocations);
 
@@ -32,6 +36,46 @@ function Map(props) {
     }
     console.log(orders);
     setGeoData(array);
+  }, []);
+
+  //update live current location of rider
+  useEffect(() => {
+    setInterval(() => {
+      if (allRiderLocations[0]) {
+        dispatch(
+          updateRiderLocations(
+            allRiderLocations[0],
+            allRiderLocations[0].latitude + 0.00001,
+            allRiderLocations[0].longitude + 0.00001,
+            ""
+          )
+        );
+      }
+    }, 10000);
+  }, []);
+
+  useEffect(() => {
+    DirectionsService.route(
+      {
+        origin: new window.google.maps.LatLng(
+          allRiderLocations[0]
+            ? allRiderLocations[0].latitude
+            : 6.972509699999997,
+          allRiderLocations[0]
+            ? allRiderLocations[0].longitude
+            : 79.91580280000002
+        ),
+        destination: geoAddresses[0] ? geoAddresses[0].geo : null,
+        travelMode: window.google.maps.TravelMode.DRIVING,
+      },
+      (result, status) => {
+        if (status === window.google.maps.DirectionsStatus.OK) {
+          setDirections(result);
+        } else {
+          console.error(`error fetching directions ${result}`);
+        }
+      }
+    );
   }, []);
 
   const setGeoData = (data) => {
@@ -62,9 +106,9 @@ function Map(props) {
       if (status === "OK") {
         //map.setCenter(results[0].geometry.location);
         /* var marker = new google.maps.Marker({
-            map: map,
-            position: results[0].geometry.location
-        }); */
+              map: map,
+              position: results[0].geometry.location
+          }); */
         console.log(results[0].geometry.location.lat);
         setPos(results[0].geometry.location);
       } else {
@@ -77,21 +121,21 @@ function Map(props) {
     <GoogleMap
       defaultZoom={16}
       defaultCenter={{
-        lat: 6.972469699999999,
-        lng: 79.91576280000001,
+        lat: 6.972509699999997,
+        lng: 79.91580280000002,
       }}
     >
       {props.isMarkerShown && (
         <>
           {/* <Marker position={{ lat: 6.841273, lng: 80.003059 }} label="Rahul" />
-          <Marker
-            position={{ lat: 6.841124370943574, lng: 79.99884379754049 }}
-            label="Rajesh"
-          />
-          <Marker
-            position={{ lat: 6.836558219136004, lng: 80.00349632925149 }}
-            label="Virat"
-          /> */}
+            <Marker
+              position={{ lat: 6.841124370943574, lng: 79.99884379754049 }}
+              label="Rajesh"
+            />
+            <Marker
+              position={{ lat: 6.836558219136004, lng: 80.00349632925149 }}
+              label="Virat"
+            /> */}
           {geoAddresses.map((loc) => (
             <Marker position={loc.geo} label={loc.name} />
           ))}
@@ -103,11 +147,12 @@ function Map(props) {
           ))}
         </>
       )}
+      {directions && <DirectionsRenderer directions={directions} />}
     </GoogleMap>
   );
 }
 
-export const MapNew = () => {
+export const DeliveryRiderViewMap = () => {
   const key = process.env.REACT_APP_MAP_KEY;
   const WrappedMap = withScriptjs(withGoogleMap(Map));
   return (

@@ -11,6 +11,7 @@ import inventoryReducer from "./inventory.reducer";
 import purchaseReducer from "./purchase.reducer";
 import storeReducer from "./store.reducer";
 import reportReducer from "./report.reducer";
+import riderReducer from "./rider.reducer";
 import { combineReducers } from "redux";
 
 const rootReducer = combineReducers({
@@ -24,6 +25,7 @@ const rootReducer = combineReducers({
   purchase: purchaseReducer,
   store: storeReducer,
   report: reportReducer,
+  rider: riderReducer,
 });
 
 export default rootReducer;

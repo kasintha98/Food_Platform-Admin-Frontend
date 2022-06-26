@@ -22,6 +22,8 @@ import {
 } from "@mui/material";
 import { toast } from "react-toastify";
 import { MapNew } from "../MapNew";
+import { DeliveryRiderViewMap } from "../DeliveryRiderViewMap";
+import { DeliveryRiderViewMapNew } from "../DeliveryRiderViewMapNew";
 import { OrderDetailsTable } from "../OrderDetailsTable";
 import "./style.css";
 
@@ -40,6 +42,8 @@ export const DeliveryTrackingTable = (props) => {
   const user = useSelector((state) => state.auth.user);
   const orders = useSelector((state) => state.order.orders);
   const loading = useSelector((state) => state.order.loading);
+  const allRiderLocations = useSelector((state) => state.rider.allLocations);
+
   const [currentOrder, setCurrentOrder] = useState(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [keywords, setKeywords] = useState("");
@@ -327,7 +331,12 @@ export const DeliveryTrackingTable = (props) => {
         </Table>
       </TableContainer>
       <div>
+        <h3>Customer Order Address Locations</h3>
         <MapNew></MapNew>
+        {/* <h3>Delivery Rider View</h3>
+        <DeliveryRiderViewMap></DeliveryRiderViewMap> */}
+        <h3>Delivery Rider View New</h3>
+        <DeliveryRiderViewMapNew></DeliveryRiderViewMapNew>
       </div>
       {renderDetailsModal()}
     </div>
