@@ -221,3 +221,78 @@ export const deleteRoleWithModuleAccess = (payload) => {
     }
   };
 };
+
+export const getConfigDetails = (restaurantId, storeId, criteria) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: userConstants.GET_CONFIG_DETAILS_REQUEST });
+
+      const res = await axios.get(`/getConfigDetailsByCriteria`, {
+        params: {
+          restaurantId,
+          storeId,
+          criteria,
+        },
+      });
+
+      if (res.status === 200) {
+        dispatch({
+          type: userConstants.GET_CONFIG_DETAILS_SUCCESS,
+          payload: res.data,
+        });
+        return res.data;
+      } else {
+        dispatch({
+          type: userConstants.GET_CONFIG_DETAILS_FAILURE,
+          payload: { error: "Error fetching data!" },
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch({
+        type: userConstants.GET_CONFIG_DETAILS_FAILURE,
+        payload: { error: "Error fetching data!" },
+      });
+    }
+  };
+};
+
+export const addConfigDetails = (configDetails) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: userConstants.ADD_CONFIG_DETAILS_REQUEST });
+
+      const res = await axios.post(
+        `/addConfigDetailsByCriteria`,
+        configDetails
+      );
+
+      if (res.status === 200) {
+        dispatch({
+          type: userConstants.ADD_CONFIG_DETAILS_SUCCESS,
+          payload: res.data,
+        });
+        /* dispatch(
+          getConfigDetails(
+            configDetails.restaurantId,
+            configDetails.storeId,
+            "ORDER_SOURCE"
+          )
+        ); */
+        toast.success("Order source added successfully!");
+        return res.data;
+      } else {
+        dispatch({
+          type: userConstants.ADD_CONFIG_DETAILS_FAILURE,
+          payload: { error: "Error fetching data!" },
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch({
+        type: userConstants.ADD_CONFIG_DETAILS_FAILURE,
+        payload: { error: "Error fetching data!" },
+      });
+    }
+  };
+};
