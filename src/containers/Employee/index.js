@@ -11,11 +11,17 @@ import {
 } from "@mui/material";
 import { Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { getUsersByRole, getRoles } from "../../actions";
+import {
+  getUsersByRole,
+  getRoles,
+  addUpdateEmployee,
+  getEmployeesByRes,
+} from "../../actions";
 import styled from "@emotion/styled";
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { toast } from "react-toastify";
 
 const CusMenuItem = styled(MenuItem)``;
 
@@ -37,7 +43,7 @@ const SaveButton = styled(Button)`
 
 export default function Employee(props) {
   const stores = useSelector((state) => state.store.stores);
-  const usersByRole = useSelector((state) => state.user.usersByRole);
+  const employeesByRes = useSelector((state) => state.employees.employeesByRes);
   const rolesWithModules = useSelector((state) => state.user.rolesWithModules);
   const allRoles = useSelector((state) => state.user.roles);
 
@@ -79,6 +85,15 @@ export default function Employee(props) {
   };
 
   const handleSelectedStore = (store) => {
+    dispatch(
+      getEmployeesByRes(store.restaurantId, store.storeId, "ACTIVE")
+    ).then((res) => {
+      if (res) {
+        clearFields();
+        setSelectedEmployee("");
+        setSelectedEmployeeObj(null);
+      }
+    });
     setSelectedStoreObj(store);
     console.log(store);
   };
@@ -109,31 +124,35 @@ export default function Employee(props) {
       setEmail(employee.emailId);
       setEmergency(employee.emergencyNumber);
       setMobile(employee.mobileNumber);
-      setDob(employee.dob);
+      setDob(new Date(employee.userDob));
       setStartDate(new Date(employee.effectiveStartDate));
       setEndDate(new Date(employee.effectiveEndDate));
       setSelectedRole(employee.roleCategory);
     } else {
-      setFirstName("");
-      setMiddleName("");
-      setLastName("");
-      setLicenseNo("");
-      setPId("");
-      setAId("");
-      setAddress1("");
-      setAddress2("");
-      setState("");
-      setZip("");
-      setCountry("");
-      setCity("");
-      setEmail("");
-      setEmergency("");
-      setMobile("");
-      setDob(new Date());
-      setStartDate(new Date());
-      setEndDate(new Date());
-      setSelectedRole("");
+      clearFields();
     }
+  };
+
+  const clearFields = () => {
+    setFirstName("");
+    setMiddleName("");
+    setLastName("");
+    setLicenseNo("");
+    setPId("");
+    setAId("");
+    setAddress1("");
+    setAddress2("");
+    setState("");
+    setZip("");
+    setCountry("");
+    setCity("");
+    setEmail("");
+    setEmergency("");
+    setMobile("");
+    setDob(new Date());
+    setStartDate(new Date());
+    setEndDate(new Date());
+    setSelectedRole("");
   };
 
   const handleChangeDob = (newValue) => {
@@ -146,6 +165,111 @@ export default function Employee(props) {
 
   const handleChangeEnd = (newValue) => {
     setEndDate(newValue);
+  };
+
+  const updateEmployee = () => {
+    const obj = {
+      userSeqNo: selectedEmployeeObj.userSeqNo,
+      firstName: firstName,
+      middleName: middleName,
+      lastName: lastName,
+      loginId: selectedEmployeeObj.loginId,
+      loginPassword: selectedEmployeeObj.loginPassword,
+      userDob: `${dob.getFullYear()}-${("0" + (dob.getMonth() + 1)).slice(
+        -2
+      )}-${("0" + dob.getDate()).slice(-2)}`,
+      restaurantId: selectedStoreObj.restaurantId,
+      storeId: selectedStoreObj.storeId,
+      status: selectedEmployeeObj.status,
+      adhaarId: aId,
+      panId: pId,
+      drivingLicenseNumber: licenseNo,
+      address1: address1,
+      address2: address2,
+      address3: selectedEmployeeObj.address3,
+      city: city,
+      country: country,
+      zipCode: zip,
+      mobileNumber: mobile,
+      alternativeContactId: emergency,
+      emailId: email,
+      qualification: selectedEmployeeObj.qualification,
+      photoFileLocation: selectedEmployeeObj.photoFileLocation,
+      roleCategory: selectedRole,
+      effectiveStartDate: `${startDate.getFullYear()}-${(
+        "0" +
+        (startDate.getMonth() + 1)
+      ).slice(-2)}-${("0" + startDate.getDate()).slice(-2)}`,
+      effectiveEndDate: `${endDate.getFullYear()}-${(
+        "0" +
+        (endDate.getMonth() + 1)
+      ).slice(-2)}-${("0" + endDate.getDate()).slice(-2)}`,
+    };
+
+    dispatch(addUpdateEmployee(obj)).then((res) => {
+      if (res) {
+        clearFields();
+        setSelectedEmployee("");
+        setSelectedEmployeeObj(null);
+        toast.success("Employee updated successfully!");
+      }
+    });
+  };
+
+  const addEmployee = () => {
+    const obj = {
+      firstName: firstName,
+      middleName: middleName,
+      lastName: lastName,
+      loginId: `${firstName}${startDate.getFullYear()}`,
+      loginPassword: `${firstName}${startDate.getFullYear()}`,
+      userDob: `${dob.getFullYear()}-${("0" + (dob.getMonth() + 1)).slice(
+        -2
+      )}-${("0" + dob.getDate()).slice(-2)}`,
+      restaurantId: selectedStoreObj.restaurantId,
+      storeId: selectedStoreObj.storeId,
+      status: "ACTIVE",
+      adhaarId: aId,
+      panId: pId,
+      drivingLicenseNumber: licenseNo,
+      address1: address1,
+      address2: address2,
+      address3: "",
+      city: city,
+      country: country,
+      zipCode: zip,
+      mobileNumber: mobile,
+      alternativeContactId: emergency,
+      emailId: email,
+      qualification: "",
+      photoFileLocation: "",
+      roleCategory: selectedRole,
+      effectiveStartDate: `${startDate.getFullYear()}-${(
+        "0" +
+        (startDate.getMonth() + 1)
+      ).slice(-2)}-${("0" + startDate.getDate()).slice(-2)}`,
+      effectiveEndDate: `${endDate.getFullYear()}-${(
+        "0" +
+        (endDate.getMonth() + 1)
+      ).slice(-2)}-${("0" + endDate.getDate()).slice(-2)}`,
+    };
+
+    console.log(obj);
+
+    dispatch(addUpdateEmployee(obj)).then((res) => {
+      if (res) {
+        clearFields();
+        setSelectedEmployee("");
+        setSelectedEmployeeObj(null);
+        toast.success("Employee added successfully!");
+      }
+    });
+  };
+
+  const checkSelectStore = () => {
+    if (!selectedStore) {
+      toast.error("Please select a store first!");
+    }
   };
 
   return (
@@ -265,6 +389,8 @@ export default function Employee(props) {
                     value={selectedEmployee}
                     label="Employee"
                     onChange={handleEmployeeChange}
+                    disabled={selectedStore ? false : true}
+                    onClick={checkSelectStore}
                   >
                     <MenuItem
                       value={"ADD NEW EMPLOYEE"}
@@ -274,7 +400,7 @@ export default function Employee(props) {
                     >
                       ++ ADD NEW EMPLOYEE
                     </MenuItem>
-                    {usersByRole.map((user) => (
+                    {employeesByRes.map((user) => (
                       <MenuItem
                         key={user.userSeqNo}
                         value={user.userSeqNo}
@@ -571,12 +697,18 @@ export default function Employee(props) {
         <div className="text-center mt-4">
           <Row>
             <Col sm={4}>
-              <SaveButton disabled={selectedEmployee !== "ADD NEW EMPLOYEE"}>
+              <SaveButton
+                disabled={selectedEmployee !== "ADD NEW EMPLOYEE"}
+                onClick={addEmployee}
+              >
                 ADD NEW <br></br> EMPLOYEE
               </SaveButton>
             </Col>
             <Col sm={4}>
-              <SaveButton disabled={selectedEmployeeObj === null}>
+              <SaveButton
+                disabled={selectedEmployeeObj === null}
+                onClick={updateEmployee}
+              >
                 UPDATE <br></br> EMPLOYEE
               </SaveButton>
             </Col>
