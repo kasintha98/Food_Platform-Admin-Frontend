@@ -167,7 +167,7 @@ export default function Employee(props) {
     setEndDate(newValue);
   };
 
-  const updateEmployee = () => {
+  const updateEmployee = (isDelete) => {
     const obj = {
       userSeqNo: selectedEmployeeObj.userSeqNo,
       firstName: firstName,
@@ -180,7 +180,7 @@ export default function Employee(props) {
       )}-${("0" + dob.getDate()).slice(-2)}`,
       restaurantId: selectedStoreObj.restaurantId,
       storeId: selectedStoreObj.storeId,
-      status: selectedEmployeeObj.status,
+      status: isDelete ? "INACTIVE" : selectedEmployeeObj.status,
       adhaarId: aId,
       panId: pId,
       drivingLicenseNumber: licenseNo,
@@ -211,7 +211,11 @@ export default function Employee(props) {
         clearFields();
         setSelectedEmployee("");
         setSelectedEmployeeObj(null);
-        toast.success("Employee updated successfully!");
+        toast.success(
+          isDelete
+            ? "Employee deleted successfully!"
+            : "Employee updated successfully!"
+        );
       }
     });
   };
@@ -221,8 +225,8 @@ export default function Employee(props) {
       firstName: firstName,
       middleName: middleName,
       lastName: lastName,
-      loginId: `${firstName}${startDate.getFullYear()}`,
-      loginPassword: `${firstName}${startDate.getFullYear()}`,
+      loginId: `${firstName}${dob.getFullYear()}`,
+      loginPassword: `${firstName}${dob.getFullYear()}`,
       userDob: `${dob.getFullYear()}-${("0" + (dob.getMonth() + 1)).slice(
         -2
       )}-${("0" + dob.getDate()).slice(-2)}`,
@@ -707,13 +711,20 @@ export default function Employee(props) {
             <Col sm={4}>
               <SaveButton
                 disabled={selectedEmployeeObj === null}
-                onClick={updateEmployee}
+                onClick={() => {
+                  updateEmployee(false);
+                }}
               >
                 UPDATE <br></br> EMPLOYEE
               </SaveButton>
             </Col>
             <Col sm={4}>
-              <SaveButton disabled={selectedEmployeeObj === null}>
+              <SaveButton
+                disabled={selectedEmployeeObj === null}
+                onClick={() => {
+                  updateEmployee(true);
+                }}
+              >
                 DELETE <br></br> EMPLOYEE
               </SaveButton>
             </Col>

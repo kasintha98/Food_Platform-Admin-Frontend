@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getCustomerOrders, updateOrder } from "../../actions";
+import { getCustomerOrders, updateOrder, getUsersByRole } from "../../actions";
 import Layout from "../NewLayout";
 import { Row, Col, Modal } from "react-bootstrap";
 import styled from "@emotion/styled";
@@ -44,6 +44,7 @@ const statuses = [
 
 export const DeliveryBoy = () => {
   const user = useSelector((state) => state.auth.user);
+  const usersByRole = useSelector((state) => state.user.usersByRole);
   const orders = useSelector((state) => state.order.orders);
   const loading = useSelector((state) => state.order.loading);
   const [currentOrder, setCurrentOrder] = useState(null);
@@ -52,25 +53,31 @@ export const DeliveryBoy = () => {
   const [isReset, setIsReset] = useState(false);
   const [status, setStatus] = useState("");
   const [filteredData, setFilteredData] = useState([]);
+  const [selectedDeliBoy, setSelectedDeliBoy] = useState("");
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const today = new Date();
-    dispatch(
-      getCustomerOrders(
-        user.restaurantId,
-        user.storeId,
-        null,
-        `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,
-        null,
-        "rahul"
-      )
-    ).then((res) => {
-      if (res) {
-        setFilteredData(filterByStatus(res));
-      }
-    });
+    if (user.roleCategory === "DELIVERY_BOY") {
+      setSelectedDeliBoy(user.firstName);
+      const today = new Date();
+      dispatch(
+        getCustomerOrders(
+          null,
+          null,
+          null,
+          `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,
+          null,
+          `${user.firstName}`
+        )
+      ).then((res) => {
+        if (res) {
+          setFilteredData(filterByStatus(res));
+        }
+      });
+    } else {
+      dispatch(getUsersByRole("DELIVERY_BOY"));
+    }
   }, [isReset]);
 
   const filterByStatus = (orders) => {
@@ -106,7 +113,7 @@ export const DeliveryBoy = () => {
         null,
         `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,
         keywords,
-        "rahul"
+        selectedDeliBoy
       )
     ).then((res) => {
       if (res) {
@@ -141,6 +148,30 @@ export const DeliveryBoy = () => {
     console.log(event.target.value);
   };
 
+  const handleDeliveryBoyUpdate = (event) => {
+    setSelectedDeliBoy(event.target.value);
+
+    if (event.target.value) {
+      const today = new Date();
+      dispatch(
+        getCustomerOrders(
+          null,
+          null,
+          null,
+          `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,
+          null,
+          `${event.target.value}`
+        )
+      ).then((res) => {
+        if (res) {
+          setFilteredData(filterByStatus(res));
+        }
+      });
+    } else {
+      setFilteredData([]);
+    }
+  };
+
   const renderDetailsModal = () => {
     return (
       <Modal
@@ -162,7 +193,7 @@ export const DeliveryBoy = () => {
   return (
     <Layout sidebar headerTitle="Delivery Boy">
       <Row>
-        <Col sm={6}>
+        <Col sm={4}>
           <div className="mb-3">
             <TextField
               label="Search Order By ID"
@@ -189,14 +220,36 @@ export const DeliveryBoy = () => {
             </Button>
           </div>
         </Col>
-        <Col sm={6}>
+        <Col sm={4}>
           <Typography sx={{ color: "#595959", fontWeight: "bold" }}>
-            Role: Delivery Boy (rahul)
+            Role: Delivery Boy{" "}
+            {selectedDeliBoy && <span>({selectedDeliBoy})</span>}
           </Typography>
           <Typography sx={{ color: "#595959", fontWeight: "bold" }}>
             Store Name: Hangries YamunaNagar
           </Typography>
         </Col>
+        {user.roleCategory !== "DELIVERY_BOY" && (
+          <Col sm={4}>
+            <FormControl fullWidth>
+              <NativeSelect
+                inputProps={{
+                  name: "status",
+                  id: "uncontrolled-native",
+                }}
+                onChange={handleDeliveryBoyUpdate}
+                sx={{ fontSize: "0.75rem" }}
+              >
+                <option value="">Select Delivery Boy</option>
+                {usersByRole.map((user) => (
+                  <option key={user.userSeqNo} value={user.firstName}>
+                    {user.firstName}
+                  </option>
+                ))}
+              </NativeSelect>
+            </FormControl>
+          </Col>
+        )}
       </Row>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -366,8 +419,10 @@ export const DeliveryBoy = () => {
                     </div>
                   ) : (
                     <Alert severity="warning">
-                      No orders in "FOOD READY" / "OUT FOR DELIVERY" /
-                      "DELIVERED" / "CANCELLED" status to show today!
+                      {selectedDeliBoy
+                        ? `No orders in "FOOD READY" / "OUT FOR DELIVERY" /
+                      "DELIVERED" / "CANCELLED" status to show today!`
+                        : "Please select a delivery boy!"}
                     </Alert>
                   )}
                 </CusTableCell2>
