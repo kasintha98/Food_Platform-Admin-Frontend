@@ -2,6 +2,7 @@ import axios from "../helpers/axios";
 import { authConstants } from "./constants";
 import { userConstants } from "./constants";
 import { toast } from "react-toastify";
+import { getModulesForUser } from "./user.actions";
 
 //action for login
 export const login = (user) => {
@@ -99,8 +100,17 @@ export const newLogin = (user) => {
               user,
             },
           });
+
+          dispatch(
+            getModulesForUser(
+              user.restaurantId,
+              user.storeId,
+              user.roleCategory
+            )
+          );
           //show success notification
           toast.success("Login Success!");
+          return res.data;
         }
         if (res.data.loginResponse === "INCORRECT_ID") {
           dispatch({

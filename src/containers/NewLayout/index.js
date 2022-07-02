@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useSelector } from "react-redux";
 import styled from "@emotion/styled";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -21,6 +22,7 @@ const CustToolbar = styled(Toolbar)`
 function NewLayout(props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const modulesForUser = useSelector((state) => state.user.modulesForUser);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -29,96 +31,164 @@ function NewLayout(props) {
   const drawer = (
     <div className="sidebar2">
       <List>
-        <ListItem>
-          <NavLink exact to={"/"}>
-            <i className="fa fa-home"></i>
-            &nbsp; Admin Dashboard
-          </NavLink>
-        </ListItem>
-        <ListItem>
-          <NavLink to={"/orders"}>
-            <i className="fa fa-info-circle"></i>
-            &nbsp; Orders
-          </NavLink>
-        </ListItem>
-        <ListItem>
-          <NavLink to={"/restaurants"}>
-            <i className="fa fa-coffee"></i>
-            &nbsp; Restaurants
-          </NavLink>
-        </ListItem>
-        <ListItem>
-          <NavLink to={"/products"}>
-            <i className="fa fa-cutlery"></i>
-            &nbsp; Menu
-          </NavLink>
-        </ListItem>
-        <ListItem>
-          <NavLink to={"/delivery-charges"}>
-            <i className="fa fa-motorcycle"></i>
-            &nbsp; Delivery Charges
-          </NavLink>
-        </ListItem>
-        <ListItem>
-          <NavLink exact to={"/employee"}>
-            <i className="fa fa-user"></i>
-            &nbsp; Employee
-          </NavLink>
-        </ListItem>
-        <ListItem>
-          <NavLink exact to={"/order-auto"}>
-            <i className="fa fa-sort"></i>
-            &nbsp; Order Automation
-          </NavLink>
-        </ListItem>
-        <ListItem>
-          <NavLink exact to={"/user-entitle"}>
-            <i className="fa fa-address-card"></i>
-            &nbsp; User Entitlement
-          </NavLink>
-        </ListItem>
-        <ListItem>
-          <NavLink to={"/reports"}>
-            <i className="fa fa-pie-chart"></i>
-            &nbsp; Reports
-          </NavLink>
-        </ListItem>
-        <ListItem>
-          <NavLink to={"/inventory"}>
-            <i className="fa fa-suitcase"></i>
-            &nbsp; Inventory Mgmt
-          </NavLink>
-        </ListItem>
-        <ListItem>
-          <NavLink to={"/customer"}>
-            <i className="fa fa-child"></i>
-            &nbsp; Customer
-          </NavLink>
-        </ListItem>
-        <ListItem>
-          <NavLink to={"/kds"}>
-            <i className="fa fa-clone"></i>
-            &nbsp; KDS
-          </NavLink>
-        </ListItem>
-        <ListItem>
-          <NavLink to={"/delivery-management"}>
-            <i className="fa fa-cube"></i>
-            &nbsp; Delivery Mgmt
-          </NavLink>
-        </ListItem>
-        <ListItem>
-          <NavLink to={"/delivery-tracking"}>
-            <i className=" 	fa fa-map-marker"></i>
-            &nbsp; Delivery Tracking
-          </NavLink>
-        </ListItem>
-        <ListItem>
-          <NavLink to={"/delivery-boy"}>
-            <i className=" 	fa fa-flash"></i>
-            &nbsp; Delivery Boy
-          </NavLink>
-        </ListItem>
+        {modulesForUser.some((module) => module.moduleName === "DASHBOARD") && (
+          <ListItem>
+            <NavLink exact to={"/dashboard"}>
+              <i className="fa fa-home"></i>
+              &nbsp; Admin Dashboard
+            </NavLink>
+          </ListItem>
+        )}
+
+        {modulesForUser.some((module) => module.moduleName === "ORDERS") && (
+          <ListItem>
+            <NavLink to={"/orders"}>
+              <i className="fa fa-info-circle"></i>
+              &nbsp; Orders
+            </NavLink>
+          </ListItem>
+        )}
+
+        {modulesForUser.some(
+          (module) => module.moduleName === "ADMIN FUNCTIONS"
+        ) && (
+          <ListItem>
+            <NavLink to={"/restaurants"}>
+              <i className="fa fa-coffee"></i>
+              &nbsp; Restaurants
+            </NavLink>
+          </ListItem>
+        )}
+
+        {modulesForUser.some(
+          (module) => module.moduleName === "ADMIN FUNCTIONS"
+        ) && (
+          <ListItem>
+            <NavLink to={"/products"}>
+              <i className="fa fa-cutlery"></i>
+              &nbsp; Menu
+            </NavLink>
+          </ListItem>
+        )}
+
+        {modulesForUser.some(
+          (module) => module.moduleName === "ADMIN FUNCTIONS"
+        ) && (
+          <ListItem>
+            <NavLink to={"/delivery-charges"}>
+              <i className="fa fa-motorcycle"></i>
+              &nbsp; Delivery Charges
+            </NavLink>
+          </ListItem>
+        )}
+
+        {modulesForUser.some(
+          (module) => module.moduleName === "ADMIN FUNCTIONS"
+        ) && (
+          <ListItem>
+            <NavLink exact to={"/employee"}>
+              <i className="fa fa-user"></i>
+              &nbsp; Employee
+            </NavLink>
+          </ListItem>
+        )}
+
+        {modulesForUser.some(
+          (module) => module.moduleName === "ADMIN FUNCTIONS"
+        ) && (
+          <ListItem>
+            <NavLink exact to={"/order-auto"}>
+              <i className="fa fa-sort"></i>
+              &nbsp; Order Automation
+            </NavLink>
+          </ListItem>
+        )}
+
+        {modulesForUser.some(
+          (module) => module.moduleName === "ADMIN FUNCTIONS"
+        ) && (
+          <ListItem>
+            <NavLink exact to={"/user-entitle"}>
+              <i className="fa fa-address-card"></i>
+              &nbsp; User Entitlement
+            </NavLink>
+          </ListItem>
+        )}
+
+        {modulesForUser.some((module) => module.moduleName === "REPORTS") && (
+          <ListItem>
+            <NavLink to={"/reports"}>
+              <i className="fa fa-pie-chart"></i>
+              &nbsp; Reports
+            </NavLink>
+          </ListItem>
+        )}
+
+        {modulesForUser.some(
+          (module) => module.moduleName === "ADMIN FUNCTIONS"
+        ) && (
+          <ListItem>
+            <NavLink to={"/inventory"}>
+              <i className="fa fa-suitcase"></i>
+              &nbsp; Inventory Mgmt
+            </NavLink>
+          </ListItem>
+        )}
+
+        {modulesForUser.some(
+          (module) => module.moduleName === "ADMIN FUNCTIONS"
+        ) && (
+          <ListItem>
+            <NavLink to={"/customer"}>
+              <i className="fa fa-child"></i>
+              &nbsp; Customer
+            </NavLink>
+          </ListItem>
+        )}
+
+        {modulesForUser.some(
+          (module) => module.moduleName === "KITCHEN DISPLAY SYSTEM"
+        ) && (
+          <ListItem>
+            <NavLink to={"/kds"}>
+              <i className="fa fa-clone"></i>
+              &nbsp; KDS
+            </NavLink>
+          </ListItem>
+        )}
+
+        {modulesForUser.some(
+          (module) => module.moduleName === "DELIVERY MGMT"
+        ) && (
+          <ListItem>
+            <NavLink to={"/delivery-management"}>
+              <i className="fa fa-cube"></i>
+              &nbsp; Delivery Mgmt
+            </NavLink>
+          </ListItem>
+        )}
+
+        {modulesForUser.some(
+          (module) => module.moduleName === "DELIVERY TRACKING"
+        ) && (
+          <ListItem>
+            <NavLink to={"/delivery-tracking"}>
+              <i className=" 	fa fa-map-marker"></i>
+              &nbsp; Delivery Tracking
+            </NavLink>
+          </ListItem>
+        )}
+
+        {modulesForUser.some(
+          (module) => module.moduleName === "DELIVERY BOY"
+        ) && (
+          <ListItem>
+            <NavLink to={"/delivery-boy"}>
+              <i className=" 	fa fa-flash"></i>
+              &nbsp; Delivery Boy
+            </NavLink>
+          </ListItem>
+        )}
       </List>
     </div>
   );

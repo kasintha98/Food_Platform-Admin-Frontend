@@ -12,6 +12,7 @@ const initState = {
   rolesWithModules: [],
   loadingRWM: false,
   configDetails: [],
+  modulesForUser: [],
 };
 
 export default (state = initState, action) => {
@@ -56,6 +57,24 @@ export default (state = initState, action) => {
         loading: false,
         error: action.payload,
         roles: [],
+      };
+      break;
+    case userConstants.GET_MODULES_FOR_USER_REQUEST:
+      state = {
+        ...state,
+      };
+      break;
+    case userConstants.GET_MODULES_FOR_USER_SUCCESS:
+      state = {
+        ...state,
+        modulesForUser: action.payload,
+      };
+      break;
+    case userConstants.GET_MODULES_FOR_USER_FAILURE:
+      state = {
+        ...state,
+        error: action.payload,
+        modulesForUser: [],
       };
       break;
     case userConstants.GET_CONFIG_DETAILS_REQUEST:

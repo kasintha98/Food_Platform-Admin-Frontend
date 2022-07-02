@@ -1,6 +1,11 @@
 import { Route, Switch } from "react-router-dom";
 import React, { useEffect } from "react";
-import { isUserLoggedIn, getInitialData, getAllStores } from "./actions";
+import {
+  isUserLoggedIn,
+  getInitialData,
+  getAllStores,
+  getModulesForUser,
+} from "./actions";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-date-range/dist/styles.css"; // main css file
@@ -29,10 +34,13 @@ import { NewOrders } from "./containers/NewOrders";
 import { DeliveryManagement } from "./containers/DeliveryManagement";
 import { DeliveryTracking } from "./containers/DeliveryTracking";
 import { NewTrack } from "./containers/NewTrack";
+import { Welcome } from "./containers/Welcome";
+import { PageNotFound } from "./containers/PageNotFound";
 
 function App() {
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
+  const modulesForUser = useSelector((state) => state.user.modulesForUser);
 
   //checking user logging and getting initial data
   useEffect(() => {
@@ -41,57 +49,135 @@ function App() {
     }
     /* dispatch(getInitialData()); */
     dispatch(getAllStores());
+
+    if (localStorage.getItem("user")) {
+      const user = JSON.parse(localStorage.getItem("user"));
+      dispatch(
+        getModulesForUser(user.restaurantId, user.storeId, user.roleCategory)
+      );
+    }
   }, []);
 
   return (
     <div>
       <ToastContainer theme="dark" />
       <Switch>
-        <PrivateRoute path="/" exact component={AdminDashboard}></PrivateRoute>
-        <PrivateRoute
+        <PrivateRoute path="/" exact component={Welcome}></PrivateRoute>
+
+        {modulesForUser.some((module) => module.moduleName === "DASHBOARD") && (
+          <PrivateRoute
+            path="/dashboard"
+            exact
+            component={AdminDashboard}
+          ></PrivateRoute>
+        )}
+
+        {/* <PrivateRoute
           path="/newtrack"
           exact
           component={NewTrack}
-        ></PrivateRoute>
-        <PrivateRoute path="/products" component={Products}></PrivateRoute>
-        <PrivateRoute
-          path="/delivery-management"
-          component={DeliveryManagement}
-        ></PrivateRoute>
-        <PrivateRoute
-          path="/delivery-tracking"
-          component={DeliveryTracking}
-        ></PrivateRoute>
-        <PrivateRoute path="/orders" component={NewOrders}></PrivateRoute>
-        <PrivateRoute path="/kds" component={KDS}></PrivateRoute>
-        <PrivateRoute
-          path="/restaurants"
-          component={Restaurants}
-        ></PrivateRoute>
-        <PrivateRoute
-          path="/delivery-charges"
-          component={DeliveryCharges}
-        ></PrivateRoute>
-        <PrivateRoute
-          path="/order-auto"
-          component={OrderAutomation}
-        ></PrivateRoute>
-        <PrivateRoute
-          path="/user-entitle"
-          component={UserEntitlement}
-        ></PrivateRoute>
-        <PrivateRoute path="/categories" component={Category}></PrivateRoute>
-        <PrivateRoute path="/employee" component={Employee}></PrivateRoute>
-        <PrivateRoute path="/customer" component={Customer}></PrivateRoute>
-        <PrivateRoute
-          path="/delivery-boy"
-          component={DeliveryBoy}
-        ></PrivateRoute>
-        <PrivateRoute path="/reports" component={NewReports}></PrivateRoute>
-        <PrivateRoute path="/inventory" component={Inventory}></PrivateRoute>
-        <PrivateRoute path="/purchases" component={Purchases}></PrivateRoute>
+        ></PrivateRoute> */}
+
+        {/* <PrivateRoute path="/products" component={Products}></PrivateRoute> */}
+
+        {modulesForUser.some(
+          (module) => module.moduleName === "DELIVERY MGMT"
+        ) && (
+          <PrivateRoute
+            path="/delivery-management"
+            component={DeliveryManagement}
+          ></PrivateRoute>
+        )}
+
+        {modulesForUser.some(
+          (module) => module.moduleName === "DELIVERY TRACKING"
+        ) && (
+          <PrivateRoute
+            path="/delivery-tracking"
+            component={DeliveryTracking}
+          ></PrivateRoute>
+        )}
+
+        {modulesForUser.some((module) => module.moduleName === "ORDERS") && (
+          <PrivateRoute path="/orders" component={NewOrders}></PrivateRoute>
+        )}
+
+        {modulesForUser.some(
+          (module) => module.moduleName === "KITCHEN DISPLAY SYSTEM"
+        ) && <PrivateRoute path="/kds" component={KDS}></PrivateRoute>}
+
+        {modulesForUser.some(
+          (module) => module.moduleName === "ADMIN FUNCTIONS"
+        ) && (
+          <PrivateRoute
+            path="/restaurants"
+            component={Restaurants}
+          ></PrivateRoute>
+        )}
+
+        {modulesForUser.some(
+          (module) => module.moduleName === "ADMIN FUNCTIONS"
+        ) && (
+          <PrivateRoute
+            path="/delivery-charges"
+            component={DeliveryCharges}
+          ></PrivateRoute>
+        )}
+
+        {modulesForUser.some(
+          (module) => module.moduleName === "ADMIN FUNCTIONS"
+        ) && (
+          <PrivateRoute
+            path="/order-auto"
+            component={OrderAutomation}
+          ></PrivateRoute>
+        )}
+
+        {modulesForUser.some(
+          (module) => module.moduleName === "ADMIN FUNCTIONS"
+        ) && (
+          <PrivateRoute
+            path="/user-entitle"
+            component={UserEntitlement}
+          ></PrivateRoute>
+        )}
+
+        {/* <PrivateRoute path="/categories" component={Category}></PrivateRoute> */}
+
+        {modulesForUser.some(
+          (module) => module.moduleName === "ADMIN FUNCTIONS"
+        ) && (
+          <PrivateRoute path="/employee" component={Employee}></PrivateRoute>
+        )}
+
+        {modulesForUser.some(
+          (module) => module.moduleName === "ADMIN FUNCTIONS"
+        ) && (
+          <PrivateRoute path="/customer" component={Customer}></PrivateRoute>
+        )}
+
+        {modulesForUser.some(
+          (module) => module.moduleName === "DELIVERY BOY"
+        ) && (
+          <PrivateRoute
+            path="/delivery-boy"
+            component={DeliveryBoy}
+          ></PrivateRoute>
+        )}
+
+        {modulesForUser.some((module) => module.moduleName === "REPORTS") && (
+          <PrivateRoute path="/reports" component={NewReports}></PrivateRoute>
+        )}
+
+        {modulesForUser.some(
+          (module) => module.moduleName === "ADMIN FUNCTIONS"
+        ) && (
+          <PrivateRoute path="/inventory" component={Inventory}></PrivateRoute>
+        )}
+
         <Route path="/signin" component={Signin}></Route>
         <Route path="/signup" component={Signup}></Route>
+        <Route path="*" component={PageNotFound} />
       </Switch>
     </div>
   );

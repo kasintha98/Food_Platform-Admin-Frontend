@@ -43,6 +43,7 @@ const CusDropdownButton = styled(DropdownButton)`
 
 export const NewHeader = (props) => {
   const auth = useSelector((state) => state.auth);
+  const modulesForUser = useSelector((state) => state.user.modulesForUser);
   const dispatch = useDispatch();
   const isMobile = useMediaQuery({ query: `(max-width: 1210px)` });
 
@@ -59,59 +60,98 @@ export const NewHeader = (props) => {
       <Nav>
         {!isMobile ? (
           <>
-            <li className="nav-item top-module">
-              <NavLink exact to={"/"}>
-                Dashboard
-              </NavLink>
-            </li>
-            <li className="nav-item top-module">
-              <NavLink exact to={"/orders"}>
-                Orders
-              </NavLink>
-            </li>
-            <li className="nav-item top-module">
-              <NavLink exact to={"/kds"}>
-                KDS
-              </NavLink>
-            </li>
-            <li className="nav-item top-module">
-              <NavLink to={"/delivery-management"}>Delivery Mgmt</NavLink>
-            </li>
-            <li className="nav-item top-module">
-              <NavLink exact to={"/delivery-boy"}>
-                Delivery Boy
-              </NavLink>
-            </li>
-            <li className="nav-item top-module">
-              <NavLink exact to={"/delivery-tracking"}>
-                Delivery Tracking
-              </NavLink>
-            </li>
-            <li className="nav-item top-module">
-              <NavLink exact to={"/reports"}>
-                Reports
-              </NavLink>
-            </li>
-            <li className="nav-item top-module">
-              <CusDropdownButton title="Admin Functions">
-                <NavLink exact to={"/employee"}>
-                  Employee
+            {modulesForUser.some(
+              (module) => module.moduleName === "DASHBOARD"
+            ) && (
+              <li className="nav-item top-module">
+                <NavLink exact to={"/dashboard"}>
+                  Dashboard
                 </NavLink>
-                <NavLink to={"/products"}>Menu</NavLink>
-                <NavLink exact to={"/order-auto"}>
-                  Order Automation
+              </li>
+            )}
+
+            {modulesForUser.some(
+              (module) => module.moduleName === "ORDERS"
+            ) && (
+              <li className="nav-item top-module">
+                <NavLink exact to={"/orders"}>
+                  Orders
                 </NavLink>
-                <NavLink to={"/delivery-charges"}>Delivery Charges</NavLink>
-                <NavLink exact to={"/user-entitle"}>
-                  User Entitlement
+              </li>
+            )}
+
+            {modulesForUser.some(
+              (module) => module.moduleName === "KITCHEN DISPLAY SYSTEM"
+            ) && (
+              <li className="nav-item top-module">
+                <NavLink exact to={"/kds"}>
+                  KDS
                 </NavLink>
-                <NavLink to={"/customer"}>Customer</NavLink>
-                <NavLink to={"/restaurants"}>Restaurants</NavLink>
-                <NavLink exact to={"/inventory"}>
-                  Inventory Mgmt
+              </li>
+            )}
+
+            {modulesForUser.some(
+              (module) => module.moduleName === "DELIVERY MGMT"
+            ) && (
+              <li className="nav-item top-module">
+                <NavLink to={"/delivery-management"}>Delivery Mgmt</NavLink>
+              </li>
+            )}
+
+            {modulesForUser.some(
+              (module) => module.moduleName === "DELIVERY BOY"
+            ) && (
+              <li className="nav-item top-module">
+                <NavLink exact to={"/delivery-boy"}>
+                  Delivery Boy
                 </NavLink>
-              </CusDropdownButton>
-            </li>
+              </li>
+            )}
+
+            {modulesForUser.some(
+              (module) => module.moduleName === "DELIVERY TRACKING"
+            ) && (
+              <li className="nav-item top-module">
+                <NavLink exact to={"/delivery-tracking"}>
+                  Delivery Tracking
+                </NavLink>
+              </li>
+            )}
+
+            {modulesForUser.some(
+              (module) => module.moduleName === "REPORTS"
+            ) && (
+              <li className="nav-item top-module">
+                <NavLink exact to={"/reports"}>
+                  Reports
+                </NavLink>
+              </li>
+            )}
+
+            {modulesForUser.some(
+              (module) => module.moduleName === "ADMIN FUNCTIONS"
+            ) && (
+              <li className="nav-item top-module">
+                <CusDropdownButton title="Admin Functions">
+                  <NavLink exact to={"/employee"}>
+                    Employee
+                  </NavLink>
+                  <NavLink to={"/products"}>Menu</NavLink>
+                  <NavLink exact to={"/order-auto"}>
+                    Order Automation
+                  </NavLink>
+                  <NavLink to={"/delivery-charges"}>Delivery Charges</NavLink>
+                  <NavLink exact to={"/user-entitle"}>
+                    User Entitlement
+                  </NavLink>
+                  <NavLink to={"/customer"}>Customer</NavLink>
+                  <NavLink to={"/restaurants"}>Restaurants</NavLink>
+                  <NavLink exact to={"/inventory"}>
+                    Inventory Mgmt
+                  </NavLink>
+                </CusDropdownButton>
+              </li>
+            )}
           </>
         ) : null}
 

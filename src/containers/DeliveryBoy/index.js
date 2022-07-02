@@ -193,7 +193,7 @@ export const DeliveryBoy = () => {
   return (
     <Layout sidebar headerTitle="Delivery Boy">
       <Row>
-        <Col sm={4}>
+        <Col sm={user.roleCategory === "DELIVERY_BOY" ? 6 : 4}>
           <div className="mb-3">
             <TextField
               label="Search Order By ID"
@@ -220,7 +220,7 @@ export const DeliveryBoy = () => {
             </Button>
           </div>
         </Col>
-        <Col sm={4}>
+        <Col sm={user.roleCategory === "DELIVERY_BOY" ? 6 : 4}>
           <Typography sx={{ color: "#595959", fontWeight: "bold" }}>
             Role: Delivery Boy{" "}
             {selectedDeliBoy && <span>({selectedDeliBoy})</span>}

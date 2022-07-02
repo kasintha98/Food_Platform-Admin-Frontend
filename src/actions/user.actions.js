@@ -296,3 +296,33 @@ export const addConfigDetails = (configDetails) => {
     }
   };
 };
+
+export const getModulesForUser = (restaurantId, storeId, roleCategory) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: userConstants.GET_MODULES_FOR_USER_REQUEST });
+
+      const res = await axios.get(`/getRoleWithModuleAccess`, {
+        params: { restaurantId, storeId, roleCategory },
+      });
+
+      if (res.status === 200 && res.data) {
+        dispatch({
+          type: userConstants.GET_MODULES_FOR_USER_SUCCESS,
+          payload: res.data[0].modules,
+        });
+      } else {
+        dispatch({
+          type: userConstants.GET_MODULES_FOR_USER_FAILURE,
+          payload: { error: "Error fetching data!" },
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch({
+        type: userConstants.GET_MODULES_FOR_USER_FAILURE,
+        payload: { error: "Error fetching data!" },
+      });
+    }
+  };
+};
