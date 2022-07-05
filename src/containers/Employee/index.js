@@ -68,6 +68,7 @@ export default function Employee(props) {
   const [email, setEmail] = useState("");
   const [emergency, setEmergency] = useState("");
   const [mobile, setMobile] = useState("");
+  const [loginId, setLoginId] = useState("");
   const [dob, setDob] = useState(new Date());
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
@@ -128,6 +129,7 @@ export default function Employee(props) {
       setStartDate(new Date(employee.effectiveStartDate));
       setEndDate(new Date(employee.effectiveEndDate));
       setSelectedRole(employee.roleCategory);
+      setLoginId(employee.loginId);
     } else {
       clearFields();
     }
@@ -153,6 +155,7 @@ export default function Employee(props) {
     setStartDate(new Date());
     setEndDate(new Date());
     setSelectedRole("");
+    setLoginId("");
   };
 
   const handleChangeDob = (newValue) => {
@@ -168,12 +171,17 @@ export default function Employee(props) {
   };
 
   const updateEmployee = (isDelete) => {
+    if (!dob || !firstName || !selectedRole || !loginId) {
+      toast.error("Please fill all the mandatory fields!");
+      return;
+    }
+
     const obj = {
       userSeqNo: selectedEmployeeObj.userSeqNo,
       firstName: firstName,
       middleName: middleName,
       lastName: lastName,
-      loginId: selectedEmployeeObj.loginId,
+      loginId: loginId,
       loginPassword: selectedEmployeeObj.loginPassword,
       userDob: `${dob.getFullYear()}-${("0" + (dob.getMonth() + 1)).slice(
         -2
@@ -221,12 +229,17 @@ export default function Employee(props) {
   };
 
   const addEmployee = () => {
+    if (!dob || !firstName || !selectedRole || !loginId) {
+      toast.error("Please fill all the mandatory fields!");
+      return;
+    }
+
     const obj = {
       firstName: firstName,
       middleName: middleName,
       lastName: lastName,
-      loginId: `${firstName}${dob.getFullYear()}`,
-      loginPassword: `${firstName}${dob.getFullYear()}`,
+      loginId: loginId,
+      loginPassword: "default",
       userDob: `${dob.getFullYear()}-${("0" + (dob.getMonth() + 1)).slice(
         -2
       )}-${("0" + dob.getDate()).slice(-2)}`,
@@ -446,6 +459,7 @@ export default function Employee(props) {
                     setFirstName(e.target.value);
                   }}
                   fullWidth
+                  required
                 />
               </Col>
               <Col sm={4}>
@@ -478,10 +492,21 @@ export default function Employee(props) {
                     value={dob}
                     onChange={handleChangeDob}
                     renderInput={(params) => (
-                      <TextField {...params} fullWidth />
+                      <TextField {...params} fullWidth required />
                     )}
                   />
                 </LocalizationProvider>
+              </Col>
+              <Col sm={4}>
+                <TextField
+                  label="Login ID"
+                  value={loginId}
+                  onChange={(e) => {
+                    setLoginId(e.target.value);
+                  }}
+                  fullWidth
+                  required
+                />
               </Col>
             </Row>
             <Row className="mt-3">
@@ -678,14 +703,15 @@ export default function Employee(props) {
               <Col sm={4}>
                 <FormControl fullWidth>
                   <InputLabel id="demo-simple-select-label2">
-                    Select Role
+                    Select Role *
                   </InputLabel>
                   <Select
                     labelId="demo-simple-select-label2"
                     id="demo-simple-select2"
                     value={selectedRole}
-                    label="Select Role"
+                    label="Select Role *"
                     onChange={handleRoleChange}
+                    required
                   >
                     {allRoles.map((role) => (
                       <MenuItem key={role.roleId} value={role.roleCategory}>
