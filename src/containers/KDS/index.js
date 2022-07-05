@@ -21,13 +21,17 @@ const CusMenuItem = styled(MenuItem)``;
 
 export const KDS = () => {
   const stores = useSelector((state) => state.store.stores);
+  const user = useSelector((state) => state.auth.user);
   const refreshRef = useRef();
 
   const [tabValue, setTabValue] = React.useState("ORDER ROUTING SCREEN");
-  const [selectedStore, setSelectedStore] = useState("ALL");
+  const [selectedStore, setSelectedStore] = useState(
+    user.roleCategory === "SUPER_ADMIN" ? "ALL" : user.restaurantId
+  );
   const [selectedStoreObj, setSelectedStoreObj] = useState({
-    restaurantId: null,
-    storeId: null,
+    restaurantId:
+      user.roleCategory === "SUPER_ADMIN" ? null : user.restaurantId,
+    storeId: user.roleCategory === "SUPER_ADMIN" ? null : user.storeId,
   });
 
   const handleChangeTab = (event, newValue) => {
@@ -74,78 +78,54 @@ export const KDS = () => {
               <Row className="align-items-center pt-2">
                 <div style={{ maxWidth: "125px !important" }}>
                   <Typography sx={{ color: "#7F7F7F", fontWeight: "bold" }}>
-                    Select Store
+                    {user.roleCategory === "SUPER_ADMIN"
+                      ? "Select Store"
+                      : "Your Store"}
                   </Typography>
                 </div>
                 <Col className="col-6" style={{ display: "flex" }}>
-                  <FormControl fullWidth>
-                    <InputLabel id="demo-simple-select-label">
-                      Please select the store
-                    </InputLabel>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      value={selectedStore}
-                      label="Please select the store"
-                      onChange={handleChangeStore}
-                    >
-                      <CusMenuItem
-                        onClick={() => {
-                          handleSelectedStore({
-                            restaurantId: null,
-                            storeId: null,
-                          });
-                        }}
-                        value={"ALL"}
+                  {user.roleCategory === "SUPER_ADMIN" ? (
+                    <FormControl fullWidth>
+                      <InputLabel id="demo-simple-select-label">
+                        Please select the store
+                      </InputLabel>
+                      <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={selectedStore}
+                        label="Please select the store"
+                        onChange={handleChangeStore}
                       >
-                        All Stores
-                      </CusMenuItem>
-                      {stores.map((store) => (
                         <CusMenuItem
                           onClick={() => {
-                            handleSelectedStore(store);
+                            handleSelectedStore({
+                              restaurantId: null,
+                              storeId: null,
+                            });
                           }}
-                          value={store.resturantName}
+                          value={"ALL"}
                         >
-                          <span>
-                            {store.resturantName}
-                            {/* <br></br>
-                            <span
-                              style={{ fontSize: "0.70rem", color: "#767171" }}
-                            >
-                              {store.address1}
-                            </span>
-                            {store.address2 ? (
-                              <>
-                                ,{" "}
-                                <span
-                                  style={{
-                                    fontSize: "0.70rem",
-                                    color: "#767171",
-                                  }}
-                                >
-                                  {store.address2}
-                                </span>
-                              </>
-                            ) : null}
-                            {store.address3 ? (
-                              <>
-                                ,{" "}
-                                <span
-                                  style={{
-                                    fontSize: "0.70rem",
-                                    color: "#767171",
-                                  }}
-                                >
-                                  {store.address3}
-                                </span>
-                              </>
-                            ) : null} */}
-                          </span>
+                          All Stores
                         </CusMenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
+                        {stores.map((store) => (
+                          <CusMenuItem
+                            onClick={() => {
+                              handleSelectedStore(store);
+                            }}
+                            value={store.resturantName}
+                          >
+                            <span>{store.resturantName}</span>
+                          </CusMenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  ) : (
+                    <span>
+                      {user.resturantName
+                        ? user.resturantName
+                        : user.restaurantId}
+                    </span>
+                  )}
                 </Col>
                 <Col className="col-3">
                   <IconButton

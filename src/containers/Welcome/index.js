@@ -35,6 +35,9 @@ export const Welcome = () => {
               <Typography sx={{ fontSize: "22px", color: "red" }}>
                 Hungries Admin Dashboard
               </Typography>
+              <Typography sx={{ fontSize: "22px", color: "red" }}>
+                Role: {user.roleCategory}
+              </Typography>
             </Col>
           </Row>
         </Col>
