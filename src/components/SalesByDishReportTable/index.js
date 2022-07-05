@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getCustomerOrders } from "../../actions";
+import { getCustomerOrders, getAllReports } from "../../actions";
 import styled from "@emotion/styled";
 import {
   TableContainer,
@@ -30,105 +30,104 @@ const CusTableCell2 = styled(TableCell)`
 `;
 
 export const SalesByDishReportTable = (props) => {
-  const orders = useSelector((state) => state.order.orders);
-  const loading = useSelector((state) => state.order.loading);
+  const allReports = useSelector((state) => state.report.allReports);
+  const loading = useSelector((state) => state.report.loading);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const today = new Date();
     dispatch(
-      getCustomerOrders(
-        props.restaurantId,
-        props.storeId,
-        null,
-        `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
+      getAllReports(
+        props.restaurantId ? props.restaurantId : "ALL",
+        props.storeId ? props.storeId : "ALL",
+        `${props.startDate.getFullYear()}-${
+          props.startDate.getMonth() + 1
+        }-${props.startDate.getDate()}`,
+        `${props.endDate.getFullYear()}-${
+          props.endDate.getMonth() + 1
+        }-${props.endDate.getDate()}`
       )
     );
-  }, [props.restaurantId, props.storeId]);
+  }, [props.restaurantId, props.storeId, props.startDate, props.endDate]);
 
   return (
     <div>
-      <ExcelFile element={<Button variant="text">Download Full Report</Button>}>
-        <ExcelSheet data={orders} name="Orders">
-          <ExcelColumn label="restaurantId" value="restaurantId" />
-          <ExcelColumn label="orderStatus" value="orderStatus" />
-          <ExcelColumn label="orderId" value="orderId" />
-          <ExcelColumn label="createdDate" value="createdDate" />
-          <ExcelColumn label="orderSource" value="orderSource" />
-          <ExcelColumn label="orderDeliveryType" value="orderDeliveryType" />
-          <ExcelColumn label="paymentStatus" value="paymentStatus" />
-          <ExcelColumn label="paymentMode" value="paymentMode" />
-          <ExcelColumn label="customerName" value="customerName" />
-          <ExcelColumn label="mobileNumber" value="mobileNumber" />
-          <ExcelColumn
-            label="overallPriceWithTax"
-            value="overallPriceWithTax"
-          />
-          <ExcelColumn
-            label="cgstCalculatedValue"
-            value="cgstCalculatedValue"
-          />
-          <ExcelColumn
-            label="sgstCalculatedValue"
-            value="sgstCalculatedValue"
-          />
-          <ExcelColumn label="deliveryCharges" value="deliveryCharges" />
-          <ExcelColumn label="orderStatus" value="orderStatus" />
-          <ExcelColumn label="createdBy" value="createdBy" />
-        </ExcelSheet>
-      </ExcelFile>
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 800 }} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <CusTableCell1 align="center">RESTAURANT</CusTableCell1>
-              <CusTableCell1 align="center">STORE</CusTableCell1>
-              <CusTableCell1 align="center">SYSTEM ID</CusTableCell1>
-              <CusTableCell1 align="center">DISH NAME</CusTableCell1>
-              <CusTableCell1 align="center">DISH SIZE</CusTableCell1>
-              <CusTableCell1 align="center">DISH UNIT PRICE</CusTableCell1>
-              <CusTableCell1 align="center">ITEM SOLD</CusTableCell1>
-              <CusTableCell1 align="center">TOTAL SALES REVENUE</CusTableCell1>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {orders && orders.length > 0 ? (
-              <>
-                {orders.map((row, index) => (
+      {allReports &&
+      allReports.reportDishConsumptionSummary &&
+      allReports.reportDishConsumptionSummary.length > 0 ? (
+        <div>
+          <ExcelFile
+            element={<Button variant="text">Download Full Report</Button>}
+          >
+            <ExcelSheet
+              data={allReports.reportDishConsumptionSummary}
+              name="Orders"
+            >
+              <ExcelColumn
+                label="RESTAURANT &amp; STORE"
+                value="restaurantName"
+              />
+              <ExcelColumn label="SYSTEM ID" value="dishId" />
+              <ExcelColumn label="DISH NAME" value="dishName" />
+              <ExcelColumn label="DISH SIZE" value="size" />
+              <ExcelColumn
+                label="DISH UNIT PRICE"
+                value={(col) => Number(col.totalPrice) / Number(col.totalQty)}
+              />
+              <ExcelColumn label="ITEM SOLD" value="totalQty" />
+              <ExcelColumn label="TOTAL SALES REVENUE" value="totalPrice" />
+            </ExcelSheet>
+          </ExcelFile>
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 800 }} aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  <CusTableCell1 align="center">
+                    RESTAURANT &amp; STORE
+                  </CusTableCell1>
+                  <CusTableCell1 align="center">SYSTEM ID</CusTableCell1>
+                  <CusTableCell1 align="center">DISH NAME</CusTableCell1>
+                  <CusTableCell1 align="center">DISH SIZE</CusTableCell1>
+                  <CusTableCell1 align="center">DISH UNIT PRICE</CusTableCell1>
+                  <CusTableCell1 align="center">ITEM SOLD</CusTableCell1>
+                  <CusTableCell1 align="center">
+                    TOTAL SALES REVENUE
+                  </CusTableCell1>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {allReports.reportDishConsumptionSummary.map((row, index) => (
                   <TableRow key={row.orderId}>
                     <CusTableCell2 align="center">
-                      {row.restaurantId}
+                      {row.restaurantName}
                     </CusTableCell2>
-                    <CusTableCell2 align="center">Yamuna Nagar</CusTableCell2>
-                    <CusTableCell2 align="center">S001</CusTableCell2>
-                    <CusTableCell2 align="center">Onion</CusTableCell2>
-                    <CusTableCell2 align="center">Small</CusTableCell2>
-                    <CusTableCell2 align="center">Rs. 10</CusTableCell2>
-                    <CusTableCell2 align="center">3</CusTableCell2>
-                    <CusTableCell2 align="center">Rs. 30</CusTableCell2>
+                    <CusTableCell2 align="center"> {row.dishId}</CusTableCell2>
+                    <CusTableCell2 align="center">{row.dishName}</CusTableCell2>
+                    <CusTableCell2 align="center">{row.size}</CusTableCell2>
+                    <CusTableCell2 align="center">
+                      Rs. {Number(row.totalPrice) / Number(row.totalQty)}
+                    </CusTableCell2>
+                    <CusTableCell2 align="center">{row.totalQty}</CusTableCell2>
+                    <CusTableCell2 align="center">
+                      Rs. {row.totalPrice}
+                    </CusTableCell2>
                   </TableRow>
                 ))}
-              </>
-            ) : (
-              <TableRow>
-                <CusTableCell2 scope="row" colspan="13">
-                  {loading ? (
-                    <div className="d-flex justify-content-center">
-                      <div
-                        className="spinner-border text-primary"
-                        role="status"
-                      ></div>
-                    </div>
-                  ) : (
-                    <Alert severity="warning">No orders to show!</Alert>
-                  )}
-                </CusTableCell2>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </div>
+      ) : (
+        <div>
+          {loading ? (
+            <div className="d-flex justify-content-center">
+              <div className="spinner-border text-primary" role="status"></div>
+            </div>
+          ) : (
+            <Alert severity="warning">No orders to show!</Alert>
+          )}
+        </div>
+      )}
     </div>
   );
 };
