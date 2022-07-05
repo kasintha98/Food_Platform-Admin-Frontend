@@ -1,0 +1,17 @@
+{
+  "hosting": {
+    "target": "admin-app",  
+    "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+    "rewrites": [{
+        "source": "**",
+        "run": {
+          "serviceId": "admin-app",
+          "region": "asia-south2"
+        }
+      }]
+  }
+}
