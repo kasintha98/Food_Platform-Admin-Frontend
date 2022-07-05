@@ -90,22 +90,23 @@ export const newLogin = (user) => {
 
       if (res.status === 200) {
         if (res.data.loginResponse === "SUCCESS") {
-          const { user } = res.data;
-          localStorage.setItem("token", user);
-          localStorage.setItem("user", JSON.stringify(user));
+          const { user, restaurantName } = res.data;
+          const userObj = { ...user, resturantName: restaurantName };
+          localStorage.setItem("token", userObj);
+          localStorage.setItem("user", JSON.stringify(userObj));
           dispatch({
             type: authConstants.LOGIN_SUCCESS,
             payload: {
-              token: user,
-              user,
+              token: userObj,
+              user: userObj,
             },
           });
 
           dispatch(
             getModulesForUser(
-              user.restaurantId,
-              user.storeId,
-              user.roleCategory
+              userObj.restaurantId,
+              userObj.storeId,
+              userObj.roleCategory
             )
           );
           //show success notification
