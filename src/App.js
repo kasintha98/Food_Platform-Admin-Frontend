@@ -36,6 +36,7 @@ import { DeliveryTracking } from "./containers/DeliveryTracking";
 import { NewTrack } from "./containers/NewTrack";
 import { Welcome } from "./containers/Welcome";
 import { PageNotFound } from "./containers/PageNotFound";
+import { ForgotPassword } from "./containers/ForgotPassword";
 
 function App() {
   const dispatch = useDispatch();
@@ -176,7 +177,7 @@ function App() {
         )}
 
         <Route path="/signin" component={Signin}></Route>
-        <Route path="/signup" component={Signup}></Route>
+        <Route path="/forgot-password" component={ForgotPassword}></Route>
         <Route path="*" component={PageNotFound} />
       </Switch>
     </div>

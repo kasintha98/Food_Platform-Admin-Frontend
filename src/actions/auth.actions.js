@@ -225,3 +225,14 @@ export const signout = () => {
     }
   };
 };
+
+export const resetPassword = (resetObj) => {
+  return async (dispatch) => {
+    try {
+      console.log(resetObj);
+    } catch (error) {
+      console.log(error);
+      toast.error("There was an error! Please try again!");
+    }
+  };
+};

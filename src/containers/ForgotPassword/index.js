@@ -1,34 +1,40 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
 import Layout from "../NewLayout";
 import { Form, Button, Row, Col } from "react-bootstrap";
-import Input from "../../components/UI/Input";
-import { login, loginTest, newLogin } from "../../actions";
+import { resetPassword } from "../../actions";
 import { useDispatch, useSelector } from "react-redux";
-import { Redirect, useHistory } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import "./style.css";
 import logo from "../../img/logo.png";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import TextField from "@mui/material/TextField";
-import { Typography } from "@mui/material";
 
-function Signin(props) {
-  //initial state of email
+export const ForgotPassword = () => {
   const [loginId, setLoginId] = useState("");
-  //initial state of password
-  const [password, setPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [passwordRepeat, setPasswordRepeat] = useState("");
 
   //geting user's authenticate status (from auth.reducers.js) and storing in the auth variable
   const auth = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
-  const history = useHistory();
 
-  const userLogin = (e) => {
+  const resetPasswordHandle = (e) => {
     e.preventDefault();
-    const user = { loginId, password };
-    dispatch(newLogin(user));
+
+    if (!loginId || !newPassword || !passwordRepeat) {
+      toast.error("Please fill all the fields!");
+      return;
+    }
+
+    if (newPassword !== passwordRepeat) {
+      toast.error("Passwords do not match. Please repeat the same password!");
+      return;
+    }
+
+    const resetObj = { loginId, newPassword, passwordRepeat };
+    dispatch(resetPassword(resetObj));
   };
 
   if (auth.authenticate === true) {
@@ -50,11 +56,9 @@ function Signin(props) {
               <Col md={{ span: 6, offset: 3 }}>
                 <img width="100px" src={logo} alt="logo" />
 
-                <h2 className="text-center">Sign In</h2>
+                <h2 className="text-center">Reset Password</h2>
                 <br></br>
-                <h3 className="text-center">Hangries Admin Dashboard</h3>
-                <br></br>
-                <Form onSubmit={userLogin}>
+                <Form onSubmit={resetPasswordHandle}>
                   <TextField
                     variant="standard"
                     label="Login ID"
@@ -68,46 +72,34 @@ function Signin(props) {
 
                   <TextField
                     variant="standard"
-                    label="Password"
+                    label="New Password"
                     type="password"
-                    value={password}
+                    value={newPassword}
                     className="w-100"
                     onChange={(e) => {
-                      setPassword(e.target.value);
+                      setNewPassword(e.target.value);
                     }}
                   />
 
-                  <Form.Group className="mt-3">
-                    <Form.Check
-                      className="text-center"
-                      type="checkbox"
-                      label="Remember Me"
-                    />
-                  </Form.Group>
+                  <TextField
+                    variant="standard"
+                    label="Confirm Password"
+                    type="password"
+                    value={passwordRepeat}
+                    className="w-100"
+                    onChange={(e) => {
+                      setPasswordRepeat(e.target.value);
+                    }}
+                  />
+
                   <Button
                     variant="primary"
                     type="submit"
-                    style={{ width: "100%" }}
-                  >
-                    Sign In
-                  </Button>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
                     className="mt-3"
+                    style={{ width: "100%", marginBottom: "50px" }}
                   >
-                    <Typography>Forgot Password? &nbsp;</Typography>
-                    <NavLink
-                      to="/forgot-password"
-                      className="nav-link"
-                      style={{ padding: 0 }}
-                    >
-                      Reset Password Now!
-                    </NavLink>
-                  </div>
+                    Reset Password
+                  </Button>
                 </Form>
               </Col>
             </Row>
@@ -116,6 +108,4 @@ function Signin(props) {
       </Layout>
     </div>
   );
-}
-
-export default Signin;
+};

@@ -173,11 +173,11 @@ export const NewHeader = (props) => {
             <i className="fa fa-sign-in"></i>&nbsp; Sign In
           </NavLink>
         </li>
-        <li className="nav-item">
+        {/* <li className="nav-item">
           <NavLink to="/signup" className="nav-link pointer newLink">
             <i className="fa fa-user-plus"></i>&nbsp; Sign Up
           </NavLink>
-        </li>
+        </li> */}
       </Nav>
     );
   };
