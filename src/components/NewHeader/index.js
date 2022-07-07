@@ -43,9 +43,10 @@ const CusDropdownButton = styled(DropdownButton)`
 
 export const NewHeader = (props) => {
   const auth = useSelector((state) => state.auth);
+  const version = useSelector((state) => state.auth.version);
   const modulesForUser = useSelector((state) => state.user.modulesForUser);
   const dispatch = useDispatch();
-  const isMobile = useMediaQuery({ query: `(max-width: 1210px)` });
+  const isMobile = useMediaQuery({ query: `(max-width: 1260px)` });
 
   const drawerWidth = props.drawerWidth;
 
@@ -214,6 +215,9 @@ export const NewHeader = (props) => {
           {/* &nbsp; &nbsp;{" "}
           {props.headerTitle ? props.headerTitle : "Admin Dashboard"} */}
         </Link>
+        <span style={{ fontSize: "0.8rem" }}>
+          {version ? `${version.appEnvironment}: ${version.appVersion}` : null}
+        </span>
         <Nav className="mr-auto"></Nav>
         {auth.authenticate ? renderLoggedInLinks() : renderNonLoggedInLinks()}
       </Toolbar>

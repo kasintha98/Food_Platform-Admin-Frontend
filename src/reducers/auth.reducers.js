@@ -22,6 +22,7 @@ const initState = {
   error: null,
   errormsg: null,
   message: "",
+  version: null,
 };
 
 //check what is the request and returning suitable state for the request
@@ -69,6 +70,23 @@ export default (state = initState, action) => {
         ...state,
         error: action.payload.error,
         loading: false,
+      };
+      break;
+
+    case authConstants.GET_VERSION_REQUEST:
+      state = {
+        ...state,
+      };
+      break;
+    case authConstants.GET_VERSION_SUCCESS:
+      state = {
+        ...state,
+        version: action.payload,
+      };
+      break;
+    case authConstants.GET_VERSION_FAILURE:
+      state = {
+        ...state,
       };
       break;
   }

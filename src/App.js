@@ -2,7 +2,7 @@ import { Route, Switch } from "react-router-dom";
 import React, { useEffect } from "react";
 import {
   isUserLoggedIn,
-  getInitialData,
+  getVersion,
   getAllStores,
   getModulesForUser,
 } from "./actions";
@@ -56,6 +56,10 @@ function App() {
       dispatch(
         getModulesForUser(user.restaurantId, user.storeId, user.roleCategory)
       );
+    }
+
+    if (localStorage.getItem("user")) {
+      dispatch(getVersion());
     }
   }, []);
 
