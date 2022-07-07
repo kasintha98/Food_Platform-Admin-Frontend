@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getCustomerOrders, updateOrder } from "../../actions";
+import {
+  getCustomerOrders,
+  updateOrder,
+  GetOrderProcessStatus2,
+} from "../../actions";
 import { Row, Col, Modal } from "react-bootstrap";
 import styled from "@emotion/styled";
 import {
@@ -28,7 +32,7 @@ import { OrderDetailsTable } from "../OrderDetailsTable";
 import "./style.css";
 
 const CusTableCell1 = styled(TableCell)`
-  font-size: 0.75rem;
+  font-size: 0.68rem;
   font-weight: bold;
   color: #fff;
   background-color: #70ad47;
@@ -50,6 +54,7 @@ export const DeliveryTrackingTable = (props) => {
   const [isReset, setIsReset] = useState(false);
   const [status, setStatus] = useState("");
   const [filteredData, setFilteredData] = useState([]);
+  const [allStatus, setAllStatus] = useState({});
 
   const dispatch = useDispatch();
 
@@ -67,6 +72,23 @@ export const DeliveryTrackingTable = (props) => {
     ).then((res) => {
       if (res) {
         setFilteredData(filterByStatus(res));
+      }
+
+      if (res && res.length > 0) {
+        let ob = {};
+        for (let j = 0; j < res.length; j++) {
+          dispatch(GetOrderProcessStatus2(res[j].orderId)).then((res2) => {
+            if (res2 && res2.length > 0) {
+              for (let i = 0; i < res2.length; i++) {
+                const newPair = { [res2[i].orderId]: res2 };
+                //ob[res2[i].orderId] = res2;
+                ob = { ...ob, ...newPair };
+              }
+              console.log(ob);
+              setAllStatus(ob);
+            }
+          });
+        }
       }
     });
   }, [isReset]);
@@ -157,6 +179,68 @@ export const DeliveryTrackingTable = (props) => {
       );
     }).length;
     return <span>{count}</span>;
+  };
+
+  const renderDate = (date) => {
+    const dateObj = new Date(date);
+    const month = dateObj.toLocaleString("default", { month: "short" });
+    const day = dateObj.getDate();
+    const year = dateObj.getFullYear();
+    return (
+      <span>
+        {day}/{month.toUpperCase()}/{year}
+      </span>
+    );
+  };
+
+  const renderTime = (date) => {
+    const dateObj = new Date(date);
+    const time = dateObj.toLocaleString("en-US", {
+      hour: "numeric",
+      hour12: true,
+      minute: "numeric",
+    });
+
+    return <span>{time}</span>;
+  };
+
+  const getTimeByStatus = (id, status, isHtml) => {
+    let acceptedTime = null;
+    if (allStatus) {
+      const arrayOb = allStatus[id];
+
+      if (arrayOb) {
+        for (let i = 0; i < arrayOb.length; i++) {
+          if (arrayOb[i].orderStatus === status) {
+            acceptedTime = arrayOb[i].updatedDate;
+          }
+        }
+      }
+    }
+
+    if (acceptedTime) {
+      return isHtml ? (
+        <span>
+          {renderDate(acceptedTime)} - {renderTime(acceptedTime)}
+        </span>
+      ) : (
+        acceptedTime
+      );
+    } else {
+      return isHtml ? <span>N/A</span> : null;
+    }
+  };
+
+  const getTimeTakenByDeliveryRider = (id) => {
+    const outTime = getTimeByStatus(id, "OUT FOR DELIVERY", false);
+    const deliveredTime = getTimeByStatus(id, "DELIVERED", false);
+
+    if (outTime && deliveredTime) {
+      const timeTaken = new Date(deliveredTime) - new Date(outTime);
+      return <span>{new Date(timeTaken).toISOString().substring(11, 19)}</span>;
+    } else {
+      return <span>N/A</span>;
+    }
   };
 
   const renderDetailsModal = () => {
@@ -254,6 +338,11 @@ export const DeliveryTrackingTable = (props) => {
               <CusTableCell1 align="center">CUSTOMER ADDRESS</CusTableCell1>
               <CusTableCell1 align="center">AMOUNT</CusTableCell1>
               <CusTableCell1 align="center">CURRENT STATUS</CusTableCell1>
+              <CusTableCell1 align="center">ORDER ACCEPTED TIME</CusTableCell1>
+              <CusTableCell1 align="center">ORDER DELIVERED TIME</CusTableCell1>
+              <CusTableCell1 align="center">
+                TIME TAKEN BY DELIVERY BOY (HH:MM:SS)
+              </CusTableCell1>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -305,6 +394,15 @@ export const DeliveryTrackingTable = (props) => {
                         <span>{row.orderStatus}</span>
                       )}
                     </CusTableCell2>
+                    <CusTableCell2 align="center">
+                      {getTimeByStatus(row.orderId, "ACCEPTED", true)}
+                    </CusTableCell2>
+                    <CusTableCell2 align="center">
+                      {getTimeByStatus(row.orderId, "DELIVERED", true)}
+                    </CusTableCell2>
+                    <CusTableCell2 align="center">
+                      {getTimeTakenByDeliveryRider(row.orderId)}
+                    </CusTableCell2>
                   </TableRow>
                 ))}
               </>
@@ -331,8 +429,8 @@ export const DeliveryTrackingTable = (props) => {
         </Table>
       </TableContainer>
       <div>
-        <h3>Customer Order Address Locations</h3>
-        <MapNew></MapNew>
+        {/* <h3>Customer Order Address Locations</h3>
+        <MapNew></MapNew> */}
         {/* <h3>Delivery Rider View</h3>
         <DeliveryRiderViewMap></DeliveryRiderViewMap> */}
         <h3>Delivery Rider View New</h3>

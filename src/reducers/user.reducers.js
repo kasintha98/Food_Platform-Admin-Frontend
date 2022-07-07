@@ -13,6 +13,7 @@ const initState = {
   loadingRWM: false,
   configDetails: [],
   modulesForUser: [],
+  orderStatus: [],
 };
 
 export default (state = initState, action) => {
@@ -153,6 +154,26 @@ export default (state = initState, action) => {
         ...state,
         loadingRWM: false,
         rolesWithModules: [],
+      };
+      break;
+
+    case userConstants.GET_ORDER_STATUS_REQUEST:
+      state = {
+        ...state,
+      };
+      break;
+
+    case userConstants.GET_ORDER_STATUS_SUCCESS:
+      state = {
+        ...state,
+        orderStatus: action.payload,
+      };
+      break;
+
+    case userConstants.GET_ORDER_STATUS_FAILURE:
+      state = {
+        ...state,
+        error: action.payload.error,
       };
       break;
   }

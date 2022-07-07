@@ -326,3 +326,32 @@ export const getModulesForUser = (restaurantId, storeId, roleCategory) => {
     }
   };
 };
+
+export const GetOrderProcessStatus2 = (id) => {
+  return async (dispatch) => {
+    try {
+      const res = await axios.get("/getOrderProcessingDetailsByOrderId", {
+        params: { orderId: id },
+      });
+      dispatch({ type: userConstants.GET_ORDER_STATUS_REQUEST });
+
+      if (res.status === 200) {
+        console.log(res);
+        dispatch({
+          type: userConstants.GET_ORDER_STATUS_SUCCESS,
+          payload: res.data,
+        });
+        return res.data;
+      } else {
+        const { error } = res.data;
+        dispatch({
+          type: userConstants.GET_ORDER_STATUS_FAILURE,
+          payload: { error },
+        });
+        toast.error("There was an error when getting order status data!");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
