@@ -46,7 +46,7 @@ export const DeliveryBoy = () => {
   const [selectedDeliBoy, setSelectedDeliBoy] = useState("");
   const statuses =
     user.roleCategory === "DELIVERY_BOY"
-      ? ["FOOD READY", "OUT FOR DELIVERY", "DELIVERED"]
+      ? ["OUT FOR DELIVERY", "DELIVERED"]
       : ["FOOD READY", "OUT FOR DELIVERY", "DELIVERED", "CANCELLED"];
 
   const dispatch = useDispatch();
@@ -127,13 +127,15 @@ export const DeliveryBoy = () => {
   };
 
   const onClickUpdateStatus = (id) => {
-    if (status) {
+    if (status && status !== "none") {
       dispatch(updateOrder(id, status, null)).then((res) => {
         if (res) {
           resetState();
         }
       });
       setStatus("");
+    } else {
+      toast.error("Please select a status!");
     }
   };
 
@@ -361,6 +363,12 @@ export const DeliveryBoy = () => {
                               onChange={handleStatusUpdate}
                               sx={{ fontSize: "0.75rem" }}
                             >
+                              <option
+                                value="none"
+                                style={{ fontSize: "0.75rem" }}
+                              >
+                                Select Status
+                              </option>
                               {statuses.map((status) => (
                                 <option
                                   key={status}
