@@ -28,7 +28,11 @@ function Signin(props) {
   const userLogin = (e) => {
     e.preventDefault();
     const user = { loginId, password };
-    dispatch(newLogin(user));
+    dispatch(newLogin(user)).then((res) => {
+      if (res && res.isFirstTime) {
+        history.push("/forgot-password");
+      }
+    });
   };
 
   if (auth.authenticate === true) {

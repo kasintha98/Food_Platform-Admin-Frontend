@@ -3,7 +3,7 @@ import Layout from "../NewLayout";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import { resetPassword } from "../../actions";
 import { useDispatch, useSelector } from "react-redux";
-import { Redirect } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
 import "./style.css";
 import logo from "../../img/logo.png";
 import { toast, ToastContainer } from "react-toastify";
@@ -19,6 +19,7 @@ export const ForgotPassword = () => {
   const auth = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const resetPasswordHandle = (e) => {
     e.preventDefault();
@@ -33,8 +34,14 @@ export const ForgotPassword = () => {
       return;
     }
 
-    const resetObj = { loginId, newPassword, passwordRepeat };
-    dispatch(resetPassword(resetObj));
+    dispatch(resetPassword(loginId, newPassword)).then((res) => {
+      if (res) {
+        setLoginId("");
+        setNewPassword("");
+        setPasswordRepeat("");
+        history.push("/signin");
+      }
+    });
   };
 
   if (auth.authenticate === true) {

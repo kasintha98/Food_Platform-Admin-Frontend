@@ -90,30 +90,43 @@ export const newLogin = (user) => {
 
       if (res.status === 200) {
         if (res.data.loginResponse === "SUCCESS") {
-          const { user, restaurantName } = res.data;
-          const userObj = { ...user, resturantName: restaurantName };
-          localStorage.setItem("token", userObj);
-          localStorage.setItem("user", JSON.stringify(userObj));
-          dispatch({
-            type: authConstants.LOGIN_SUCCESS,
-            payload: {
-              token: userObj,
-              user: userObj,
-            },
-          });
+          if (user.password === "default") {
+            toast.warn("This is your first time login!", {
+              autoClose: 8000,
+            });
+            toast.warn(
+              "Please change your default password to a new password!!",
+              {
+                autoClose: 8000,
+              }
+            );
+            return { isFirstTime: true };
+          } else {
+            const { user, restaurantName } = res.data;
+            const userObj = { ...user, resturantName: restaurantName };
+            localStorage.setItem("token", userObj);
+            localStorage.setItem("user", JSON.stringify(userObj));
+            dispatch({
+              type: authConstants.LOGIN_SUCCESS,
+              payload: {
+                token: userObj,
+                user: userObj,
+              },
+            });
 
-          dispatch(
-            getModulesForUser(
-              userObj.restaurantId,
-              userObj.storeId,
-              userObj.roleCategory
-            )
-          );
+            dispatch(
+              getModulesForUser(
+                userObj.restaurantId,
+                userObj.storeId,
+                userObj.roleCategory
+              )
+            );
 
-          dispatch(getVersion());
-          //show success notification
-          toast.success("Login Success!");
-          return res.data;
+            dispatch(getVersion());
+            //show success notification
+            toast.success("Login Success!");
+            return res.data;
+          }
         }
         if (res.data.loginResponse === "INCORRECT_ID") {
           dispatch({
@@ -228,10 +241,40 @@ export const signout = () => {
   };
 };
 
-export const resetPassword = (resetObj) => {
+export const resetPassword = (loginId, loginPassword) => {
   return async (dispatch) => {
     try {
-      console.log(resetObj);
+      dispatch({ type: authConstants.RESET_PASSWORD_REQUEST });
+
+      const res = await axios.post(`/updateEmployeePasswordByLoginId`, {
+        loginId,
+        loginPassword,
+      });
+
+      if (res.status === 200 && res.data) {
+        if (res.data.loginResponse === "SUCCESS") {
+          dispatch({
+            type: authConstants.RESET_PASSWORD_SUCCESS,
+            payload: res.data,
+          });
+          toast.success(
+            "Password reset successfull! Please use the new password for login!"
+          );
+          return res.data;
+        }
+        if (res.data.loginResponse === "INCORRECT_ID") {
+          dispatch({
+            type: authConstants.RESET_PASSWORD_FAILURE,
+            payload: null,
+          });
+          toast.error("Login ID is incorrect!");
+        }
+      } else {
+        dispatch({
+          type: authConstants.RESET_PASSWORD_FAILURE,
+          payload: null,
+        });
+      }
     } catch (error) {
       console.log(error);
       toast.error("There was an error! Please try again!");
