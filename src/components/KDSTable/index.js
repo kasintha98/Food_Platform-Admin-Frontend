@@ -22,6 +22,7 @@ import {
   updateOrderSubProdStatus,
   updateOrder,
 } from "../../actions";
+import { Button } from "@mui/material";
 
 const CusTableCell = styled(TableCell)`
   padding: 0;
@@ -77,10 +78,12 @@ export const KDSTable = forwardRef((props, ref) => {
       });
     }
 
-    orders = orders.filter(function (el) {
+    //In All KDS counter show only ACCEPT, PROCESSING orders filtering
+    /* orders = orders.filter(function (el) {
       return el.orderStatus === "ACCEPTED" || el.orderStatus === "PROCESSING";
-    });
+    }); */
 
+    //Divide into 2 tables
     /* let odd = [];
     let even = [];
     orders.forEach((x, i) => {
@@ -112,6 +115,13 @@ export const KDSTable = forwardRef((props, ref) => {
     order
   ) => {
     if (currentOrderDetailStatus === "SUBMITTED") {
+      handleSubProductFromTopProduct(
+        productId,
+        order.orderDetails,
+        subProductId,
+        "ACCEPTED"
+      );
+
       dispatch(
         updateOrderSubProdStatus(orderId, productId, subProductId, "ACCEPTED")
       ).then((res) => {
@@ -121,6 +131,13 @@ export const KDSTable = forwardRef((props, ref) => {
       });
     }
     if (currentOrderDetailStatus === "ACCEPTED") {
+      handleSubProductFromTopProduct(
+        productId,
+        order.orderDetails,
+        subProductId,
+        "PROCESSING"
+      );
+
       dispatch(
         updateOrderSubProdStatus(orderId, productId, subProductId, "PROCESSING")
       ).then((res) => {
@@ -134,6 +151,13 @@ export const KDSTable = forwardRef((props, ref) => {
       }
     }
     if (currentOrderDetailStatus === "PROCESSING") {
+      handleSubProductFromTopProduct(
+        productId,
+        order.orderDetails,
+        subProductId,
+        "FOOD READY"
+      );
+
       dispatch(
         updateOrderSubProdStatus(orderId, productId, subProductId, "FOOD READY")
       ).then((res) => {
@@ -154,6 +178,33 @@ export const KDSTable = forwardRef((props, ref) => {
           newSubStatus ? setNewSubStatus(false) : setNewSubStatus(true);
         }
       });
+    }
+  };
+
+  const handleSubProductFromTopProduct = (
+    productId,
+    orderDetails,
+    subProductId,
+    status
+  ) => {
+    if (subProductId === "NAA") {
+      for (let i = 0; i < orderDetails.length; i++) {
+        if (
+          orderDetails[i].productId === productId &&
+          orderDetails[i].subProductId !== "NAA"
+        ) {
+          dispatch(
+            updateOrderSubProdStatus(
+              orderDetails[i].orderId,
+              orderDetails[i].productId,
+              orderDetails[i].subProductId,
+              status,
+              null,
+              true
+            )
+          );
+        }
+      }
     }
   };
 
@@ -237,6 +288,10 @@ export const KDSTable = forwardRef((props, ref) => {
                         sx={{ border: "1px solid #000" }}
                       >
                         {order.orderId.substr(order.orderId.length - 3)}
+                        <br></br>
+                        <Button color="error" variant="contained">
+                          Release
+                        </Button>
                       </CusTableCell>
                       <CusTableCell
                         align="center"

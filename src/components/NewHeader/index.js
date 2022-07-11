@@ -157,7 +157,11 @@ export const NewHeader = (props) => {
         ) : null}
 
         <li className="nav-item">
-          <span className="nav-link pointer" onClick={logout}>
+          <span
+            className="nav-link pointer"
+            onClick={logout}
+            style={{ fontSize: "13px" }}
+          >
             <i className="fa fa-sign-out"></i>&nbsp; Sign Out
           </span>
         </li>
@@ -215,8 +219,12 @@ export const NewHeader = (props) => {
           {/* &nbsp; &nbsp;{" "}
           {props.headerTitle ? props.headerTitle : "Admin Dashboard"} */}
         </Link>
-        <span style={{ fontSize: "0.8rem" }}>
+        <span style={{ fontSize: "12px" }}>
           {version ? `${version.appEnvironment}: ${version.appVersion}` : null}
+          <br></br>
+          <span>{auth.user.loginId}</span>
+          <br></br>
+          <span>{auth.user.roleCategory}</span>
         </span>
         <Nav className="mr-auto"></Nav>
         {auth.authenticate ? renderLoggedInLinks() : renderNonLoggedInLinks()}

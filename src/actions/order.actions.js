@@ -136,7 +136,8 @@ export const updateOrderSubProdStatus = (
   productId,
   subProductId,
   orderStatus,
-  tabType
+  tabType,
+  isAutoSubProductUpdate
 ) => {
   return async (dispatch) => {
     dispatch({ type: orderConstants.UPDATE_ORDER_SUBPROD_STATUS_REQUEST });
@@ -160,7 +161,10 @@ export const updateOrderSubProdStatus = (
           type: orderConstants.UPDATE_ORDER_SUBPROD_STATUS_SUCCESS,
         });
 
-        toast.success("Order item status updated successfully!");
+        if (!isAutoSubProductUpdate) {
+          toast.success("Order item status updated successfully!");
+        }
+
         return res.data;
       } else {
         const { error } = res.data;

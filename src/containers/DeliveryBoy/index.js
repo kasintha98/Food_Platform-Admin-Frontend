@@ -222,7 +222,7 @@ export const DeliveryBoy = () => {
             {selectedDeliBoy && <span>({selectedDeliBoy})</span>}
           </Typography>
           <Typography sx={{ color: "#595959", fontWeight: "bold" }}>
-            Store Name: Hangries YamunaNagar
+            Store Name: {user.resturantName}
           </Typography>
         </Col>
         {user.roleCategory !== "DELIVERY_BOY" && (
