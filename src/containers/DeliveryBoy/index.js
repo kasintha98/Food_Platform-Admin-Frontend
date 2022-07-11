@@ -32,16 +32,6 @@ const CusTableCell2 = styled(TableCell)`
   font-size: 0.75rem;
 `;
 
-const statuses = [
-  /* "SUBMITTED",
-  "ACCEPTED",
-  "PROCESSING", */
-  "FOOD READY",
-  "OUT FOR DELIVERY",
-  "DELIVERED",
-  "CANCELLED",
-];
-
 export const DeliveryBoy = () => {
   const user = useSelector((state) => state.auth.user);
   const usersByRole = useSelector((state) => state.user.usersByRole);
@@ -54,6 +44,10 @@ export const DeliveryBoy = () => {
   const [status, setStatus] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const [selectedDeliBoy, setSelectedDeliBoy] = useState("");
+  const statuses =
+    user.roleCategory === "DELIVERY_BOY"
+      ? ["FOOD READY", "OUT FOR DELIVERY", "DELIVERED"]
+      : ["FOOD READY", "OUT FOR DELIVERY", "DELIVERED", "CANCELLED"];
 
   const dispatch = useDispatch();
 
