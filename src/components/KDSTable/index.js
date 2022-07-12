@@ -288,10 +288,14 @@ export const KDSTable = forwardRef((props, ref) => {
                         sx={{ border: "1px solid #000" }}
                       >
                         {order.orderId.substr(order.orderId.length - 3)}
-                        <br></br>
-                        <Button color="error" variant="contained">
-                          Release
-                        </Button>
+                        {!props.counter && (
+                          <>
+                            <br></br>
+                            <Button color="error" variant="contained">
+                              Release
+                            </Button>
+                          </>
+                        )}
                       </CusTableCell>
                       <CusTableCell
                         align="center"
