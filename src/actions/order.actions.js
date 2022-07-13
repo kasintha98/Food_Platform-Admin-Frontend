@@ -10,7 +10,8 @@ export const getCustomerOrders = (
   orderReceivedDate,
   orderId,
   deliveryUserId,
-  orderDeliveryType
+  orderDeliveryType,
+  foodPackagedFlag
 ) => {
   return async (dispatch) => {
     dispatch({ type: orderConstants.GET_CUSTOMER_ORDER_REQUEST });
@@ -23,6 +24,7 @@ export const getCustomerOrders = (
         orderId,
         deliveryUserId,
         orderDeliveryType,
+        foodPackagedFlag,
       };
 
       console.log(body);
@@ -220,6 +222,36 @@ export const updateOrderDeliBoy = (orderId, deliveryUser) => {
         });
       }
     } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+export const updateFoodPackagedFlag = (orderId, foodPackagedFlag) => {
+  return async (dispatch) => {
+    dispatch({ type: orderConstants.UPDATE_ORDER_SUBPROD_STATUS_REQUEST });
+    try {
+      const res = await axios.post("/updateFoodPackagedFlagByOrderId", null, {
+        params: { orderId, foodPackagedFlag },
+      });
+
+      if (res.status === 200) {
+        dispatch({
+          type: orderConstants.UPDATE_ORDER_SUBPROD_STATUS_SUCCESS,
+          payload: res.data,
+        });
+        toast.success("Food package released successfully!");
+        return res.data;
+      } else {
+        dispatch({
+          type: orderConstants.UPDATE_ORDER_SUBPROD_STATUS_FAILURE,
+          payload: res.data,
+        });
+        toast.success("Error please try again!!");
+        return false;
+      }
+    } catch (error) {
+      toast.success("Error please try again!!");
       console.log(error);
     }
   };

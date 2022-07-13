@@ -21,6 +21,7 @@ import {
   getCustomerOrders,
   updateOrderSubProdStatus,
   updateOrder,
+  updateFoodPackagedFlag,
 } from "../../actions";
 import { Button } from "@mui/material";
 
@@ -46,7 +47,11 @@ export const KDSTable = forwardRef((props, ref) => {
         props.restaurantId,
         props.storeId,
         null,
-        `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
+        `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,
+        null,
+        null,
+        null,
+        "N"
       )
     ).then((res) => {
       if (res) {
@@ -181,6 +186,14 @@ export const KDSTable = forwardRef((props, ref) => {
     }
   };
 
+  const updateFoodPackageFlag = (orderId, foodPackagedFlag) => {
+    dispatch(updateFoodPackagedFlag(orderId, foodPackagedFlag)).then((res) => {
+      if (res) {
+        handleRefresh();
+      }
+    });
+  };
+
   const handleSubProductFromTopProduct = (
     productId,
     orderDetails,
@@ -291,7 +304,18 @@ export const KDSTable = forwardRef((props, ref) => {
                         {!props.counter && (
                           <>
                             <br></br>
-                            <Button color="error" variant="contained">
+                            <Button
+                              color="error"
+                              variant="contained"
+                              onClick={() => {
+                                updateFoodPackageFlag(order.orderId, "Y");
+                              }}
+                              disabled={
+                                order.orderStatus === "SUBMITTED" ||
+                                order.orderStatus === "ACCEPTED" ||
+                                order.orderStatus === "PROCESSING"
+                              }
+                            >
                               Release
                             </Button>
                           </>
