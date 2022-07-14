@@ -9,9 +9,8 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { Bar, defaults } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 import { Typography, Button } from "@mui/material";
-import Pdf from "react-to-pdf";
 import ReactExport from "react-export-excel";
 const ExcelFile = ReactExport.ExcelFile;
 const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;

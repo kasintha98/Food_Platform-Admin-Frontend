@@ -11,7 +11,6 @@ import {
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import { Typography, Button } from "@mui/material";
-import Pdf from "react-to-pdf";
 import randomColor from "randomcolor";
 import ReactExport from "react-export-excel";
 const ExcelFile = ReactExport.ExcelFile;

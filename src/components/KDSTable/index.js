@@ -17,7 +17,6 @@ import Alert from "@mui/material/Alert";
 import { Row, Col } from "react-bootstrap";
 import "./style.css";
 import {
-  getAllOrders,
   getCustomerOrders,
   updateOrderSubProdStatus,
   updateOrder,
@@ -31,12 +30,9 @@ const CusTableCell = styled(TableCell)`
 `;
 
 export const KDSTable = forwardRef((props, ref) => {
-  const orders = useSelector((state) => state.order.orders);
   const loading = useSelector((state) => state.order.loading);
   const [filteredData, setFilteredData] = useState([]);
   const [newSubStatus, setNewSubStatus] = useState(false);
-  const [tableOneData, setTableOneData] = useState([]);
-  const [tableTwoData, setTableTwoData] = useState([]);
 
   const dispatch = useDispatch();
 

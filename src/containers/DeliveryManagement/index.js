@@ -22,7 +22,6 @@ import {
   Typography,
   NativeSelect,
   FormControl,
-  InputLabel,
 } from "@mui/material";
 import { toast } from "react-toastify";
 import { OrderDetailsTable } from "../../components/OrderDetailsTable";

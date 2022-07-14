@@ -14,7 +14,6 @@ import Select from "@mui/material/Select";
 import { Row, Col } from "react-bootstrap";
 import { Typography, IconButton } from "@mui/material";
 import { KDSTable } from "../../components/KDSTable";
-import { getCustomerOrders } from "../../actions";
 import RefreshIcon from "@mui/icons-material/Refresh";
 
 const CusMenuItem = styled(MenuItem)``;

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getCustomerOrders, getAllReports } from "../../actions";
+import { getAllReports } from "../../actions";
 import styled from "@emotion/styled";
 import {
   TableContainer,
