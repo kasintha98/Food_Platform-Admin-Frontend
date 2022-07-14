@@ -100,7 +100,6 @@ export const KDSTable = forwardRef((props, ref) => {
         setTableTwoData(odd);
       }
     }); */
-
     return orders;
   };
 
@@ -355,8 +354,8 @@ export const KDSTable = forwardRef((props, ref) => {
                         align="left"
                         sx={{ border: "1px solid #000" }}
                       >
-                        {order.orderDetails.map((item) => (
-                          <>
+                        {order.orderDetails.map((item, index) => (
+                          <div key={index}>
                             {item.ingredient === "No Ingredient" ? (
                               <div style={{ borderBottom: "1px solid #000" }}>
                                 {item.productName}
@@ -372,39 +371,42 @@ export const KDSTable = forwardRef((props, ref) => {
                                 {item.ingredient}
                               </div>
                             )}
-                          </>
+                          </div>
                         ))}
                       </CusTableCell>
                       <CusTableCell
                         align="center"
                         sx={{ border: "1px solid #000" }}
                       >
-                        {order.orderDetails.map((item) => (
-                          <>
-                            <div style={{ borderBottom: "1px solid #000" }}>
-                              {item.quantity}
-                            </div>
-                          </>
-                        ))}
-                      </CusTableCell>
-                      <CusTableCell
-                        align="center"
-                        sx={{ border: "1px solid #000" }}
-                      >
-                        {order.orderDetails.map((item) => (
-                          <>
-                            <div style={{ borderBottom: "1px solid #000" }}>
-                              {item.remarks ? item.remarks : "No Data"}
-                            </div>
-                          </>
-                        ))}
-                      </CusTableCell>
-                      <CusTableCell
-                        align="center"
-                        sx={{ border: "1px solid #000" }}
-                      >
-                        {order.orderDetails.map((item) => (
+                        {order.orderDetails.map((item, index) => (
                           <div
+                            key={index}
+                            style={{ borderBottom: "1px solid #000" }}
+                          >
+                            {item.quantity}
+                          </div>
+                        ))}
+                      </CusTableCell>
+                      <CusTableCell
+                        align="center"
+                        sx={{ border: "1px solid #000" }}
+                      >
+                        {order.orderDetails.map((item, index) => (
+                          <div
+                            key={index}
+                            style={{ borderBottom: "1px solid #000" }}
+                          >
+                            {item.remarks ? item.remarks : "No Data"}
+                          </div>
+                        ))}
+                      </CusTableCell>
+                      <CusTableCell
+                        align="center"
+                        sx={{ border: "1px solid #000" }}
+                      >
+                        {order.orderDetails.map((item, index) => (
+                          <div
+                            key={index}
                             className={
                               item.orderDetailStatus === "FOOD READY"
                                 ? "back-green"
