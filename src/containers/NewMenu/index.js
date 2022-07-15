@@ -277,7 +277,7 @@ export default function NewMenu(props) {
             </div>
           </Col>
           <CusCol sm={12} md={12} lg={3} xl={3}>
-            <NewCart></NewCart>
+            <NewCart setShowCheckout={props.setShowCheckout}></NewCart>
           </CusCol>
         </Row>
       </CusContainer>

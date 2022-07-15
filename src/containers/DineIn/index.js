@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { Row, Col } from "react-bootstrap";
-import { Typography } from "@mui/material";
+import { Typography, Button } from "@mui/material";
 import Layout from "../NewLayout";
 import styled from "@emotion/styled";
 import { Redirect } from "react-router-dom";
@@ -10,6 +10,7 @@ import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import NewMenu from "../NewMenu";
+import NewCheckout from "../NewCheckout";
 
 const CusMenuItem = styled(MenuItem)``;
 
@@ -23,6 +24,7 @@ export const DineIn = () => {
     restaurantId: user.restaurantId,
     storeId: user.storeId,
   });
+  const [ShowCheckout, setShowCheckout] = useState(false);
 
   if (auth.authenticate !== true) {
     return <Redirect to={"/signin"} />;
@@ -40,7 +42,17 @@ export const DineIn = () => {
   return (
     <Layout sidebar headerTitle="Welcome">
       <Row className="align-items-center pt-2">
-        <Col className="col-sm-7"></Col>
+        <Col className="col-sm-7">
+          {ShowCheckout ? (
+            <Button
+              onClick={() => {
+                setShowCheckout(false);
+              }}
+            >
+              Back
+            </Button>
+          ) : null}
+        </Col>
         <div style={{ maxWidth: "125px !important" }}>
           <Typography sx={{ color: "#7F7F7F", fontWeight: "bold" }}>
             {user.roleCategory === "SUPER_ADMIN"
@@ -81,10 +93,19 @@ export const DineIn = () => {
         </Col>
       </Row>
       <div>
-        <NewMenu
-          restaurantId={selectedStoreObj.restaurantId}
-          storeId={selectedStoreObj.storeId}
-        ></NewMenu>
+        {ShowCheckout ? (
+          <NewCheckout
+            restaurantId={selectedStoreObj.restaurantId}
+            storeId={selectedStoreObj.storeId}
+            storeObj={selectedStoreObj}
+          ></NewCheckout>
+        ) : (
+          <NewMenu
+            setShowCheckout={setShowCheckout}
+            restaurantId={selectedStoreObj.restaurantId}
+            storeId={selectedStoreObj.storeId}
+          ></NewMenu>
+        )}
       </div>
     </Layout>
   );

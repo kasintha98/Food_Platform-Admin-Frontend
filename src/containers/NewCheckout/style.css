@@ -1,0 +1,50 @@
+#numberofitems {
+  width: 7px;
+  font-size: 12px;
+  height: 8px;
+}
+
+.borderRound {
+  border: 1px #2979ff solid;
+  width: 100%;
+  margin-top: 5px;
+}
+
+.borderRound:hover {
+  background-color: #a6d4fa;
+}
+
+.gpay-card-info-container {
+  min-width: 100%;
+}
+
+.wh-background {
+  background-color: rgb(242, 242, 242);
+}
+
+.mar-tp {
+  margin-top: 5px;
+}
+
+.mar-tp-f {
+  margin-top: 5px;
+}
+
+.w75 {
+  width: 75% !important;
+}
+
+.w25 {
+  width: 25% !important;
+  padding-left: 0;
+}
+
+@media (max-width: 992px) {
+  .mar-tp {
+    margin-top: 5vh;
+  }
+
+  .mar-tp-f {
+    margin-top: 40vh;
+  }
+}

@@ -18,7 +18,7 @@ const CheckoutButton = styled(Button)`
   }
 `;
 
-export const NewCart = () => {
+export const NewCart = (props) => {
   const [subTotal, setSubtotal] = useState(0);
   const [extraSubTotal, setExtraSubTotal] = useState(0);
   const [choiceTotal, setChoiceTotal] = useState(0);
@@ -140,14 +140,15 @@ export const NewCart = () => {
           </Typography>
 
           <CardActions>
-            <Link
-              style={{ color: "#fff", textDecoration: "none", width: "100%" }}
-              to="/new-checkout"
+            <CheckoutButton
+              onClick={() => {
+                props.setShowCheckout(true);
+              }}
+              variant="contained"
+              className="w-100"
             >
-              <CheckoutButton variant="contained" className="w-100">
-                Checkout
-              </CheckoutButton>
-            </Link>
+              Checkout
+            </CheckoutButton>
           </CardActions>
         </div>
       </Card>

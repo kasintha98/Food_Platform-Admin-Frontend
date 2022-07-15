@@ -1,5 +1,6 @@
 import axios from "../helpers/axios";
 import { userConstants, taxConstants } from "./constants";
+import { resetCart } from "./cart.action";
 import { toast } from "react-toastify";
 
 //action to signup
@@ -380,6 +381,35 @@ export const GetTaxDetails = (restaurantId, storeId) => {
       }
     } catch (error) {
       console.log(error);
+    }
+  };
+};
+
+//action to add new order
+export const saveNewOrder = (payload) => {
+  return async (dispatch) => {
+    try {
+      const res = await axios.post("/saveNewOrder", payload);
+      dispatch({ type: userConstants.ADD_USER_ORDER_REQUEST });
+
+      if (res.status === 200 && res.data) {
+        console.log(res);
+        dispatch(resetCart());
+        localStorage.removeItem("cart");
+        //dispatch(getCartItems());
+        toast.success("Order Placed Successfully!");
+        return res;
+      } else {
+        const { error } = res.data;
+        dispatch({
+          type: userConstants.ADD_USER_ORDER_FAILURE,
+          payload: { error },
+        });
+        toast.error("There was an error!");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("There was an error from our end, Please try again!");
     }
   };
 };
