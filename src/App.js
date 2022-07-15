@@ -71,7 +71,9 @@ function App() {
       <Switch>
         <PrivateRoute path="/" exact component={Welcome}></PrivateRoute>
 
-        <PrivateRoute path="/dine-in" exact component={DineIn}></PrivateRoute>
+        {modulesForUser.some((module) => module.moduleName === "DINE-IN") && (
+          <PrivateRoute path="/dine-in" exact component={DineIn}></PrivateRoute>
+        )}
 
         {modulesForUser.some((module) => module.moduleName === "DASHBOARD") && (
           <PrivateRoute

@@ -61,11 +61,16 @@ export const NewHeader = (props) => {
       <Nav>
         {!isMobile ? (
           <>
-            <li className="nav-item top-module">
-              <NavLink exact to={"/dine-in"}>
-                Dine-In
-              </NavLink>
-            </li>
+            {modulesForUser.some(
+              (module) => module.moduleName === "DINE-IN"
+            ) && (
+              <li className="nav-item top-module">
+                <NavLink exact to={"/dine-in"}>
+                  Dine-In
+                </NavLink>
+              </li>
+            )}
+
             {modulesForUser.some(
               (module) => module.moduleName === "DASHBOARD"
             ) && (
