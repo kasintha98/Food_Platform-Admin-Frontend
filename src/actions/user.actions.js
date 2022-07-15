@@ -1,5 +1,5 @@
 import axios from "../helpers/axios";
-import { userConstants } from "./constants";
+import { userConstants, taxConstants } from "./constants";
 import { toast } from "react-toastify";
 
 //action to signup
@@ -349,6 +349,34 @@ export const GetOrderProcessStatus2 = (id) => {
           payload: { error },
         });
         toast.error("There was an error when getting order status data!");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+export const GetTaxDetails = (restaurantId, storeId) => {
+  return async (dispatch) => {
+    try {
+      const res = await axios.get("/getTaxDetailsByRestroAndStore", {
+        params: { restaurantId: restaurantId, storeId: storeId },
+      });
+      dispatch({ type: taxConstants.GET_TAX_REQUEST });
+
+      if (res.status === 200) {
+        console.log(res);
+        dispatch({
+          type: taxConstants.GET_TAX_SUCCESS,
+          payload: res.data,
+        });
+      } else {
+        const { error } = res.data;
+        dispatch({
+          type: taxConstants.GET_TAX_FAILURE,
+          payload: { error },
+        });
+        toast.error("There was an error when getting data!");
       }
     } catch (error) {
       console.log(error);

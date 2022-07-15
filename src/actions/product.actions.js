@@ -1,158 +1,114 @@
 import axios from "../helpers/axios";
 import { productConstants } from "./constants";
-import { toast } from "react-toastify";
 
-//action to get all products from database
-const getAllProducts = () => {
+export const getProductsNew = (restaurantId, storeId) => {
   return async (dispatch) => {
-    dispatch({ type: productConstants.GET_ALL_PRODUCTS_REQUEST });
-
-    const res = await axios.get("product/getproducts");
-    console.log(res);
-
-    if (res.status === 200) {
-      const { products } = res.data;
-
-      dispatch({
-        type: productConstants.GET_ALL_PRODUCTS_SUCCESS,
-        payload: { products: products },
-      });
-    } else {
-      dispatch({
-        type: productConstants.GET_ALL_PRODUCTS_FAILURE,
-        payload: {
-          error: res.data.error,
+    try {
+      const res = await axios.get(`/getMenuItemsByRestroAndStore`, {
+        params: {
+          restaurantId: restaurantId ? restaurantId : "ALL",
+          storeId: storeId ? storeId : "ALL",
         },
       });
-    }
-  };
-};
 
-//action to add product
-export const addProduct = (form) => {
-  return async (dispatch) => {
-    dispatch({ type: productConstants.ADD_NEW_PRODUCT_REQUEST });
+      if (res && res.status === 200) {
+        const productsList = {
+          products: res.data,
+        };
+        console.log(productsList);
 
-    try {
-      const res = await axios.post("product/create", form);
-      if (res.status === 201) {
         dispatch({
-          type: productConstants.ADD_NEW_PRODUCT_SUCCESS,
-          payload: { product: res.data.product },
-        });
-        dispatch(getAllProducts());
-
-        toast.success(res.data.msg, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
+          type: productConstants.GET_PRODUCTS_BY_SLUG_SUCCESS,
+          payload: productsList,
         });
       } else {
-        dispatch({
-          type: productConstants.ADD_NEW_PRODUCT_FAILURE,
-          payload: res.data.error,
-        });
-
-        toast.error(res.data.error, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
+        console.log("error");
       }
-      console.log(res);
     } catch (error) {
-      console.log(error.reponse);
+      console.log(error);
     }
   };
 };
 
-//action to a update product
-export const updateProduct = (form) => {
+export const getMenuIngredientsByProductId = (id, restaurantId, storeId) => {
   return async (dispatch) => {
-    dispatch({ type: productConstants.UPDATE_PRODUCT_REQUEST });
-
-    const res = await axios.post("/product/update", form);
-    if (res.status === 201) {
-      dispatch({ type: productConstants.UPDATE_PRODUCT_SUCCESS });
-      dispatch(getAllProducts());
-
-      toast.success(res.data.msg, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    } else {
-      const { error } = res.data;
-      dispatch({
-        type: productConstants.UPDATE_PRODUCT_FAILURE,
-        payload: { error },
+    try {
+      const res = await axios.get(`/getMenuIngredientsByMenuId`, {
+        params: {
+          productId: id,
+          restaurantId: restaurantId ? restaurantId : "ALL",
+          storeId: storeId ? storeId : "ALL",
+        },
       });
 
-      toast.error(res.data.error, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      if (res.status === 200) {
+        dispatch({
+          type: productConstants.GET_MENU_INGREDIENTS_BY_PRODUCT_ID_SUCCESS,
+          payload: res.data,
+        });
+        return res.data;
+      } else {
+        console.log("error");
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 };
 
-//action to delete a product
-export const deleteProduct = (id) => {
+export const getAllSections = (restaurantId, storeId) => {
   return async (dispatch) => {
-    dispatch({ type: productConstants.DELETE_PRODUCT_REQUEST });
-
-    const res = await axios.delete("product/delete/" + id);
-
-    if (res.status === 200) {
-      dispatch(getAllProducts());
-      dispatch({
-        type: productConstants.DELETE_PRODUCT_SUCCESS,
+    try {
+      const res = await axios.get(`/getAllSections`, {
+        params: {
+          restaurantId: restaurantId ? restaurantId : "ALL",
+          storeId: storeId ? storeId : "ALL",
+        },
       });
 
-      toast.success(res.data.msg, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    } else {
-      const { error } = res.data;
-      dispatch({
-        type: productConstants.DELETE_PRODUCT_FAILURE,
-        payload: { error },
-      });
+      if (res && res.status === 200) {
+        dispatch({
+          type: productConstants.GET_ALL_SECTIONS_SUCCESS,
+          payload: res.data,
+        });
 
-      toast.error(res.data.error, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+        return res.data;
+      } else {
+        dispatch({
+          type: productConstants.GET_ALL_SECTIONS_FAILURE,
+          payload: [],
+        });
+        console.log("error");
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 };
 
-export { getAllProducts };
+export const getDishesBySection = (section, restaurantId, storeId) => {
+  return async (dispatch) => {
+    try {
+      const res = await axios.get(`/getDishesBySection`, {
+        params: {
+          section: section,
+          restaurantId: restaurantId ? restaurantId : "ALL",
+          storeId: storeId ? storeId : "ALL",
+        },
+      });
+
+      if (res.status === 200) {
+        dispatch({
+          type: productConstants.GET_DISHES_BY_SECTION_SUCCESS,
+          payload: res.data,
+        });
+        //console.log(res.data);
+        return res.data;
+      } else {
+        console.log("error");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};

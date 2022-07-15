@@ -5,6 +5,7 @@ import {
   getVersion,
   getAllStores,
   getModulesForUser,
+  updateCart,
 } from "./actions";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -37,6 +38,7 @@ import { NewTrack } from "./containers/NewTrack";
 import { Welcome } from "./containers/Welcome";
 import { PageNotFound } from "./containers/PageNotFound";
 import { ForgotPassword } from "./containers/ForgotPassword";
+import { DineIn } from "./containers/DineIn";
 
 function App() {
   const dispatch = useDispatch();
@@ -48,7 +50,7 @@ function App() {
     if (!auth.authenticate) {
       dispatch(isUserLoggedIn());
     }
-    /* dispatch(getInitialData()); */
+    dispatch(updateCart());
     dispatch(getAllStores());
 
     if (localStorage.getItem("user")) {
@@ -68,6 +70,8 @@ function App() {
       <ToastContainer theme="dark" />
       <Switch>
         <PrivateRoute path="/" exact component={Welcome}></PrivateRoute>
+
+        <PrivateRoute path="/dine-in" exact component={DineIn}></PrivateRoute>
 
         {modulesForUser.some((module) => module.moduleName === "DASHBOARD") && (
           <PrivateRoute

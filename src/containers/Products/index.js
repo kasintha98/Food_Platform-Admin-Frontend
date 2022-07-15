@@ -11,7 +11,7 @@ import {
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Input from "../../components/UI/Input";
-import { addProduct, updateProduct, deleteProduct } from "../../actions";
+import {} from "../../actions";
 import CurrencyFormat from "react-currency-format";
 import NewModal from "../../components/UI/Modal";
 import { generatePublicUrl } from "../../urlConfig";
@@ -194,7 +194,7 @@ function Products(props) {
       form.append("productImages", pic);
     }
 
-    dispatch(addProduct(form));
+    //dispatch(addProduct(form));
 
     setProductName("");
     setProductPrice("");
@@ -375,7 +375,7 @@ function Products(props) {
     form.append("category", productCategoryUpdate._id);
 
     //updating the product with new form data and then updating the product list(getting the updated product list)
-    dispatch(updateProduct(form));
+    //dispatch(updateProduct(form));
   };
 
   console.log(productImage);
@@ -588,7 +588,7 @@ function Products(props) {
   //fuction to delete product. dispatching the deleteproduct() from actions
   const deleteProductData = (pro) => {
     //dispatching the action to delete selected Product
-    dispatch(deleteProduct(pro._id));
+    //dispatch(deleteProduct(pro._id));
   };
 
   //popup modal to delete product

@@ -1,4 +1,4 @@
-import { userConstants } from "../actions/constants";
+import { userConstants, taxConstants } from "../actions/constants";
 
 const initState = {
   error: null,
@@ -14,6 +14,7 @@ const initState = {
   configDetails: [],
   modulesForUser: [],
   orderStatus: [],
+  taxDetails: null,
 };
 
 export default (state = initState, action) => {
@@ -174,6 +175,13 @@ export default (state = initState, action) => {
       state = {
         ...state,
         error: action.payload.error,
+      };
+      break;
+
+    case taxConstants.GET_TAX_SUCCESS:
+      state = {
+        ...state,
+        taxDetails: action.payload,
       };
       break;
   }
