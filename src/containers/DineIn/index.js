@@ -11,6 +11,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import NewMenu from "../NewMenu";
 import NewCheckout from "../NewCheckout";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const CusMenuItem = styled(MenuItem)``;
 
@@ -41,7 +42,7 @@ export const DineIn = () => {
 
   return (
     <Layout sidebar headerTitle="Welcome">
-      <Row className="align-items-center pt-2">
+      <Row className="align-items-center" style={{ marginTop: "-10px" }}>
         <Col className="col-sm-7">
           {ShowCheckout ? (
             <Button
@@ -49,12 +50,19 @@ export const DineIn = () => {
                 setShowCheckout(false);
               }}
             >
-              Back
+              <ArrowBackIcon></ArrowBackIcon> &nbsp; Back
             </Button>
           ) : null}
         </Col>
         <div style={{ maxWidth: "125px !important" }}>
-          <Typography sx={{ color: "#7F7F7F", fontWeight: "bold" }}>
+          <Typography
+            sx={{
+              color: "#7F7F7F",
+              fontWeight: "bold",
+              fontSize: "0.75rem",
+              lineHeight: "1rem",
+            }}
+          >
             {user.roleCategory === "SUPER_ADMIN"
               ? "Select Store"
               : "Your Store"}
@@ -63,10 +71,14 @@ export const DineIn = () => {
         <Col className="col-sm-4" style={{ display: "flex" }}>
           {user.roleCategory === "SUPER_ADMIN" ? (
             <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">
+              <InputLabel
+                sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
+                id="demo-simple-select-label"
+              >
                 Please select the store
               </InputLabel>
               <Select
+                sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 value={selectedStore}

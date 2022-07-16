@@ -529,7 +529,6 @@ export default function NewCheckout(props) {
                       fontWeight: "bold",
                       color: "#000",
                       fontSize: "1.1rem",
-                      fontSize: "1.1rem",
                     }}
                   >
                     VALIDATE YOUR ORDER
@@ -537,7 +536,14 @@ export default function NewCheckout(props) {
                 </Col>
               </Row>
               <div>
-                <Card sx={{ width: "100%", marginTop: 3, minHeight: "468px" }}>
+                <Card
+                  sx={{
+                    width: "100%",
+                    marginTop: 3,
+                    height: "468px",
+                    overflowY: "auto",
+                  }}
+                >
                   <CardContent sx={{ height: "auto" }}>
                     <CartCard
                       onChangeSubTotal={handleSubTotal}

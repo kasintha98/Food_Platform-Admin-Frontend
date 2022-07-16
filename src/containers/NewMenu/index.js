@@ -50,10 +50,10 @@ const CusTab = styled(Tab)`
 `;
 
 const CusBox1 = styled(Box)`
-  margin-top: 41px;
+  margin-top: -3px;
 
-  @media (max-width: 992px) {
-    margin-top: -6px;
+  @media (max-width: 1055px) {
+    margin-top: 11px;
   }
 `;
 
@@ -135,7 +135,7 @@ export default function NewMenu(props) {
                       borderBottom: 1,
                       borderColor: "divider",
                       position: "absolute",
-                      top: "-35px",
+                      top: "-58px",
                       left: "0px",
                       width: "96vw",
                       backgroundColor: "#ffc423",
