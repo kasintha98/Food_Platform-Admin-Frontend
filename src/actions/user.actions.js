@@ -413,3 +413,188 @@ export const saveNewOrder = (payload) => {
     }
   };
 };
+
+export const addNewCustomer = (mobileNumber, firstName, lastName, emailId) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: userConstants.ADD_NEW_CUSTOMER_REQUEST });
+
+      const res = await axios.get("/customer/register", {
+        params: { mobno: mobileNumber, firstName, lastName, emailId },
+      });
+
+      if (res.data) {
+        dispatch({
+          type: userConstants.ADD_NEW_CUSTOMER_SUCCESS,
+          payload: res.data,
+        });
+
+        toast.success("New Customer Saved!");
+        return res.data;
+      } else {
+        dispatch({
+          type: userConstants.ADD_NEW_CUSTOMER_FAILURE,
+          payload: { errormsg: res.data.errormsg },
+        });
+        toast.error(res.data.errormsg);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+export const updateCustomerDetails = (payload) => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: userConstants.UPDATE_CUSTOMER_DETAILS_REQUEST,
+      });
+
+      const res = await axios.put("/customer/update", payload);
+
+      if (res.status === 200) {
+        const { id, firstName, lastName, emailId, mobileNumber } = res.data;
+
+        dispatch({
+          type: userConstants.UPDATE_CUSTOMER_DETAILS_SUCCESS,
+          payload: res.data,
+        });
+
+        toast.success("Details updated successfully!");
+        return res.data;
+      } else {
+        const { error } = res.data;
+        dispatch({
+          type: userConstants.UPDATE_CUSTOMER_DETAILS_FAILURE,
+          payload: { error },
+        });
+
+        toast.error("There was an error please try again!");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("There was an error please try again!");
+    }
+  };
+};
+
+export const GetCustomerAddress = (mobileNumber) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: userConstants.GET_CUSTOMER_ADDRESS_REQUEST });
+      const specialChars = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+      if (specialChars.test(mobileNumber)) {
+        encodeURIComponent(mobileNumber);
+      }
+
+      const res = await axios.get("/getCustomerAddressDtlsByMobNum", {
+        params: { mobno: mobileNumber },
+      });
+
+      if (res.status === 200) {
+        console.log(res);
+
+        const filteredAddresses = res.data.filter(function (el) {
+          return el.active === "Y";
+        });
+
+        dispatch({
+          type: userConstants.GET_CUSTOMER_ADDRESS_SUCCESS,
+          payload: res.data.filter(function (el) {
+            return el.active === "Y";
+          }),
+        });
+
+        if (filteredAddresses && filteredAddresses.length > 0) {
+          toast.success("Existing address found for this number!");
+        } else {
+          toast.warning(
+            "No address added for this number, Please add a new address!"
+          );
+        }
+
+        return filteredAddresses;
+      } else {
+        const { error } = res.data;
+        toast.error("No address found for this number!");
+        dispatch({
+          type: userConstants.GET_CUSTOMER_ADDRESS_FAILURE,
+          payload: { error },
+        });
+      }
+    } catch (error) {
+      toast.error("No address found for this number!");
+      console.log(error);
+    }
+  };
+};
+
+export const AddUpdateCustomerAddress = (payload) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: userConstants.ADD_UPDATE_CUSTOMER_ADDRESS_REQUEST });
+
+      const res = await axios.post("/saveCustomerDtls", payload);
+
+      if (res.status === 200) {
+        dispatch(GetCustomerAddress(payload.mobileNumber));
+
+        dispatch({
+          type: userConstants.ADD_UPDATE_CUSTOMER_ADDRESS_SUCCESS,
+          payload,
+        });
+
+        console.log(res);
+        return res.data;
+      } else {
+        const { error } = res.data;
+        dispatch({
+          type: userConstants.ADD_UPDATE_CUSTOMER_ADDRESS_FAILURE,
+          payload: { error },
+        });
+
+        toast.error("There was an error adding new address!");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("There was an error adding new address!");
+    }
+  };
+};
+
+export const GetCustomerDetails = (mobileNumber) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: userConstants.GET_CUSTOMER_DETAILS_REQUEST });
+      const specialChars = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+      if (specialChars.test(mobileNumber)) {
+        encodeURIComponent(mobileNumber);
+      }
+      const res = await axios.get("/putTheApiHere", {
+        params: { mobno: mobileNumber },
+      });
+
+      if (res.status === 200) {
+        console.log(res);
+
+        dispatch({
+          type: userConstants.GET_CUSTOMER_DETAILS_SUCCESS,
+          payload: res.data,
+        });
+        toast.success("Existing user found for this number!");
+        return res.data;
+      } else {
+        const { error } = res.data;
+        toast.error("No user found for this number!");
+        dispatch({
+          type: userConstants.GET_CUSTOMER_DETAILS_FAILURE,
+          payload: { error },
+        });
+      }
+    } catch (error) {
+      toast.error("No user found for this number!");
+      console.log(error);
+    }
+  };
+};

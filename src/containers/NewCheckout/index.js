@@ -10,7 +10,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import styled from "@emotion/styled";
 import { useSelector, useDispatch } from "react-redux";
-import { Grid, TextField } from "@mui/material";
+import { Grid, TextField, FormGroup, Checkbox } from "@mui/material";
 import CartCard from "../../components/CartCard";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
@@ -19,7 +19,14 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import { saveNewOrder } from "../../actions";
+import {
+  saveNewOrder,
+  addNewCustomer,
+  updateCustomerDetails,
+  GetCustomerAddress,
+  AddUpdateCustomerAddress,
+  GetCustomerDetails,
+} from "../../actions";
 import { InvoiceTable } from "../../components/InvoiceTable";
 import Pdf from "react-to-pdf";
 import { toast } from "react-toastify";
@@ -63,6 +70,7 @@ const SPMButton = styled(Button)`
 
 export default function NewCheckout(props) {
   const user = useSelector((state) => state.auth.user);
+  const currentAddress = useSelector((state) => state.user.currentAddress);
   const taxDetails = useSelector((state) => state.user.taxDetails);
 
   const cart = useSelector((state) => state.cart);
@@ -81,6 +89,16 @@ export default function NewCheckout(props) {
   const [lastName, setLastName] = useState("");
   const [phoneNo, setPhoneNo] = useState("");
   const [emailId, setEmailId] = useState("");
+  const [addressType, setAddressType] = useState("");
+  const [address1, setAddress1] = useState("");
+  const [address2, setAddress2] = useState("");
+  const [landMark, setLandMark] = useState("");
+  const [zipCode, setZipCode] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [defaultAddress, setDefaultAddress] = useState(false);
+  const [currentGetAddress, setCurrentGetAddress] = useState(null);
+  const [currentCustomer, setCurrentCustomer] = useState(null);
 
   const dispatch = useDispatch();
   const ref = React.createRef();
@@ -155,8 +173,14 @@ export default function NewCheckout(props) {
 
   const placeOrder = async () => {
     try {
+      console.log(currentGetAddress);
+
       if (!tableNo) {
         toast.error("Table No is required!");
+        return;
+      }
+      if (!defaultAddress && !currentGetAddress) {
+        toast.error("Address required or select default store address!");
         return;
       }
 
@@ -247,12 +271,12 @@ export default function NewCheckout(props) {
         restaurantId: props.restaurantId,
         storeId: props.storeId,
         //orderSource: "W",
-        orderSource: "DINE-IN",
+        orderSource: "D",
         //customerId: 106,
-        customerId: "000",
+        customerId: currentCustomer ? currentCustomer.id : 99999,
         orderReceivedDateTime: new Date(),
         //orderDeliveryType: "SELF-COLLECT",
-        orderDeliveryType: "DINE-IN",
+        orderDeliveryType: "DINE_IN",
         storeTableId: tableNo,
         orderStatus: "SUBMITTED",
         taxRuleId: 1,
@@ -260,15 +284,12 @@ export default function NewCheckout(props) {
         paymentStatus: "PAID",
         paymentMode: currentPaymentType,
         deliveryCharges: 0,
-        customerAddressId: null,
+        customerAddressId: defaultAddress ? 99999 : currentGetAddress.id,
         cgstCalculatedValue: cgstCaluclatedValue.toFixed(2),
         sgstCalculatedValue: sgstCalculatedValue.toFixed(2),
         overallPriceWithTax: overallPriceWithTax,
         orderDetails: orderDetails,
         createdBy: user.firstName,
-        mobileNumber: phoneNo ? phoneNo : "0000000000",
-        customerName: `${firstName} ${lastName}`,
-        emailId,
       };
 
       console.log(NewOrder);
@@ -279,7 +300,8 @@ export default function NewCheckout(props) {
           setOrderResp(res.data[0], () => {
             handleShowInvoice();
           });
-
+          clearCustomer();
+          clearAddress();
           return res.data;
         }
       });
@@ -309,6 +331,54 @@ export default function NewCheckout(props) {
     setPaymentType(event.target.value);
   };
 
+  const addUpdateCustomerDetails = () => {
+    if (defaultAddress) {
+      if (!phoneNo || !firstName) {
+        toast.error("Fill all mandatory fields!");
+        return;
+      }
+    } else {
+      if (
+        !phoneNo ||
+        !firstName ||
+        !addressType ||
+        !address1 ||
+        !zipCode ||
+        !city ||
+        !state
+      ) {
+        toast.error("Fill all mandatory fields!");
+        return;
+      }
+    }
+
+    if (!currentCustomer) {
+      dispatch(addNewCustomer(phoneNo, firstName, lastName, emailId)).then(
+        (res) => {
+          if (res && !defaultAddress) {
+            let addressObj = {
+              mobileNumber: phoneNo,
+              customerAddressType: addressType,
+              address1: address1,
+              address2: address2,
+              city: city,
+              state: state,
+              landmark: landMark,
+              zipCode: parseInt(zipCode),
+            };
+            dispatch(AddUpdateCustomerAddress(addressObj)).then((res) => {
+              if (res) {
+                setCurrentGetAddress(res);
+              }
+            });
+          }
+        }
+      );
+    } else {
+      dispatch(updateCustomerDetails(currentCustomer));
+    }
+  };
+
   const renderNowDate = () => {
     const dateObj = new Date();
     const month = dateObj.toLocaleString("default", { month: "short" });
@@ -332,6 +402,46 @@ export default function NewCheckout(props) {
     return <span>{time}</span>;
   };
 
+  const clearAddress = () => {
+    setAddress1("");
+    setAddress2("");
+    setLandMark("");
+    setAddressType("");
+    setZipCode("");
+    setCity("");
+    setState("");
+    setCurrentGetAddress(null);
+  };
+
+  const clearCustomer = () => {
+    //setFirstName("")
+    // setLastName("")
+    //setPhoneNo("")
+    ///setEmailId("")
+    setCurrentCustomer(null);
+  };
+
+  const setFoundAddress = (address) => {
+    if (address) {
+      setAddress1(address.address1);
+      setAddress2(address.address2);
+      setLandMark(address.landmark);
+      setAddressType(address.customerAddressType);
+      setZipCode(address.zipCode);
+      setCity(address.city);
+      setState(address.city);
+      setCurrentGetAddress(address);
+    }
+  };
+
+  const setFoundCustomer = (userObj) => {
+    setFirstName(userObj.firstName);
+    setLastName(userObj.lastName);
+    setPhoneNo(userObj.mobileNumber);
+    setEmailId(userObj.emailId);
+    setCurrentCustomer(userObj);
+  };
+
   const renderInvoiceModal = () => {
     return (
       <Modal
@@ -350,7 +460,9 @@ export default function NewCheckout(props) {
               <div ref={ref}>
                 <div ref={refH}>
                   <div className="text-center">
-                    <Typography sx={{ fontWeight: "600" }}>Hangries</Typography>
+                    <Typography sx={{ fontWeight: "600" }}>
+                      {orderResp ? orderResp.storeName : "Hangries"}
+                    </Typography>
                     <Typography sx={{ color: "black" }}>
                       <span>{props.storeObj.address1}</span>
                       {props.storeObj.address2 ? (
@@ -374,13 +486,22 @@ export default function NewCheckout(props) {
                       Order ID: {orderResp ? orderResp.orderId : null}
                     </Typography>
                     <Typography sx={{ fontWeight: "600" }}>
-                      Customer Name: {orderResp ? orderResp.customerName : null}
+                      Customer Name:{" "}
+                      {firstName ? (
+                        <span>
+                          {firstName} {lastName}
+                        </span>
+                      ) : (
+                        <span>{orderResp?.customerName}</span>
+                      )}
                     </Typography>
                     <Typography sx={{ fontWeight: "600" }}>
                       Order No: {orderResp ? orderResp.id : null}
                     </Typography>
                     <Typography sx={{ fontWeight: "600" }}>
-                      <span>DINE-IN</span>
+                      <span>
+                        {orderResp ? orderResp.orderDeliveryType : null}
+                      </span>
                       <span>
                         [{orderResp ? orderResp.paymentStatus : null}]
                       </span>
@@ -389,10 +510,22 @@ export default function NewCheckout(props) {
                   <hr></hr>
                   <div>
                     <Typography sx={{ color: "black" }}>
-                      Name: {firstName} {lastName}
+                      Name:{" "}
+                      {firstName ? (
+                        <span>
+                          {firstName} {lastName}
+                        </span>
+                      ) : (
+                        <span>{orderResp?.customerName}</span>
+                      )}
                     </Typography>
                     <Typography sx={{ color: "black" }}>
-                      Mob No: {phoneNo}
+                      Mob No:{" "}
+                      {phoneNo ? (
+                        <span>{phoneNo}</span>
+                      ) : (
+                        <span>{orderResp?.mobileNumber}</span>
+                      )}
                     </Typography>
                   </div>
                   <hr></hr>
@@ -670,7 +803,7 @@ export default function NewCheckout(props) {
                               <MainText>Select Table No</MainText>
                             </Col>
                             <Col className="pl-0">
-                              <FormControl fullWidth>
+                              {/* <FormControl fullWidth>
                                 <InputLabel id="tableNO">
                                   Select Table No
                                 </InputLabel>
@@ -690,37 +823,12 @@ export default function NewCheckout(props) {
                                     LOWER-02
                                   </MenuItem>
                                 </Select>
-                              </FormControl>
-                            </Col>
-                          </Row>
-                        </div>
-                        <div style={{ marginTop: "100px" }}>
-                          <Row className="align-items-center">
-                            <Col className="pr-0">
-                              <MainText>Customer First Name</MainText>
-                            </Col>
-                            <Col className="pl-0">
+                              </FormControl> */}
                               <TextField
-                                label="Customer First Name"
-                                value={firstName}
+                                label="Table No"
+                                value={tableNo}
                                 onChange={(event) => {
-                                  setFirstName(event.target.value);
-                                }}
-                              />
-                            </Col>
-                          </Row>
-                        </div>
-                        <div className="mt-3">
-                          <Row className="align-items-center">
-                            <Col className="pr-0">
-                              <MainText>Customer Last Name</MainText>
-                            </Col>
-                            <Col className="pl-0">
-                              <TextField
-                                label="Customer Last Name"
-                                value={lastName}
-                                onChange={(event) => {
-                                  setLastName(event.target.value);
+                                  setTableNo(event.target.value);
                                 }}
                               />
                             </Col>
@@ -737,6 +845,24 @@ export default function NewCheckout(props) {
                                 value={phoneNo}
                                 onChange={(event) => {
                                   setPhoneNo(event.target.value);
+                                }}
+                                onKeyDown={(e) => {
+                                  if (e.keyCode === 9) {
+                                    dispatch(
+                                      GetCustomerAddress(e.target.value)
+                                    ).then((res) => {
+                                      if (res) {
+                                        setFoundAddress(res[0]);
+                                      }
+                                    });
+                                    dispatch(
+                                      GetCustomerDetails(e.target.value)
+                                    ).then((res) => {
+                                      if (res) {
+                                        setFoundCustomer(res);
+                                      }
+                                    });
+                                  }
                                 }}
                               />
                             </Col>
@@ -757,6 +883,133 @@ export default function NewCheckout(props) {
                               />
                             </Col>
                           </Row>
+                        </div>
+                        <div className="text-center mt-3">
+                          <TextField
+                            label="Address Type"
+                            value={addressType}
+                            onChange={(event) => {
+                              setAddressType(event.target.value);
+                            }}
+                            disabled={defaultAddress}
+                          />
+                        </div>
+                        <div className="mt-3">
+                          <Row className="align-items-center">
+                            <Col className="pr-0">
+                              <TextField
+                                label="First Name"
+                                value={firstName}
+                                onChange={(event) => {
+                                  setFirstName(event.target.value);
+                                }}
+                              />
+                            </Col>
+                            <Col className="pl-1">
+                              <TextField
+                                label="Last Name (Optional)"
+                                value={lastName}
+                                onChange={(event) => {
+                                  setLastName(event.target.value);
+                                }}
+                              />
+                            </Col>
+                          </Row>
+                        </div>
+                        <div className="mt-3">
+                          <Row className="align-items-center">
+                            <Col className="pr-0">
+                              <TextField
+                                label="Address 1"
+                                value={address1}
+                                onChange={(event) => {
+                                  setAddress1(event.target.value);
+                                }}
+                                disabled={defaultAddress}
+                              />
+                            </Col>
+                            <Col className="pl-1">
+                              <TextField
+                                label="Address 2 (Optional)"
+                                value={address2}
+                                onChange={(event) => {
+                                  setAddress2(event.target.value);
+                                }}
+                                disabled={defaultAddress}
+                              />
+                            </Col>
+                          </Row>
+                        </div>
+                        <div className="mt-3">
+                          <Row className="align-items-center">
+                            <Col className="pr-0">
+                              <TextField
+                                label="Land Mark (Optional)"
+                                value={landMark}
+                                onChange={(event) => {
+                                  setLandMark(event.target.value);
+                                }}
+                                disabled={defaultAddress}
+                              />
+                            </Col>
+                            <Col className="pl-1">
+                              <TextField
+                                label="Zip Code"
+                                value={zipCode}
+                                onChange={(event) => {
+                                  setZipCode(event.target.value);
+                                }}
+                                disabled={defaultAddress}
+                              />
+                            </Col>
+                          </Row>
+                        </div>
+                        <div className="mt-3">
+                          <Row className="align-items-center">
+                            <Col className="pr-0">
+                              <TextField
+                                label="City"
+                                value={city}
+                                onChange={(event) => {
+                                  setCity(event.target.value);
+                                }}
+                                disabled={defaultAddress}
+                              />
+                            </Col>
+                            <Col className="pl-1">
+                              <TextField
+                                label="State"
+                                value={state}
+                                onChange={(event) => {
+                                  setState(event.target.value);
+                                }}
+                                disabled={defaultAddress}
+                              />
+                            </Col>
+                          </Row>
+                        </div>
+                        <div className="text-center mt-3">
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={defaultAddress}
+                                onChange={(event) => {
+                                  setDefaultAddress(event.target.checked);
+                                  clearAddress();
+                                }}
+                              />
+                            }
+                            label="Default Store address"
+                          />
+                        </div>
+                        <div className="text-center mt-3">
+                          <Button
+                            variant="contained"
+                            color="warning"
+                            onClick={addUpdateCustomerDetails}
+                          >
+                            SAVE CUSTOMER DETAILS
+                          </Button>
                         </div>
                       </CardContent>
                     </Card>

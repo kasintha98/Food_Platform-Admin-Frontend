@@ -89,7 +89,7 @@ export const InvoiceTable = (props) => {
                 Rs. {props.sgst}
               </CusTableCell>
             </TableRow>
-            <TableRow>
+            {/* <TableRow>
               <CusTableCell component="th" scope="row" colspan="3">
                 Delivery Charges
               </CusTableCell>
@@ -101,7 +101,7 @@ export const InvoiceTable = (props) => {
               >
                 Rs. {props.fullResp.deliveryCharges}
               </CusTableCell>
-            </TableRow>
+            </TableRow> */}
             <TableRow
               sx={{
                 borderTop: "2px solid black",

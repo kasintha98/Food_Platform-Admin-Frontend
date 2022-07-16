@@ -15,6 +15,10 @@ const initState = {
   modulesForUser: [],
   orderStatus: [],
   taxDetails: null,
+  customerAddress: [],
+  currentCustomer: null,
+  currentAddress: null,
+  currentGetAddress: null,
 };
 
 export default (state = initState, action) => {
@@ -182,6 +186,90 @@ export default (state = initState, action) => {
       state = {
         ...state,
         taxDetails: action.payload,
+      };
+      break;
+
+    case userConstants.GET_CUSTOMER_ADDRESS_SUCCESS:
+      state = {
+        ...state,
+        customerAddress: action.payload,
+      };
+      break;
+
+    case userConstants.GET_CUSTOMER_ADDRESS_FAILURE:
+      state = {
+        ...state,
+        customerAddress: [],
+      };
+      break;
+
+    case userConstants.ADD_NEW_CUSTOMER_SUCCESS:
+      state = {
+        ...state,
+        currentCustomer: action.payload,
+      };
+      break;
+
+    case userConstants.ADD_NEW_CUSTOMER_FAILURE:
+      state = {
+        ...state,
+        currentCustomer: null,
+      };
+      break;
+
+    case userConstants.UPDATE_CUSTOMER_DETAILS_SUCCESS:
+      state = {
+        ...state,
+        currentCustomer: action.payload,
+      };
+      break;
+
+    case userConstants.UPDATE_CUSTOMER_DETAILS_FAILURE:
+      state = {
+        ...state,
+        currentCustomer: null,
+      };
+      break;
+
+    case userConstants.GET_CUSTOMER_DETAILS_SUCCESS:
+      state = {
+        ...state,
+        currentCustomer: action.payload,
+      };
+      break;
+
+    case userConstants.GET_CUSTOMER_DETAILS_FAILURE:
+      state = {
+        ...state,
+        currentCustomer: null,
+      };
+      break;
+
+    case userConstants.ADD_UPDATE_CUSTOMER_ADDRESS_SUCCESS:
+      state = {
+        ...state,
+        currentAddress: action.payload,
+      };
+      break;
+
+    case userConstants.ADD_UPDATE_CUSTOMER_ADDRESS_FAILURE:
+      state = {
+        ...state,
+        currentAddress: null,
+      };
+      break;
+
+    case userConstants.GET_CUSTOMER_ADDRESS_SUCCESS:
+      state = {
+        ...state,
+        currentGetAddress: action.payload[0],
+      };
+      break;
+
+    case userConstants.GET_CUSTOMER_ADDRESS_FAILURE:
+      state = {
+        ...state,
+        currentGetAddress: null,
       };
       break;
   }
