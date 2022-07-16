@@ -100,13 +100,17 @@ export const OrderTable = (props) => {
   };
 
   const hidePrevStatus = (curStatus) => {
-    const index = statuses.indexOf(curStatus);
-
-    if (index) {
-      const newArr = statuses.slice(index, statuses.length);
-      return newArr;
+    if (curStatus === "DELIVERED") {
+      return [];
     } else {
-      return statuses;
+      const index = statuses.indexOf(curStatus);
+
+      if (index) {
+        const newArr = statuses.slice(index, statuses.length);
+        return newArr;
+      } else {
+        return statuses;
+      }
     }
   };
 

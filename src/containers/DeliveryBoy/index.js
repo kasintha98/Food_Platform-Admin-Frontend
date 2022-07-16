@@ -98,6 +98,21 @@ export const DeliveryBoy = () => {
     isReset ? setIsReset(false) : setIsReset(true);
   };
 
+  const hidePrevStatus = (curStatus) => {
+    if (curStatus === "DELIVERED") {
+      return [];
+    } else {
+      const index = statuses.indexOf(curStatus);
+
+      if (index) {
+        const newArr = statuses.slice(index, statuses.length);
+        return newArr;
+      } else {
+        return statuses;
+      }
+    }
+  };
+
   const searchOrder = () => {
     const today = new Date();
     dispatch(
@@ -369,7 +384,7 @@ export const DeliveryBoy = () => {
                               >
                                 Select Status
                               </option>
-                              {statuses.map((status) => (
+                              {hidePrevStatus(row.orderStatus).map((status) => (
                                 <option
                                   key={status}
                                   value={status}
