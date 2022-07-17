@@ -44,17 +44,25 @@ export const DeliveryBoy = () => {
   const [status, setStatus] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const [selectedDeliBoy, setSelectedDeliBoy] = useState("");
+  const [selectedDeliBoyObj, setSelectedDeliBoyObj] = useState("");
   const statuses =
     user.roleCategory === "DELIVERY_BOY"
-      ? ["OUT FOR DELIVERY", "DELIVERED"]
-      : ["FOOD READY", "OUT FOR DELIVERY", "DELIVERED", "CANCELLED"];
+      ? ["PROCESSING", "FOOD READY", "OUT FOR DELIVERY", "DELIVERED"]
+      : [
+          "PROCESSING",
+          "FOOD READY",
+          "OUT FOR DELIVERY",
+          "DELIVERED",
+          "CANCELLED",
+        ];
 
   const dispatch = useDispatch();
 
   useEffect(() => {
+    const today = new Date();
+
     if (user.roleCategory === "DELIVERY_BOY") {
       setSelectedDeliBoy(user.firstName);
-      const today = new Date();
       dispatch(
         getCustomerOrders(
           null,
@@ -71,6 +79,22 @@ export const DeliveryBoy = () => {
       });
     } else {
       dispatch(getUsersByRole("DELIVERY_BOY"));
+      if (selectedDeliBoyObj) {
+        dispatch(
+          getCustomerOrders(
+            null,
+            null,
+            null,
+            `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,
+            null,
+            `${selectedDeliBoyObj.firstName}`
+          )
+        ).then((res) => {
+          if (res) {
+            setFilteredData(filterByStatus(res));
+          }
+        });
+      }
     }
   }, [isReset]);
 
@@ -105,7 +129,7 @@ export const DeliveryBoy = () => {
       const index = statuses.indexOf(curStatus);
 
       if (index) {
-        const newArr = statuses.slice(index, statuses.length);
+        const newArr = statuses.slice(index + 1, statuses.length);
         return newArr;
       } else {
         return statuses;
@@ -251,9 +275,22 @@ export const DeliveryBoy = () => {
                 onChange={handleDeliveryBoyUpdate}
                 sx={{ fontSize: "0.75rem" }}
               >
-                <option value="">Select Delivery Boy</option>
+                <option
+                  value=""
+                  onClick={() => {
+                    setSelectedDeliBoyObj(null);
+                  }}
+                >
+                  Select Delivery Boy
+                </option>
                 {usersByRole.map((user) => (
-                  <option key={user.userSeqNo} value={user.firstName}>
+                  <option
+                    key={user.userSeqNo}
+                    value={user.firstName}
+                    onClick={() => {
+                      setSelectedDeliBoyObj(user);
+                    }}
+                  >
                     {user.firstName}
                   </option>
                 ))}
@@ -377,6 +414,7 @@ export const DeliveryBoy = () => {
                               }}
                               onChange={handleStatusUpdate}
                               sx={{ fontSize: "0.75rem" }}
+                              disabled={row.orderStatus === "DELIVERED"}
                             >
                               <option
                                 value="none"
@@ -406,6 +444,7 @@ export const DeliveryBoy = () => {
                             onClick={() => {
                               onClickUpdateStatus(row.orderId);
                             }}
+                            disabled={row.orderStatus === "DELIVERED"}
                           >
                             Confirm
                           </Button>

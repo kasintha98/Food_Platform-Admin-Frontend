@@ -571,7 +571,7 @@ export const GetCustomerDetails = (mobileNumber) => {
       if (specialChars.test(mobileNumber)) {
         encodeURIComponent(mobileNumber);
       }
-      const res = await axios.get("/putTheApiHere", {
+      const res = await axios.get("/getCustomerDtlsByMobNum", {
         params: { mobno: mobileNumber },
       });
 

@@ -90,7 +90,11 @@ export const OrderTable = (props) => {
 
   const onClickUpdateStatus = (id) => {
     if (status) {
-      dispatch(updateOrder(id, status, props.type));
+      dispatch(updateOrder(id, status, props.type)).then((res) => {
+        if (res) {
+          handleIsReset();
+        }
+      });
       setStatus("");
     }
   };
@@ -246,12 +250,16 @@ export const OrderTable = (props) => {
 
   const resetSearch = () => {
     setKeywords("");
+    handleIsReset();
+    toast.success("Reset Orders!");
+  };
+
+  const handleIsReset = () => {
     if (isReset) {
       setIsReset(false);
     } else {
       setIsReset(true);
     }
-    toast.success("Reset Orders!");
   };
 
   return (
@@ -386,6 +394,7 @@ export const OrderTable = (props) => {
                               }}
                               onChange={handleStatusUpdate}
                               sx={{ fontSize: "0.75rem" }}
+                              disabled={row.orderStatus === "DELIVERED"}
                             >
                               {hidePrevStatus(row.orderStatus).map((status) => (
                                 <option
@@ -409,6 +418,7 @@ export const OrderTable = (props) => {
                             onClick={() => {
                               onClickUpdateStatus(row.orderId);
                             }}
+                            disabled={row.orderStatus === "DELIVERED"}
                           >
                             Confirm
                           </Button>
