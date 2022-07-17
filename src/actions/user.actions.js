@@ -414,13 +414,13 @@ export const saveNewOrder = (payload) => {
   };
 };
 
-export const addNewCustomer = (mobileNumber, firstName, lastName, emailId) => {
+export const addNewCustomer = (mobileNumber) => {
   return async (dispatch) => {
     try {
       dispatch({ type: userConstants.ADD_NEW_CUSTOMER_REQUEST });
 
       const res = await axios.get("/customer/register", {
-        params: { mobno: mobileNumber, firstName, lastName, emailId },
+        params: { mobno: mobileNumber },
       });
 
       if (res.data) {

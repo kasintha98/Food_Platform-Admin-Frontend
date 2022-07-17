@@ -21,10 +21,14 @@ export const DineIn = () => {
   const stores = useSelector((state) => state.store.stores);
 
   const [selectedStore, setSelectedStore] = useState(user.resturantName);
-  const [selectedStoreObj, setSelectedStoreObj] = useState({
-    restaurantId: user.restaurantId,
-    storeId: user.storeId,
-  });
+  const [selectedStoreObj, setSelectedStoreObj] = useState(
+    stores[0]
+      ? stores[0]
+      : {
+          restaurantId: user.restaurantId,
+          storeId: user.storeId,
+        }
+  );
   const [ShowCheckout, setShowCheckout] = useState(false);
 
   if (auth.authenticate !== true) {

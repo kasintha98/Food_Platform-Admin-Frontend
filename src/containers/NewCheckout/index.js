@@ -356,8 +356,16 @@ export default function NewCheckout(props) {
       dispatch(addNewCustomer(phoneNo, firstName, lastName, emailId)).then(
         (res) => {
           if (res && !defaultAddress) {
+            const custObj = {
+              ...res,
+              firstName,
+              lastName,
+              emailId,
+            };
+            dispatch(updateCustomerDetails(custObj));
+
             let addressObj = {
-              mobileNumber: phoneNo,
+              mobileNumber: res.mobileNumber,
               customerAddressType: addressType,
               address1: address1,
               address2: address2,
@@ -375,7 +383,14 @@ export default function NewCheckout(props) {
         }
       );
     } else {
-      dispatch(updateCustomerDetails(currentCustomer));
+      const custObj = {
+        ...currentCustomer,
+        firstName,
+        lastName,
+        emailId,
+        mobileNumber: phoneNo,
+      };
+      dispatch(updateCustomerDetails(custObj));
     }
   };
 
