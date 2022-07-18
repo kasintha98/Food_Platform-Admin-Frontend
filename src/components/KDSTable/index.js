@@ -223,7 +223,7 @@ export const KDSTable = forwardRef((props, ref) => {
           className="p-0 m-0 col-12"
           style={{ overflowX: "auto", paddingRight: "5px" }}
         >
-          <Table sx={{ minWidth: 703 }} aria-label="simple table">
+          <Table sx={{ minWidth: 825 }} aria-label="simple table">
             <TableHead>
               <TableRow
                 sx={{
@@ -253,6 +253,12 @@ export const KDSTable = forwardRef((props, ref) => {
                   align="center"
                 >
                   Order Info
+                </CusTableCell>
+                <CusTableCell
+                  sx={{ color: "#fff", border: "1px solid #fff" }}
+                  align="center"
+                >
+                  Table ID
                 </CusTableCell>
                 <CusTableCell
                   sx={{ color: "#fff", border: "1px solid #fff" }}
@@ -295,11 +301,11 @@ export const KDSTable = forwardRef((props, ref) => {
                         align="center"
                         sx={{ border: "1px solid #000" }}
                       >
-                        {order.orderId.substr(order.orderId.length - 3)}
+                        {order.orderId.substr(order.orderId.length - 3)} &nbsp;
                         {!props.counter && (
                           <>
-                            <br></br>
                             <Button
+                              sx={{ padding: 0 }}
                               color="error"
                               variant="contained"
                               onClick={() => {
@@ -344,6 +350,12 @@ export const KDSTable = forwardRef((props, ref) => {
                         align="center"
                         sx={{ border: "1px solid #000" }}
                       >
+                        {order.storeTableId ? order.storeTableId : "N/A"}
+                      </CusTableCell>
+                      <CusTableCell
+                        align="center"
+                        sx={{ border: "1px solid #000" }}
+                      >
                         {order.customerName}
                       </CusTableCell>
                       <CusTableCell
@@ -353,7 +365,12 @@ export const KDSTable = forwardRef((props, ref) => {
                         {order.orderDetails.map((item, index) => (
                           <div key={index}>
                             {item.ingredient === "No Ingredient" ? (
-                              <div style={{ borderBottom: "1px solid #000" }}>
+                              <div
+                                style={{
+                                  borderBottom: "1px solid #000",
+                                  minHeight: "25px",
+                                }}
+                              >
                                 {item.productName}
                               </div>
                             ) : (
@@ -362,6 +379,7 @@ export const KDSTable = forwardRef((props, ref) => {
                                   borderBottom: "1px solid #000",
                                   color: "red",
                                   paddingLeft: "2em",
+                                  minHeight: "25px",
                                 }}
                               >
                                 {item.ingredient}
@@ -377,7 +395,10 @@ export const KDSTable = forwardRef((props, ref) => {
                         {order.orderDetails.map((item, index) => (
                           <div
                             key={index}
-                            style={{ borderBottom: "1px solid #000" }}
+                            style={{
+                              borderBottom: "1px solid #000",
+                              minHeight: "25px",
+                            }}
                           >
                             {item.quantity}
                           </div>
@@ -390,7 +411,10 @@ export const KDSTable = forwardRef((props, ref) => {
                         {order.orderDetails.map((item, index) => (
                           <div
                             key={index}
-                            style={{ borderBottom: "1px solid #000" }}
+                            style={{
+                              borderBottom: "1px solid #000",
+                              minHeight: "25px",
+                            }}
                           >
                             {item.remarks ? item.remarks : "No Data"}
                           </div>
@@ -422,7 +446,12 @@ export const KDSTable = forwardRef((props, ref) => {
                               );
                             }}
                           >
-                            <div style={{ borderBottom: "1px solid #000" }}>
+                            <div
+                              style={{
+                                borderBottom: "1px solid #000",
+                                minHeight: "25px",
+                              }}
+                            >
                               {item.orderDetailStatus}
                             </div>
                           </div>

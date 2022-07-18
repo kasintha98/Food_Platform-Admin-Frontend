@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useStateWithCallbackLazy } from "use-state-with-callback";
 import { useHistory } from "react-router-dom";
+import PhoneInput from "react-phone-number-input";
 import "./style.css";
 import { Row, Col, Container, Modal } from "react-bootstrap";
 import Card from "@mui/material/Card";
@@ -10,7 +11,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import styled from "@emotion/styled";
 import { useSelector, useDispatch } from "react-redux";
-import { Grid, TextField, FormGroup, Checkbox } from "@mui/material";
+import { Grid, TextField, Checkbox } from "@mui/material";
 import CartCard from "../../components/CartCard";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
@@ -30,6 +31,7 @@ import {
 import { InvoiceTable } from "../../components/InvoiceTable";
 import Pdf from "react-to-pdf";
 import { toast } from "react-toastify";
+import "react-phone-number-input/style.css";
 
 const CusContainer = styled(Container)`
   margin-top: 50px;
@@ -66,6 +68,31 @@ const SPMButton = styled(Button)`
   &:hover {
     background-color: #548235;
   }
+`;
+
+const CusTextField = styled(TextField)`
+ & label {
+  font-size: 0.75rem;
+  top: -11px;
+}
+
+& .Mui-focused{
+  top: 0px !important;
+}
+
+& fieldset{
+  font-size: 0.75rem;
+}
+
+& .MuiFormLabel-filled{
+  top: 0px !important;
+}
+
+& input{
+  font-size: 0.75rem;
+  padding: 0.25rem;
+}
+ }
 `;
 
 export default function NewCheckout(props) {
@@ -173,8 +200,6 @@ export default function NewCheckout(props) {
 
   const placeOrder = async () => {
     try {
-      console.log(currentGetAddress);
-
       if (!tableNo) {
         toast.error("Table No is required!");
         return;
@@ -455,6 +480,24 @@ export default function NewCheckout(props) {
     setPhoneNo(userObj.mobileNumber);
     setEmailId(userObj.emailId);
     setCurrentCustomer(userObj);
+  };
+
+  const onKeyDownHandler = (e) => {
+    if (e.keyCode === 13) {
+      e.preventDefault();
+    }
+    if (e.keyCode === 9) {
+      dispatch(GetCustomerAddress(phoneNo)).then((res) => {
+        if (res) {
+          setFoundAddress(res[0]);
+        }
+      });
+      dispatch(GetCustomerDetails(phoneNo)).then((res) => {
+        if (res) {
+          setFoundCustomer(res);
+        }
+      });
+    }
   };
 
   const renderInvoiceModal = () => {
@@ -839,7 +882,7 @@ export default function NewCheckout(props) {
                                   </MenuItem>
                                 </Select>
                               </FormControl> */}
-                              <TextField
+                              <CusTextField
                                 label="Table No"
                                 value={tableNo}
                                 onChange={(event) => {
@@ -855,7 +898,15 @@ export default function NewCheckout(props) {
                               <MainText>Phone No</MainText>
                             </Col>
                             <Col className="pl-0">
-                              <TextField
+                              <PhoneInput
+                                defaultCountry="IN"
+                                style={{ fontSize: "0.75rem" }}
+                                placeholder="Mobile Number"
+                                value={phoneNo}
+                                onChange={setPhoneNo}
+                                onKeyDown={onKeyDownHandler}
+                              />
+                              {/* <CusTextField
                                 label="Phone No"
                                 value={phoneNo}
                                 onChange={(event) => {
@@ -879,7 +930,7 @@ export default function NewCheckout(props) {
                                     });
                                   }
                                 }}
-                              />
+                              /> */}
                             </Col>
                           </Row>
                         </div>
@@ -889,7 +940,7 @@ export default function NewCheckout(props) {
                               <MainText>Email Id</MainText>
                             </Col>
                             <Col className="pl-0">
-                              <TextField
+                              <CusTextField
                                 label="Email Id"
                                 value={emailId}
                                 onChange={(event) => {
@@ -900,7 +951,7 @@ export default function NewCheckout(props) {
                           </Row>
                         </div>
                         <div className="text-center mt-3">
-                          <TextField
+                          <CusTextField
                             label="Address Type"
                             value={addressType}
                             onChange={(event) => {
@@ -912,7 +963,7 @@ export default function NewCheckout(props) {
                         <div className="mt-3">
                           <Row className="align-items-center">
                             <Col className="pr-0">
-                              <TextField
+                              <CusTextField
                                 label="First Name"
                                 value={firstName}
                                 onChange={(event) => {
@@ -921,7 +972,7 @@ export default function NewCheckout(props) {
                               />
                             </Col>
                             <Col className="pl-1">
-                              <TextField
+                              <CusTextField
                                 label="Last Name (Optional)"
                                 value={lastName}
                                 onChange={(event) => {
@@ -934,7 +985,7 @@ export default function NewCheckout(props) {
                         <div className="mt-3">
                           <Row className="align-items-center">
                             <Col className="pr-0">
-                              <TextField
+                              <CusTextField
                                 label="Address 1"
                                 value={address1}
                                 onChange={(event) => {
@@ -944,7 +995,7 @@ export default function NewCheckout(props) {
                               />
                             </Col>
                             <Col className="pl-1">
-                              <TextField
+                              <CusTextField
                                 label="Address 2 (Optional)"
                                 value={address2}
                                 onChange={(event) => {
@@ -958,7 +1009,7 @@ export default function NewCheckout(props) {
                         <div className="mt-3">
                           <Row className="align-items-center">
                             <Col className="pr-0">
-                              <TextField
+                              <CusTextField
                                 label="Land Mark (Optional)"
                                 value={landMark}
                                 onChange={(event) => {
@@ -968,7 +1019,7 @@ export default function NewCheckout(props) {
                               />
                             </Col>
                             <Col className="pl-1">
-                              <TextField
+                              <CusTextField
                                 label="Zip Code"
                                 value={zipCode}
                                 onChange={(event) => {
@@ -982,7 +1033,7 @@ export default function NewCheckout(props) {
                         <div className="mt-3">
                           <Row className="align-items-center">
                             <Col className="pr-0">
-                              <TextField
+                              <CusTextField
                                 label="City"
                                 value={city}
                                 onChange={(event) => {
@@ -992,7 +1043,7 @@ export default function NewCheckout(props) {
                               />
                             </Col>
                             <Col className="pl-1">
-                              <TextField
+                              <CusTextField
                                 label="State"
                                 value={state}
                                 onChange={(event) => {

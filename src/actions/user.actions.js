@@ -582,7 +582,13 @@ export const GetCustomerDetails = (mobileNumber) => {
           type: userConstants.GET_CUSTOMER_DETAILS_SUCCESS,
           payload: res.data,
         });
-        toast.success("Existing user found for this number!");
+
+        if (res.data) {
+          toast.success("Existing user found for this number!");
+        } else {
+          toast.warning("No user found for this number!");
+        }
+
         return res.data;
       } else {
         const { error } = res.data;
@@ -593,7 +599,7 @@ export const GetCustomerDetails = (mobileNumber) => {
         });
       }
     } catch (error) {
-      toast.error("No user found for this number!");
+      toast.error("There was an error adding new address!");
       console.log(error);
     }
   };

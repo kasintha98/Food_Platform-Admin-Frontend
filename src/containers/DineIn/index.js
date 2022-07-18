@@ -15,6 +15,13 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const CusMenuItem = styled(MenuItem)``;
 
+const CusSelect = styled(Select)`
+  & .MuiSelect-select {
+    padding-top: 3px;
+    padding-bottom: 3px;
+  }
+`;
+
 export const DineIn = () => {
   const user = useSelector((state) => state.auth.user);
   const auth = useSelector((state) => state.auth);
@@ -81,7 +88,7 @@ export const DineIn = () => {
               >
                 Please select the store
               </InputLabel>
-              <Select
+              <CusSelect
                 sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
@@ -99,7 +106,7 @@ export const DineIn = () => {
                     <span>{store.resturantName}</span>
                   </CusMenuItem>
                 ))}
-              </Select>
+              </CusSelect>
             </FormControl>
           ) : (
             <span>
