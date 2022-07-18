@@ -27,7 +27,9 @@ export const DineIn = () => {
   const auth = useSelector((state) => state.auth);
   const stores = useSelector((state) => state.store.stores);
 
-  const [selectedStore, setSelectedStore] = useState(user.resturantName);
+  const [selectedStore, setSelectedStore] = useState(
+    stores[0] ? stores[0].resturantName : user.resturantName
+  );
   const [selectedStoreObj, setSelectedStoreObj] = useState(
     stores[0]
       ? stores[0]

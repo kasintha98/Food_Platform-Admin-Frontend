@@ -39,6 +39,7 @@ import { Welcome } from "./containers/Welcome";
 import { PageNotFound } from "./containers/PageNotFound";
 import { ForgotPassword } from "./containers/ForgotPassword";
 import { DineIn } from "./containers/DineIn";
+import { AdminMenu } from "./containers/AdminMenu";
 
 function App() {
   const dispatch = useDispatch();
@@ -184,6 +185,12 @@ function App() {
           (module) => module.moduleName === "ADMIN FUNCTIONS"
         ) && (
           <PrivateRoute path="/inventory" component={Inventory}></PrivateRoute>
+        )}
+
+        {modulesForUser.some(
+          (module) => module.moduleName === "ADMIN FUNCTIONS"
+        ) && (
+          <PrivateRoute path="/products" component={AdminMenu}></PrivateRoute>
         )}
 
         <Route path="/signin" component={Signin}></Route>

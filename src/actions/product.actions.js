@@ -21,6 +21,8 @@ export const getProductsNew = (restaurantId, storeId) => {
           type: productConstants.GET_PRODUCTS_BY_SLUG_SUCCESS,
           payload: productsList,
         });
+
+        return res.data;
       } else {
         console.log("error");
       }
