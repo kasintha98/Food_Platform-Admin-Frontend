@@ -10,19 +10,27 @@ import { DeliveryTrackingTable } from "../../components/DeliveryTrackingTable";
 import "./style.css";
 
 const CusTab = styled(Tab)`
-  & .count-d {
-    background-color: #2e75b6;
+  /* & .count-d {
+    background-color: #2e75b6 !important;
+    color: #fff;
+    margin-left: 5px;
+    padding: 10px;
+    border-radius: 5px;
+  } */
+`;
+
+const CusTabs = styled(Tabs)`
+  & .Mui-selected .count-d {
+    background-color: #2e75b6 !important;
     color: #fff;
     margin-left: 5px;
     padding: 10px;
     border-radius: 5px;
   }
-`;
 
-const CusTabs = styled(Tabs)`
-  & .Mui-selected .count-d {
-    background-color: #ffc000 !important;
+  & button:focus .count-d {
     color: #fff !important;
+    background-color: #ffc000 !important;
   }
 `;
 

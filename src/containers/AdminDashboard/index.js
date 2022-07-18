@@ -33,6 +33,13 @@ const CusDDT = styled(Dropdown.Toggle)`
   line-height: 1.75;
 `;
 
+const CusSelect = styled(Select)`
+  & .MuiSelect-select {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+`;
+
 const DRButton = styled(Button)`
   color: #fff;
   background-color: #6c757d;
@@ -196,10 +203,14 @@ export const AdminDashboard = () => {
           <Row className="align-items-center">
             <Col sm={3} className="m-0 p-0">
               <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">
+                <InputLabel
+                  sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
+                  id="demo-simple-select-label"
+                >
                   Please select the store
                 </InputLabel>
-                <Select
+                <CusSelect
+                  sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   value={selectedStore}
@@ -259,7 +270,7 @@ export const AdminDashboard = () => {
                       </span>
                     </CusMenuItem>
                   ))}
-                </Select>
+                </CusSelect>
               </FormControl>
             </Col>
             <Col sm={3}>

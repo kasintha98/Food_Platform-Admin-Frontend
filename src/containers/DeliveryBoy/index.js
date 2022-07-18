@@ -258,7 +258,11 @@ export const DeliveryBoy = () => {
         <Col sm={user.roleCategory === "DELIVERY_BOY" ? 6 : 4}>
           <Typography sx={{ color: "#595959", fontWeight: "bold" }}>
             Role: Delivery Boy{" "}
-            {selectedDeliBoy && <span>({selectedDeliBoy})</span>}
+            {selectedDeliBoy ? (
+              <span>({selectedDeliBoy})</span>
+            ) : (
+              <span>(None Selected)</span>
+            )}
           </Typography>
           <Typography sx={{ color: "#595959", fontWeight: "bold" }}>
             Store Name: {user.resturantName}

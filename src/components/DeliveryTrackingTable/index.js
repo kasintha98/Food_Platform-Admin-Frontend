@@ -44,6 +44,13 @@ const CusTableCell2 = styled(TableCell)`
   font-size: 0.75rem;
 `;
 
+const CusSelect = styled(Select)`
+  & .MuiSelect-select {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+`;
+
 const CusMenuItem = styled(MenuItem)``;
 
 export const DeliveryTrackingTable = (props) => {
@@ -316,10 +323,14 @@ export const DeliveryTrackingTable = (props) => {
           {user.roleCategory === "SUPER_ADMIN" ? (
             <>
               <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">
+                <InputLabel
+                  sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
+                  id="demo-simple-select-label"
+                >
                   Please select the store
                 </InputLabel>
-                <Select
+                <CusSelect
+                  sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   value={selectedStore}
@@ -347,7 +358,7 @@ export const DeliveryTrackingTable = (props) => {
                       <span>{store.resturantName}</span>
                     </CusMenuItem>
                   ))}
-                </Select>
+                </CusSelect>
               </FormControl>
             </>
           ) : (

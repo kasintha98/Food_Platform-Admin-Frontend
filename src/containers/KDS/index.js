@@ -18,6 +18,13 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 
 const CusMenuItem = styled(MenuItem)``;
 
+const CusSelect = styled(Select)`
+  & .MuiSelect-select {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+`;
+
 export const KDS = () => {
   const stores = useSelector((state) => state.store.stores);
   const user = useSelector((state) => state.auth.user);
@@ -85,10 +92,14 @@ export const KDS = () => {
                 <Col className="col-6" style={{ display: "flex" }}>
                   {user.roleCategory === "SUPER_ADMIN" ? (
                     <FormControl fullWidth>
-                      <InputLabel id="demo-simple-select-label">
+                      <InputLabel
+                        sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
+                        id="demo-simple-select-label"
+                      >
                         Please select the store
                       </InputLabel>
-                      <Select
+                      <CusSelect
+                        sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
                         value={selectedStore}
@@ -116,7 +127,7 @@ export const KDS = () => {
                             <span>{store.resturantName}</span>
                           </CusMenuItem>
                         ))}
-                      </Select>
+                      </CusSelect>
                     </FormControl>
                   ) : (
                     <span>
