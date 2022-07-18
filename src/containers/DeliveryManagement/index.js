@@ -22,6 +22,9 @@ import {
   Typography,
   NativeSelect,
   FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import { toast } from "react-toastify";
 import { OrderDetailsTable } from "../../components/OrderDetailsTable";
@@ -36,9 +39,12 @@ const CusTableCell2 = styled(TableCell)`
   font-size: 0.75rem;
 `;
 
+const CusMenuItem = styled(MenuItem)``;
+
 export const DeliveryManagement = () => {
   const user = useSelector((state) => state.auth.user);
   const orders = useSelector((state) => state.order.orders);
+  const stores = useSelector((state) => state.store.stores);
   const usersByRole = useSelector((state) => state.user.usersByRole);
   const loading = useSelector((state) => state.order.loading);
   const [currentOrder, setCurrentOrder] = useState(null);
@@ -46,6 +52,14 @@ export const DeliveryManagement = () => {
   const [keywords, setKeywords] = useState("");
   const [selectedDeliBoy, setSelectedDeliBoy] = useState("");
   const [isReset, setIsReset] = useState(false);
+  const [selectedStore, setSelectedStore] = useState(
+    user.roleCategory === "SUPER_ADMIN" ? "ALL" : user.restaurantId
+  );
+  const [selectedStoreObj, setSelectedStoreObj] = useState({
+    restaurantId:
+      user.roleCategory === "SUPER_ADMIN" ? null : user.restaurantId,
+    storeId: user.roleCategory === "SUPER_ADMIN" ? null : user.storeId,
+  });
 
   const dispatch = useDispatch();
 
@@ -53,8 +67,8 @@ export const DeliveryManagement = () => {
     const today = new Date();
     dispatch(
       getCustomerOrders(
-        null,
-        null,
+        selectedStoreObj.restaurantId,
+        selectedStoreObj.storeId,
         null,
         `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,
         null,
@@ -64,13 +78,22 @@ export const DeliveryManagement = () => {
     );
 
     dispatch(getUsersByRole("DELIVERY_BOY"));
-  }, [isReset]);
+  }, [isReset, selectedStoreObj]);
 
   const handleCloseDetailsModal = () => setShowDetailsModal(false);
   const handleShowDetailsModal = () => setShowDetailsModal(true);
 
   const handleChangeKeywords = (event) => {
     setKeywords(event.target.value);
+  };
+
+  const handleChangeStore = (event) => {
+    setSelectedStore(event.target.value);
+    console.log(event.target.value);
+  };
+
+  const handleSelectedStore = (store) => {
+    setSelectedStoreObj(store);
   };
 
   const searchOrder = () => {
@@ -160,12 +183,53 @@ export const DeliveryManagement = () => {
           </div>
         </Col>
         <Col sm={6}>
-          <Typography sx={{ color: "#595959", fontWeight: "bold" }}>
-            Role: Store Manager
-          </Typography>
-          <Typography sx={{ color: "#595959", fontWeight: "bold" }}>
-            Store Name: Hangries YamunaNagar
-          </Typography>
+          {user.roleCategory === "SUPER_ADMIN" ? (
+            <>
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">
+                  Please select the store
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={selectedStore}
+                  label="Please select the store"
+                  onChange={handleChangeStore}
+                >
+                  <CusMenuItem
+                    onClick={() => {
+                      handleSelectedStore({
+                        restaurantId: null,
+                        storeId: null,
+                      });
+                    }}
+                    value={"ALL"}
+                  >
+                    All Stores
+                  </CusMenuItem>
+                  {stores.map((store) => (
+                    <CusMenuItem
+                      onClick={() => {
+                        handleSelectedStore(store);
+                      }}
+                      value={store.resturantName}
+                    >
+                      <span>{store.resturantName}</span>
+                    </CusMenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </>
+          ) : (
+            <>
+              <Typography sx={{ color: "#595959", fontWeight: "bold" }}>
+                Role: {user.roleCategory}
+              </Typography>
+              <Typography sx={{ color: "#595959", fontWeight: "bold" }}>
+                Store Name: {user.resturantName}
+              </Typography>
+            </>
+          )}
         </Col>
       </Row>
       <TableContainer component={Paper}>
