@@ -8,14 +8,29 @@ const initState = {
   loading: false,
   product: {},
   error: null,
+  dishSectionLoading: false,
+  allDishesBySection: {},
 };
 
 export default (state = initState, action) => {
   switch (action.type) {
+    case productConstants.GET_PRODUCTS_BY_SLUG_REQUEST:
+      state = {
+        ...state,
+        loading: true,
+      };
+      break;
     case productConstants.GET_PRODUCTS_BY_SLUG_SUCCESS:
       state = {
         ...state,
         products: action.payload.products,
+        loading: false,
+      };
+      break;
+    case productConstants.GET_PRODUCTS_BY_SLUG_FAILURE:
+      state = {
+        ...state,
+        loading: false,
       };
       break;
     case productConstants.GET_SPECIFIC_PRODUCT_BY_SLUG_REQUEST:
@@ -81,21 +96,25 @@ export default (state = initState, action) => {
     case productConstants.GET_DISHES_BY_SECTION_REQUEST:
       state = {
         ...state,
-        loading: true,
+        dishSectionLoading: true,
       };
       break;
     case productConstants.GET_DISHES_BY_SECTION_SUCCESS:
       state = {
         ...state,
-        dishesOfSection: action.payload,
-        loading: false,
+        dishesOfSection: action.payload.res,
+        dishSectionLoading: false,
+        allDishesBySection: {
+          ...state.allDishesBySection,
+          [action.payload.section]: action.payload.res,
+        },
       };
       break;
     case productConstants.GET_DISHES_BY_SECTION_FAILURE:
       state = {
         ...state,
         dishesOfSection: [],
-        loading: false,
+        dishSectionLoading: false,
       };
       break;
   }

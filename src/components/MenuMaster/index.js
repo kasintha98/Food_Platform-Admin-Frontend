@@ -1,13 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { getProductsNew } from "../../actions";
+import {
+  getProductsNew,
+  getAllSections,
+  getDishesBySection,
+} from "../../actions";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import { Row, Col } from "react-bootstrap";
 import Select from "@mui/material/Select";
 import styled from "@emotion/styled";
 import MenuItem from "@mui/material/MenuItem";
-import { Typography, TextField, Button, Alert } from "@mui/material";
+import {
+  Typography,
+  TextField,
+  Button,
+  Alert,
+  NativeSelect,
+  TableContainer,
+} from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -18,6 +29,16 @@ const CusSelect = styled(Select)`
   & .MuiSelect-select {
     padding-top: 5px;
     padding-bottom: 5px;
+  }
+`;
+
+const CusInputLabel = styled(InputLabel)`
+  &.Mui-focused {
+    top: 0px !important;
+  }
+
+  &.MuiFormLabel-filled {
+    top: 0px !important;
   }
 `;
 
@@ -57,24 +78,54 @@ const CusMenuItem = styled(MenuItem)``;
 export const MenuMaster = () => {
   const stores = useSelector((state) => state.store.stores);
   const productList = useSelector((state) => state.product.products);
+  const allDishesBySection = useSelector(
+    (state) => state.product.allDishesBySection
+  );
+  const productListLoading = useSelector((state) => state.product.loading);
+  const dishSectionLoading = useSelector(
+    (state) => state.product.dishSectionLoading
+  );
+  //const allDishOfSection = useSelector((state) => state.product.allDishOfSection);
+  const sections = useSelector((state) => state.product.sections);
   const user = useSelector((state) => state.auth.user);
 
   const [selectedStore, setSelectedStore] = useState(
-    stores[0] ? stores[0].resturantName : user.resturantName
+    //stores[0] ? stores[0].resturantName : null
+    null
   );
-  const [selectedStoreObj, setSelectedStoreObj] = useState({
-    restaurantId: stores[0] ? stores[0] : user.restaurantId,
-    storeId: stores[0] ? stores[0] : user.storeId,
-  });
+  const [selectedStoreObj, setSelectedStoreObj] = useState(
+    /* stores[0] */ null
+  );
   const [newDishSection, setNewDishSection] = useState("");
   const [newDishCategory, setNewDishCategory] = useState("");
+  const [currentRestaurent, setCurrentRestaurent] = useState("");
+  const [currentSection, setCurrentSection] = useState("");
+  const [currentDish, setCurrentDish] = useState("");
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(
-      getProductsNew(selectedStoreObj.restaurantId, selectedStoreObj.storeId)
-    );
+    if (selectedStoreObj) {
+      dispatch(
+        getProductsNew(selectedStoreObj.restaurantId, selectedStoreObj.storeId)
+      );
+      dispatch(
+        getAllSections(selectedStoreObj.restaurantId, selectedStoreObj.storeId)
+      ).then((res) => {
+        if (res) {
+          for (let i = 0; i < res.length; i++) {
+            dispatch(
+              getDishesBySection(
+                res[i],
+                selectedStoreObj.restaurantId,
+                selectedStoreObj.storeId
+              )
+            );
+          }
+          console.log("done");
+        }
+      });
+    }
   }, [selectedStoreObj]);
 
   const handleChangeStore = (event) => {
@@ -85,22 +136,37 @@ export const MenuMaster = () => {
     setSelectedStoreObj(store);
   };
 
+  const handleRestaurentUpdate = (event) => {
+    console.log(event.target.value);
+    setCurrentRestaurent(event.target.value);
+  };
+
+  const handleSectionUpdate = (event) => {
+    console.log(event.target.value);
+    setCurrentSection(event.target.value);
+  };
+
+  const handleDishUpdate = (event) => {
+    console.log(event.target.value);
+    setCurrentDish(event.target.value);
+  };
+
   return (
     <div>
       <Row className="align-items-center">
-        <div style={{ maxWidth: "125px !important" }}>
+        <div style={{ minWidth: "180px" }}>
           <Typography sx={{ color: "#7F7F7F", fontWeight: "bold" }}>
             Select Store
           </Typography>
         </div>
         <Col sm={5}>
           <FormControl fullWidth>
-            <InputLabel
-              sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
+            <CusInputLabel
+              sx={{ fontSize: "0.75rem", lineHeight: "1rem", top: "-11px" }}
               id="demo-simple-select-label"
             >
               Please select the store
-            </InputLabel>
+            </CusInputLabel>
             <CusSelect
               sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
               labelId="demo-simple-select-label"
@@ -125,7 +191,7 @@ export const MenuMaster = () => {
         <Col sm={6}></Col>
       </Row>
       <Row className="align-items-center mt-2">
-        <div style={{ maxWidth: "125px !important" }}>
+        <div style={{ minWidth: "180px" }}>
           <Typography sx={{ color: "#7F7F7F", fontWeight: "bold" }}>
             Add new Dish Section
           </Typography>
@@ -140,10 +206,22 @@ export const MenuMaster = () => {
             fullWidth
           />
         </Col>
-        <Col sm={6}></Col>
+        <Col sm={3}>
+          <Button
+            sx={{
+              fontSize: "0.75rem",
+              lineHeight: "1rem",
+              padding: "5px 16px",
+            }}
+            variant="contained"
+            color="warning"
+          >
+            SAVE
+          </Button>
+        </Col>
       </Row>
       <Row className="align-items-center mt-2">
-        <div style={{ maxWidth: "125px !important" }}>
+        <div style={{ minWidth: "180px" }}>
           <Typography sx={{ color: "#7F7F7F", fontWeight: "bold" }}>
             Add new Dish Category
           </Typography>
@@ -158,99 +236,276 @@ export const MenuMaster = () => {
             fullWidth
           />
         </Col>
-        <Col sm={6}></Col>
+        <Col sm={3}>
+          <Button
+            sx={{
+              fontSize: "0.75rem",
+              lineHeight: "1rem",
+              padding: "5px 16px",
+            }}
+            variant="contained"
+            color="warning"
+          >
+            SAVE
+          </Button>
+        </Col>
       </Row>
       <div>
-        <Table
-          sx={{ minWidth: 800 }}
-          aria-label="simple table"
-          className="mt-3"
-        >
-          <TableHead>
-            <TableRow>
-              <CusTableCell align="center">Store Name</CusTableCell>
-              <CusTableCell align="center">Dish Section</CusTableCell>
-              <CusTableCell align="center">Dish Category</CusTableCell>
-              <CusTableCell align="center">Dish Name</CusTableCell>
-              <CusTableCell align="center">Veg (Y/N)</CusTableCell>
-              <CusTableCell align="center">Spicy Indicator</CusTableCell>
-              <CusTableCell align="center">Dish Description</CusTableCell>
-              <CusTableCell align="center">Size</CusTableCell>
-              <CusTableCell align="center">Price</CusTableCell>
-              <CusTableCell align="center">Image Name</CusTableCell>
-              <CusTableCell align="center">Dish Visible (Y/N)</CusTableCell>
-              <CusTableCell align="center">KDS Counter Name</CusTableCell>
-              <CusTableCell align="center">Topping (Y/N)</CusTableCell>
-              <CusTableCell align="center">Add Toppings</CusTableCell>
-              <CusTableCell align="center">Action</CusTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {productList && productList.length > 0 ? (
-              <>
-                {" "}
-                {productList.map((product) => (
-                  <TableRow>
-                    <CusTableCell align="center">
-                      {product.restaruantId}
-                    </CusTableCell>
-                    <CusTableCell align="center">
-                      {product.section}
-                    </CusTableCell>
-                    <CusTableCell align="center">{product.dish}</CusTableCell>
-                    <CusTableCell align="center">
-                      {product.dishType}
-                    </CusTableCell>
-                    <CusTableCell align="center">
-                      {product.dishCategory === "Veg" ? "Y" : "N"}
-                    </CusTableCell>
-                    <CusTableCell align="center">
-                      {product.dishSpiceIndicatory}
-                    </CusTableCell>
-                    <CusTableCell align="center">
-                      {product.dishDescriptionId}
-                    </CusTableCell>
-                    <CusTableCell align="center">
-                      {product.productSize}
-                    </CusTableCell>
-                    <CusTableCell align="center">{product.price}</CusTableCell>
-                    <CusTableCell
-                      style={{ wordWrap: "break-word", maxWidth: "200px" }}
-                      align="center"
-                    >
-                      {product.imagePath}
-                    </CusTableCell>
-                    <CusTableCell align="center">
-                      {product.menuAvailableFlag}
-                    </CusTableCell>
-                    <CusTableCell align="center">
-                      {product.kdsRoutingName}
-                    </CusTableCell>
-                    <CusTableCell align="center">
-                      {product.ingredientExistsFalg}
-                    </CusTableCell>
-                    <CusTableCell align="center">
-                      {product.ingredientExistsFalg === "Y" ? (
-                        <Button>Add Toppings</Button>
-                      ) : null}
-                    </CusTableCell>
-                    <CusTableCell align="center">
-                      <Button variant="contained" color="success">
-                        Save
-                      </Button>
-                    </CusTableCell>
-                  </TableRow>
-                ))}
-              </>
-            ) : (
+        <TableContainer className="mt-2" sx={{ maxHeight: 430 }}>
+          <Table sx={{ minWidth: 800 }} aria-label="simple table" stickyHeader>
+            <TableHead>
               <TableRow>
-                <TableCell colSpan={15}>
-                  <Alert severity="warning">No products found!</Alert>
-                </TableCell>
+                <CusTableCell align="center">Store Name</CusTableCell>
+                <CusTableCell align="center">Dish Section</CusTableCell>
+                <CusTableCell align="center">Dish Category</CusTableCell>
+                <CusTableCell align="center">Dish Name</CusTableCell>
+                <CusTableCell align="center">Veg (Y/N)</CusTableCell>
+                <CusTableCell align="center">Spicy Indicator</CusTableCell>
+                <CusTableCell align="center">Dish Description</CusTableCell>
+                <CusTableCell align="center">Size</CusTableCell>
+                <CusTableCell align="center">Price</CusTableCell>
+                <CusTableCell align="center">Image Name</CusTableCell>
+                <CusTableCell align="center">Dish Visible (Y/N)</CusTableCell>
+                <CusTableCell align="center">KDS Counter Name</CusTableCell>
+                <CusTableCell align="center">Topping (Y/N)</CusTableCell>
+                <CusTableCell align="center">Add Toppings</CusTableCell>
+                <CusTableCell align="center">Action</CusTableCell>
               </TableRow>
-            )}
-          </TableBody>
-        </Table>
+            </TableHead>
+            <TableBody>
+              {productListLoading ||
+              Object.keys(allDishesBySection).length !== sections.length ? (
+                <TableRow>
+                  <TableCell colSpan={15}>
+                    <div className="d-flex justify-content-center">
+                      <div
+                        className="spinner-border text-primary"
+                        role="status"
+                      ></div>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ) : (
+                <>
+                  {productList && productList.length > 0 ? (
+                    <>
+                      {productList.map((product) => (
+                        <TableRow>
+                          <CusTableCell align="center">
+                            <FormControl fullWidth>
+                              <NativeSelect
+                                defaultValue={`${
+                                  product.restaurantId - product.storeId
+                                }`}
+                                inputProps={{
+                                  name: "status",
+                                  id: "uncontrolled-native",
+                                }}
+                                onChange={handleRestaurentUpdate}
+                                sx={{ fontSize: "0.75rem" }}
+                              >
+                                {stores.map((store, index) => (
+                                  <option
+                                    key={index}
+                                    value={`${
+                                      store.restaurantId - store.storeId
+                                    }`}
+                                    style={{ fontSize: "0.75rem" }}
+                                  >
+                                    {store.resturantName}
+                                  </option>
+                                ))}
+                              </NativeSelect>
+                            </FormControl>
+                          </CusTableCell>
+                          <CusTableCell align="center">
+                            <FormControl fullWidth>
+                              <NativeSelect
+                                defaultValue={product.section}
+                                inputProps={{
+                                  name: "status",
+                                  id: "uncontrolled-native",
+                                }}
+                                onChange={handleSectionUpdate}
+                                sx={{ fontSize: "0.75rem" }}
+                              >
+                                {sections.map((section, index) => (
+                                  <option
+                                    key={index}
+                                    value={section}
+                                    style={{ fontSize: "0.75rem" }}
+                                  >
+                                    {section}
+                                  </option>
+                                ))}
+                              </NativeSelect>
+                            </FormControl>
+                          </CusTableCell>
+                          <CusTableCell align="center">
+                            <FormControl fullWidth>
+                              <NativeSelect
+                                defaultValue={product.dish}
+                                inputProps={{
+                                  name: "status",
+                                  id: "uncontrolled-native",
+                                }}
+                                onChange={handleDishUpdate}
+                                sx={{ fontSize: "0.75rem" }}
+                                /* onClick={() => {
+                                  if (!allDishOfSection[product.section]) {
+                                    console.log(
+                                      product.section,
+                                      currentSection
+                                    );
+                                    dispatch(
+                                      getDishesBySection(
+                                        product.section,
+                                        selectedStoreObj.restaurantId,
+                                        selectedStoreObj.storeId
+                                      )
+                                    ).then((res) => {
+                                      if (res) {
+                                        const data = {
+                                          ...allDishOfSection,
+                                          [product.section]: res,
+                                        };
+                                        setAllDishOfSection(data);
+                                      }
+                                    });
+                                  }
+                                }} */
+                              >
+                                {allDishesBySection[product.section] &&
+                                allDishesBySection[product.section].length >
+                                  0 &&
+                                allDishesBySection[product.section].some(
+                                  (el) => el === product.dish
+                                ) ? (
+                                  allDishesBySection[product.section].map(
+                                    (dish, index) => (
+                                      <option
+                                        key={index}
+                                        value={dish}
+                                        style={{ fontSize: "0.75rem" }}
+                                      >
+                                        {dish}
+                                        {index === allDishesBySection.length &&
+                                          dishSectionLoading && (
+                                            <div className="d-flex justify-content-center">
+                                              <div
+                                                className="spinner-border text-primary"
+                                                role="status"
+                                              ></div>
+                                            </div>
+                                          )}
+                                      </option>
+                                    )
+                                  )
+                                ) : (
+                                  <option
+                                    value={product.dish}
+                                    style={{ fontSize: "0.75rem" }}
+                                  >
+                                    {product.dish}
+                                    {dishSectionLoading && (
+                                      <div className="d-flex justify-content-center">
+                                        <div
+                                          className="spinner-border text-primary"
+                                          role="status"
+                                        ></div>
+                                      </div>
+                                    )}
+                                  </option>
+                                )}
+                              </NativeSelect>
+                            </FormControl>
+                          </CusTableCell>
+                          <CusTableCell align="center">
+                            {product.dishType}
+                          </CusTableCell>
+                          <CusTableCell align="center">
+                            {product.dishCategory === "Veg" ? "Y" : "N"}
+                          </CusTableCell>
+                          <CusTableCell align="center">
+                            {product.dishSpiceIndicatory}
+                          </CusTableCell>
+                          <CusTableCell align="center">
+                            {product.dishDescriptionId}
+                          </CusTableCell>
+                          <CusTableCell align="center">
+                            {product.productSize}
+                          </CusTableCell>
+                          <CusTableCell align="center">
+                            {product.price}
+                          </CusTableCell>
+                          <CusTableCell
+                            style={{
+                              wordWrap: "break-word",
+                              maxWidth: "200px",
+                            }}
+                            align="center"
+                          >
+                            {product.imagePath}
+                          </CusTableCell>
+                          <CusTableCell align="center">
+                            {product.menuAvailableFlag}
+                          </CusTableCell>
+                          <CusTableCell align="center">
+                            {product.kdsRoutingName}
+                          </CusTableCell>
+                          <CusTableCell align="center">
+                            {product.ingredientExistsFalg}
+                          </CusTableCell>
+                          <CusTableCell align="center">
+                            {product.ingredientExistsFalg === "Y" ? (
+                              <Button
+                                sx={{
+                                  fontSize: "0.75rem",
+                                  lineHeight: "1rem",
+                                  padding: "5px 16px",
+                                }}
+                              >
+                                Add Toppings
+                              </Button>
+                            ) : null}
+                          </CusTableCell>
+                          <CusTableCell align="center">
+                            <Button
+                              variant="contained"
+                              color="success"
+                              sx={{
+                                fontSize: "0.75rem",
+                                lineHeight: "1rem",
+                                padding: "5px 16px",
+                              }}
+                            >
+                              Save
+                            </Button>
+                          </CusTableCell>
+                        </TableRow>
+                      ))}
+                    </>
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={15}>
+                        <Alert severity="warning">
+                          {selectedStoreObj
+                            ? "No products found!"
+                            : "Please select a store!"}{" "}
+                        </Alert>
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
+      <div className="mt-3 text-center">
+        <Button variant="contained" color="success">
+          ADD NEW DISH
+        </Button>
       </div>
     </div>
   );

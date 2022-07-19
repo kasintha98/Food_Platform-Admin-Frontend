@@ -4,6 +4,10 @@ import { productConstants } from "./constants";
 export const getProductsNew = (restaurantId, storeId) => {
   return async (dispatch) => {
     try {
+      dispatch({
+        type: productConstants.GET_PRODUCTS_BY_SLUG_REQUEST,
+      });
+
       const res = await axios.get(`/getMenuItemsByRestroAndStore`, {
         params: {
           restaurantId: restaurantId ? restaurantId : "ALL",
@@ -25,9 +29,15 @@ export const getProductsNew = (restaurantId, storeId) => {
         return res.data;
       } else {
         console.log("error");
+        dispatch({
+          type: productConstants.GET_PRODUCTS_BY_SLUG_FAILURE,
+        });
       }
     } catch (error) {
       console.log(error);
+      dispatch({
+        type: productConstants.GET_PRODUCTS_BY_SLUG_FAILURE,
+      });
     }
   };
 };
@@ -91,6 +101,10 @@ export const getAllSections = (restaurantId, storeId) => {
 export const getDishesBySection = (section, restaurantId, storeId) => {
   return async (dispatch) => {
     try {
+      dispatch({
+        type: productConstants.GET_DISHES_BY_SECTION_REQUEST,
+      });
+
       const res = await axios.get(`/getDishesBySection`, {
         params: {
           section: section,
@@ -102,14 +116,20 @@ export const getDishesBySection = (section, restaurantId, storeId) => {
       if (res.status === 200) {
         dispatch({
           type: productConstants.GET_DISHES_BY_SECTION_SUCCESS,
-          payload: res.data,
+          payload: { res: res.data, section },
         });
         //console.log(res.data);
         return res.data;
       } else {
+        dispatch({
+          type: productConstants.GET_DISHES_BY_SECTION_FAILURE,
+        });
         console.log("error");
       }
     } catch (error) {
+      dispatch({
+        type: productConstants.GET_DISHES_BY_SECTION_FAILURE,
+      });
       console.log(error);
     }
   };
