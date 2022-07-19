@@ -101,6 +101,15 @@ export const MenuMaster = () => {
   const [currentRestaurent, setCurrentRestaurent] = useState("");
   const [currentSection, setCurrentSection] = useState("");
   const [currentDish, setCurrentDish] = useState("");
+  const [currentVeg, setCurrentVeg] = useState("");
+  const [currentSpice, setCurrentSpice] = useState("");
+  const [currentDishType, setCurrentDishType] = useState("");
+  const [currentDishDesc, setCurrentDishDesc] = useState("");
+  const [currentImageName, setCurrentImageName] = useState("");
+  const [currentPrice, setCurrentPrice] = useState("");
+  const [currentMenuFlag, setCurrentMenuFlag] = useState("");
+  const [currentIngredientFlag, setCurrentIngredientFlag] = useState("");
+  const [currentSize, setCurrentSize] = useState("");
 
   const dispatch = useDispatch();
 
@@ -149,6 +158,31 @@ export const MenuMaster = () => {
   const handleDishUpdate = (event) => {
     console.log(event.target.value);
     setCurrentDish(event.target.value);
+  };
+
+  const handleVegUpdate = (event) => {
+    console.log(event.target.value);
+    setCurrentVeg(event.target.value);
+  };
+
+  const handleSpiceUpdate = (event) => {
+    console.log(event.target.value);
+    setCurrentSpice(event.target.value);
+  };
+
+  const handleMenuFlagUpdate = (event) => {
+    console.log(event.target.value);
+    setCurrentMenuFlag(event.target.value);
+  };
+
+  const handleIngredientFlagUpdate = (event) => {
+    console.log(event.target.value);
+    setCurrentIngredientFlag(event.target.value);
+  };
+
+  const handleSizeUpdate = (event) => {
+    console.log(event.target.value);
+    setCurrentSize(event.target.value);
   };
 
   return (
@@ -282,6 +316,9 @@ export const MenuMaster = () => {
                         className="spinner-border text-primary"
                         role="status"
                       ></div>
+                    </div>
+                    <div className="text-center">
+                      <Typography>Loading Data...</Typography>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -421,40 +458,204 @@ export const MenuMaster = () => {
                             </FormControl>
                           </CusTableCell>
                           <CusTableCell align="center">
-                            {product.dishType}
+                            <CusTextField
+                              value={
+                                currentDishType
+                                  ? currentDishType
+                                  : product.dishType
+                              }
+                              onChange={(event) => {
+                                setCurrentDishType(event.target.value);
+                              }}
+                              fullWidth
+                              variant="standard"
+                            />
                           </CusTableCell>
                           <CusTableCell align="center">
-                            {product.dishCategory === "Veg" ? "Y" : "N"}
+                            <FormControl fullWidth>
+                              <NativeSelect
+                                defaultValue={product.dishCategory}
+                                inputProps={{
+                                  name: "status",
+                                  id: "uncontrolled-native",
+                                }}
+                                onChange={handleVegUpdate}
+                                sx={{ fontSize: "0.75rem" }}
+                              >
+                                <option
+                                  value={"Veg"}
+                                  style={{ fontSize: "0.75rem" }}
+                                >
+                                  Y
+                                </option>
+                                <option
+                                  value={"Non-Veg"}
+                                  style={{ fontSize: "0.75rem" }}
+                                >
+                                  N
+                                </option>
+                              </NativeSelect>
+                            </FormControl>
                           </CusTableCell>
                           <CusTableCell align="center">
-                            {product.dishSpiceIndicatory}
+                            {product.dishSpiceIndicatory ? (
+                              <FormControl fullWidth>
+                                <NativeSelect
+                                  defaultValue={product.dishSpiceIndicatory}
+                                  inputProps={{
+                                    name: "status",
+                                    id: "uncontrolled-native",
+                                  }}
+                                  onChange={handleSpiceUpdate}
+                                  sx={{ fontSize: "0.75rem" }}
+                                >
+                                  <option
+                                    value={"Less Spicy"}
+                                    style={{ fontSize: "0.75rem" }}
+                                  >
+                                    Less Spicy
+                                  </option>
+                                  <option
+                                    value={"Medium Spicy"}
+                                    style={{ fontSize: "0.75rem" }}
+                                  >
+                                    Medium Spicy
+                                  </option>
+                                  <option
+                                    value={"Extra Hot"}
+                                    style={{ fontSize: "0.75rem" }}
+                                  >
+                                    Extra Hot
+                                  </option>
+                                </NativeSelect>
+                              </FormControl>
+                            ) : null}
                           </CusTableCell>
                           <CusTableCell align="center">
-                            {product.dishDescriptionId}
+                            <CusTextField
+                              value={
+                                currentDishDesc
+                                  ? currentDishDesc
+                                  : product.dishDescriptionId
+                              }
+                              onChange={(event) => {
+                                setCurrentDishDesc(event.target.value);
+                              }}
+                              fullWidth
+                              variant="standard"
+                            />
                           </CusTableCell>
                           <CusTableCell align="center">
-                            {product.productSize}
+                            <NativeSelect
+                              defaultValue={product.productSize}
+                              inputProps={{
+                                name: "status",
+                                id: "uncontrolled-native",
+                              }}
+                              onChange={handleSizeUpdate}
+                              sx={{ fontSize: "0.75rem" }}
+                            >
+                              <option
+                                value={"Regular"}
+                                style={{ fontSize: "0.75rem" }}
+                              >
+                                Regular
+                              </option>
+                              <option
+                                value={"Small"}
+                                style={{ fontSize: "0.75rem" }}
+                              >
+                                Small
+                              </option>
+                              <option
+                                value={"Medium"}
+                                style={{ fontSize: "0.75rem" }}
+                              >
+                                Medium
+                              </option>
+                              <option
+                                value={"Large"}
+                                style={{ fontSize: "0.75rem" }}
+                              >
+                                Large
+                              </option>
+                            </NativeSelect>
                           </CusTableCell>
                           <CusTableCell align="center">
-                            {product.price}
-                          </CusTableCell>
-                          <CusTableCell
-                            style={{
-                              wordWrap: "break-word",
-                              maxWidth: "200px",
-                            }}
-                            align="center"
-                          >
-                            {product.imagePath}
+                            <CusTextField
+                              defaultValue={product.price}
+                              value={currentPrice}
+                              onChange={(event) => {
+                                setCurrentPrice(event.target.value);
+                              }}
+                              fullWidth
+                              variant="standard"
+                            />
                           </CusTableCell>
                           <CusTableCell align="center">
-                            {product.menuAvailableFlag}
+                            <CusTextField
+                              value={
+                                currentImageName
+                                  ? currentImageName
+                                  : product.imagePath
+                              }
+                              onChange={(event) => {
+                                setCurrentImageName(event.target.value);
+                              }}
+                              fullWidth
+                              variant="standard"
+                            />
+                          </CusTableCell>
+                          <CusTableCell align="center">
+                            <NativeSelect
+                              defaultValue={product.menuAvailableFlag}
+                              inputProps={{
+                                name: "status",
+                                id: "uncontrolled-native",
+                              }}
+                              onChange={handleMenuFlagUpdate}
+                              sx={{ fontSize: "0.75rem" }}
+                            >
+                              <option
+                                value={"Y"}
+                                style={{ fontSize: "0.75rem" }}
+                              >
+                                Y
+                              </option>
+                              <option
+                                value={"N"}
+                                style={{ fontSize: "0.75rem" }}
+                              >
+                                N
+                              </option>
+                            </NativeSelect>
                           </CusTableCell>
                           <CusTableCell align="center">
                             {product.kdsRoutingName}
                           </CusTableCell>
                           <CusTableCell align="center">
-                            {product.ingredientExistsFalg}
+                            <NativeSelect
+                              defaultValue={product.ingredientExistsFalg}
+                              inputProps={{
+                                name: "status",
+                                id: "uncontrolled-native",
+                              }}
+                              onChange={handleIngredientFlagUpdate}
+                              sx={{ fontSize: "0.75rem" }}
+                            >
+                              <option
+                                value={"Y"}
+                                style={{ fontSize: "0.75rem" }}
+                              >
+                                Y
+                              </option>
+                              <option
+                                value={"N"}
+                                style={{ fontSize: "0.75rem" }}
+                              >
+                                N
+                              </option>
+                            </NativeSelect>
                           </CusTableCell>
                           <CusTableCell align="center">
                             {product.ingredientExistsFalg === "Y" ? (
