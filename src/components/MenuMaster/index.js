@@ -103,10 +103,10 @@ export const MenuMaster = () => {
   const [currentDish, setCurrentDish] = useState("");
   const [currentVeg, setCurrentVeg] = useState("");
   const [currentSpice, setCurrentSpice] = useState("");
-  const [currentDishType, setCurrentDishType] = useState("");
-  const [currentDishDesc, setCurrentDishDesc] = useState("");
-  const [currentImageName, setCurrentImageName] = useState("");
-  const [currentPrice, setCurrentPrice] = useState("");
+  const [currentDishType, setCurrentDishType] = useState({});
+  const [currentDishDesc, setCurrentDishDesc] = useState({});
+  const [currentImageName, setCurrentImageName] = useState({});
+  const [currentPrice, setCurrentPrice] = useState({});
   const [currentMenuFlag, setCurrentMenuFlag] = useState("");
   const [currentIngredientFlag, setCurrentIngredientFlag] = useState("");
   const [currentSize, setCurrentSize] = useState("");
@@ -459,13 +459,14 @@ export const MenuMaster = () => {
                           </CusTableCell>
                           <CusTableCell align="center">
                             <CusTextField
-                              value={
-                                currentDishType
-                                  ? currentDishType
-                                  : product.dishType
-                              }
+                              defaultValue={product.dishType}
+                              value={currentDishType[product.id]}
                               onChange={(event) => {
-                                setCurrentDishType(event.target.value);
+                                const dishTypes = {
+                                  ...currentDishType,
+                                  [product.id]: event.target.value,
+                                };
+                                setCurrentDishType(dishTypes);
                               }}
                               fullWidth
                               variant="standard"
@@ -533,13 +534,14 @@ export const MenuMaster = () => {
                           </CusTableCell>
                           <CusTableCell align="center">
                             <CusTextField
-                              value={
-                                currentDishDesc
-                                  ? currentDishDesc
-                                  : product.dishDescriptionId
-                              }
+                              defaultValue={product.dishDescriptionId}
+                              value={currentDishDesc[product.id]}
                               onChange={(event) => {
-                                setCurrentDishDesc(event.target.value);
+                                const dishDescriptionIds = {
+                                  ...currentDishDesc,
+                                  [product.id]: event.target.value,
+                                };
+                                setCurrentDishDesc(dishDescriptionIds);
                               }}
                               fullWidth
                               variant="standard"
@@ -584,9 +586,13 @@ export const MenuMaster = () => {
                           <CusTableCell align="center">
                             <CusTextField
                               defaultValue={product.price}
-                              value={currentPrice}
+                              value={currentPrice[product.id]}
                               onChange={(event) => {
-                                setCurrentPrice(event.target.value);
+                                const prices = {
+                                  ...currentPrice,
+                                  [product.id]: event.target.value,
+                                };
+                                setCurrentPrice(prices);
                               }}
                               fullWidth
                               variant="standard"
@@ -594,13 +600,14 @@ export const MenuMaster = () => {
                           </CusTableCell>
                           <CusTableCell align="center">
                             <CusTextField
-                              value={
-                                currentImageName
-                                  ? currentImageName
-                                  : product.imagePath
-                              }
+                              defaultValue={product.imagePath}
+                              value={currentImageName[product.id]}
                               onChange={(event) => {
-                                setCurrentImageName(event.target.value);
+                                const imagePaths = {
+                                  ...currentImageName,
+                                  [product.id]: event.target.value,
+                                };
+                                setCurrentImageName(imagePaths);
                               }}
                               fullWidth
                               variant="standard"
