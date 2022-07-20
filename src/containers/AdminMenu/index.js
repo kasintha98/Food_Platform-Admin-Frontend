@@ -28,7 +28,9 @@ export const AdminMenu = () => {
             <Tab label="ADD TOPPINGS TO DISH" value="3" />
           </TabList>
         </Box>
-        <TabPanel value="1">{/* <MenuMaster></MenuMaster> */}</TabPanel>
+        <TabPanel value="1">
+          <MenuMaster></MenuMaster>
+        </TabPanel>
         <TabPanel value="2">
           <ToppingMaster></ToppingMaster>
         </TabPanel>

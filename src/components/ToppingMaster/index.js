@@ -43,6 +43,31 @@ const CusTableCell = styled(TableCell)`
   border: 1px solid #000;
 `;
 
+const CusTextField = styled(TextField)`
+ & label {
+  font-size: 0.75rem;
+  top: -11px;
+}
+
+& .Mui-focused{
+  top: 0px !important;
+}
+
+& fieldset{
+  font-size: 0.75rem;
+}
+
+& .MuiFormLabel-filled{
+  top: 0px !important;
+}
+
+& input{
+  font-size: 0.75rem;
+  padding: 0.25rem;
+}
+ }
+`;
+
 const CusMenuItem = styled(MenuItem)``;
 
 export const ToppingMaster = () => {
@@ -55,6 +80,12 @@ export const ToppingMaster = () => {
   const [selectedStoreObj, setSelectedStoreObj] = useState(
     /* stores[0] */ null
   );
+  const [currentRestaurent, setCurrentRestaurent] = useState("");
+  const [currentToppingType, setCurrentToppingType] = useState("");
+  const [currentSize, setCurrentSize] = useState("");
+  const [currentIngredientFlag, setCurrentIngredientFlag] = useState("");
+  const [currentToppingName, setCurrentToppingName] = useState({});
+  const [currentPrice, setCurrentPrice] = useState({});
 
   const dispatch = useDispatch();
 
@@ -64,6 +95,22 @@ export const ToppingMaster = () => {
 
   const handleSelectedStore = (store) => {
     setSelectedStoreObj(store);
+  };
+
+  const handleRestaurentUpdate = (event) => {
+    setCurrentRestaurent(event.target.value);
+  };
+
+  const handleToppingTypeUpdate = (event) => {
+    setCurrentToppingType(event.target.value);
+  };
+
+  const handleSizeUpdate = (event) => {
+    setCurrentSize(event.target.value);
+  };
+
+  const handleIngredientFlagUpdate = (event) => {
+    setCurrentIngredientFlag(event.target.value);
   };
 
   return (
@@ -122,14 +169,140 @@ export const ToppingMaster = () => {
             </TableHead>
             <TableBody>
               <TableRow>
-                <CusTableCell align="center">row.name</CusTableCell>
-                <CusTableCell align="center">row.calories</CusTableCell>
-                <CusTableCell align="center">row.fat</CusTableCell>
-                <CusTableCell align="center">row.carbs</CusTableCell>
-                <CusTableCell align="center">row.protein</CusTableCell>
-                <CusTableCell align="center">row.protein</CusTableCell>
                 <CusTableCell align="center">
-                  <Button>SAVE</Button>
+                  <FormControl fullWidth>
+                    <NativeSelect
+                      defaultValue={`${
+                        /* product.restaurantId - product.storeId */
+                        "R001-S001"
+                      }`}
+                      inputProps={{
+                        name: "status",
+                        id: "uncontrolled-native",
+                      }}
+                      onChange={handleRestaurentUpdate}
+                      sx={{ fontSize: "0.75rem" }}
+                    >
+                      {stores.map((store, index) => (
+                        <option
+                          key={index}
+                          value={`${store.restaurantId - store.storeId}`}
+                          style={{ fontSize: "0.75rem" }}
+                        >
+                          {store.resturantName}
+                        </option>
+                      ))}
+                    </NativeSelect>
+                  </FormControl>
+                </CusTableCell>
+                <CusTableCell align="center">
+                  <FormControl fullWidth>
+                    <NativeSelect
+                      defaultValue={/* product.dishCategory */ "Topping"}
+                      inputProps={{
+                        name: "status",
+                        id: "uncontrolled-native",
+                      }}
+                      onChange={handleToppingTypeUpdate}
+                      sx={{ fontSize: "0.75rem" }}
+                    >
+                      <option value={"Topping"} style={{ fontSize: "0.75rem" }}>
+                        Topping
+                      </option>
+                      <option
+                        value={"Choice of Base"}
+                        style={{ fontSize: "0.75rem" }}
+                      >
+                        Choice of Base
+                      </option>
+                    </NativeSelect>
+                  </FormControl>
+                </CusTableCell>
+                <CusTableCell align="center">
+                  <CusTextField
+                    defaultValue={/* product.price */ "test"}
+                    value={currentToppingName[/* product.id */ "test"]}
+                    onChange={(event) => {
+                      const names = {
+                        ...currentToppingName,
+                        [/* product.id */ "test"]: event.target.value,
+                      };
+                      setCurrentToppingName(names);
+                    }}
+                    fullWidth
+                    variant="standard"
+                  />
+                </CusTableCell>
+                <CusTableCell align="center">
+                  <NativeSelect
+                    defaultValue={/* product.productSize */ "Small"}
+                    inputProps={{
+                      name: "status",
+                      id: "uncontrolled-native",
+                    }}
+                    onChange={handleSizeUpdate}
+                    sx={{ fontSize: "0.75rem" }}
+                  >
+                    <option value={"Regular"} style={{ fontSize: "0.75rem" }}>
+                      Regular
+                    </option>
+                    <option value={"Small"} style={{ fontSize: "0.75rem" }}>
+                      Small
+                    </option>
+                    <option value={"Medium"} style={{ fontSize: "0.75rem" }}>
+                      Medium
+                    </option>
+                    <option value={"Large"} style={{ fontSize: "0.75rem" }}>
+                      Large
+                    </option>
+                  </NativeSelect>
+                </CusTableCell>
+                <CusTableCell align="center">
+                  <CusTextField
+                    defaultValue={/* product.price */ "0"}
+                    value={currentPrice[/* product.id */ "test"]}
+                    onChange={(event) => {
+                      const prices = {
+                        ...currentPrice,
+                        [/* product.id */ "test"]: event.target.value,
+                      };
+                      setCurrentPrice(prices);
+                    }}
+                    fullWidth
+                    variant="standard"
+                  />
+                </CusTableCell>
+                <CusTableCell align="center">
+                  <NativeSelect
+                    defaultValue={/* product.ingredientExistsFalg */ "Y"}
+                    inputProps={{
+                      name: "status",
+                      id: "uncontrolled-native",
+                    }}
+                    onChange={handleIngredientFlagUpdate}
+                    sx={{ fontSize: "0.75rem" }}
+                  >
+                    <option value={"Y"} style={{ fontSize: "0.75rem" }}>
+                      Y
+                    </option>
+                    <option value={"N"} style={{ fontSize: "0.75rem" }}>
+                      N
+                    </option>
+                  </NativeSelect>
+                </CusTableCell>
+                <CusTableCell align="center">
+                  <Button
+                    variant="contained"
+                    color="success"
+                    sx={{
+                      fontSize: "0.75rem",
+                      lineHeight: "1rem",
+                      padding: "5px 16px",
+                    }}
+                  >
+                    {" "}
+                    SAVE
+                  </Button>
                 </CusTableCell>
               </TableRow>
             </TableBody>
