@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 import {
   getProductsNew,
   getAllSections,
@@ -7,7 +8,7 @@ import {
 } from "../../actions";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
-import { Row, Col } from "react-bootstrap";
+import { Row, Col, Form } from "react-bootstrap";
 import Select from "@mui/material/Select";
 import styled from "@emotion/styled";
 import MenuItem from "@mui/material/MenuItem";
@@ -110,6 +111,7 @@ export const MenuMaster = () => {
   const [currentMenuFlag, setCurrentMenuFlag] = useState("");
   const [currentIngredientFlag, setCurrentIngredientFlag] = useState("");
   const [currentSize, setCurrentSize] = useState("");
+  const [productImage, setProductImage] = useState({});
 
   const dispatch = useDispatch();
 
@@ -183,6 +185,22 @@ export const MenuMaster = () => {
   const handleSizeUpdate = (event) => {
     console.log(event.target.value);
     setCurrentSize(event.target.value);
+  };
+
+  const handleProductImage = (e, id) => {
+    if (e.target.files[0].size > 400000) {
+      toast.error("File is too big. Please enter a image under 400 kb!");
+      return;
+    }
+
+    if (e.target.files[0].type !== "image/jpeg") {
+      toast.error("Only JPG images are accepted!");
+      return;
+    }
+
+    let images = { ...productImage, [id]: e.target.files[0] };
+    setProductImage(images);
+    console.log(images);
   };
 
   return (
@@ -599,7 +617,37 @@ export const MenuMaster = () => {
                             />
                           </CusTableCell>
                           <CusTableCell align="center">
-                            <CusTextField
+                            <Form.Group controlId="formFileSm" className="mb-1">
+                              <Form.Control
+                                type="file"
+                                size="sm"
+                                accept=".jpg"
+                                maxFileSize={400000}
+                                onChange={(e) => {
+                                  handleProductImage(e, product.id);
+                                }}
+                              />
+                            </Form.Group>
+                            {/* <div className="input-group mb-1">
+                              <input
+                                type="file"
+                                name="productImage"
+                                className="form-control"
+                                id="inputGroupFile01"
+                                accept=".jpg"
+                                max={400000}
+                              
+                                onChange={(e) => {
+                                  handleProductImage(e, product.id);
+                                }}
+                                style={{ fontSize: "12px" }}
+                              />
+                            </div> */}
+                            <Typography sx={{ fontSize: "12px" }}>
+                              Current Image : {product.imagePath}
+                            </Typography>
+
+                            {/* <CusTextField
                               defaultValue={product.imagePath}
                               value={currentImageName[product.id]}
                               onChange={(event) => {
@@ -611,7 +659,7 @@ export const MenuMaster = () => {
                               }}
                               fullWidth
                               variant="standard"
-                            />
+                            /> */}
                           </CusTableCell>
                           <CusTableCell align="center">
                             <NativeSelect

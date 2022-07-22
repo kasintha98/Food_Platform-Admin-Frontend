@@ -134,3 +134,41 @@ export const getDishesBySection = (section, restaurantId, storeId) => {
     }
   };
 };
+export const getAllMenuIngredientsByRestoAndStoreId = (
+  restaurantId,
+  storeId
+) => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: productConstants.GET_ALL_MENU_INGREDIENTS_REQUEST,
+      });
+
+      const res = await axios.get(`/getMenuIngredientsByRestoAndStoreId`, {
+        params: {
+          restaurantId: restaurantId ? restaurantId : "ALL",
+          storeId: storeId ? storeId : "ALL",
+        },
+      });
+
+      if (res.status === 200) {
+        dispatch({
+          type: productConstants.GET_ALL_MENU_INGREDIENTS_SUCCESS,
+          payload: res.data,
+        });
+
+        return res.data;
+      } else {
+        dispatch({
+          type: productConstants.GET_ALL_MENU_INGREDIENTS_FAILURE,
+        });
+        console.log("error");
+      }
+    } catch (error) {
+      dispatch({
+        type: productConstants.GET_ALL_MENU_INGREDIENTS_FAILURE,
+      });
+      console.log(error);
+    }
+  };
+};

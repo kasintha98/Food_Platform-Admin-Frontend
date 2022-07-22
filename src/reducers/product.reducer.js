@@ -10,6 +10,8 @@ const initState = {
   error: null,
   dishSectionLoading: false,
   allDishesBySection: {},
+  allMenuIngredients: [],
+  menuIngredientsLoading: false,
 };
 
 export default (state = initState, action) => {
@@ -115,6 +117,27 @@ export default (state = initState, action) => {
         ...state,
         dishesOfSection: [],
         dishSectionLoading: false,
+      };
+      break;
+
+    case productConstants.GET_ALL_MENU_INGREDIENTS_REQUEST:
+      state = {
+        ...state,
+        menuIngredientsLoading: true,
+      };
+      break;
+    case productConstants.GET_ALL_MENU_INGREDIENTS_SUCCESS:
+      state = {
+        ...state,
+        allMenuIngredients: action.payload,
+        menuIngredientsLoading: false,
+      };
+      break;
+    case productConstants.GET_ALL_MENU_INGREDIENTS_FAILURE:
+      state = {
+        ...state,
+        allMenuIngredients: [],
+        menuIngredientsLoading: false,
       };
       break;
   }
