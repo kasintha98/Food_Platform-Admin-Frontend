@@ -4,7 +4,8 @@ import { toast } from "react-toastify";
 import {
   getProductsNew,
   getAllSections,
-  getDishesBySection,
+  getAllSectionsWithDishes,
+  getProductsNewWithPaging,
 } from "../../actions";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
@@ -19,6 +20,7 @@ import {
   Alert,
   NativeSelect,
   TableContainer,
+  Pagination,
 } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -76,9 +78,12 @@ const CusTableCell = styled(TableCell)`
 
 const CusMenuItem = styled(MenuItem)``;
 
+const itemsPerPage = 5;
+
 export const MenuMaster = () => {
   const stores = useSelector((state) => state.store.stores);
   const productList = useSelector((state) => state.product.products);
+  //const productsOfPage = useSelector((state) => state.product.productsOfPage);
   const allDishesBySection = useSelector(
     (state) => state.product.allDishesBySection
   );
@@ -112,6 +117,8 @@ export const MenuMaster = () => {
   const [currentIngredientFlag, setCurrentIngredientFlag] = useState("");
   const [currentSize, setCurrentSize] = useState("");
   const [productImage, setProductImage] = useState({});
+  const [page, setPage] = useState(1);
+  const [productsOfPage, setProductsOfPage] = useState([]);
 
   const dispatch = useDispatch();
 
@@ -120,9 +127,12 @@ export const MenuMaster = () => {
       dispatch(
         getProductsNew(selectedStoreObj.restaurantId, selectedStoreObj.storeId)
       );
+
       dispatch(
         getAllSections(selectedStoreObj.restaurantId, selectedStoreObj.storeId)
-      ).then((res) => {
+      );
+
+      /* .then((res) => {
         if (res) {
           for (let i = 0; i < res.length; i++) {
             dispatch(
@@ -135,9 +145,32 @@ export const MenuMaster = () => {
           }
           console.log("done");
         }
-      });
+      }); */
+
+      dispatch(
+        getAllSectionsWithDishes(
+          selectedStoreObj.restaurantId,
+          selectedStoreObj.storeId
+        )
+      );
     }
   }, [selectedStoreObj]);
+
+  useEffect(() => {
+    if (selectedStoreObj) {
+      dispatch(
+        getProductsNewWithPaging(
+          selectedStoreObj.restaurantId,
+          selectedStoreObj.storeId,
+          Number(page - 1) * itemsPerPage,
+          page * itemsPerPage,
+          productList
+        )
+      ).then((res) => {
+        setProductsOfPage(res);
+      });
+    }
+  }, [page, selectedStoreObj]);
 
   const handleChangeStore = (event) => {
     setSelectedStore(event.target.value);
@@ -185,6 +218,10 @@ export const MenuMaster = () => {
   const handleSizeUpdate = (event) => {
     console.log(event.target.value);
     setCurrentSize(event.target.value);
+  };
+
+  const handlePage = (event, value) => {
+    setPage(value);
   };
 
   const handleProductImage = (e, id) => {
@@ -240,7 +277,19 @@ export const MenuMaster = () => {
             </CusSelect>
           </FormControl>
         </Col>
-        <Col sm={6}></Col>
+        <Col sm={4}>
+          <Button
+            sx={{
+              fontSize: "0.75rem",
+              lineHeight: "1rem",
+              padding: "5px 16px",
+            }}
+            variant="contained"
+            color="success"
+          >
+            ADD NEW DISH
+          </Button>
+        </Col>
       </Row>
       <Row className="align-items-center mt-2">
         <div style={{ minWidth: "180px" }}>
@@ -304,7 +353,7 @@ export const MenuMaster = () => {
       </Row>
       <div>
         <TableContainer className="mt-2" sx={{ maxHeight: 430 }}>
-          <Table sx={{ minWidth: 800 }} aria-label="simple table" stickyHeader>
+          <Table sx={{ minWidth: 1600 }} aria-label="simple table" stickyHeader>
             <TableHead>
               <TableRow>
                 <CusTableCell align="center">Store Name</CusTableCell>
@@ -325,8 +374,7 @@ export const MenuMaster = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {productListLoading ||
-              Object.keys(allDishesBySection).length !== sections.length ? (
+              {productListLoading ? (
                 <TableRow>
                   <TableCell colSpan={15}>
                     <div className="d-flex justify-content-center">
@@ -344,8 +392,8 @@ export const MenuMaster = () => {
                 <>
                   {productList && productList.length > 0 ? (
                     <>
-                      {productList.map((product) => (
-                        <TableRow>
+                      {productsOfPage.map((product) => (
+                        <TableRow key={product.id}>
                           <CusTableCell align="center">
                             <FormControl fullWidth>
                               <NativeSelect
@@ -477,6 +525,7 @@ export const MenuMaster = () => {
                           </CusTableCell>
                           <CusTableCell align="center">
                             <CusTextField
+                              key={product.id}
                               defaultValue={product.dishType}
                               value={currentDishType[product.id]}
                               onChange={(event) => {
@@ -552,6 +601,7 @@ export const MenuMaster = () => {
                           </CusTableCell>
                           <CusTableCell align="center">
                             <CusTextField
+                              key={product.id}
                               defaultValue={product.dishDescriptionId}
                               value={currentDishDesc[product.id]}
                               onChange={(event) => {
@@ -603,6 +653,7 @@ export const MenuMaster = () => {
                           </CusTableCell>
                           <CusTableCell align="center">
                             <CusTextField
+                              key={product.id}
                               defaultValue={product.price}
                               value={currentPrice[product.id]}
                               onChange={(event) => {
@@ -758,11 +809,18 @@ export const MenuMaster = () => {
           </Table>
         </TableContainer>
       </div>
-      <div className="mt-3 text-center">
-        <Button variant="contained" color="success">
-          ADD NEW DISH
-        </Button>
-      </div>
+      {productList && productList.length > 0 && selectedStore ? (
+        <div
+          className="mt-3 mb-3"
+          style={{ justifyContent: "center", display: "flex" }}
+        >
+          <Pagination
+            count={Math.ceil(productList.length / itemsPerPage)}
+            page={page}
+            onChange={handlePage}
+          />
+        </div>
+      ) : null}
     </div>
   );
 };

@@ -134,6 +134,7 @@ export const getDishesBySection = (section, restaurantId, storeId) => {
     }
   };
 };
+
 export const getAllMenuIngredientsByRestoAndStoreId = (
   restaurantId,
   storeId
@@ -167,6 +168,153 @@ export const getAllMenuIngredientsByRestoAndStoreId = (
     } catch (error) {
       dispatch({
         type: productConstants.GET_ALL_MENU_INGREDIENTS_FAILURE,
+      });
+      console.log(error);
+    }
+  };
+};
+
+export const getAllSectionsWithDishes = (restaurantId, storeId) => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: productConstants.GET_ALL_SECTIONS_WITH_DISHES_REQUEST,
+      });
+
+      const res = await axios.get(`/getAllSectionsWithDishes`, {
+        params: {
+          restaurantId: restaurantId ? restaurantId : "ALL",
+          storeId: storeId ? storeId : "ALL",
+        },
+      });
+
+      if (res.status === 200) {
+        dispatch({
+          type: productConstants.GET_ALL_SECTIONS_WITH_DISHES_SUCCESS,
+          payload: res.data,
+        });
+
+        return res.data;
+      } else {
+        dispatch({
+          type: productConstants.GET_ALL_SECTIONS_WITH_DISHES_FAILURE,
+        });
+        console.log("error");
+      }
+    } catch (error) {
+      dispatch({
+        type: productConstants.GET_ALL_SECTIONS_WITH_DISHES_FAILURE,
+      });
+      console.log(error);
+    }
+  };
+};
+
+export const getProductsNewWithPaging = (
+  restaurantId,
+  storeId,
+  start,
+  end,
+  list
+) => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: productConstants.GET_PRODUCTS_BY_PAGE_REQUEST,
+      });
+
+      let res = null;
+
+      if (!list || list.length < 1) {
+        res = await axios.get(`/getMenuItemsByRestroAndStore`, {
+          params: {
+            restaurantId: restaurantId ? restaurantId : "ALL",
+            storeId: storeId ? storeId : "ALL",
+          },
+        });
+
+        res = { ...res, data: res.data.slice(start, end) };
+      } else {
+        res = {
+          status: 200,
+          data: list.slice(start, end),
+        };
+      }
+
+      if (res && res.status === 200) {
+        const productsList = {
+          products: res.data,
+        };
+        console.log(productsList);
+
+        dispatch({
+          type: productConstants.GET_PRODUCTS_BY_PAGE_SUCCESS,
+          payload: productsList,
+        });
+
+        return res.data;
+      } else {
+        console.log("error");
+        dispatch({
+          type: productConstants.GET_PRODUCTS_BY_PAGE_FAILURE,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch({
+        type: productConstants.GET_PRODUCTS_BY_PAGE_FAILURE,
+      });
+    }
+  };
+};
+
+export const getAllMenuIngredientsByRestoAndStoreIdWithPaging = (
+  restaurantId,
+  storeId,
+  start,
+  end,
+  list
+) => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: productConstants.GET_ALL_MENU_INGREDIENTS_PAGE_REQUEST,
+      });
+
+      let res = null;
+
+      if (!list || list.length < 1) {
+        res = await axios.get(`/getMenuIngredientsByRestoAndStoreId`, {
+          params: {
+            restaurantId: restaurantId ? restaurantId : "ALL",
+            storeId: storeId ? storeId : "ALL",
+          },
+        });
+
+        res = { ...res, data: res.data.slice(start, end) };
+      } else {
+        res = {
+          status: 200,
+          data: list.slice(start, end),
+        };
+      }
+
+      if (res.status === 200) {
+        dispatch({
+          type: productConstants.GET_ALL_MENU_INGREDIENTS_PAGE_SUCCESS,
+          payload: res.data,
+        });
+
+        return res.data;
+      } else {
+        dispatch({
+          type: productConstants.GET_ALL_MENU_INGREDIENTS_PAGE_FAILURE,
+        });
+        console.log("error");
+      }
+    } catch (error) {
+      dispatch({
+        type: productConstants.GET_ALL_MENU_INGREDIENTS_PAGE_FAILURE,
       });
       console.log(error);
     }

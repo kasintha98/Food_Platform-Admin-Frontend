@@ -126,6 +126,7 @@ export default function NewCheckout(props) {
   const [defaultAddress, setDefaultAddress] = useState(false);
   const [currentGetAddress, setCurrentGetAddress] = useState(null);
   const [currentCustomer, setCurrentCustomer] = useState(null);
+  const [isNewCustomerFunc, setIsNewCustomerFunc] = useState(false);
 
   const dispatch = useDispatch();
   const ref = React.createRef();
@@ -495,6 +496,14 @@ export default function NewCheckout(props) {
       dispatch(GetCustomerDetails(phoneNo)).then((res) => {
         if (res) {
           setFoundCustomer(res);
+          setIsNewCustomerFunc(false);
+        } else {
+          clearCustomer();
+          clearAddress();
+          setFirstName("");
+          setLastName("");
+          setEmailId("");
+          setIsNewCustomerFunc(true);
         }
       });
     }
@@ -901,7 +910,7 @@ export default function NewCheckout(props) {
                               <PhoneInput
                                 defaultCountry="IN"
                                 style={{ fontSize: "0.75rem" }}
-                                placeholder="Mobile Number"
+                                placeholder="Mobile Number *"
                                 value={phoneNo}
                                 onChange={setPhoneNo}
                                 onKeyDown={onKeyDownHandler}
@@ -952,7 +961,7 @@ export default function NewCheckout(props) {
                         </div>
                         <div className="text-center mt-3">
                           <CusTextField
-                            label="Address Type"
+                            label="Address Type *"
                             value={addressType}
                             onChange={(event) => {
                               setAddressType(event.target.value);
@@ -964,7 +973,7 @@ export default function NewCheckout(props) {
                           <Row className="align-items-center">
                             <Col className="pr-0">
                               <CusTextField
-                                label="First Name"
+                                label="First Name *"
                                 value={firstName}
                                 onChange={(event) => {
                                   setFirstName(event.target.value);
@@ -986,7 +995,7 @@ export default function NewCheckout(props) {
                           <Row className="align-items-center">
                             <Col className="pr-0">
                               <CusTextField
-                                label="Address 1"
+                                label="Address 1 *"
                                 value={address1}
                                 onChange={(event) => {
                                   setAddress1(event.target.value);
@@ -1020,7 +1029,7 @@ export default function NewCheckout(props) {
                             </Col>
                             <Col className="pl-1">
                               <CusTextField
-                                label="Zip Code"
+                                label="Zip Code *"
                                 value={zipCode}
                                 onChange={(event) => {
                                   setZipCode(event.target.value);
@@ -1034,7 +1043,7 @@ export default function NewCheckout(props) {
                           <Row className="align-items-center">
                             <Col className="pr-0">
                               <CusTextField
-                                label="City"
+                                label="City *"
                                 value={city}
                                 onChange={(event) => {
                                   setCity(event.target.value);
@@ -1044,7 +1053,7 @@ export default function NewCheckout(props) {
                             </Col>
                             <Col className="pl-1">
                               <CusTextField
-                                label="State"
+                                label="State *"
                                 value={state}
                                 onChange={(event) => {
                                   setState(event.target.value);
@@ -1063,6 +1072,7 @@ export default function NewCheckout(props) {
                                   setDefaultAddress(event.target.checked);
                                   clearAddress();
                                 }}
+                                disabled={!isNewCustomerFunc}
                               />
                             }
                             label="Default Store address"
@@ -1073,6 +1083,7 @@ export default function NewCheckout(props) {
                             variant="contained"
                             color="warning"
                             onClick={addUpdateCustomerDetails}
+                            disabled={!isNewCustomerFunc}
                           >
                             SAVE CUSTOMER DETAILS
                           </Button>
@@ -1101,7 +1112,14 @@ export default function NewCheckout(props) {
               <Row>
                 <Col className="col-12">
                   <Grid sx={{ width: "100%", marginTop: 3 }}>
-                    {!currentPaymentType ? (
+                    {!currentPaymentType ||
+                    !(
+                      paymentType &&
+                      firstName &&
+                      phoneNo &&
+                      (defaultAddress ||
+                        (address1 && zipCode && city && state && addressType))
+                    ) ? (
                       <Card sx={{ minHeight: "468px" }}>
                         <FormControl sx={{ marginLeft: 3, marginTop: 2 }}>
                           <RadioGroup
@@ -1230,7 +1248,19 @@ export default function NewCheckout(props) {
                             color="success"
                             className="w-100"
                             onClick={handlePaymentType}
-                            disabled={paymentType ? false : true}
+                            disabled={
+                              paymentType &&
+                              firstName &&
+                              phoneNo &&
+                              (defaultAddress ||
+                                (address1 &&
+                                  zipCode &&
+                                  city &&
+                                  state &&
+                                  addressType))
+                                ? false
+                                : true
+                            }
                           >
                             SELECT PAYMENT METHOD
                           </SPMButton>
@@ -1238,7 +1268,12 @@ export default function NewCheckout(props) {
                       </Card>
                     ) : null}
 
-                    {currentPaymentType ? (
+                    {currentPaymentType &&
+                    paymentType &&
+                    firstName &&
+                    phoneNo &&
+                    (defaultAddress ||
+                      (address1 && zipCode && city && state && addressType)) ? (
                       <Card className="p-3" sx={{ minHeight: "468px" }}>
                         <Row>
                           <Col>

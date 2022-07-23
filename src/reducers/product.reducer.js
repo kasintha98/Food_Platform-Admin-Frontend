@@ -2,6 +2,8 @@ import { productConstants } from "../actions/constants";
 
 const initState = {
   products: [],
+  productsOfPage: [],
+  ingredientsOfPage: [],
   ingredients: [],
   sections: [],
   dishesOfSection: [],
@@ -95,28 +97,44 @@ export default (state = initState, action) => {
         loading: false,
       };
       break;
+
     case productConstants.GET_DISHES_BY_SECTION_REQUEST:
       state = {
         ...state,
-        dishSectionLoading: true,
       };
       break;
     case productConstants.GET_DISHES_BY_SECTION_SUCCESS:
       state = {
         ...state,
         dishesOfSection: action.payload.res,
-        dishSectionLoading: false,
-        allDishesBySection: {
-          ...state.allDishesBySection,
-          [action.payload.section]: action.payload.res,
-        },
       };
       break;
     case productConstants.GET_DISHES_BY_SECTION_FAILURE:
       state = {
         ...state,
         dishesOfSection: [],
+      };
+      break;
+
+    case productConstants.GET_ALL_SECTIONS_WITH_DISHES_REQUEST:
+      state = {
+        ...state,
+        dishSectionLoading: true,
+      };
+      break;
+    case productConstants.GET_ALL_SECTIONS_WITH_DISHES_SUCCESS:
+      state = {
+        ...state,
+
         dishSectionLoading: false,
+        allDishesBySection: action.payload,
+      };
+      break;
+    case productConstants.GET_ALL_SECTIONS_WITH_DISHES_FAILURE:
+      state = {
+        ...state,
+        dishSectionLoading: false,
+        allDishesBySection: {},
       };
       break;
 
@@ -138,6 +156,45 @@ export default (state = initState, action) => {
         ...state,
         allMenuIngredients: [],
         menuIngredientsLoading: false,
+      };
+      break;
+
+    case productConstants.GET_PRODUCTS_BY_PAGE_REQUEST:
+      state = {
+        ...state,
+        loading: true,
+      };
+      break;
+    case productConstants.GET_PRODUCTS_BY_PAGE_SUCCESS:
+      state = {
+        ...state,
+        productsOfPage: action.payload.products,
+        loading: false,
+      };
+      break;
+    case productConstants.GET_PRODUCTS_BY_PAGE_FAILURE:
+      state = {
+        ...state,
+        loading: false,
+        productsOfPage: [],
+      };
+      break;
+
+    case productConstants.GET_ALL_MENU_INGREDIENTS_PAGE_REQUEST:
+      state = {
+        ...state,
+      };
+      break;
+    case productConstants.GET_ALL_MENU_INGREDIENTS_PAGE_SUCCESS:
+      state = {
+        ...state,
+        ingredientsOfPage: action.payload,
+      };
+      break;
+    case productConstants.GET_ALL_MENU_INGREDIENTS_PAGE_FAILURE:
+      state = {
+        ...state,
+        ingredientsOfPage: [],
       };
       break;
   }

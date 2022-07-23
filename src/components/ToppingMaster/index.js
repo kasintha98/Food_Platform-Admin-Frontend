@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { getAllMenuIngredientsByRestoAndStoreId } from "../../actions";
+import {
+  getAllMenuIngredientsByRestoAndStoreId,
+  getAllMenuIngredientsByRestoAndStoreIdWithPaging,
+} from "../../actions";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Table from "@mui/material/Table";
@@ -18,8 +21,11 @@ import {
   Button,
   Alert,
   NativeSelect,
+  Pagination,
 } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
+
+const itemsPerPage = 10;
 
 const CusSelect = styled(Select)`
   & .MuiSelect-select {
@@ -93,6 +99,8 @@ export const ToppingMaster = () => {
   const [currentIngredientFlag, setCurrentIngredientFlag] = useState("");
   const [currentToppingName, setCurrentToppingName] = useState({});
   const [currentPrice, setCurrentPrice] = useState({});
+  const [page, setPage] = useState(1);
+  const [ToppingssOfPage, setToppingssOfPage] = useState([]);
 
   const dispatch = useDispatch();
 
@@ -106,6 +114,22 @@ export const ToppingMaster = () => {
       );
     }
   }, [selectedStoreObj]);
+
+  useEffect(() => {
+    if (selectedStoreObj) {
+      dispatch(
+        getAllMenuIngredientsByRestoAndStoreIdWithPaging(
+          selectedStoreObj.restaurantId,
+          selectedStoreObj.storeId,
+          Number(page - 1) * itemsPerPage,
+          page * itemsPerPage,
+          allMenuIngredients
+        )
+      ).then((res) => {
+        setToppingssOfPage(res);
+      });
+    }
+  }, [page, selectedStoreObj]);
 
   const handleChangeStore = (event) => {
     setSelectedStore(event.target.value);
@@ -131,6 +155,10 @@ export const ToppingMaster = () => {
     setCurrentIngredientFlag(event.target.value);
   };
 
+  const handlePage = (event, value) => {
+    setPage(value);
+  };
+
   return (
     <div>
       <Row className="align-items-center justify-content-center">
@@ -139,7 +167,7 @@ export const ToppingMaster = () => {
             Select Store
           </Typography>
         </div>
-        <Col sm={5}>
+        <Col sm={6} style={{ display: "flex" }}>
           <FormControl fullWidth>
             <CusInputLabel
               sx={{ fontSize: "0.75rem", lineHeight: "1rem", top: "-11px" }}
@@ -167,6 +195,19 @@ export const ToppingMaster = () => {
               ))}
             </CusSelect>
           </FormControl>
+          &nbsp;
+          <Button
+            sx={{
+              fontSize: "0.75rem",
+              lineHeight: "1rem",
+              padding: "5px 16px",
+              minWidth: "120px",
+            }}
+            variant="contained"
+            color="success"
+          >
+            ADD NEW DISH
+          </Button>
         </Col>
       </Row>
       <div>
@@ -179,9 +220,9 @@ export const ToppingMaster = () => {
                 <CusTableCell align="center">Topping Name</CusTableCell>
                 <CusTableCell align="center">Size</CusTableCell>
                 <CusTableCell align="center">Price</CusTableCell>
-                <CusTableCell align="center">
+                {/* <CusTableCell align="center">
                   Topping Available(Y/N)
-                </CusTableCell>
+                </CusTableCell> */}
                 <CusTableCell align="center">Action</CusTableCell>
               </TableRow>
             </TableHead>
@@ -204,11 +245,12 @@ export const ToppingMaster = () => {
                 <>
                   {allMenuIngredients && allMenuIngredients.length > 0 ? (
                     <>
-                      {allMenuIngredients.map((item) => (
-                        <TableRow>
+                      {ToppingssOfPage.map((item) => (
+                        <TableRow key={item.id}>
                           <CusTableCell align="center">
                             <FormControl fullWidth>
                               <NativeSelect
+                                key={item.id}
                                 defaultValue={`${
                                   item.restaurantId - item.storeId
                                 }`}
@@ -236,6 +278,7 @@ export const ToppingMaster = () => {
                           <CusTableCell align="center">
                             <FormControl fullWidth>
                               <NativeSelect
+                                key={item.id}
                                 defaultValue={item.category}
                                 inputProps={{
                                   name: "status",
@@ -261,6 +304,7 @@ export const ToppingMaster = () => {
                           </CusTableCell>
                           <CusTableCell align="center">
                             <CusTextField
+                              key={item.id}
                               defaultValue={item.ingredientType}
                               value={currentToppingName[item.id]}
                               onChange={(event) => {
@@ -276,6 +320,7 @@ export const ToppingMaster = () => {
                           </CusTableCell>
                           <CusTableCell align="center">
                             <NativeSelect
+                              key={item.id}
                               defaultValue={item.size}
                               inputProps={{
                                 name: "status",
@@ -312,6 +357,7 @@ export const ToppingMaster = () => {
                           </CusTableCell>
                           <CusTableCell align="center">
                             <CusTextField
+                              key={item.id}
                               defaultValue={item.price}
                               value={currentPrice[item.id]}
                               onChange={(event) => {
@@ -325,10 +371,10 @@ export const ToppingMaster = () => {
                               variant="standard"
                             />
                           </CusTableCell>
-                          <CusTableCell align="center">
+                          {/* <CusTableCell align="center">
                             <NativeSelect
                               defaultValue={
-                                /* product.ingredientExistsFalg */ "Y"
+                                 "Y"
                               }
                               inputProps={{
                                 name: "status",
@@ -350,7 +396,7 @@ export const ToppingMaster = () => {
                                 N
                               </option>
                             </NativeSelect>
-                          </CusTableCell>
+                          </CusTableCell> */}
                           <CusTableCell align="center">
                             <Button
                               variant="contained"
@@ -381,6 +427,18 @@ export const ToppingMaster = () => {
           </Table>
         </TableContainer>
       </div>
+      {allMenuIngredients && allMenuIngredients.length > 0 && selectedStore ? (
+        <div
+          className="mt-3 mb-3"
+          style={{ justifyContent: "center", display: "flex" }}
+        >
+          <Pagination
+            count={Math.ceil(allMenuIngredients.length / itemsPerPage)}
+            page={page}
+            onChange={handlePage}
+          />
+        </div>
+      ) : null}
       <div className="mt-3 text-center">
         <Button variant="contained" color="success">
           ADD NEW TOPPING
