@@ -23,6 +23,7 @@ import DropdownMenu from "@atlaskit/dropdown-menu";
 import "./style.css";
 import { OrderReportTable } from "../../components/OrderReportTable";
 import { SalesByDishReportTable } from "../../components/SalesByDishReportTable";
+import { MenuReport } from "../../components/MenuReport";
 
 const CusDDT = styled(Dropdown.Toggle)`
   font-weight: 500;
@@ -65,7 +66,7 @@ const NumberDiv = styled.div`
   padding: 10px;
 `;
 
-const reportTypes = ["Order Report", "Sales By Dish Item"];
+const reportTypes = ["Order Report", "Sales By Dish Item", "Menu Report"];
 
 export const NewReports = () => {
   const allReports = useSelector((state) => state.report.allReports);
@@ -263,6 +264,15 @@ export const NewReports = () => {
               storeId={selectedStoreObj.storeId}
               restaurantId={selectedStoreObj.restaurantId}
             ></SalesByDishReportTable>
+          )}
+
+          {selectedReport === "Menu Report" && (
+            <MenuReport
+              startDate={dateState[0].startDate}
+              endDate={dateState[0].endDate}
+              storeId={selectedStoreObj.storeId}
+              restaurantId={selectedStoreObj.restaurantId}
+            ></MenuReport>
           )}
         </div>
       </div>
