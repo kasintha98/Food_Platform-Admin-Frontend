@@ -124,7 +124,6 @@ export const MenuReport = (props) => {
                     <CusTableCell2 align="center">
                       {row.productSize}
                     </CusTableCell2>
-
                     <CusTableCell2 align="center">{row.price}</CusTableCell2>
                     <CusTableCell2 align="center">
                       {row.imagePath}
