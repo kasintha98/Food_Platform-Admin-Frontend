@@ -8,6 +8,7 @@ import TabPanel from "@mui/lab/TabPanel";
 import { MenuMaster } from "../../components/MenuMaster";
 import { ToppingMaster } from "../../components/ToppingMaster";
 import { AddToppingToDish } from "../../components/AddToppingToDish";
+import { MenuMasterNew } from "../../components/MenuMasterNew";
 
 export const AdminMenu = () => {
   const [tabValue, setTabValue] = React.useState("1");

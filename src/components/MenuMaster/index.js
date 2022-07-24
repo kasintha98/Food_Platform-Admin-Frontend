@@ -70,15 +70,64 @@ const CusTextField = styled(TextField)`
  }
 `;
 
+const CusTextField2 = styled(TextField)`
+ & label {
+  font-size: 0.75rem;
+  top: -11px;
+}
+
+& .Mui-focused{
+  top: 0px !important;
+  & lable{
+    display: none
+  }
+}
+
+& label .Mui-focused{
+  display: none
+}
+
+& fieldset{
+  font-size: 0.75rem;
+}
+
+& .MuiFormLabel-filled{
+  top: 0px !important;
+  & lable{
+    display: none
+  }
+}
+
+& input{
+  font-size: 0.75rem;
+  padding: 0.25rem;
+}
+ }
+`;
+
 const CusTableCell = styled(TableCell)`
   padding: 0;
   font-size: 14px;
   border: 1px solid #000;
 `;
 
+const CusTableCell2 = styled(TableCell)`
+  padding: 0;
+  font-size: 14px;
+  border: 1px solid #000;
+  padding-top: 8px;
+  padding-bottom: 8px;
+`;
+
 const CusMenuItem = styled(MenuItem)``;
 
-const itemsPerPage = 5;
+const CusNativeSelect = styled(NativeSelect)`
+  & svg {
+    display: none;
+  }
+`;
+
+const itemsPerPage = 33;
 
 export const MenuMaster = () => {
   const stores = useSelector((state) => state.store.stores);
@@ -93,7 +142,6 @@ export const MenuMaster = () => {
   );
   //const allDishOfSection = useSelector((state) => state.product.allDishOfSection);
   const sections = useSelector((state) => state.product.sections);
-  const user = useSelector((state) => state.auth.user);
 
   const [selectedStore, setSelectedStore] = useState(
     //stores[0] ? stores[0].resturantName : null
@@ -119,6 +167,12 @@ export const MenuMaster = () => {
   const [productImage, setProductImage] = useState({});
   const [page, setPage] = useState(1);
   const [productsOfPage, setProductsOfPage] = useState([]);
+  const [isSave, setIsSave] = useState({});
+  const [sectionKeyword, setSectionKeyword] = useState("");
+  const [categoryKeyword, setCategoryKeyword] = useState("");
+  const [nameKeyword, setNameKeyword] = useState("");
+  const [firstProductList, setFirstProductList] = useState([]);
+  const [isSearched, setIsSearched] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -126,26 +180,15 @@ export const MenuMaster = () => {
     if (selectedStoreObj) {
       dispatch(
         getProductsNew(selectedStoreObj.restaurantId, selectedStoreObj.storeId)
-      );
+      ).then((res) => {
+        if (res) {
+          setFirstProductList(res);
+        }
+      });
 
       dispatch(
         getAllSections(selectedStoreObj.restaurantId, selectedStoreObj.storeId)
       );
-
-      /* .then((res) => {
-        if (res) {
-          for (let i = 0; i < res.length; i++) {
-            dispatch(
-              getDishesBySection(
-                res[i],
-                selectedStoreObj.restaurantId,
-                selectedStoreObj.storeId
-              )
-            );
-          }
-          console.log("done");
-        }
-      }); */
 
       dispatch(
         getAllSectionsWithDishes(
@@ -157,20 +200,53 @@ export const MenuMaster = () => {
   }, [selectedStoreObj]);
 
   useEffect(() => {
+    console.log(sectionKeyword, categoryKeyword, nameKeyword);
     if (selectedStoreObj) {
-      dispatch(
-        getProductsNewWithPaging(
-          selectedStoreObj.restaurantId,
-          selectedStoreObj.storeId,
-          Number(page - 1) * itemsPerPage,
-          page * itemsPerPage,
-          productList
-        )
-      ).then((res) => {
-        setProductsOfPage(res);
-      });
+      if (isSearched && !sectionKeyword && !categoryKeyword && !nameKeyword) {
+        dispatch(
+          getProductsNew(
+            selectedStoreObj.restaurantId,
+            selectedStoreObj.storeId
+          )
+        ).then((res) => {
+          if (res) {
+            setFirstProductList(res);
+            dispatch(
+              getProductsNewWithPaging(
+                selectedStoreObj.restaurantId,
+                selectedStoreObj.storeId,
+                Number(page - 1) * itemsPerPage,
+                page * itemsPerPage,
+                res,
+                sectionKeyword,
+                categoryKeyword,
+                nameKeyword,
+                res
+              )
+            ).then((res) => {
+              setProductsOfPage(res);
+            });
+          }
+        });
+      } else {
+        dispatch(
+          getProductsNewWithPaging(
+            selectedStoreObj.restaurantId,
+            selectedStoreObj.storeId,
+            Number(page - 1) * itemsPerPage,
+            page * itemsPerPage,
+            productList,
+            sectionKeyword,
+            categoryKeyword,
+            nameKeyword,
+            firstProductList
+          )
+        ).then((res) => {
+          setProductsOfPage(res);
+        });
+      }
     }
-  }, [page, selectedStoreObj]);
+  }, [page, selectedStoreObj, sectionKeyword, categoryKeyword, nameKeyword]);
 
   const handleChangeStore = (event) => {
     setSelectedStore(event.target.value);
@@ -240,6 +316,16 @@ export const MenuMaster = () => {
     console.log(images);
   };
 
+  const onEditClickHandle = (id) => {
+    let edits = { ...isSave, [id]: true };
+    setIsSave(edits);
+  };
+
+  const onSaveClickHandle = (id) => {
+    let edits = { ...isSave, [id]: false };
+    setIsSave(edits);
+  };
+
   return (
     <div>
       <Row className="align-items-center">
@@ -248,7 +334,7 @@ export const MenuMaster = () => {
             Select Store
           </Typography>
         </div>
-        <Col sm={5}>
+        <Col sm={2}>
           <FormControl fullWidth>
             <CusInputLabel
               sx={{ fontSize: "0.75rem", lineHeight: "1rem", top: "-11px" }}
@@ -297,7 +383,7 @@ export const MenuMaster = () => {
             Add new Dish Section
           </Typography>
         </div>
-        <Col sm={5}>
+        <Col sm={2}>
           <CusTextField
             label="New Dish Section"
             value={newDishSection}
@@ -327,7 +413,7 @@ export const MenuMaster = () => {
             Add new Dish Category
           </Typography>
         </div>
-        <Col sm={5}>
+        <Col sm={2}>
           <CusTextField
             label="New Dish Category"
             value={newDishCategory}
@@ -352,14 +438,72 @@ export const MenuMaster = () => {
         </Col>
       </Row>
       <div>
-        <TableContainer className="mt-2" sx={{ maxHeight: 430 }}>
-          <Table sx={{ minWidth: 1600 }} aria-label="simple table" stickyHeader>
+        <TableContainer className="mt-2" sx={{ maxHeight: 430, width: "101%" }}>
+          <Table sx={{ minWidth: 1700 }} aria-label="simple table" stickyHeader>
             <TableHead>
               <TableRow>
+                <CusTableCell align="center">No</CusTableCell>
                 <CusTableCell align="center">Store Name</CusTableCell>
-                <CusTableCell align="center">Dish Section</CusTableCell>
-                <CusTableCell align="center">Dish Category</CusTableCell>
-                <CusTableCell align="center">Dish Name</CusTableCell>
+                <CusTableCell2 align="center">
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    Dish Section &nbsp;
+                    <CusTextField2
+                      value={sectionKeyword}
+                      onChange={(event) => {
+                        setIsSearched(true);
+                        setSectionKeyword(event.target.value);
+                      }}
+                      sx={{ width: "150px" }}
+                      label="Search"
+                    />
+                  </div>
+                </CusTableCell2>
+                <CusTableCell align="center">
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    Dish Category &nbsp;
+                    <CusTextField2
+                      value={categoryKeyword}
+                      onChange={(event) => {
+                        setIsSearched(true);
+                        setCategoryKeyword(event.target.value);
+                      }}
+                      sx={{ width: "150px" }}
+                      label="Search"
+                    />
+                  </div>
+                </CusTableCell>
+                <CusTableCell align="center">
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    Dish Name &nbsp;
+                    <CusTextField2
+                      value={nameKeyword}
+                      onChange={(event) => {
+                        setIsSearched(true);
+                        setNameKeyword(event.target.value);
+                      }}
+                      sx={{ width: "150px" }}
+                      label="Search"
+                    />
+                  </div>
+                </CusTableCell>
                 <CusTableCell align="center">Veg (Y/N)</CusTableCell>
                 <CusTableCell align="center">Spicy Indicator</CusTableCell>
                 <CusTableCell align="center">Dish Description</CusTableCell>
@@ -390,13 +534,19 @@ export const MenuMaster = () => {
                 </TableRow>
               ) : (
                 <>
-                  {productList && productList.length > 0 ? (
+                  {productList && productList.length > 0 && productsOfPage ? (
                     <>
-                      {productsOfPage.map((product) => (
+                      {productsOfPage.map((product, index) => (
                         <TableRow key={product.id}>
                           <CusTableCell align="center">
+                            {index + 1 + (page - 1) * itemsPerPage}
+                          </CusTableCell>
+                          <CusTableCell
+                            align="center"
+                            style={{ minWidth: "175px" }}
+                          >
                             <FormControl fullWidth>
-                              <NativeSelect
+                              <CusNativeSelect
                                 defaultValue={`${
                                   product.restaurantId - product.storeId
                                 }`}
@@ -405,7 +555,14 @@ export const MenuMaster = () => {
                                   id: "uncontrolled-native",
                                 }}
                                 onChange={handleRestaurentUpdate}
-                                sx={{ fontSize: "0.75rem" }}
+                                sx={{
+                                  fontSize: "0.75rem",
+                                  "& .MuiInputBase-input.Mui-disabled": {
+                                    WebkitTextFillColor:
+                                      isSave[product.id] && "black",
+                                  },
+                                }}
+                                disabled={true}
                               >
                                 {stores.map((store, index) => (
                                   <option
@@ -418,10 +575,13 @@ export const MenuMaster = () => {
                                     {store.resturantName}
                                   </option>
                                 ))}
-                              </NativeSelect>
+                              </CusNativeSelect>
                             </FormControl>
                           </CusTableCell>
-                          <CusTableCell align="center">
+                          <CusTableCell
+                            align="center"
+                            style={{ minWidth: "100px" }}
+                          >
                             <FormControl fullWidth>
                               <NativeSelect
                                 defaultValue={product.section}
@@ -431,6 +591,7 @@ export const MenuMaster = () => {
                                 }}
                                 onChange={handleSectionUpdate}
                                 sx={{ fontSize: "0.75rem" }}
+                                disabled={!isSave[product.id]}
                               >
                                 {sections.map((section, index) => (
                                   <option
@@ -444,7 +605,10 @@ export const MenuMaster = () => {
                               </NativeSelect>
                             </FormControl>
                           </CusTableCell>
-                          <CusTableCell align="center">
+                          <CusTableCell
+                            align="center"
+                            style={{ minWidth: "100px" }}
+                          >
                             <FormControl fullWidth>
                               <NativeSelect
                                 defaultValue={product.dish}
@@ -454,6 +618,7 @@ export const MenuMaster = () => {
                                 }}
                                 onChange={handleDishUpdate}
                                 sx={{ fontSize: "0.75rem" }}
+                                disabled={!isSave[product.id]}
                                 /* onClick={() => {
                                   if (!allDishOfSection[product.section]) {
                                     console.log(
@@ -523,8 +688,12 @@ export const MenuMaster = () => {
                               </NativeSelect>
                             </FormControl>
                           </CusTableCell>
-                          <CusTableCell align="center">
+                          <CusTableCell
+                            align="center"
+                            style={{ minWidth: "150px" }}
+                          >
                             <CusTextField
+                              disabled={!isSave[product.id]}
                               key={product.id}
                               defaultValue={product.dishType}
                               value={currentDishType[product.id]}
@@ -539,7 +708,10 @@ export const MenuMaster = () => {
                               variant="standard"
                             />
                           </CusTableCell>
-                          <CusTableCell align="center">
+                          <CusTableCell
+                            align="center"
+                            style={{ minWidth: "50px" }}
+                          >
                             <FormControl fullWidth>
                               <NativeSelect
                                 defaultValue={product.dishCategory}
@@ -549,6 +721,7 @@ export const MenuMaster = () => {
                                 }}
                                 onChange={handleVegUpdate}
                                 sx={{ fontSize: "0.75rem" }}
+                                disabled={!isSave[product.id]}
                               >
                                 <option
                                   value={"Veg"}
@@ -565,42 +738,54 @@ export const MenuMaster = () => {
                               </NativeSelect>
                             </FormControl>
                           </CusTableCell>
-                          <CusTableCell align="center">
-                            {product.dishSpiceIndicatory ? (
-                              <FormControl fullWidth>
-                                <NativeSelect
-                                  defaultValue={product.dishSpiceIndicatory}
-                                  inputProps={{
-                                    name: "status",
-                                    id: "uncontrolled-native",
-                                  }}
-                                  onChange={handleSpiceUpdate}
-                                  sx={{ fontSize: "0.75rem" }}
+                          <CusTableCell
+                            align="center"
+                            style={{ minWidth: "130px" }}
+                          >
+                            <FormControl fullWidth>
+                              <NativeSelect
+                                disabled={!isSave[product.id]}
+                                defaultValue={product.dishSpiceIndicatory}
+                                inputProps={{
+                                  name: "status",
+                                  id: "uncontrolled-native",
+                                }}
+                                onChange={handleSpiceUpdate}
+                                sx={{ fontSize: "0.75rem" }}
+                              >
+                                <option
+                                  value={""}
+                                  style={{ fontSize: "0.75rem" }}
                                 >
-                                  <option
-                                    value={"Less Spicy"}
-                                    style={{ fontSize: "0.75rem" }}
-                                  >
-                                    Less Spicy
-                                  </option>
-                                  <option
-                                    value={"Medium Spicy"}
-                                    style={{ fontSize: "0.75rem" }}
-                                  >
-                                    Medium Spicy
-                                  </option>
-                                  <option
-                                    value={"Extra Hot"}
-                                    style={{ fontSize: "0.75rem" }}
-                                  >
-                                    Extra Hot
-                                  </option>
-                                </NativeSelect>
-                              </FormControl>
-                            ) : null}
+                                  None
+                                </option>
+                                <option
+                                  value={"Less Spicy"}
+                                  style={{ fontSize: "0.75rem" }}
+                                >
+                                  Less Spicy
+                                </option>
+                                <option
+                                  value={"Medium Spicy"}
+                                  style={{ fontSize: "0.75rem" }}
+                                >
+                                  Medium Spicy
+                                </option>
+                                <option
+                                  value={"Extra Hot"}
+                                  style={{ fontSize: "0.75rem" }}
+                                >
+                                  Extra Hot
+                                </option>
+                              </NativeSelect>
+                            </FormControl>
                           </CusTableCell>
-                          <CusTableCell align="center">
+                          <CusTableCell
+                            align="center"
+                            style={{ minWidth: "250px" }}
+                          >
                             <CusTextField
+                              disabled={!isSave[product.id]}
                               key={product.id}
                               defaultValue={product.dishDescriptionId}
                               value={currentDishDesc[product.id]}
@@ -615,8 +800,12 @@ export const MenuMaster = () => {
                               variant="standard"
                             />
                           </CusTableCell>
-                          <CusTableCell align="center">
+                          <CusTableCell
+                            align="center"
+                            style={{ minWidth: "80px" }}
+                          >
                             <NativeSelect
+                              disabled={!isSave[product.id]}
                               defaultValue={product.productSize}
                               inputProps={{
                                 name: "status",
@@ -651,25 +840,51 @@ export const MenuMaster = () => {
                               </option>
                             </NativeSelect>
                           </CusTableCell>
-                          <CusTableCell align="center">
-                            <CusTextField
-                              key={product.id}
-                              defaultValue={product.price}
-                              value={currentPrice[product.id]}
-                              onChange={(event) => {
-                                const prices = {
-                                  ...currentPrice,
-                                  [product.id]: event.target.value,
-                                };
-                                setCurrentPrice(prices);
-                              }}
-                              fullWidth
-                              variant="standard"
-                            />
+                          <CusTableCell
+                            align="center"
+                            style={{ minWidth: "70px" }}
+                          >
+                            <div style={{ display: "flex" }}>
+                              &nbsp;
+                              <span
+                                style={{
+                                  fontSize: "0.75rem",
+                                  marginTop: "0.25rem",
+                                  color: isSave[product.id]
+                                    ? "black"
+                                    : "rgb(0,0,0, 0.38)",
+                                }}
+                              >
+                                Rs.{" "}
+                              </span>
+                              <CusTextField
+                                disabled={!isSave[product.id]}
+                                key={product.id}
+                                defaultValue={product.price}
+                                value={currentPrice[product.id]}
+                                onChange={(event) => {
+                                  const prices = {
+                                    ...currentPrice,
+                                    [product.id]: event.target.value,
+                                  };
+                                  setCurrentPrice(prices);
+                                }}
+                                fullWidth
+                                variant="standard"
+                              />
+                            </div>
                           </CusTableCell>
-                          <CusTableCell align="center">
-                            <Form.Group controlId="formFileSm" className="mb-1">
+                          <CusTableCell
+                            align="center"
+                            style={{ display: "flex", minWidth: "450px" }}
+                          >
+                            <Form.Group
+                              controlId="formFileSm"
+                              className="mb-1"
+                              style={{ width: "175px" }}
+                            >
                               <Form.Control
+                                disabled={!isSave[product.id]}
                                 type="file"
                                 size="sm"
                                 accept=".jpg"
@@ -694,7 +909,14 @@ export const MenuMaster = () => {
                                 style={{ fontSize: "12px" }}
                               />
                             </div> */}
-                            <Typography sx={{ fontSize: "12px" }}>
+                            <Typography
+                              sx={{
+                                fontSize: "12px",
+                                color: isSave[product.id]
+                                  ? "black"
+                                  : "rgb(0,0,0, 0.38)",
+                              }}
+                            >
                               Current Image : {product.imagePath}
                             </Typography>
 
@@ -712,8 +934,12 @@ export const MenuMaster = () => {
                               variant="standard"
                             /> */}
                           </CusTableCell>
-                          <CusTableCell align="center">
+                          <CusTableCell
+                            align="center"
+                            style={{ minWidth: "50px" }}
+                          >
                             <NativeSelect
+                              disabled={!isSave[product.id]}
                               defaultValue={product.menuAvailableFlag}
                               inputProps={{
                                 name: "status",
@@ -739,8 +965,12 @@ export const MenuMaster = () => {
                           <CusTableCell align="center">
                             {product.kdsRoutingName}
                           </CusTableCell>
-                          <CusTableCell align="center">
+                          <CusTableCell
+                            align="center"
+                            style={{ minWidth: "50px" }}
+                          >
                             <NativeSelect
+                              disabled={!isSave[product.id]}
                               defaultValue={product.ingredientExistsFalg}
                               inputProps={{
                                 name: "status",
@@ -763,7 +993,10 @@ export const MenuMaster = () => {
                               </option>
                             </NativeSelect>
                           </CusTableCell>
-                          <CusTableCell align="center">
+                          <CusTableCell
+                            align="center"
+                            style={{ minWidth: "130px" }}
+                          >
                             {product.ingredientExistsFalg === "Y" ? (
                               <Button
                                 sx={{
@@ -771,23 +1004,46 @@ export const MenuMaster = () => {
                                   lineHeight: "1rem",
                                   padding: "5px 16px",
                                 }}
+                                disabled={!isSave[product.id]}
                               >
                                 Add Toppings
                               </Button>
                             ) : null}
                           </CusTableCell>
                           <CusTableCell align="center">
-                            <Button
-                              variant="contained"
-                              color="success"
-                              sx={{
-                                fontSize: "0.75rem",
-                                lineHeight: "1rem",
-                                padding: "5px 16px",
-                              }}
-                            >
-                              Save
-                            </Button>
+                            {isSave[product.id] ? (
+                              <Button
+                                key={product.id}
+                                variant="contained"
+                                color="success"
+                                sx={{
+                                  fontSize: "0.75rem",
+                                  lineHeight: "1rem",
+                                  padding: "5px 16px",
+                                }}
+                                onClick={() => {
+                                  onSaveClickHandle(product.id);
+                                }}
+                              >
+                                Save
+                              </Button>
+                            ) : (
+                              <Button
+                                key={product.id}
+                                variant="contained"
+                                color="warning"
+                                sx={{
+                                  fontSize: "0.75rem",
+                                  lineHeight: "1rem",
+                                  padding: "5px 16px",
+                                }}
+                                onClick={() => {
+                                  onEditClickHandle(product.id);
+                                }}
+                              >
+                                EDIT
+                              </Button>
+                            )}
                           </CusTableCell>
                         </TableRow>
                       ))}
@@ -811,7 +1067,7 @@ export const MenuMaster = () => {
       </div>
       {productList && productList.length > 0 && selectedStore ? (
         <div
-          className="mt-3 mb-3"
+          className="mt-3"
           style={{ justifyContent: "center", display: "flex" }}
         >
           <Pagination

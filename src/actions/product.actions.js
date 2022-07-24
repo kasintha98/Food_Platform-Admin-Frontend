@@ -215,7 +215,11 @@ export const getProductsNewWithPaging = (
   storeId,
   start,
   end,
-  list
+  list,
+  sectionKeyword,
+  categoryKeyword,
+  nameKeyword,
+  firstProductList
 ) => {
   return async (dispatch) => {
     try {
@@ -233,11 +237,26 @@ export const getProductsNewWithPaging = (
           },
         });
 
-        res = { ...res, data: res.data.slice(start, end) };
+        if (res.data) {
+          res = {
+            ...res,
+            data: filterSearch(
+              res.data,
+              sectionKeyword,
+              categoryKeyword,
+              nameKeyword
+            ).slice(start, end),
+          };
+        }
       } else {
         res = {
           status: 200,
-          data: list.slice(start, end),
+          data: filterSearch(
+            list,
+            sectionKeyword,
+            categoryKeyword,
+            nameKeyword
+          ).slice(start, end),
         };
       }
 
@@ -251,6 +270,20 @@ export const getProductsNewWithPaging = (
           type: productConstants.GET_PRODUCTS_BY_PAGE_SUCCESS,
           payload: productsList,
         });
+
+        if (sectionKeyword || categoryKeyword || nameKeyword) {
+          dispatch({
+            type: productConstants.GET_PRODUCTS_BY_SLUG_SUCCESS,
+            payload: productsList,
+          });
+        } /* else {
+          if (firstProductList.length !== productsList.length) {
+            dispatch({
+              type: productConstants.GET_PRODUCTS_BY_SLUG_SUCCESS,
+              payload: firstProductList,
+            });
+          }
+        } */
 
         return res.data;
       } else {
@@ -319,4 +352,52 @@ export const getAllMenuIngredientsByRestoAndStoreIdWithPaging = (
       console.log(error);
     }
   };
+};
+
+const filterSearch = (list, sectionKeyword, categoryKeyword, nameKeyword) => {
+  console.log(list, sectionKeyword, categoryKeyword, nameKeyword);
+  if (sectionKeyword && categoryKeyword && nameKeyword) {
+    return list.filter(function (el) {
+      return (
+        el.section.toLowerCase().includes(sectionKeyword.toLowerCase()) &&
+        el.dish.toLowerCase().includes(categoryKeyword.toLowerCase()) &&
+        el.dishType.toLowerCase().includes(nameKeyword.toLowerCase())
+      );
+    });
+  } else if (!sectionKeyword && categoryKeyword && nameKeyword) {
+    return list.filter(function (el) {
+      return (
+        el.dish.toLowerCase().includes(categoryKeyword.toLowerCase()) &&
+        el.dishType.toLowerCase().includes(nameKeyword.toLowerCase())
+      );
+    });
+  } else if (sectionKeyword && !categoryKeyword && nameKeyword) {
+    return list.filter(function (el) {
+      return (
+        el.section.toLowerCase().includes(sectionKeyword.toLowerCase()) &&
+        el.dishType.toLowerCase().includes(nameKeyword.toLowerCase())
+      );
+    });
+  } else if (sectionKeyword && categoryKeyword && !nameKeyword) {
+    return list.filter(function (el) {
+      return (
+        el.section.toLowerCase().includes(sectionKeyword.toLowerCase()) &&
+        el.dish.toLowerCase().includes(categoryKeyword.toLowerCase())
+      );
+    });
+  } else if (!sectionKeyword && !categoryKeyword && nameKeyword) {
+    return list.filter(function (el) {
+      return el.dishType.toLowerCase().includes(nameKeyword.toLowerCase());
+    });
+  } else if (!sectionKeyword && categoryKeyword && !nameKeyword) {
+    return list.filter(function (el) {
+      return el.dish.toLowerCase().includes(categoryKeyword.toLowerCase());
+    });
+  } else if (sectionKeyword && !categoryKeyword && !nameKeyword) {
+    return list.filter(function (el) {
+      return el.section.toLowerCase().includes(sectionKeyword.toLowerCase());
+    });
+  } else {
+    return list;
+  }
 };
