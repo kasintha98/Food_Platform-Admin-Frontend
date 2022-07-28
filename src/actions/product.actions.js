@@ -1,6 +1,15 @@
 import axios from "../helpers/axios";
 import { productConstants } from "./constants";
 
+const pizzaSort = [
+  "Taste of India",
+  "Simply Veg 2",
+  "Simply Veg 3",
+  "Simply Veg 1",
+  "Simply Veg",
+  "Combo",
+];
+
 export const getProductsNew = (restaurantId, storeId) => {
   return async (dispatch) => {
     try {
@@ -114,12 +123,16 @@ export const getDishesBySection = (section, restaurantId, storeId) => {
       });
 
       if (res.status === 200) {
+        const sorted = res.data.sort(
+          (a, b) => pizzaSort.indexOf(a) - pizzaSort.indexOf(b)
+        );
+
         dispatch({
           type: productConstants.GET_DISHES_BY_SECTION_SUCCESS,
-          payload: { res: res.data, section },
+          payload: { res: sorted, section },
         });
-        //console.log(res.data);
-        return res.data;
+        //console.log(sorted);
+        return sorted;
       } else {
         dispatch({
           type: productConstants.GET_DISHES_BY_SECTION_FAILURE,

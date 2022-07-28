@@ -23,11 +23,11 @@ const CusSelect = styled(Select)`
 `;
 
 const orderTypes = [
-  { name: "DINE-IN", code: "D" },
-  { name: "STORE TAKE-AWAY", code: "ST" },
-  { name: "STORE DELIVERY", code: "SD" },
-  { name: "PHONE SELF-COLLECT", code: "PT" },
-  { name: "PHONE DELIVERY", code: "PD" },
+  { name: "DINE-IN", code: "D", paymentStatus: "PAID" },
+  { name: "STORE TAKE-AWAY", code: "ST", paymentStatus: "PAID" },
+  { name: "STORE DELIVERY", code: "SD", paymentStatus: "PAID" },
+  { name: "PHONE SELF-COLLECT", code: "PT", paymentStatus: "Not Paid" },
+  { name: "PHONE DELIVERY", code: "PD", paymentStatus: "Not Paid" },
 ];
 
 export const DineIn = () => {
@@ -48,10 +48,9 @@ export const DineIn = () => {
   );
   const [ShowCheckout, setShowCheckout] = useState(false);
   const [selectedOrderType, setSelectedOrderType] = useState("DINE-IN");
-  const [selectedOrderTypeObj, setSelectedOrderTypeObj] = useState({
-    name: "DINE-IN",
-    code: "D",
-  });
+  const [selectedOrderTypeObj, setSelectedOrderTypeObj] = useState(
+    orderTypes[0]
+  );
 
   if (auth.authenticate !== true) {
     return <Redirect to={"/signin"} />;

@@ -50,11 +50,14 @@ const CusMenuItem = styled(MenuItem)``;
 
 export const DeliveryManagement = () => {
   const user = useSelector((state) => state.auth.user);
-  const orders = useSelector((state) => state.order.orders);
+  //const orders = useSelector((state) => state.order.orders);
   const stores = useSelector((state) => state.store.stores);
   const usersByRole = useSelector((state) => state.user.usersByRole);
   const loading = useSelector((state) => state.order.loading);
   const [currentOrder, setCurrentOrder] = useState(null);
+  const [deliveryOrders, setDeliveryOrders] = useState([]);
+  const [storeOrders, setStoreOrders] = useState([]);
+  const [phoneOrders, setPhoneOrders] = useState([]);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [keywords, setKeywords] = useState("");
   const [selectedDeliBoy, setSelectedDeliBoy] = useState("");
@@ -82,7 +85,43 @@ export const DeliveryManagement = () => {
         null,
         "DELIVERY"
       )
-    );
+    ).then((res) => {
+      if (res) {
+        setDeliveryOrders(res);
+      }
+    });
+
+    dispatch(
+      getCustomerOrders(
+        selectedStoreObj.restaurantId,
+        selectedStoreObj.storeId,
+        null,
+        `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,
+        null,
+        null,
+        "STORE DELIVERY"
+      )
+    ).then((res) => {
+      if (res) {
+        setStoreOrders(res);
+      }
+    });
+
+    dispatch(
+      getCustomerOrders(
+        selectedStoreObj.restaurantId,
+        selectedStoreObj.storeId,
+        null,
+        `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,
+        null,
+        null,
+        "PHONE DELIVERY"
+      )
+    ).then((res) => {
+      if (res) {
+        setPhoneOrders(res);
+      }
+    });
 
     dispatch(getUsersByRole("DELIVERY_BOY"));
   }, [isReset, selectedStoreObj]);
@@ -115,7 +154,43 @@ export const DeliveryManagement = () => {
         null,
         "DELIVERY"
       )
-    );
+    ).then((res) => {
+      if (res) {
+        setDeliveryOrders(res);
+      }
+    });
+
+    dispatch(
+      getCustomerOrders(
+        user.restaurantId,
+        user.storeId,
+        null,
+        `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,
+        keywords,
+        null,
+        "STORE DELIVERY"
+      )
+    ).then((res) => {
+      if (res) {
+        setStoreOrders(res);
+      }
+    });
+
+    dispatch(
+      getCustomerOrders(
+        user.restaurantId,
+        user.storeId,
+        null,
+        `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,
+        keywords,
+        null,
+        "PHONE DELIVERY"
+      )
+    ).then((res) => {
+      if (res) {
+        setPhoneOrders(res);
+      }
+    });
   };
 
   const resetSearch = () => {
@@ -265,9 +340,255 @@ export const DeliveryManagement = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {orders && orders.length > 0 ? (
+            {deliveryOrders && deliveryOrders.length > 0 ? (
               <>
-                {orders.map((row) => (
+                {deliveryOrders.map((row) => (
+                  <TableRow
+                    key={row.orderId}
+                    className={row.orderStatus === "DELIVERED" ? "gr" : ""}
+                  >
+                    <CusTableCell2
+                      align="center"
+                      onClick={() => {
+                        setCurrentOrder(row);
+                        handleShowDetailsModal();
+                      }}
+                      sx={{ cursor: "pointer" }}
+                    >
+                      {row.orderId.slice(0, 11)} <br></br>
+                      {row.orderId.slice(11, 19)}
+                      <span style={{ color: "#4472c4" }}>
+                        {row.orderId.slice(19, 23)}
+                      </span>
+                    </CusTableCell2>
+                    <CusTableCell2 align="center">
+                      {new Date(row.createdDate).getFullYear()}-
+                      {new Date(row.createdDate).getMonth() + 1}-
+                      {new Date(row.createdDate).getDate()}
+                    </CusTableCell2>
+                    <CusTableCell2 align="center">
+                      {row.orderSource}
+                    </CusTableCell2>
+                    <CusTableCell2 align="center">
+                      {row.mobileNumber}
+                    </CusTableCell2>
+                    <CusTableCell2 align="center">
+                      {row.paymentStatus}
+                    </CusTableCell2>
+                    <CusTableCell2 align="center">
+                      {row.paymentMode}
+                    </CusTableCell2>
+                    <CusTableCell2 align="center">
+                      {row.customerName}
+                    </CusTableCell2>
+                    <CusTableCell2 align="center">{row.address}</CusTableCell2>
+                    <CusTableCell2
+                      align="center"
+                      sx={{ paddingLeft: 0, paddingRight: 0 }}
+                    >
+                      Rs. {row.overallPriceWithTax}
+                    </CusTableCell2>
+                    {/* <CusTableCell2 align="center"         >
+                      <Button
+                        sx={{ fontSize: "0.75rem" }}
+                        fullWidth
+                        onClick={() => {
+                          setCurrentOrder(row);
+                          handleShowDetailsModal();
+                        }}
+                      >
+                        View details
+                      </Button>
+                    </CusTableCell2> */}
+                    <CusTableCell2 align="center">
+                      {row.orderStatus}
+                    </CusTableCell2>
+                    <CusTableCell2 align="center">
+                      {row.orderStatus === "DELIVERED" ? (
+                        <span>{row.deliveryUserId}</span>
+                      ) : (
+                        <Row>
+                          <Col className="m-0 p-0 col-12">
+                            <FormControl fullWidth>
+                              {/* <InputLabel
+                              id="demo-simple-select-label"
+                              sx={{ fontSize: "0.75rem" }}
+                            >
+                              Delivery Boy
+                            </InputLabel> */}
+                              <NativeSelect
+                                defaultValue={
+                                  row.deliveryUserId ? row.deliveryUserId : ""
+                                }
+                                inputProps={{
+                                  name: "status",
+                                  id: "uncontrolled-native",
+                                }}
+                                onChange={handleDeliveryBoyUpdate}
+                                sx={{ fontSize: "0.75rem" }}
+                              >
+                                <option
+                                  value=""
+                                  style={{ fontSize: "0.75rem" }}
+                                >
+                                  Select Delivery Boy
+                                </option>
+                                {usersByRole.map((user) => (
+                                  <option
+                                    key={user.userSeqNo}
+                                    value={user.firstName}
+                                    style={{ fontSize: "0.75rem" }}
+                                  >
+                                    {user.firstName}
+                                  </option>
+                                ))}
+                              </NativeSelect>
+                            </FormControl>
+                          </Col>
+                          <Col className="m-0 p-0 col-12">
+                            <Button
+                              variant="contained"
+                              color={row.deliveryUserId ? "primary" : "success"}
+                              fullWidth
+                              className="mt-2"
+                              sx={{ fontSize: "0.75rem" }}
+                              onClick={() => {
+                                onClickSelectDeliBoy(row.orderId);
+                              }}
+                            >
+                              Confirm
+                            </Button>
+                          </Col>
+                        </Row>
+                      )}
+                    </CusTableCell2>
+                  </TableRow>
+                ))}
+
+                {storeOrders.map((row) => (
+                  <TableRow
+                    key={row.orderId}
+                    className={row.orderStatus === "DELIVERED" ? "gr" : ""}
+                  >
+                    <CusTableCell2
+                      align="center"
+                      onClick={() => {
+                        setCurrentOrder(row);
+                        handleShowDetailsModal();
+                      }}
+                      sx={{ cursor: "pointer" }}
+                    >
+                      {row.orderId.slice(0, 11)} <br></br>
+                      {row.orderId.slice(11, 19)}
+                      <span style={{ color: "#4472c4" }}>
+                        {row.orderId.slice(19, 23)}
+                      </span>
+                    </CusTableCell2>
+                    <CusTableCell2 align="center">
+                      {new Date(row.createdDate).getFullYear()}-
+                      {new Date(row.createdDate).getMonth() + 1}-
+                      {new Date(row.createdDate).getDate()}
+                    </CusTableCell2>
+                    <CusTableCell2 align="center">
+                      {row.orderSource}
+                    </CusTableCell2>
+                    <CusTableCell2 align="center">
+                      {row.mobileNumber}
+                    </CusTableCell2>
+                    <CusTableCell2 align="center">
+                      {row.paymentStatus}
+                    </CusTableCell2>
+                    <CusTableCell2 align="center">
+                      {row.paymentMode}
+                    </CusTableCell2>
+                    <CusTableCell2 align="center">
+                      {row.customerName}
+                    </CusTableCell2>
+                    <CusTableCell2 align="center">{row.address}</CusTableCell2>
+                    <CusTableCell2
+                      align="center"
+                      sx={{ paddingLeft: 0, paddingRight: 0 }}
+                    >
+                      Rs. {row.overallPriceWithTax}
+                    </CusTableCell2>
+                    {/* <CusTableCell2 align="center"         >
+                      <Button
+                        sx={{ fontSize: "0.75rem" }}
+                        fullWidth
+                        onClick={() => {
+                          setCurrentOrder(row);
+                          handleShowDetailsModal();
+                        }}
+                      >
+                        View details
+                      </Button>
+                    </CusTableCell2> */}
+                    <CusTableCell2 align="center">
+                      {row.orderStatus}
+                    </CusTableCell2>
+                    <CusTableCell2 align="center">
+                      {row.orderStatus === "DELIVERED" ? (
+                        <span>{row.deliveryUserId}</span>
+                      ) : (
+                        <Row>
+                          <Col className="m-0 p-0 col-12">
+                            <FormControl fullWidth>
+                              {/* <InputLabel
+                              id="demo-simple-select-label"
+                              sx={{ fontSize: "0.75rem" }}
+                            >
+                              Delivery Boy
+                            </InputLabel> */}
+                              <NativeSelect
+                                defaultValue={
+                                  row.deliveryUserId ? row.deliveryUserId : ""
+                                }
+                                inputProps={{
+                                  name: "status",
+                                  id: "uncontrolled-native",
+                                }}
+                                onChange={handleDeliveryBoyUpdate}
+                                sx={{ fontSize: "0.75rem" }}
+                              >
+                                <option
+                                  value=""
+                                  style={{ fontSize: "0.75rem" }}
+                                >
+                                  Select Delivery Boy
+                                </option>
+                                {usersByRole.map((user) => (
+                                  <option
+                                    key={user.userSeqNo}
+                                    value={user.firstName}
+                                    style={{ fontSize: "0.75rem" }}
+                                  >
+                                    {user.firstName}
+                                  </option>
+                                ))}
+                              </NativeSelect>
+                            </FormControl>
+                          </Col>
+                          <Col className="m-0 p-0 col-12">
+                            <Button
+                              variant="contained"
+                              color={row.deliveryUserId ? "primary" : "success"}
+                              fullWidth
+                              className="mt-2"
+                              sx={{ fontSize: "0.75rem" }}
+                              onClick={() => {
+                                onClickSelectDeliBoy(row.orderId);
+                              }}
+                            >
+                              Confirm
+                            </Button>
+                          </Col>
+                        </Row>
+                      )}
+                    </CusTableCell2>
+                  </TableRow>
+                ))}
+
+                {phoneOrders.map((row) => (
                   <TableRow
                     key={row.orderId}
                     className={row.orderStatus === "DELIVERED" ? "gr" : ""}

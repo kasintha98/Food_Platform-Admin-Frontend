@@ -308,7 +308,7 @@ export default function NewCheckout(props) {
         orderStatus: "SUBMITTED",
         taxRuleId: 1,
         totalPrice: total,
-        paymentStatus: "PAID",
+        paymentStatus: props.selectedOrderTypeObj.paymentStatus,
         paymentMode: currentPaymentType,
         deliveryCharges: 0,
         customerAddressId: defaultAddress ? 99999 : currentGetAddress.id,
