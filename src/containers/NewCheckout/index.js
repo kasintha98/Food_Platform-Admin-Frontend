@@ -123,6 +123,7 @@ export default function NewCheckout(props) {
   const [zipCode, setZipCode] = useState("");
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
+  const [referenceNo, setReferenceNo] = useState("");
   const [defaultAddress, setDefaultAddress] = useState(false);
   const [currentGetAddress, setCurrentGetAddress] = useState(null);
   const [currentCustomer, setCurrentCustomer] = useState(null);
@@ -297,12 +298,12 @@ export default function NewCheckout(props) {
         restaurantId: props.restaurantId,
         storeId: props.storeId,
         //orderSource: "W",
-        orderSource: "D",
+        orderSource: props.selectedOrderTypeObj.code,
         //customerId: 106,
         customerId: currentCustomer ? currentCustomer.id : 99999,
         orderReceivedDateTime: new Date(),
         //orderDeliveryType: "SELF-COLLECT",
-        orderDeliveryType: "DINE_IN",
+        orderDeliveryType: props.selectedOrderTypeObj.name,
         storeTableId: tableNo,
         orderStatus: "SUBMITTED",
         taxRuleId: 1,
@@ -316,6 +317,7 @@ export default function NewCheckout(props) {
         overallPriceWithTax: overallPriceWithTax,
         orderDetails: orderDetails,
         createdBy: user.firstName,
+        paymentTxnReference: referenceNo,
       };
 
       console.log(NewOrder);
@@ -1274,23 +1276,38 @@ export default function NewCheckout(props) {
                     phoneNo &&
                     (defaultAddress ||
                       (address1 && zipCode && city && state && addressType)) ? (
-                      <Card className="p-3" sx={{ minHeight: "468px" }}>
-                        <Row>
-                          <Col>
-                            <p>You selected {currentPaymentType}!</p>
-                          </Col>
-                          <Col>
-                            <Button
-                              onClick={resetPaymentMethod}
-                              variant="contained"
-                              color="warning"
-                              sx={{ width: "100%", height: "100%" }}
-                            >
-                              Reset
-                            </Button>
-                          </Col>
-                        </Row>
-                      </Card>
+                      <>
+                        {" "}
+                        <Card className="p-3" sx={{ minHeight: "468px" }}>
+                          <Row>
+                            <Col>
+                              <p>You selected {currentPaymentType}!</p>
+                            </Col>
+                            <Col>
+                              <Button
+                                onClick={resetPaymentMethod}
+                                variant="contained"
+                                color="warning"
+                                sx={{ width: "100%", height: "100%" }}
+                              >
+                                Reset
+                              </Button>
+                            </Col>
+                          </Row>
+                        </Card>
+                        <div
+                          style={{ position: "relative", bottom: "50px" }}
+                          className="text-center"
+                        >
+                          <CusTextField
+                            label="Payment Reference No#"
+                            value={referenceNo}
+                            onChange={(event) => {
+                              setReferenceNo(event.target.value);
+                            }}
+                          />
+                        </div>
+                      </>
                     ) : null}
                   </Grid>
                 </Col>
