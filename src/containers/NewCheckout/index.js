@@ -1142,23 +1142,7 @@ export default function NewCheckout(props) {
                                     fontFamily: "Arial",
                                   }}
                                 >
-                                  Cash
-                                </Typography>
-                              }
-                            />
-                            <FormControlLabel
-                              value="GooglePay"
-                              control={<Radio color="success" />}
-                              label={
-                                <Typography
-                                  sx={{
-                                    color: "#595959",
-                                    fontSize: "0.9rem",
-                                    fontWeight: "600",
-                                    fontFamily: "Arial",
-                                  }}
-                                >
-                                  GooglePay
+                                  CASH
                                 </Typography>
                               }
                             />
@@ -1179,7 +1163,7 @@ export default function NewCheckout(props) {
                               }
                             />
                             <FormControlLabel
-                              value="Credit Card"
+                              value="EDC"
                               control={<Radio color="success" />}
                               label={
                                 <Typography
@@ -1190,12 +1174,12 @@ export default function NewCheckout(props) {
                                     fontFamily: "Arial",
                                   }}
                                 >
-                                  Credit Card
+                                  Credit / Debit
                                 </Typography>
                               }
                             />
                             <FormControlLabel
-                              value="Debit Card"
+                              value="Gpay"
                               control={<Radio color="success" />}
                               label={
                                 <Typography
@@ -1206,10 +1190,11 @@ export default function NewCheckout(props) {
                                     fontFamily: "Arial",
                                   }}
                                 >
-                                  Debit Card
+                                  Google Pay
                                 </Typography>
                               }
                             />
+
                             <FormControlLabel
                               value="PhonePe"
                               control={<Radio color="success" />}
@@ -1227,7 +1212,7 @@ export default function NewCheckout(props) {
                               }
                             />
                             <FormControlLabel
-                              value="Amazon Pay"
+                              value="AmznPay"
                               control={<Radio color="success" />}
                               label={
                                 <Typography

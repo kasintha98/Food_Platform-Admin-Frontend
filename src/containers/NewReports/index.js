@@ -24,6 +24,7 @@ import "./style.css";
 import { OrderReportTable } from "../../components/OrderReportTable";
 import { SalesByDishReportTable } from "../../components/SalesByDishReportTable";
 import { MenuReport } from "../../components/MenuReport";
+import { CashSalesReport } from "../../components/CashSalesReport";
 
 const CusDDT = styled(Dropdown.Toggle)`
   font-weight: 500;
@@ -66,7 +67,12 @@ const NumberDiv = styled.div`
   padding: 10px;
 `;
 
-const reportTypes = ["Order Report", "Sales By Dish Item", "Menu Report"];
+const reportTypes = [
+  "Order Report",
+  "Sales By Dish Item",
+  "Menu Report",
+  "Cash Sales Report",
+];
 
 export const NewReports = () => {
   const allReports = useSelector((state) => state.report.allReports);
@@ -273,6 +279,15 @@ export const NewReports = () => {
               storeId={selectedStoreObj.storeId}
               restaurantId={selectedStoreObj.restaurantId}
             ></MenuReport>
+          )}
+
+          {selectedReport === "Cash Sales Report" && (
+            <CashSalesReport
+              startDate={dateState[0].startDate}
+              endDate={dateState[0].endDate}
+              storeId={selectedStoreObj.storeId}
+              restaurantId={selectedStoreObj.restaurantId}
+            ></CashSalesReport>
           )}
         </div>
       </div>

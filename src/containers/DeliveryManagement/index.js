@@ -46,6 +46,12 @@ const CusTableCell2 = styled(TableCell)`
   font-size: 0.75rem;
 `;
 
+const CusTableCell3 = styled(TableCell)`
+  font-size: 0.75rem;
+  max-width: 120px;
+  word-wrap: break-word;
+`;
+
 const CusMenuItem = styled(MenuItem)``;
 
 export const DeliveryManagement = () => {
@@ -340,14 +346,16 @@ export const DeliveryManagement = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {deliveryOrders && deliveryOrders.length > 0 ? (
+            {(deliveryOrders && deliveryOrders.length > 0) ||
+            storeOrders.length > 0 ||
+            phoneOrders.length > 0 ? (
               <>
                 {deliveryOrders.map((row) => (
                   <TableRow
                     key={row.orderId}
                     className={row.orderStatus === "DELIVERED" ? "gr" : ""}
                   >
-                    <CusTableCell2
+                    <CusTableCell3
                       align="center"
                       onClick={() => {
                         setCurrentOrder(row);
@@ -355,12 +363,11 @@ export const DeliveryManagement = () => {
                       }}
                       sx={{ cursor: "pointer" }}
                     >
-                      {row.orderId.slice(0, 11)} <br></br>
-                      {row.orderId.slice(11, 19)}
+                      {row.orderId.substr(0, row.orderId.length - 3)}
                       <span style={{ color: "#4472c4" }}>
-                        {row.orderId.slice(19, 23)}
+                        {row.orderId.substr(row.orderId.length - 3)}
                       </span>
-                    </CusTableCell2>
+                    </CusTableCell3>
                     <CusTableCell2 align="center">
                       {new Date(row.createdDate).getFullYear()}-
                       {new Date(row.createdDate).getMonth() + 1}-
@@ -470,7 +477,7 @@ export const DeliveryManagement = () => {
                     key={row.orderId}
                     className={row.orderStatus === "DELIVERED" ? "gr" : ""}
                   >
-                    <CusTableCell2
+                    <CusTableCell3
                       align="center"
                       onClick={() => {
                         setCurrentOrder(row);
@@ -478,12 +485,11 @@ export const DeliveryManagement = () => {
                       }}
                       sx={{ cursor: "pointer" }}
                     >
-                      {row.orderId.slice(0, 11)} <br></br>
-                      {row.orderId.slice(11, 19)}
+                      {row.orderId.substr(0, row.orderId.length - 3)}
                       <span style={{ color: "#4472c4" }}>
-                        {row.orderId.slice(19, 23)}
+                        {row.orderId.substr(row.orderId.length - 3)}
                       </span>
-                    </CusTableCell2>
+                    </CusTableCell3>
                     <CusTableCell2 align="center">
                       {new Date(row.createdDate).getFullYear()}-
                       {new Date(row.createdDate).getMonth() + 1}-
@@ -593,7 +599,7 @@ export const DeliveryManagement = () => {
                     key={row.orderId}
                     className={row.orderStatus === "DELIVERED" ? "gr" : ""}
                   >
-                    <CusTableCell2
+                    <CusTableCell3
                       align="center"
                       onClick={() => {
                         setCurrentOrder(row);
@@ -601,12 +607,11 @@ export const DeliveryManagement = () => {
                       }}
                       sx={{ cursor: "pointer" }}
                     >
-                      {row.orderId.slice(0, 11)} <br></br>
-                      {row.orderId.slice(11, 19)}
+                      {row.orderId.substr(0, row.orderId.length - 3)}
                       <span style={{ color: "#4472c4" }}>
-                        {row.orderId.slice(19, 23)}
+                        {row.orderId.substr(row.orderId.length - 3)}
                       </span>
-                    </CusTableCell2>
+                    </CusTableCell3>
                     <CusTableCell2 align="center">
                       {new Date(row.createdDate).getFullYear()}-
                       {new Date(row.createdDate).getMonth() + 1}-
