@@ -45,16 +45,25 @@ export const OrderReportTable = (props) => {
   const refH = useRef(null);
 
   useEffect(() => {
-    const today = new Date();
+    //const today = new Date();
     dispatch(
       getCustomerOrders(
         props.restaurantId,
         props.storeId,
         null,
-        `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
+        `${props.endDate.getFullYear()}-${
+          props.endDate.getMonth() + 1
+        }-${props.endDate.getDate()}`,
+        null,
+        null,
+        null,
+        null,
+        `${props.startDate.getFullYear()}-${
+          props.startDate.getMonth() + 1
+        }-${props.startDate.getDate()}`
       )
     );
-  }, [props.restaurantId, props.storeId]);
+  }, [props.restaurantId, props.storeId, props.endDate, props.startDate]);
 
   useEffect(() => {
     if (refH.current) {
