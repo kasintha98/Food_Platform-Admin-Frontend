@@ -6,6 +6,7 @@ import {
   getAllSections,
   getAllSectionsWithDishes,
   getProductsNewWithPaging,
+  updateMenuItem,
 } from "../../actions";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
@@ -159,7 +160,7 @@ export const MenuMaster = () => {
   const [currentSpice, setCurrentSpice] = useState("");
   const [currentDishType, setCurrentDishType] = useState({});
   const [currentDishDesc, setCurrentDishDesc] = useState({});
-  const [currentImageName, setCurrentImageName] = useState({});
+  //const [currentImageName, setCurrentImageName] = useState({});
   const [currentPrice, setCurrentPrice] = useState({});
   const [currentMenuFlag, setCurrentMenuFlag] = useState("");
   const [currentIngredientFlag, setCurrentIngredientFlag] = useState("");
@@ -324,6 +325,40 @@ export const MenuMaster = () => {
   const onSaveClickHandle = (id) => {
     let edits = { ...isSave, [id]: false };
     setIsSave(edits);
+  };
+
+  const saveUpdateProduct = (product) => {
+    const newProduct = {
+      ...product,
+      section: currentSection ? currentSection : product.section,
+      dish: currentDish ? currentDish : product.dish,
+      dishCategory: currentVeg ? currentVeg : product.dishCategory,
+      dishSpiceIndicatory: currentSpice
+        ? currentSpice
+        : product.dishSpiceIndicatory,
+      dishType: currentDishType[product.id]
+        ? currentDishType[product.id]
+        : product.dishType,
+      dishDescriptionId: currentDishDesc[product.id]
+        ? currentDishDesc[product.id]
+        : product.dishDescriptionId,
+      productSize: currentSize ? currentSize : product.productSize,
+      price: currentPrice[product.id]
+        ? currentPrice[product.id]
+        : product.price,
+      imagePath: productImage[product.id]
+        ? productImage[product.id].name
+        : product.imagePath,
+      menuAvailableFlag: currentMenuFlag
+        ? currentMenuFlag
+        : product.menuAvailableFlag,
+      ingredientExistsFalg: currentIngredientFlag
+        ? currentIngredientFlag
+        : product.ingredientExistsFalg,
+    };
+
+    dispatch(updateMenuItem(newProduct));
+    console.log(newProduct);
   };
 
   return (
@@ -1023,6 +1058,7 @@ export const MenuMaster = () => {
                                 }}
                                 onClick={() => {
                                   onSaveClickHandle(product.id);
+                                  saveUpdateProduct(product);
                                 }}
                               >
                                 Save

@@ -1,5 +1,6 @@
 import axios from "../helpers/axios";
 import { productConstants } from "./constants";
+import { toast } from "react-toastify";
 
 const pizzaSort = [
   "Taste of India",
@@ -362,6 +363,72 @@ export const getAllMenuIngredientsByRestoAndStoreIdWithPaging = (
       dispatch({
         type: productConstants.GET_ALL_MENU_INGREDIENTS_PAGE_FAILURE,
       });
+      console.log(error);
+    }
+  };
+};
+
+export const updateMenuItem = (product) => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: productConstants.UPDATE_MENU_ITEM_REQUEST,
+      });
+
+      const res = await axios.post(`/saveMenuItem`, product);
+
+      if (res.status === 200) {
+        dispatch({
+          type: productConstants.UPDATE_MENU_ITEM_SUCCESS,
+          payload: res.data,
+        });
+        toast.success("Menu item updated successfully!");
+        return res.data;
+      } else {
+        dispatch({
+          type: productConstants.UPDATE_MENU_ITEM_FAILURE,
+        });
+        console.log("error");
+        toast.error("Error when updating menu item, please try again!");
+      }
+    } catch (error) {
+      dispatch({
+        type: productConstants.UPDATE_MENU_ITEM_FAILURE,
+      });
+      toast.error("Error when updating menu item, please try again!");
+      console.log(error);
+    }
+  };
+};
+
+export const updateMenuIngredient = (topping) => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: productConstants.UPDATE_MENU_INGREDIENT_REQUEST,
+      });
+
+      const res = await axios.post(`/saveMenuIngredient`, topping);
+
+      if (res.status === 200) {
+        dispatch({
+          type: productConstants.UPDATE_MENU_INGREDIENT_SUCCESS,
+          payload: res.data,
+        });
+        toast.success("Menu ingredient updated successfully!");
+        return res.data;
+      } else {
+        dispatch({
+          type: productConstants.UPDATE_MENU_INGREDIENT_FAILURE,
+        });
+        console.log("error");
+        toast.error("Error when updating menu ingredient, please try again!");
+      }
+    } catch (error) {
+      dispatch({
+        type: productConstants.UPDATE_MENU_INGREDIENT_FAILURE,
+      });
+      toast.error("Error when updating menu ingredient, please try again!");
       console.log(error);
     }
   };

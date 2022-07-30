@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import {
   getAllMenuIngredientsByRestoAndStoreId,
   getAllMenuIngredientsByRestoAndStoreIdWithPaging,
+  updateMenuIngredient,
 } from "../../actions";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
@@ -101,6 +102,7 @@ export const ToppingMaster = () => {
   const [currentPrice, setCurrentPrice] = useState({});
   const [page, setPage] = useState(1);
   const [ToppingssOfPage, setToppingssOfPage] = useState([]);
+  const [isSave, setIsSave] = useState({});
 
   const dispatch = useDispatch();
 
@@ -157,6 +159,32 @@ export const ToppingMaster = () => {
 
   const handlePage = (event, value) => {
     setPage(value);
+  };
+
+  const onEditClickHandle = (id) => {
+    let edits = { ...isSave, [id]: true };
+    setIsSave(edits);
+  };
+
+  const onSaveClickHandle = (id) => {
+    let edits = { ...isSave, [id]: false };
+    setIsSave(edits);
+  };
+
+  const saveUpdateTopping = (topping) => {
+    const newTopping = {
+      ...topping,
+      ingredientType: currentToppingName[topping.id]
+        ? currentToppingName[topping.id]
+        : topping.ingredientType,
+      price: currentPrice[topping.id]
+        ? currentPrice[topping.id]
+        : topping.price,
+      category: currentToppingType ? currentToppingType : topping.category,
+      size: currentSize ? currentSize : topping.size,
+    };
+    console.log(newTopping);
+    dispatch(updateMenuIngredient(newTopping));
   };
 
   return (
@@ -260,6 +288,7 @@ export const ToppingMaster = () => {
                                 }}
                                 onChange={handleRestaurentUpdate}
                                 sx={{ fontSize: "0.75rem" }}
+                                disabled={true}
                               >
                                 {stores.map((store, index) => (
                                   <option
@@ -286,6 +315,7 @@ export const ToppingMaster = () => {
                                 }}
                                 onChange={handleToppingTypeUpdate}
                                 sx={{ fontSize: "0.75rem" }}
+                                disabled={!isSave[item.id]}
                               >
                                 <option
                                   value={"Topping"}
@@ -316,6 +346,7 @@ export const ToppingMaster = () => {
                               }}
                               fullWidth
                               variant="standard"
+                              disabled={!isSave[item.id]}
                             />
                           </CusTableCell>
                           <CusTableCell align="center">
@@ -328,6 +359,7 @@ export const ToppingMaster = () => {
                               }}
                               onChange={handleSizeUpdate}
                               sx={{ fontSize: "0.75rem" }}
+                              disabled={!isSave[item.id]}
                             >
                               <option
                                 value={"Regular"}
@@ -369,6 +401,7 @@ export const ToppingMaster = () => {
                               }}
                               fullWidth
                               variant="standard"
+                              disabled={!isSave[item.id]}
                             />
                           </CusTableCell>
                           {/* <CusTableCell align="center">
@@ -398,18 +431,40 @@ export const ToppingMaster = () => {
                             </NativeSelect>
                           </CusTableCell> */}
                           <CusTableCell align="center">
-                            <Button
-                              variant="contained"
-                              color="success"
-                              sx={{
-                                fontSize: "0.75rem",
-                                lineHeight: "1rem",
-                                padding: "5px 16px",
-                              }}
-                            >
-                              {" "}
-                              SAVE
-                            </Button>
+                            {isSave[item.id] ? (
+                              <Button
+                                key={item.id}
+                                variant="contained"
+                                color="success"
+                                sx={{
+                                  fontSize: "0.75rem",
+                                  lineHeight: "1rem",
+                                  padding: "5px 16px",
+                                }}
+                                onClick={() => {
+                                  onSaveClickHandle(item.id);
+                                  saveUpdateTopping(item);
+                                }}
+                              >
+                                Save
+                              </Button>
+                            ) : (
+                              <Button
+                                key={item.id}
+                                variant="contained"
+                                color="warning"
+                                sx={{
+                                  fontSize: "0.75rem",
+                                  lineHeight: "1rem",
+                                  padding: "5px 16px",
+                                }}
+                                onClick={() => {
+                                  onEditClickHandle(item.id);
+                                }}
+                              >
+                                EDIT
+                              </Button>
+                            )}
                           </CusTableCell>
                         </TableRow>
                       ))}
