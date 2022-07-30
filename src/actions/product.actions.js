@@ -434,6 +434,39 @@ export const updateMenuIngredient = (topping) => {
   };
 };
 
+export const saveMenuItem = (product) => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: productConstants.ADD_MENU_ITEM_REQUEST,
+      });
+
+      const res = await axios.post(`/saveMenuItem`, product);
+
+      if (res.status === 200) {
+        dispatch({
+          type: productConstants.ADD_MENU_ITEM_SUCCESS,
+          payload: res.data,
+        });
+        toast.success("Menu item added successfully!");
+        return res.data;
+      } else {
+        dispatch({
+          type: productConstants.ADD_MENU_ITEM_FAILURE,
+        });
+        console.log("error");
+        toast.error("Error when adding menu item, please try again!");
+      }
+    } catch (error) {
+      dispatch({
+        type: productConstants.ADD_MENU_ITEM_FAILURE,
+      });
+      toast.error("Error when adding menu item, please try again!");
+      console.log(error);
+    }
+  };
+};
+
 const filterSearch = (list, sectionKeyword, categoryKeyword, nameKeyword) => {
   console.log(list, sectionKeyword, categoryKeyword, nameKeyword);
   if (sectionKeyword && categoryKeyword && nameKeyword) {

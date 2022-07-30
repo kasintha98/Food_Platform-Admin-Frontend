@@ -10,7 +10,7 @@ import {
 } from "../../actions";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
-import { Row, Col, Form } from "react-bootstrap";
+import { Row, Col, Form, Modal } from "react-bootstrap";
 import Select from "@mui/material/Select";
 import styled from "@emotion/styled";
 import MenuItem from "@mui/material/MenuItem";
@@ -174,6 +174,7 @@ export const MenuMaster = () => {
   const [nameKeyword, setNameKeyword] = useState("");
   const [firstProductList, setFirstProductList] = useState([]);
   const [isSearched, setIsSearched] = useState(false);
+  const [showAdd, setShowAdd] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -248,6 +249,9 @@ export const MenuMaster = () => {
       }
     }
   }, [page, selectedStoreObj, sectionKeyword, categoryKeyword, nameKeyword]);
+
+  const handleCloseAdd = () => setShowAdd(false);
+  const handleShowAdd = () => setShowAdd(true);
 
   const handleChangeStore = (event) => {
     setSelectedStore(event.target.value);
@@ -361,6 +365,33 @@ export const MenuMaster = () => {
     console.log(newProduct);
   };
 
+  const renderAddModal = () => {
+    return (
+      <Modal
+        show={showAdd}
+        onHide={handleCloseAdd}
+        style={{
+          marginTop: "65px",
+          zIndex: 1100,
+          paddingBottom: "60px",
+        }}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>ADD NEW DISH</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseAdd}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleCloseAdd}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  };
+
   return (
     <div>
       <Row className="align-items-center">
@@ -407,6 +438,7 @@ export const MenuMaster = () => {
             }}
             variant="contained"
             color="success"
+            onClick={handleShowAdd}
           >
             ADD NEW DISH
           </Button>
@@ -1113,6 +1145,7 @@ export const MenuMaster = () => {
           />
         </div>
       ) : null}
+      {renderAddModal()}
     </div>
   );
 };

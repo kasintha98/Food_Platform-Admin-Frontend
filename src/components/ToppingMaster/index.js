@@ -12,7 +12,7 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { Row, Col } from "react-bootstrap";
+import { Row, Col, Modal } from "react-bootstrap";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import styled from "@emotion/styled";
@@ -103,6 +103,7 @@ export const ToppingMaster = () => {
   const [page, setPage] = useState(1);
   const [ToppingssOfPage, setToppingssOfPage] = useState([]);
   const [isSave, setIsSave] = useState({});
+  const [showAdd, setShowAdd] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -132,6 +133,9 @@ export const ToppingMaster = () => {
       });
     }
   }, [page, selectedStoreObj]);
+
+  const handleCloseAdd = () => setShowAdd(false);
+  const handleShowAdd = () => setShowAdd(true);
 
   const handleChangeStore = (event) => {
     setSelectedStore(event.target.value);
@@ -187,6 +191,33 @@ export const ToppingMaster = () => {
     dispatch(updateMenuIngredient(newTopping));
   };
 
+  const renderAddModal = () => {
+    return (
+      <Modal
+        show={showAdd}
+        onHide={handleCloseAdd}
+        style={{
+          marginTop: "65px",
+          zIndex: 1100,
+          paddingBottom: "60px",
+        }}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>ADD NEW TOPPING</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseAdd}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleCloseAdd}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  };
+
   return (
     <div>
       <Row className="align-items-center justify-content-center">
@@ -229,12 +260,13 @@ export const ToppingMaster = () => {
               fontSize: "0.75rem",
               lineHeight: "1rem",
               padding: "5px 16px",
-              minWidth: "120px",
+              minWidth: "160px",
             }}
+            onClick={handleShowAdd}
             variant="contained"
             color="success"
           >
-            ADD NEW DISH
+            ADD NEW TOPPING
           </Button>
         </Col>
       </Row>
@@ -494,11 +526,7 @@ export const ToppingMaster = () => {
           />
         </div>
       ) : null}
-      <div className="mt-3 text-center">
-        <Button variant="contained" color="success">
-          ADD NEW TOPPING
-        </Button>
-      </div>
+      {renderAddModal()}
     </div>
   );
 };
