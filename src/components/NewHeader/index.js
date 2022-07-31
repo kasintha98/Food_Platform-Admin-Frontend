@@ -160,6 +160,9 @@ export const NewHeader = (props) => {
                   <NavLink exact to={"/inventory"}>
                     Inventory Mgmt
                   </NavLink>
+                  <NavLink exact to={"/coupons"}>
+                    Coupon Code
+                  </NavLink>
                 </CusDropdownButton>
               </li>
             )}

@@ -32,6 +32,7 @@ import { InvoiceTable } from "../../components/InvoiceTable";
 import Pdf from "react-to-pdf";
 import { toast } from "react-toastify";
 import "react-phone-number-input/style.css";
+import ReactToPrint from "react-to-print";
 
 const CusContainer = styled(Container)`
   margin-top: 50px;
@@ -124,6 +125,7 @@ export default function NewCheckout(props) {
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
   const [referenceNo, setReferenceNo] = useState("");
+  const [couponCode, setCouponCode] = useState("");
   const [defaultAddress, setDefaultAddress] = useState(false);
   const [currentGetAddress, setCurrentGetAddress] = useState(null);
   const [currentCustomer, setCurrentCustomer] = useState(null);
@@ -627,14 +629,19 @@ export default function NewCheckout(props) {
         <Modal.Footer>
           <Row className="w-100">
             <Col className="col-6">
-              <Button
-                color="secondary"
-                onClick={handleCloseInvoice}
-                className="w-100"
-                variant="contained"
-              >
-                Close
-              </Button>
+              <ReactToPrint
+                trigger={() => (
+                  <Button
+                    color="secondary"
+                    //onClick={handleCloseInvoice}
+                    className="w-100"
+                    variant="contained"
+                  >
+                    Print
+                  </Button>
+                )}
+                content={() => ref.current}
+              />
             </Col>
             <Col className="col-6">
               <Pdf
@@ -849,6 +856,32 @@ export default function NewCheckout(props) {
                         </Row>
                       </Typography>
                     ) : null}
+
+                    <Row className="mt-5">
+                      <Col sm={7}>
+                        <CusTextField
+                          label="Coupon Code"
+                          value={couponCode}
+                          onChange={(event) => {
+                            setCouponCode(event.target.value);
+                          }}
+                          fullWidth
+                        />
+                      </Col>
+                      <Col sm={5}>
+                        <Button
+                          variant="contained"
+                          color="success"
+                          sx={{
+                            fontSize: "0.75rem",
+                            lineHeight: "1rem",
+                            padding: "5px 16px",
+                          }}
+                        >
+                          APPLY
+                        </Button>
+                      </Col>
+                    </Row>
                   </CardContent>
                 </Card>
               </div>

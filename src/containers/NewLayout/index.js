@@ -189,6 +189,17 @@ function NewLayout(props) {
             </NavLink>
           </ListItem>
         )}
+
+        {modulesForUser.some(
+          (module) => module.moduleName === "ADMIN FUNCTIONS"
+        ) && (
+          <ListItem>
+            <NavLink to={"/coupons"}>
+              <i className="fa fa-address-card"></i>
+              &nbsp; Coupon Code
+            </NavLink>
+          </ListItem>
+        )}
       </List>
     </div>
   );
