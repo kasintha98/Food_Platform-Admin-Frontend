@@ -663,7 +663,15 @@ export default function NewCheckout(props) {
 
   const renderPayUModal = () => {
     return (
-      <Modal show={show} onHide={handleClose}>
+      <Modal
+        show={show}
+        onHide={handleClose}
+        style={{
+          marginTop: "65px",
+          zIndex: 1100,
+          paddingBottom: "60px",
+        }}
+      >
         <Modal.Header closeButton>
           <Modal.Title> Secure Form Example</Modal.Title>
         </Modal.Header>

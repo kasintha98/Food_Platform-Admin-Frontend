@@ -328,7 +328,15 @@ export default function ProductCard(props) {
 
   const renderPictureModal = () => {
     return (
-      <Modal show={showPictureModal} onHide={handleClosePictureModal}>
+      <Modal
+        show={showPictureModal}
+        onHide={handleClosePictureModal}
+        style={{
+          marginTop: "65px",
+          zIndex: 1100,
+          paddingBottom: "60px",
+        }}
+      >
         <Modal.Header closeButton>
           <Modal.Title>{imageName}</Modal.Title>
         </Modal.Header>

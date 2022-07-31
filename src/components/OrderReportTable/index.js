@@ -119,7 +119,11 @@ export const OrderReportTable = (props) => {
       <Modal
         show={showInvoice}
         onHide={handleCloseInvoice}
-        style={{ marginTop: "40px" }}
+        style={{
+          marginTop: "65px",
+          zIndex: 1100,
+          paddingBottom: "60px",
+        }}
       >
         <Modal.Header closeButton>
           <Modal.Title>

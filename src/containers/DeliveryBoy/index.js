@@ -213,7 +213,11 @@ export const DeliveryBoy = () => {
         show={showDetailsModal}
         onHide={handleCloseDetailsModal}
         close
-        style={{ marginTop: "60px" }}
+        style={{
+          marginTop: "65px",
+          zIndex: 1100,
+          paddingBottom: "60px",
+        }}
       >
         <Modal.Header closeButton>
           <Modal.Title>OrderDetails</Modal.Title>

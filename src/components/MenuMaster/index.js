@@ -7,6 +7,7 @@ import {
   getAllSectionsWithDishes,
   getProductsNewWithPaging,
   updateMenuItem,
+  saveMenuItem,
 } from "../../actions";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
@@ -175,6 +176,20 @@ export const MenuMaster = () => {
   const [firstProductList, setFirstProductList] = useState([]);
   const [isSearched, setIsSearched] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
+  const [newSection, setNewSection] = useState("");
+  const [newDish, setNewDish] = useState("");
+  const [newVeg, setNewVeg] = useState("");
+  const [newSpice, setNewSpice] = useState("");
+  const [newDishType, setNewDishType] = useState("");
+  const [newDishDesc, setNewDishDesc] = useState("");
+  const [newPrice, setNewPrice] = useState("");
+  const [newMenuFlag, setNewMenuFlag] = useState("");
+  const [newIngredientFlag, setNewIngredientFlag] = useState("");
+  const [newSize, setNewSize] = useState("");
+  const [newProductImage, setNewProductImage] = useState("");
+  const [newCommonImage, setNewCommonImage] = useState("");
+  const [newSelectedStore, setNewSelectedStore] = useState(null);
+  const [newSelectedStoreObj, setNewSelectedStoreObj] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -200,6 +215,24 @@ export const MenuMaster = () => {
       );
     }
   }, [selectedStoreObj]);
+
+  useEffect(() => {
+    if (newSelectedStoreObj) {
+      dispatch(
+        getAllSections(
+          newSelectedStoreObj.restaurantId,
+          newSelectedStoreObj.storeId
+        )
+      );
+
+      dispatch(
+        getAllSectionsWithDishes(
+          newSelectedStoreObj.restaurantId,
+          newSelectedStoreObj.storeId
+        )
+      );
+    }
+  }, [newSelectedStoreObj]);
 
   useEffect(() => {
     console.log(sectionKeyword, categoryKeyword, nameKeyword);
@@ -259,6 +292,14 @@ export const MenuMaster = () => {
 
   const handleSelectedStore = (store) => {
     setSelectedStoreObj(store);
+  };
+
+  const handleChangeStoreNew = (event) => {
+    setNewSelectedStore(event.target.value);
+  };
+
+  const handleSelectedStoreNew = (store) => {
+    setNewSelectedStoreObj(store);
   };
 
   const handleRestaurentUpdate = (event) => {
@@ -321,6 +362,20 @@ export const MenuMaster = () => {
     console.log(images);
   };
 
+  const handleProductImageNew = (e) => {
+    if (e.target.files[0].size > 400000) {
+      toast.error("File is too big. Please enter a image under 400 kb!");
+      return;
+    }
+
+    if (e.target.files[0].type !== "image/jpeg") {
+      toast.error("Only JPG images are accepted!");
+      return;
+    }
+    setNewProductImage(e.target.files[0]);
+    console.log(e.target.files[0]);
+  };
+
   const onEditClickHandle = (id) => {
     let edits = { ...isSave, [id]: true };
     setIsSave(edits);
@@ -333,7 +388,10 @@ export const MenuMaster = () => {
 
   const saveUpdateProduct = (product) => {
     const newProduct = {
-      ...product,
+      id: product.id,
+      productId: product.productId,
+      restaruantId: product.restaruantId,
+      storeId: product.storeId,
       section: currentSection ? currentSection : product.section,
       dish: currentDish ? currentDish : product.dish,
       dishCategory: currentVeg ? currentVeg : product.dishCategory,
@@ -359,10 +417,36 @@ export const MenuMaster = () => {
       ingredientExistsFalg: currentIngredientFlag
         ? currentIngredientFlag
         : product.ingredientExistsFalg,
+      commonImage: product.commonImage,
     };
 
     dispatch(updateMenuItem(newProduct));
     console.log(newProduct);
+  };
+
+  const saveNewProduct = () => {
+    const newProduct = {
+      restaruantId: newSelectedStoreObj.restaurantId,
+      storeId: newSelectedStoreObj.storeId,
+      section: newSection,
+      dish: newDish,
+      dishCategory: newVeg,
+      dishSpiceIndicatory: newSpice,
+      dishType: newDishType,
+      dishDescriptionId: newDishDesc,
+      productSize: newSize,
+      price: newPrice,
+      imagePath: newProductImage.name,
+      menuAvailableFlag: newMenuFlag,
+      commonImage: newCommonImage,
+      ingredientExistsFalg: newIngredientFlag,
+    };
+    console.log(newProduct);
+    dispatch(saveMenuItem(newProduct)).then((res) => {
+      if (res) {
+        handleCloseAdd();
+      }
+    });
   };
 
   const renderAddModal = () => {
@@ -379,12 +463,301 @@ export const MenuMaster = () => {
         <Modal.Header closeButton>
           <Modal.Title>ADD NEW DISH</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+        <Modal.Body>
+          <FormControl fullWidth>
+            <CusInputLabel
+              sx={{ fontSize: "0.75rem", lineHeight: "1rem", top: "-11px" }}
+              id="demo-simple-select-label"
+            >
+              Please select the store
+            </CusInputLabel>
+            <CusSelect
+              sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={newSelectedStore}
+              label="Please select the store"
+              onChange={handleChangeStoreNew}
+            >
+              {stores.map((store) => (
+                <CusMenuItem
+                  onClick={() => {
+                    handleSelectedStoreNew(store);
+                  }}
+                  value={store.resturantName}
+                >
+                  <span>{store.resturantName}</span>
+                </CusMenuItem>
+              ))}
+            </CusSelect>
+          </FormControl>
+
+          <FormControl fullWidth className="mt-3">
+            <CusInputLabel
+              sx={{ fontSize: "0.75rem", lineHeight: "1rem", top: "-11px" }}
+            >
+              Please select the section
+            </CusInputLabel>
+            <CusSelect
+              label="Please select the section"
+              onChange={(event) => {
+                setNewSection(event.target.value);
+              }}
+              sx={{ fontSize: "0.75rem" }}
+              disabled={!newSelectedStoreObj}
+            >
+              {sections.map((section, index) => (
+                <CusMenuItem
+                  key={index}
+                  value={section}
+                  style={{ fontSize: "0.75rem" }}
+                >
+                  {section}
+                </CusMenuItem>
+              ))}
+            </CusSelect>
+          </FormControl>
+
+          <FormControl fullWidth className="mt-3">
+            <CusInputLabel
+              sx={{ fontSize: "0.75rem", lineHeight: "1rem", top: "-11px" }}
+            >
+              Please select the dish category
+            </CusInputLabel>
+            <CusSelect
+              label="Please select the dish category"
+              onChange={(event) => {
+                setNewDish(event.target.value);
+              }}
+              sx={{ fontSize: "0.75rem" }}
+              disabled={!allDishesBySection[newSection]}
+            >
+              {allDishesBySection[newSection] &&
+                allDishesBySection[newSection].map((dish, index) => (
+                  <CusMenuItem
+                    key={index}
+                    value={dish}
+                    style={{ fontSize: "0.75rem" }}
+                  >
+                    {dish}
+                  </CusMenuItem>
+                ))}
+            </CusSelect>
+          </FormControl>
+
+          <CusTextField
+            className="mt-3"
+            label="Dish Name"
+            value={newDishType}
+            onChange={(event) => {
+              setNewDishType(event.target.value);
+            }}
+            fullWidth
+          />
+
+          <FormControl fullWidth className="mt-3">
+            <CusInputLabel
+              sx={{ fontSize: "0.75rem", lineHeight: "1rem", top: "-11px" }}
+            >
+              Veg (Y/N)
+            </CusInputLabel>
+            <CusSelect
+              label="Veg (Y/N)"
+              onChange={(event) => {
+                setNewVeg(event.target.value);
+              }}
+              sx={{ fontSize: "0.75rem" }}
+            >
+              <CusMenuItem value={"Veg"} style={{ fontSize: "0.75rem" }}>
+                Y
+              </CusMenuItem>
+              <CusMenuItem value={"Non-Veg"} style={{ fontSize: "0.75rem" }}>
+                N
+              </CusMenuItem>
+            </CusSelect>
+          </FormControl>
+
+          <FormControl fullWidth className="mt-3">
+            <CusInputLabel
+              sx={{ fontSize: "0.75rem", lineHeight: "1rem", top: "-11px" }}
+            >
+              Spicy Indicator
+            </CusInputLabel>
+            <CusSelect
+              label="Spicy Indicator"
+              onChange={(event) => {
+                setNewSpice(event.target.value);
+              }}
+              sx={{ fontSize: "0.75rem" }}
+            >
+              <CusMenuItem value={""} style={{ fontSize: "0.75rem" }}>
+                None
+              </CusMenuItem>
+              <CusMenuItem value={"Less Spicy"} style={{ fontSize: "0.75rem" }}>
+                Less Spicy
+              </CusMenuItem>
+              <CusMenuItem
+                value={"Medium Spicy"}
+                style={{ fontSize: "0.75rem" }}
+              >
+                Medium Spicy
+              </CusMenuItem>
+              <CusMenuItem value={"Extra Hot"} style={{ fontSize: "0.75rem" }}>
+                Extra Hot
+              </CusMenuItem>
+            </CusSelect>
+          </FormControl>
+
+          <CusTextField
+            className="mt-3"
+            label="Dish description"
+            value={newDishDesc}
+            onChange={(event) => {
+              setNewDishDesc(event.target.value);
+            }}
+            fullWidth
+          />
+
+          <FormControl fullWidth className="mt-3">
+            <CusInputLabel
+              sx={{ fontSize: "0.75rem", lineHeight: "1rem", top: "-11px" }}
+            >
+              Size
+            </CusInputLabel>
+            <CusSelect
+              label="Size"
+              onChange={(event) => {
+                setNewSize(event.target.value);
+              }}
+              sx={{ fontSize: "0.75rem" }}
+            >
+              <CusMenuItem value={"Regular"} style={{ fontSize: "0.75rem" }}>
+                Regular
+              </CusMenuItem>
+              <CusMenuItem value={"Small"} style={{ fontSize: "0.75rem" }}>
+                Small
+              </CusMenuItem>
+              <CusMenuItem value={"Medium"} style={{ fontSize: "0.75rem" }}>
+                Medium
+              </CusMenuItem>
+              <CusMenuItem value={"Large"} style={{ fontSize: "0.75rem" }}>
+                Large
+              </CusMenuItem>
+            </CusSelect>
+          </FormControl>
+
+          <div style={{ display: "flex" }} className="mt-3">
+            <span
+              style={{
+                fontSize: "0.75rem",
+                marginTop: "0.25rem",
+              }}
+            >
+              Rs.{" "}
+            </span>
+            <CusTextField
+              label="Price"
+              value={newPrice}
+              onChange={(event) => {
+                setNewPrice(event.target.value);
+              }}
+              fullWidth
+            />
+          </div>
+
+          <FormControl fullWidth className="mt-3">
+            <CusInputLabel
+              sx={{ fontSize: "0.75rem", lineHeight: "1rem", top: "-11px" }}
+            >
+              Dish visible
+            </CusInputLabel>
+            <CusSelect
+              label="Dish visible"
+              onChange={(event) => {
+                setNewMenuFlag(event.target.value);
+              }}
+              sx={{ fontSize: "0.75rem" }}
+            >
+              <CusMenuItem value={"Y"} style={{ fontSize: "0.75rem" }}>
+                Y
+              </CusMenuItem>
+              <CusMenuItem value={"N"} style={{ fontSize: "0.75rem" }}>
+                N
+              </CusMenuItem>
+            </CusSelect>
+          </FormControl>
+
+          <FormControl fullWidth className="mt-3">
+            <CusInputLabel
+              sx={{ fontSize: "0.75rem", lineHeight: "1rem", top: "-11px" }}
+            >
+              Topping (Y/N)
+            </CusInputLabel>
+            <CusSelect
+              label="Topping (Y/N)"
+              onChange={(event) => {
+                setNewIngredientFlag(event.target.value);
+              }}
+              sx={{ fontSize: "0.75rem" }}
+            >
+              <CusMenuItem value={"Y"} style={{ fontSize: "0.75rem" }}>
+                Y
+              </CusMenuItem>
+              <CusMenuItem value={"N"} style={{ fontSize: "0.75rem" }}>
+                N
+              </CusMenuItem>
+            </CusSelect>
+          </FormControl>
+
+          <FormControl fullWidth className="mt-3">
+            <CusInputLabel
+              sx={{ fontSize: "0.75rem", lineHeight: "1rem", top: "-11px" }}
+            >
+              Common image
+            </CusInputLabel>
+            <CusSelect
+              label="Common image"
+              onChange={(event) => {
+                setNewCommonImage(event.target.value);
+              }}
+              sx={{ fontSize: "0.75rem" }}
+            >
+              <CusMenuItem value={"Y"} style={{ fontSize: "0.75rem" }}>
+                Y
+              </CusMenuItem>
+              <CusMenuItem value={"N"} style={{ fontSize: "0.75rem" }}>
+                N
+              </CusMenuItem>
+            </CusSelect>
+          </FormControl>
+
+          <Form.Group
+            controlId="formFileSm"
+            className="mt-3"
+            style={{ width: "100%" }}
+          >
+            <CusInputLabel
+              sx={{ fontSize: "0.75rem", lineHeight: "1rem", top: "-11px" }}
+            >
+              Product image
+            </CusInputLabel>
+            <Form.Control
+              type="file"
+              size="sm"
+              accept=".jpg"
+              maxFileSize={400000}
+              onChange={(e) => {
+                handleProductImageNew(e);
+              }}
+            />
+          </Form.Group>
+        </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseAdd}>
+          <Button color="error" onClick={handleCloseAdd} variant="contained">
             Close
           </Button>
-          <Button variant="primary" onClick={handleCloseAdd}>
+          &nbsp;
+          <Button color="success" onClick={saveNewProduct} variant="contained">
             Save Changes
           </Button>
         </Modal.Footer>
