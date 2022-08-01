@@ -248,6 +248,8 @@ export const OrderReportTable = (props) => {
             value="sgstCalculatedValue"
           />
           <ExcelColumn label="deliveryCharges" value="deliveryCharges" />
+          <ExcelColumn label="discountCode" value="discountCode" />
+          <ExcelColumn label="discountPercentage" value="discountPercentage" />
           {/* <ExcelColumn
             label="orderDetails"
             value={(col) => {
@@ -289,6 +291,8 @@ export const OrderReportTable = (props) => {
               <CusTableCell1 align="center">CGST</CusTableCell1>
               <CusTableCell1 align="center">SGST</CusTableCell1>
               <CusTableCell1 align="center">DELIVERY CHARGES</CusTableCell1>
+              <CusTableCell1 align="center">DISCOUNT CODE</CusTableCell1>
+              <CusTableCell1 align="center">DISCOUNT PERCENTAGE</CusTableCell1>
               <CusTableCell1 align="center">ITEM ORDERED</CusTableCell1>
               <CusTableCell1 align="center">ACTION</CusTableCell1>
               <CusTableCell1 align="center">VIEW | PRINT INVOICE</CusTableCell1>
@@ -364,6 +368,18 @@ export const OrderReportTable = (props) => {
                       sx={{ paddingLeft: 0, paddingRight: 0 }}
                     >
                       Rs. {row.deliveryCharges}
+                    </CusTableCell2>
+                    <CusTableCell2
+                      align="center"
+                      sx={{ paddingLeft: 0, paddingRight: 0 }}
+                    >
+                      {row.discountCode ? row.discountCode : "N/A"}
+                    </CusTableCell2>
+                    <CusTableCell2
+                      align="center"
+                      sx={{ paddingLeft: 0, paddingRight: 0 }}
+                    >
+                      {row.discountPercentage ? row.discountPercentage : "N/A"}
                     </CusTableCell2>
                     <CusTableCell2 align="left">
                       {row.orderDetails.map((item) => (
