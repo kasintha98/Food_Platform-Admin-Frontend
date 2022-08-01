@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { saveNewCoupon, updateCoupon } from "../../actions";
 import { toast } from "react-toastify";
 import Layout from "../NewLayout";
 import styled from "@emotion/styled";
@@ -101,6 +102,8 @@ export const Coupon = () => {
   const [newEndDate, setNewEndDate] = useState(new Date());
   const [newActiveFlag, setNewActiveFlag] = useState("Y");
 
+  const dispatch = useDispatch();
+
   const handleChangeStore = (event) => {
     setSelectedStore(event.target.value);
   };
@@ -133,6 +136,51 @@ export const Coupon = () => {
 
   const handleEndDateChange = (newValue) => {
     setNewEndDate(newValue);
+  };
+
+  const saveNewCouponHandle = () => {
+    if (!newCode || !newDiscount || !newDescription) {
+      toast.error("Please fill all the fields!");
+      return;
+    }
+
+    if (!Number(newDiscount)) {
+      toast.error("Discount percentage should be a number!");
+      return;
+    }
+
+    const couponObj = {
+      restaurantId: selectedStoreObj.restaurantId,
+      storeId: selectedStoreObj.storeId,
+      couponCode: newCode,
+      discountPercentage: Number(newDiscount),
+      description: newDescription,
+      effectiveStartDate: `${newStartDate.getFullYear()}-${
+        Number(newStartDate.getMonth() + 1).toString().length < 2
+          ? `0${newStartDate.getMonth() + 1}`
+          : newStartDate.getMonth() + 1
+      }-${
+        Number(newStartDate.getDate()).toString().length < 2
+          ? `0${newStartDate.getDate()}`
+          : newStartDate.getDate()
+      }`,
+      effectiveEndDate: `${newEndDate.getFullYear()}-${
+        Number(newEndDate.getMonth() + 1).toString().length < 2
+          ? `0${newEndDate.getMonth() + 1}`
+          : newEndDate.getMonth() + 1
+      }-${
+        Number(newEndDate.getDate()).toString().length < 2
+          ? `0${newEndDate.getDate()}`
+          : newEndDate.getDate()
+      }`,
+      activeFlag: newActiveFlag,
+    };
+
+    dispatch(saveNewCoupon(couponObj)).then((res) => {
+      if (res) {
+        handleIsnewCoupon();
+      }
+    });
   };
 
   return (
@@ -218,13 +266,13 @@ export const Coupon = () => {
           <TableBody>
             <TableRow>
               <CusTableCell align="center">1</CusTableCell>
-              <CusTableCell>aa</CusTableCell>
-              <CusTableCell>aa</CusTableCell>
-              <CusTableCell>aa</CusTableCell>
-              <CusTableCell>aa</CusTableCell>
-              <CusTableCell>aa</CusTableCell>
-              <CusTableCell>aa</CusTableCell>
-              <CusTableCell>aa</CusTableCell>
+              <CusTableCell>testing</CusTableCell>
+              <CusTableCell>testing</CusTableCell>
+              <CusTableCell>testing</CusTableCell>
+              <CusTableCell>testing</CusTableCell>
+              <CusTableCell>testing</CusTableCell>
+              <CusTableCell>testing</CusTableCell>
+              <CusTableCell>testing</CusTableCell>
               <CusTableCell align="center">
                 {isSave[1] ? (
                   <Button
@@ -372,10 +420,7 @@ export const Coupon = () => {
                       lineHeight: "1rem",
                       padding: "5px 16px",
                     }}
-                    onClick={() => {
-                      //saveUpdateProduct(product);
-                      handleIsnewCoupon();
-                    }}
+                    onClick={saveNewCouponHandle}
                   >
                     Save
                   </Button>

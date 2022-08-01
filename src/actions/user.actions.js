@@ -604,3 +604,69 @@ export const GetCustomerDetails = (mobileNumber) => {
     }
   };
 };
+
+export const saveNewCoupon = (payload) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: userConstants.SAVE_COUPON_REQUEST });
+
+      const res = await axios.post(`/saveCoupon`, payload);
+
+      if (res.status === 200) {
+        dispatch({
+          type: userConstants.SAVE_COUPON_SUCCESS,
+          payload: res.data,
+        });
+        toast.success("Coupon saved successfully!");
+        dispatch(getRoles());
+        return res.data;
+      } else {
+        dispatch({
+          type: userConstants.SAVE_COUPON_FAILURE,
+          payload: { error: "Error saving data data!" },
+        });
+        toast.error("Failed to save coupon!");
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch({
+        type: userConstants.SAVE_COUPON_FAILURE,
+        payload: { error: "Error saving data!" },
+      });
+      toast.error("Failed to save coupon!");
+    }
+  };
+};
+
+export const updateCoupon = (payload) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: userConstants.UPDATE_COUPON_REQUEST });
+
+      const res = await axios.post(`/saveCoupon`, payload);
+
+      if (res.status === 200) {
+        dispatch({
+          type: userConstants.UPDATE_COUPON_SUCCESS,
+          payload: res.data,
+        });
+        toast.success("Coupon updated successfully!");
+        dispatch(getRoles());
+        return res.data;
+      } else {
+        dispatch({
+          type: userConstants.UPDATE_COUPON_FAILURE,
+          payload: { error: "Error saving data data!" },
+        });
+        toast.error("Failed to updated coupon!");
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch({
+        type: userConstants.UPDATE_COUPON_FAILURE,
+        payload: { error: "Error saving data!" },
+      });
+      toast.error("Failed to updated coupon!");
+    }
+  };
+};
