@@ -160,9 +160,17 @@ export const addToCartNew = (
         let choice = {};
 
         if (choiceIng) {
-          choice = choiceIng;
+          choice = {
+            ...choiceIng,
+            choiceTotal: choiceIng.price ? choiceIng.price * qty : 0,
+          };
         } else if (cartItems[product.productId]?.choiceIng) {
-          choice = cartItems[product.productId]?.choiceIng;
+          choice = {
+            ...cartItems[product.productId]?.choiceIng,
+            choiceTotal: cartItems[product.productId]?.choiceIng.price
+              ? cartItems[product.productId]?.choiceIng.price * qty
+              : 0,
+          };
         } else {
           choice = {};
         }
@@ -177,6 +185,7 @@ export const addToCartNew = (
             extraSubTotal: extraTotal,
             specialText: text,
             choiceIng: choice,
+            extraSubTotalWithQty: extraTotal ? extraTotal * qty : 0,
           };
         }
 

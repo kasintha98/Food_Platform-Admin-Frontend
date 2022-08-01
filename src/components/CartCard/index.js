@@ -75,7 +75,7 @@ export default function CartCard(props) {
   const calculateExtraTotal = () => {
     let total = 0;
     for (let key of Object.keys(cart?.cartItems)) {
-      total = total + cart?.cartItems[key].extraSubTotal;
+      total = total + cart?.cartItems[key].extraSubTotalWithQty;
     }
     props.onChangeExtraSubTotal(total);
   };
@@ -84,7 +84,7 @@ export default function CartCard(props) {
     let total = 0;
     for (let key of Object.keys(cart?.cartItems)) {
       if (Object.keys(cart?.cartItems[key]?.choiceIng).length > 0) {
-        total = total + cart?.cartItems[key]?.choiceIng.price;
+        total = total + cart?.cartItems[key]?.choiceIng.choiceTotal;
       }
     }
     props.onChangeChoiceTotal(total);
@@ -184,12 +184,12 @@ export default function CartCard(props) {
                             ₹{" "}
                             {cart?.cartItems[key].qty *
                               cart?.cartItems[key].price +
-                              (cart?.cartItems[key].extraSubTotal
-                                ? cart?.cartItems[key].extraSubTotal
+                              (cart?.cartItems[key].extraSubTotalWithQty
+                                ? cart?.cartItems[key].extraSubTotalWithQty
                                 : 0) +
                               (Object.keys(cart?.cartItems[key]?.choiceIng)
                                 .length > 0
-                                ? cart?.cartItems[key]?.choiceIng.price
+                                ? cart?.cartItems[key]?.choiceIng.choiceTotal
                                 : 0)}
                             .00
                           </p>
@@ -237,7 +237,9 @@ export default function CartCard(props) {
                               }}
                             >
                               {"₹ "}
-                              {cart?.cartItems[key].price}.00
+                              {cart?.cartItems[key].price *
+                                cart?.cartItems[key].qty}
+                              .00
                             </span>
                           </div>
                         </Row>
@@ -297,10 +299,8 @@ export default function CartCard(props) {
                                             }}
                                           >
                                             {"₹ "}
-                                            {
-                                              cart?.cartItems[key]?.extra[index]
-                                                .price
-                                            }
+                                            {cart?.cartItems[key]?.extra[index]
+                                              .price * cart?.cartItems[key].qty}
                                             .00
                                           </span>
                                         </div>
@@ -357,7 +357,9 @@ export default function CartCard(props) {
                                   }}
                                 >
                                   {"₹ "}
-                                  {cart?.cartItems[key]?.choiceIng.price}.00
+                                  {cart?.cartItems[key]?.choiceIng.price *
+                                    cart?.cartItems[key].qty}
+                                  .00
                                 </span>
                               </div>
                             </Row>
