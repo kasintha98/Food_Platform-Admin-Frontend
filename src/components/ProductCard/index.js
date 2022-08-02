@@ -330,7 +330,7 @@ export default function ProductCard(props) {
     const prodTotal =
       currentProduct && currentProduct.price ? qty * currentProduct.price : 0;
 
-    const total = prodTotal + choicePrice + toppingAllPrice;
+    const total = prodTotal + choicePrice * qty + toppingAllPrice * qty;
     return <span>{total}</span>;
   };
 

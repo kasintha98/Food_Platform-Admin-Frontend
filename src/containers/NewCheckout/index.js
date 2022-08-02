@@ -27,6 +27,7 @@ import {
   GetCustomerAddress,
   AddUpdateCustomerAddress,
   GetCustomerDetails,
+  validateCoupon,
 } from "../../actions";
 import { InvoiceTable } from "../../components/InvoiceTable";
 import Pdf from "react-to-pdf";
@@ -100,6 +101,7 @@ export default function NewCheckout(props) {
   const user = useSelector((state) => state.auth.user);
   const currentAddress = useSelector((state) => state.user.currentAddress);
   const taxDetails = useSelector((state) => state.user.taxDetails);
+  const couponReduxObj = useSelector((state) => state.user.coupon);
 
   const cart = useSelector((state) => state.cart);
   const [subTotal, setSubtotal] = useState(0);
@@ -131,6 +133,7 @@ export default function NewCheckout(props) {
   const [currentCustomer, setCurrentCustomer] = useState(null);
   const [isNewCustomerFunc, setIsNewCustomerFunc] = useState(false);
   const [cardHeight, setCardHeight] = useState(0);
+  const [couponLocalObj, setCouponLocalObj] = useState(null);
 
   const dispatch = useDispatch();
   const ref = React.createRef();
@@ -157,30 +160,77 @@ export default function NewCheckout(props) {
   };
 
   const renderAllSub = () => {
-    const all =
+    let all =
       subTotal +
       (extraSubTotal ? extraSubTotal : 0) +
       (choiceTotal ? choiceTotal : 0);
+
+    if (
+      couponReduxObj &&
+      Number(couponReduxObj.couponDetails.discountPercentage)
+    ) {
+      const afterAddCoupon =
+        (100 - Number(couponReduxObj.couponDetails.discountPercentage)) / 100;
+      all = all * afterAddCoupon;
+    }
+
+    return <span>₹ {all.toFixed(2)}</span>;
+  };
+
+  const renderCouponDiscount = () => {
+    let all =
+      subTotal +
+      (extraSubTotal ? extraSubTotal : 0) +
+      (choiceTotal ? choiceTotal : 0);
+
+    if (
+      couponReduxObj &&
+      Number(couponReduxObj.couponDetails.discountPercentage)
+    ) {
+      const afterAddCoupon =
+        Number(couponReduxObj.couponDetails.discountPercentage) / 100;
+      all = all * afterAddCoupon;
+    }
+
     return <span>₹ {all.toFixed(2)}</span>;
   };
 
   const renderTax = (tax) => {
-    const all = (
-      (subTotal +
-        (extraSubTotal ? extraSubTotal : 0) +
-        (choiceTotal ? choiceTotal : 0)) *
-      (tax.taxPercentage / 100)
-    ).toFixed(2);
+    let allSub =
+      subTotal +
+      (extraSubTotal ? extraSubTotal : 0) +
+      (choiceTotal ? choiceTotal : 0);
+
+    if (
+      couponReduxObj &&
+      Number(couponReduxObj.couponDetails.discountPercentage)
+    ) {
+      const afterAddCoupon =
+        (100 - Number(couponReduxObj.couponDetails.discountPercentage)) / 100;
+      allSub = allSub * afterAddCoupon;
+    }
+
+    const all = (allSub * (tax.taxPercentage / 100)).toFixed(2);
+
     return <span>₹ {all}</span>;
   };
 
   let grandTotalForPayU = 0;
 
   const renderGrandTot = () => {
-    const allSub =
+    let allSub =
       subTotal +
       (extraSubTotal ? extraSubTotal : 0) +
       (choiceTotal ? choiceTotal : 0);
+
+    if (
+      couponReduxObj &&
+      Number(couponReduxObj.couponDetails.discountPercentage)
+    ) {
+      const afterAddCoupon =
+        (100 - Number(couponReduxObj.couponDetails.discountPercentage)) / 100;
+      allSub = allSub * afterAddCoupon;
+    }
 
     let allTax = 0;
 
@@ -221,10 +271,19 @@ export default function NewCheckout(props) {
         return;
       }
 
-      const total =
+      let total =
         subTotal +
         (extraSubTotal ? extraSubTotal : 0) +
         (choiceTotal ? choiceTotal : 0);
+
+      if (
+        couponReduxObj &&
+        Number(couponReduxObj.couponDetails.discountPercentage)
+      ) {
+        const afterAddCoupon =
+          (100 - Number(couponReduxObj.couponDetails.discountPercentage)) / 100;
+        total = total * afterAddCoupon;
+      }
 
       let orderDetails = [];
       const allItems = Object.values(cart?.cartItems);
@@ -331,6 +390,12 @@ export default function NewCheckout(props) {
         orderDetails: orderDetails,
         createdBy: user.firstName,
         paymentTxnReference: referenceNo,
+        couponCode: couponReduxObj
+          ? couponReduxObj.couponDetails.couponCode
+          : "",
+        discountPercentage: couponReduxObj
+          ? couponReduxObj.couponDetails.discountPercentage
+          : 0,
       };
 
       console.log(NewOrder);
@@ -350,6 +415,18 @@ export default function NewCheckout(props) {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const validateCouponCode = () => {
+    if (!couponCode) {
+      toast.error("Please fill the coupon code!");
+      return;
+    }
+    dispatch(validateCoupon(couponCode)).then((res) => {
+      if (res) {
+        setCouponLocalObj(res);
+      }
+    });
   };
 
   const resetPaymentMethod = () => {
@@ -806,6 +883,35 @@ export default function NewCheckout(props) {
                             </Typography>
                           </div>
                         </Row>
+
+                        {couponReduxObj && couponReduxObj.couponDetails ? (
+                          <Row className="ps-2">
+                            <div className="w75">
+                              <Typography
+                                sx={{
+                                  fontSize: "0.9rem",
+                                  fontWeight: "600",
+                                  fontFamily: "Arial",
+                                  color: "#595959",
+                                }}
+                              >
+                                Coupon Discount
+                              </Typography>
+                            </div>
+                            <div className="w25">
+                              <Typography
+                                sx={{
+                                  fontSize: "0.9rem",
+                                  fontWeight: "600",
+                                  color: "#2e7d32",
+                                }}
+                              >
+                                {renderCouponDiscount()}
+                              </Typography>
+                            </div>
+                          </Row>
+                        ) : null}
+
                         <Row className="pl-2">
                           {taxDetails ? (
                             <>
@@ -889,11 +995,28 @@ export default function NewCheckout(props) {
                             lineHeight: "1rem",
                             padding: "5px 16px",
                           }}
+                          onClick={validateCouponCode}
                         >
                           APPLY
                         </Button>
                       </Col>
                     </Row>
+                    <div className="text-center mt-2">
+                      {couponReduxObj && couponReduxObj.couponDetails ? (
+                        <Typography
+                          sx={{
+                            fontWeight: "bold",
+                            color: "#2e7d32",
+                            fontSize: "0.9rem",
+                          }}
+                        >
+                          {couponReduxObj.couponDetails.couponCode} Applied!
+                          &nbsp;
+                          {couponReduxObj.couponDetails.discountPercentage}%
+                          Off!
+                        </Typography>
+                      ) : null}
+                    </div>
                   </CardContent>
                 </Card>
               </div>

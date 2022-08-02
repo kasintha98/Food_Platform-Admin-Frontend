@@ -670,3 +670,43 @@ export const updateCoupon = (payload) => {
     }
   };
 };
+
+export const validateCoupon = (couponCode) => {
+  return async (dispatch) => {
+    try {
+      const res = await axios.post("/validateCoupon", null, {
+        params: { couponCode },
+      });
+      dispatch({ type: userConstants.VALIDATE_COUPON_REQUEST });
+
+      if (res.status === 200 && res.data) {
+        if (res.data.validationResult === "VALID_COUPON") {
+          dispatch({
+            type: userConstants.VALIDATE_COUPON_SUCCESS,
+            payload: res.data,
+          });
+          toast.success("Coupon applied successfully!");
+          return res.data;
+        } else {
+          dispatch({
+            type: userConstants.VALIDATE_COUPON_FAILURE,
+            payload: null,
+          });
+          toast.error("Coupon not valid!");
+        }
+      } else {
+        dispatch({
+          type: userConstants.VALIDATE_COUPON_FAILURE,
+          payload: null,
+        });
+        toast.error("There was an error!");
+      }
+    } catch (error) {
+      dispatch({
+        type: userConstants.VALIDATE_COUPON_FAILURE,
+        payload: null,
+      });
+      toast.error("There was an error from our end, Please try again!");
+    }
+  };
+};
