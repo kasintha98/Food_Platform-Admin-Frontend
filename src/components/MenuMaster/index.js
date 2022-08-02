@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
+import axios from "axios";
 import {
   getProductsNew,
   getAllSections,
@@ -421,6 +422,7 @@ export const MenuMaster = () => {
     };
 
     dispatch(updateMenuItem(newProduct));
+    //uploadImage();
     console.log(newProduct);
   };
 
@@ -445,8 +447,28 @@ export const MenuMaster = () => {
     dispatch(saveMenuItem(newProduct)).then((res) => {
       if (res) {
         handleCloseAdd();
+        //uploadImage();
       }
     });
+  };
+
+  const uploadImage = async () => {
+    try {
+      const res = await axios.post(
+        "https://storage.googleapis.com/upload/storage/v1/b/hangries/o",
+        { newProductImage },
+        {
+          params: { uploadType: "media", name: "images/a.jpg" },
+          headers: {
+            "Content-Type": "image/jpeg",
+            Authorization: "Bearer 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",
+          },
+        }
+      );
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const renderAddModal = () => {
