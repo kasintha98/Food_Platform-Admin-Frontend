@@ -261,16 +261,24 @@ export default function ProductCard(props) {
     console.log(cartProd);
 
     if (cartProd) {
-      setQty(cartProd.qty);
+      /* setQty(cartProd.qty);
       setChoiceObj(cartProd.choiceIng);
       setChoice(cartProd.choiceIng.ingredientType);
       setToppings(cartProd.extra);
-      setSpecialText(cartProd.specialText ? cartProd.specialText : "");
+      setSpecialText(cartProd.specialText ? cartProd.specialText : ""); */
+      setChoice("");
+      setChoiceObj({});
+      setToppingSubTotal(0);
+      setToppings({});
+      //new qty = 1
+      setQty(1);
     } else {
       setChoice("");
       setChoiceObj({});
       setToppingSubTotal(0);
       setToppings({});
+      //new qty = 1
+      setQty(1);
     }
   };
 
@@ -880,7 +888,16 @@ export default function ProductCard(props) {
                               choiceObj,
                               true
                             )
-                          );
+                          ).then((res) => {
+                            if (res) {
+                              setChoice("");
+                              setChoiceObj({});
+                              setToppingSubTotal(0);
+                              setToppings({});
+                              //new qty = 1
+                              setQty(1);
+                            }
+                          });
                           calculateSubTotal();
                           setSpecialText("");
                           handleClose();
@@ -1045,7 +1062,7 @@ export default function ProductCard(props) {
                       ); */
                       calculateSubTotal();
                     }
-                    setChoice(
+                    /* setChoice(
                       cart?.cartItems[currentProduct.productId]?.choiceIng
                         ? cart?.cartItems[currentProduct.productId]?.choiceIng
                             ?.ingredientType
@@ -1071,7 +1088,7 @@ export default function ProductCard(props) {
                       cart?.cartItems[currentProduct?.productId]?.extra
                         ? cart?.cartItems[currentProduct?.productId]?.extra
                         : {}
-                    );
+                    ); */
 
                     handleOpen();
                   } else {

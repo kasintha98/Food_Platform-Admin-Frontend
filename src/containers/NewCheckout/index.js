@@ -130,16 +130,24 @@ export default function NewCheckout(props) {
   const [currentGetAddress, setCurrentGetAddress] = useState(null);
   const [currentCustomer, setCurrentCustomer] = useState(null);
   const [isNewCustomerFunc, setIsNewCustomerFunc] = useState(false);
+  const [cardHeight, setCardHeight] = useState(0);
 
   const dispatch = useDispatch();
   const ref = React.createRef();
   const refH = useRef(null);
+  const refCardHeight = useRef(null);
 
   const history = useHistory();
 
   useEffect(() => {
     if (refH.current) {
       setHeight(refH.current.clientHeight * 0.58);
+    }
+  });
+
+  useEffect(() => {
+    if (refCardHeight.current) {
+      setCardHeight(refCardHeight.current.clientHeight);
     }
   });
 
@@ -763,6 +771,7 @@ export default function NewCheckout(props) {
                     height: "468px",
                     overflowY: "auto",
                   }}
+                  ref={refCardHeight}
                 >
                   <CardContent sx={{ height: "auto" }}>
                     <CartCard
@@ -907,7 +916,11 @@ export default function NewCheckout(props) {
                 <Col className="col-12">
                   <Grid sx={{ width: "100%", marginTop: 3 }}>
                     <Card
-                      sx={{ width: "100%", marginTop: 3, minHeight: "468px" }}
+                      sx={{
+                        width: "100%",
+                        marginTop: 3,
+                        minHeight: cardHeight,
+                      }}
                     >
                       <CardContent>
                         <div>
@@ -1166,7 +1179,7 @@ export default function NewCheckout(props) {
                       (defaultAddress ||
                         (address1 && zipCode && city && state && addressType))
                     ) ? (
-                      <Card sx={{ minHeight: "468px" }}>
+                      <Card sx={{ minHeight: cardHeight }}>
                         <FormControl sx={{ marginLeft: 3, marginTop: 2 }}>
                           <RadioGroup
                             aria-labelledby="demo-controlled-radio-buttons-group"
@@ -1307,7 +1320,7 @@ export default function NewCheckout(props) {
                       (address1 && zipCode && city && state && addressType)) ? (
                       <>
                         {" "}
-                        <Card className="p-3" sx={{ minHeight: "468px" }}>
+                        <Card className="p-3" sx={{ minHeight: cardHeight }}>
                           <Row>
                             <Col>
                               <p>You selected {currentPaymentType}!</p>

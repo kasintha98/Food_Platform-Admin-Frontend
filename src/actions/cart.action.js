@@ -130,55 +130,94 @@ export const addToCartNew = (
         if (isCustomQty) {
           qty = newQty;
         } else {
-          qty = cartItems[product.productId]
-            ? parseInt(cartItems[product.productId].qty) + newQty
+          qty = cartItems[product.key ? product.key : product.productId]
+            ? parseInt(
+                cartItems[product.key ? product.key : product.productId].qty
+              ) + newQty
             : newQty;
         }
 
         const extraTotal = extraSubTotal
           ? extraSubTotal
-          : cartItems[product.productId]?.extraSubTotal
-          ? cartItems[product.productId]?.extraSubTotal
+          : cartItems[product.key ? product.key : product.productId]
+              ?.extraSubTotal
+          ? cartItems[product.key ? product.key : product.productId]
+              ?.extraSubTotal
           : 0;
 
         const extraItems = extra
           ? extra
-          : cartItems[product.productId]?.extra
-          ? cartItems[product.productId]?.extra
+          : cartItems[product.key ? product.key : product.productId]?.extra
+          ? cartItems[product.key ? product.key : product.productId]?.extra
           : {};
 
         let text = "";
 
         if (specialText) {
           text = specialText;
-        } else if (cartItems[product.productId]?.specialText) {
-          text = cartItems[product.productId]?.specialText;
+        } else if (
+          cartItems[product.key ? product.key : product.productId]?.specialText
+        ) {
+          text =
+            cartItems[product.key ? product.key : product.productId]
+              ?.specialText;
         } else {
           text = "";
         }
 
         let choice = {};
+        let choiceId = null;
+        let extraId = "";
 
         if (choiceIng) {
           choice = {
             ...choiceIng,
             choiceTotal: choiceIng.price ? choiceIng.price * qty : 0,
           };
-        } else if (cartItems[product.productId]?.choiceIng) {
+          choiceId = choiceIng.id;
+        } else if (
+          cartItems[product.key ? product.key : product.productId]?.choiceIng
+        ) {
           choice = {
-            ...cartItems[product.productId]?.choiceIng,
-            choiceTotal: cartItems[product.productId]?.choiceIng.price
-              ? cartItems[product.productId]?.choiceIng.price * qty
+            ...cartItems[product.key ? product.key : product.productId]
+              ?.choiceIng,
+            choiceTotal: cartItems[
+              product.key ? product.key : product.productId
+            ]?.choiceIng.price
+              ? cartItems[product.key ? product.key : product.productId]
+                  ?.choiceIng.price * qty
               : 0,
           };
+          choiceId =
+            cartItems[product.key ? product.key : product.productId]?.choiceIng
+              .id;
         } else {
           choice = {};
+          choiceId = null;
         }
 
+        if (extraItems && Object.keys(extraItems).length > 0) {
+          for (let k = 0; k < Object.keys(extraItems).length; k++) {
+            extraId = extraId + Object.keys(extraItems)[k];
+          }
+        }
+
+        let finalProductId = product.productId;
+
+        if (choiceId) {
+          finalProductId = finalProductId + choiceId;
+        }
+
+        if (extraId) {
+          finalProductId = finalProductId + extraId;
+        }
+
+        console.log(finalProductId);
+
         if (qty < 1) {
-          delete cartItems[product.productId];
+          delete cartItems[finalProductId];
         } else {
-          cartItems[product.productId] = {
+          cartItems[finalProductId] = {
             ...product,
             qty,
             extra: extraItems,
@@ -186,6 +225,7 @@ export const addToCartNew = (
             specialText: text,
             choiceIng: choice,
             extraSubTotalWithQty: extraTotal ? extraTotal * qty : 0,
+            key: finalProductId,
           };
         }
 
@@ -229,6 +269,8 @@ export const addToCartNew = (
             autoClose: 2000,
           });
         }
+
+        return true;
       }
     } catch (error) {
       console.log(error);

@@ -998,8 +998,9 @@ export const MenuMaster = () => {
                                 sx={{
                                   fontSize: "0.75rem",
                                   "& .MuiInputBase-input.Mui-disabled": {
-                                    WebkitTextFillColor:
-                                      isSave[product.id] && "black",
+                                    WebkitTextFillColor: isSave[product.id]
+                                      ? "black"
+                                      : "#404040",
                                   },
                                 }}
                                 disabled={true}
@@ -1030,7 +1031,14 @@ export const MenuMaster = () => {
                                   id: "uncontrolled-native",
                                 }}
                                 onChange={handleSectionUpdate}
-                                sx={{ fontSize: "0.75rem" }}
+                                sx={{
+                                  fontSize: "0.75rem",
+                                  "& .MuiInputBase-input.Mui-disabled": {
+                                    WebkitTextFillColor: isSave[product.id]
+                                      ? "black"
+                                      : "#404040",
+                                  },
+                                }}
                                 disabled={!isSave[product.id]}
                               >
                                 {sections.map((section, index) => (
@@ -1057,7 +1065,14 @@ export const MenuMaster = () => {
                                   id: "uncontrolled-native",
                                 }}
                                 onChange={handleDishUpdate}
-                                sx={{ fontSize: "0.75rem" }}
+                                sx={{
+                                  fontSize: "0.75rem",
+                                  "& .MuiInputBase-input.Mui-disabled": {
+                                    WebkitTextFillColor: isSave[product.id]
+                                      ? "black"
+                                      : "#404040",
+                                  },
+                                }}
                                 disabled={!isSave[product.id]}
                                 /* onClick={() => {
                                   if (!allDishOfSection[product.section]) {
@@ -1144,6 +1159,14 @@ export const MenuMaster = () => {
                                 };
                                 setCurrentDishType(dishTypes);
                               }}
+                              sx={{
+                                fontSize: "0.75rem",
+                                "& .MuiInputBase-input.Mui-disabled": {
+                                  WebkitTextFillColor: isSave[product.id]
+                                    ? "black"
+                                    : "#404040",
+                                },
+                              }}
                               fullWidth
                               variant="standard"
                             />
@@ -1160,7 +1183,14 @@ export const MenuMaster = () => {
                                   id: "uncontrolled-native",
                                 }}
                                 onChange={handleVegUpdate}
-                                sx={{ fontSize: "0.75rem" }}
+                                sx={{
+                                  fontSize: "0.75rem",
+                                  "& .MuiInputBase-input.Mui-disabled": {
+                                    WebkitTextFillColor: isSave[product.id]
+                                      ? "black"
+                                      : "#404040",
+                                  },
+                                }}
                                 disabled={!isSave[product.id]}
                               >
                                 <option
@@ -1191,7 +1221,14 @@ export const MenuMaster = () => {
                                   id: "uncontrolled-native",
                                 }}
                                 onChange={handleSpiceUpdate}
-                                sx={{ fontSize: "0.75rem" }}
+                                sx={{
+                                  fontSize: "0.75rem",
+                                  "& .MuiInputBase-input.Mui-disabled": {
+                                    WebkitTextFillColor: isSave[product.id]
+                                      ? "black"
+                                      : "#404040",
+                                  },
+                                }}
                               >
                                 <option
                                   value={""}
@@ -1237,6 +1274,14 @@ export const MenuMaster = () => {
                                 setCurrentDishDesc(dishDescriptionIds);
                               }}
                               fullWidth
+                              sx={{
+                                fontSize: "0.75rem",
+                                "& .MuiInputBase-input.Mui-disabled": {
+                                  WebkitTextFillColor: isSave[product.id]
+                                    ? "black"
+                                    : "#404040",
+                                },
+                              }}
                               variant="standard"
                             />
                           </CusTableCell>
@@ -1252,7 +1297,14 @@ export const MenuMaster = () => {
                                 id: "uncontrolled-native",
                               }}
                               onChange={handleSizeUpdate}
-                              sx={{ fontSize: "0.75rem" }}
+                              sx={{
+                                fontSize: "0.75rem",
+                                "& .MuiInputBase-input.Mui-disabled": {
+                                  WebkitTextFillColor: isSave[product.id]
+                                    ? "black"
+                                    : "#404040",
+                                },
+                              }}
                             >
                               <option
                                 value={"Regular"}
@@ -1292,7 +1344,7 @@ export const MenuMaster = () => {
                                   marginTop: "0.25rem",
                                   color: isSave[product.id]
                                     ? "black"
-                                    : "rgb(0,0,0, 0.38)",
+                                    : "#404040",
                                 }}
                               >
                                 Rs.{" "}
@@ -1308,6 +1360,14 @@ export const MenuMaster = () => {
                                     [product.id]: event.target.value,
                                   };
                                   setCurrentPrice(prices);
+                                }}
+                                sx={{
+                                  fontSize: "0.75rem",
+                                  "& .MuiInputBase-input.Mui-disabled": {
+                                    WebkitTextFillColor: isSave[product.id]
+                                      ? "black"
+                                      : "#404040",
+                                  },
                                 }}
                                 fullWidth
                                 variant="standard"
@@ -1352,9 +1412,7 @@ export const MenuMaster = () => {
                             <Typography
                               sx={{
                                 fontSize: "12px",
-                                color: isSave[product.id]
-                                  ? "black"
-                                  : "rgb(0,0,0, 0.38)",
+                                color: isSave[product.id] ? "black" : "#404040",
                               }}
                             >
                               Current Image : {product.imagePath}
@@ -1386,7 +1444,14 @@ export const MenuMaster = () => {
                                 id: "uncontrolled-native",
                               }}
                               onChange={handleMenuFlagUpdate}
-                              sx={{ fontSize: "0.75rem" }}
+                              sx={{
+                                fontSize: "0.75rem",
+                                "& .MuiInputBase-input.Mui-disabled": {
+                                  WebkitTextFillColor: isSave[product.id]
+                                    ? "black"
+                                    : "#404040",
+                                },
+                              }}
                             >
                               <option
                                 value={"Y"}
@@ -1417,7 +1482,14 @@ export const MenuMaster = () => {
                                 id: "uncontrolled-native",
                               }}
                               onChange={handleIngredientFlagUpdate}
-                              sx={{ fontSize: "0.75rem" }}
+                              sx={{
+                                fontSize: "0.75rem",
+                                "& .MuiInputBase-input.Mui-disabled": {
+                                  WebkitTextFillColor: isSave[product.id]
+                                    ? "black"
+                                    : "#404040",
+                                },
+                              }}
                             >
                               <option
                                 value={"Y"}

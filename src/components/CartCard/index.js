@@ -54,13 +54,14 @@ export default function CartCard(props) {
   }, [ref.current]);
 
   const onQuantityIncrement = (productId) => {
-    console.log({ productId });
-    dispatch(addToCartNew(cart.cartItems[productId], 1));
+    dispatch(addToCartNew({ ...cart.cartItems[productId], key: productId }, 1));
     calculateSubTotal();
   };
 
   const onQuantityDecrement = (productId) => {
-    dispatch(addToCartNew(cart.cartItems[productId], -1));
+    dispatch(
+      addToCartNew({ ...cart.cartItems[productId], key: productId }, -1)
+    );
     calculateSubTotal();
   };
 
@@ -132,9 +133,7 @@ export default function CartCard(props) {
                           <IncButton
                             sx={{ border: "none !important" }}
                             onClick={() => {
-                              onQuantityDecrement(
-                                cart?.cartItems[key].productId
-                              );
+                              onQuantityDecrement(key);
                             }}
                           >
                             {cart?.cartItems[key].qty < 2 ? (
@@ -161,9 +160,7 @@ export default function CartCard(props) {
                           </IncButton>
                           <IncButton
                             onClick={() => {
-                              onQuantityIncrement(
-                                cart?.cartItems[key].productId
-                              );
+                              onQuantityIncrement(key);
                             }}
                           >
                             <Add sx={{ fontSize: "0.75rem" }}></Add>
