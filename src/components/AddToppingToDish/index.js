@@ -62,8 +62,6 @@ const CusTableCell = styled(TableCell)`
   border: 1px solid #000;
 `;
 
-
-
 const useStyles = makeStyles({
   sticky: {
     position: "sticky",
@@ -95,27 +93,9 @@ export const AddToppingToDish = () => {
     /* stores[0] */ null
   );
 
-  const [currentRestaurent, setCurrentRestaurent] = useState("");
-  const [currentToppingType, setCurrentToppingType] = useState("");
-  const [currentSize, setCurrentSize] = useState("");
-  const [currentIngredientFlag, setCurrentIngredientFlag] = useState("");
-  const [currentToppingName, setCurrentToppingName] = useState({});
-  const [currentPrice, setCurrentPrice] = useState({});
   const [page, setPage] = useState(1);
   const [ToppingssOfPage, setToppingssOfPage] = useState([]);
-  const [newDishSection, setNewDishSection] = useState("");
-  const [newDishCategory, setNewDishCategory] = useState("");
-  const [currentSection, setCurrentSection] = useState("");
-  const [currentDish, setCurrentDish] = useState("");
-  const [currentVeg, setCurrentVeg] = useState("");
-  const [currentSpice, setCurrentSpice] = useState("");
-  const [currentDishType, setCurrentDishType] = useState({});
-  const [currentDishDesc, setCurrentDishDesc] = useState({});
-  const [currentImageName, setCurrentImageName] = useState({});
-  const [currentMenuFlag, setCurrentMenuFlag] = useState("");
-  const [productImage, setProductImage] = useState({});
   const [productsOfPage, setProductsOfPage] = useState([]);
-  const [isSave, setIsSave] = useState({});
   const [sectionKeyword, setSectionKeyword] = useState("");
   const [categoryKeyword, setCategoryKeyword] = useState("");
   const [nameKeyword, setNameKeyword] = useState("");
@@ -240,82 +220,6 @@ export const AddToppingToDish = () => {
     setSelectedStoreObj(store);
   };
 
-  const handleRestaurentUpdate = (event) => {
-    console.log(event.target.value);
-    setCurrentRestaurent(event.target.value);
-  };
-
-  const handleSectionUpdate = (event) => {
-    console.log(event.target.value);
-    setCurrentSection(event.target.value);
-  };
-
-  const handleDishUpdate = (event) => {
-    console.log(event.target.value);
-    setCurrentDish(event.target.value);
-  };
-
-  const handleVegUpdate = (event) => {
-    console.log(event.target.value);
-    setCurrentVeg(event.target.value);
-  };
-
-  const handleSpiceUpdate = (event) => {
-    console.log(event.target.value);
-    setCurrentSpice(event.target.value);
-  };
-
-  const handleMenuFlagUpdate = (event) => {
-    console.log(event.target.value);
-    setCurrentMenuFlag(event.target.value);
-  };
-
-  const handleIngredientFlagUpdate = (event) => {
-    console.log(event.target.value);
-    setCurrentIngredientFlag(event.target.value);
-  };
-
-  const handleSizeUpdate = (event) => {
-    console.log(event.target.value);
-    setCurrentSize(event.target.value);
-  };
-
-  const handlePage = (event, value) => {
-    setPage(value);
-  };
-
-  const handleProductImage = (e, id) => {
-    if (e.target.files[0].size > 400000) {
-      toast.error("File is too big. Please enter a image under 400 kb!");
-      return;
-    }
-
-    if (e.target.files[0].type !== "image/jpeg") {
-      toast.error("Only JPG images are accepted!");
-      return;
-    }
-
-    let images = { ...productImage, [id]: e.target.files[0] };
-    setProductImage(images);
-    console.log(images);
-  };
-
-  const onEditClickHandle = (id) => {
-    let edits = { ...isSave, [id]: true };
-    setIsSave(edits);
-  };
-
-  const onSaveClickHandle = (id) => {
-    let edits = { ...isSave, [id]: false };
-    setIsSave(edits);
-  };
-
-  const handleToppingTypeUpdate = (event) => {
-    setCurrentToppingType(event.target.value);
-  };
-
-  const classes = useStyles();
-
   return (
     <div>
       <Row className="align-items-center justify-content-center">
@@ -358,7 +262,7 @@ export const AddToppingToDish = () => {
       <div>
           {selectedStore === '' ? <h5 align="center" style={{ color: '#688789', marginTop: '2rem'}}>Please select a store</h5> : (
             <TableContainer className="mt-2" sx={{ maxHeight: 530, maxWidth: 'full'}} style={{ overflowX: "initial" }}>
-              <Table sx={{ minWidth: 1700 }} stickyHeader>
+              <Table sx={{ minWidth: 3700 }} stickyHeader>
               <TableHead>
                   <Fragment>
                     <TableRow>
