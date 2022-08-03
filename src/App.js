@@ -40,6 +40,7 @@ import { PageNotFound } from "./containers/PageNotFound";
 import { ForgotPassword } from "./containers/ForgotPassword";
 import { DineIn } from "./containers/DineIn";
 import { AdminMenu } from "./containers/AdminMenu";
+import { Coupon } from "./containers/Coupon";
 
 function App() {
   const dispatch = useDispatch();
@@ -192,6 +193,10 @@ function App() {
         ) && (
           <PrivateRoute path="/products" component={AdminMenu}></PrivateRoute>
         )}
+
+        {modulesForUser.some(
+          (module) => module.moduleName === "ADMIN FUNCTIONS"
+        ) && <PrivateRoute path="/coupons" component={Coupon}></PrivateRoute>}
 
         <Route path="/signin" component={Signin}></Route>
         <Route path="/forgot-password" component={ForgotPassword}></Route>

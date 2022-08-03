@@ -22,6 +22,14 @@ const CusSelect = styled(Select)`
   }
 `;
 
+const orderTypes = [
+  { name: "DINE-IN", code: "D", paymentStatus: "PAID" },
+  { name: "STORE TAKE-AWAY", code: "ST", paymentStatus: "PAID" },
+  { name: "STORE DELIVERY", code: "SD", paymentStatus: "PAID" },
+  { name: "PHONE SELF-COLLECT", code: "PT", paymentStatus: "Not Paid" },
+  { name: "PHONE DELIVERY", code: "PD", paymentStatus: "Not Paid" },
+];
+
 export const DineIn = () => {
   const user = useSelector((state) => state.auth.user);
   const auth = useSelector((state) => state.auth);
@@ -39,6 +47,10 @@ export const DineIn = () => {
         }
   );
   const [ShowCheckout, setShowCheckout] = useState(false);
+  const [selectedOrderType, setSelectedOrderType] = useState("DINE-IN");
+  const [selectedOrderTypeObj, setSelectedOrderTypeObj] = useState(
+    orderTypes[0]
+  );
 
   if (auth.authenticate !== true) {
     return <Redirect to={"/signin"} />;
@@ -51,6 +63,13 @@ export const DineIn = () => {
 
   const handleSelectedStore = (store) => {
     setSelectedStoreObj(store);
+  };
+  const handleChangeOrderType = (event) => {
+    setSelectedOrderType(event.target.value);
+  };
+
+  const handleChangeOrderTypeObj = (type) => {
+    setSelectedOrderTypeObj(type);
   };
 
   return (
@@ -65,7 +84,35 @@ export const DineIn = () => {
             >
               <ArrowBackIcon></ArrowBackIcon> &nbsp; Back
             </Button>
-          ) : null}
+          ) : (
+            <FormControl sx={{ width: "200px" }}>
+              <InputLabel
+                sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
+                id="demo-simple-select-label"
+              >
+                Order Type
+              </InputLabel>
+              <CusSelect
+                sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={selectedOrderType}
+                label="Please select the store"
+                onChange={handleChangeOrderType}
+              >
+                {orderTypes.map((type) => (
+                  <CusMenuItem
+                    onClick={() => {
+                      handleChangeOrderTypeObj(type);
+                    }}
+                    value={type.name}
+                  >
+                    <span>{type.name}</span>
+                  </CusMenuItem>
+                ))}
+              </CusSelect>
+            </FormControl>
+          )}
         </Col>
         <div style={{ maxWidth: "125px !important" }}>
           <Typography
@@ -123,6 +170,7 @@ export const DineIn = () => {
             restaurantId={selectedStoreObj.restaurantId}
             storeId={selectedStoreObj.storeId}
             storeObj={selectedStoreObj}
+            selectedOrderTypeObj={selectedOrderTypeObj}
           ></NewCheckout>
         ) : (
           <NewMenu

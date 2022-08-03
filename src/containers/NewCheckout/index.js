@@ -27,11 +27,13 @@ import {
   GetCustomerAddress,
   AddUpdateCustomerAddress,
   GetCustomerDetails,
+  validateCoupon,
 } from "../../actions";
 import { InvoiceTable } from "../../components/InvoiceTable";
 import Pdf from "react-to-pdf";
 import { toast } from "react-toastify";
 import "react-phone-number-input/style.css";
+import ReactToPrint from "react-to-print";
 
 const CusContainer = styled(Container)`
   margin-top: 50px;
@@ -99,6 +101,7 @@ export default function NewCheckout(props) {
   const user = useSelector((state) => state.auth.user);
   const currentAddress = useSelector((state) => state.user.currentAddress);
   const taxDetails = useSelector((state) => state.user.taxDetails);
+  const couponReduxObj = useSelector((state) => state.user.coupon);
 
   const cart = useSelector((state) => state.cart);
   const [subTotal, setSubtotal] = useState(0);
@@ -123,14 +126,19 @@ export default function NewCheckout(props) {
   const [zipCode, setZipCode] = useState("");
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
+  const [referenceNo, setReferenceNo] = useState("");
+  const [couponCode, setCouponCode] = useState("");
   const [defaultAddress, setDefaultAddress] = useState(false);
   const [currentGetAddress, setCurrentGetAddress] = useState(null);
   const [currentCustomer, setCurrentCustomer] = useState(null);
   const [isNewCustomerFunc, setIsNewCustomerFunc] = useState(false);
+  const [cardHeight, setCardHeight] = useState(0);
+  const [couponLocalObj, setCouponLocalObj] = useState(null);
 
   const dispatch = useDispatch();
   const ref = React.createRef();
   const refH = useRef(null);
+  const refCardHeight = useRef(null);
 
   const history = useHistory();
 
@@ -140,36 +148,89 @@ export default function NewCheckout(props) {
     }
   });
 
+  useEffect(() => {
+    if (refCardHeight.current) {
+      setCardHeight(refCardHeight.current.clientHeight);
+    }
+  });
+
   const options = {
     unit: "px",
     format: [255, height],
   };
 
   const renderAllSub = () => {
-    const all =
+    let all =
       subTotal +
       (extraSubTotal ? extraSubTotal : 0) +
       (choiceTotal ? choiceTotal : 0);
+
+    if (
+      couponReduxObj &&
+      Number(couponReduxObj.couponDetails.discountPercentage)
+    ) {
+      const afterAddCoupon =
+        (100 - Number(couponReduxObj.couponDetails.discountPercentage)) / 100;
+      all = all * afterAddCoupon;
+    }
+
+    return <span>₹ {all.toFixed(2)}</span>;
+  };
+
+  const renderCouponDiscount = () => {
+    let all =
+      subTotal +
+      (extraSubTotal ? extraSubTotal : 0) +
+      (choiceTotal ? choiceTotal : 0);
+
+    if (
+      couponReduxObj &&
+      Number(couponReduxObj.couponDetails.discountPercentage)
+    ) {
+      const afterAddCoupon =
+        Number(couponReduxObj.couponDetails.discountPercentage) / 100;
+      all = all * afterAddCoupon;
+    }
+
     return <span>₹ {all.toFixed(2)}</span>;
   };
 
   const renderTax = (tax) => {
-    const all = (
-      (subTotal +
-        (extraSubTotal ? extraSubTotal : 0) +
-        (choiceTotal ? choiceTotal : 0)) *
-      (tax.taxPercentage / 100)
-    ).toFixed(2);
+    let allSub =
+      subTotal +
+      (extraSubTotal ? extraSubTotal : 0) +
+      (choiceTotal ? choiceTotal : 0);
+
+    if (
+      couponReduxObj &&
+      Number(couponReduxObj.couponDetails.discountPercentage)
+    ) {
+      const afterAddCoupon =
+        (100 - Number(couponReduxObj.couponDetails.discountPercentage)) / 100;
+      allSub = allSub * afterAddCoupon;
+    }
+
+    const all = (allSub * (tax.taxPercentage / 100)).toFixed(2);
+
     return <span>₹ {all}</span>;
   };
 
   let grandTotalForPayU = 0;
 
   const renderGrandTot = () => {
-    const allSub =
+    let allSub =
       subTotal +
       (extraSubTotal ? extraSubTotal : 0) +
       (choiceTotal ? choiceTotal : 0);
+
+    if (
+      couponReduxObj &&
+      Number(couponReduxObj.couponDetails.discountPercentage)
+    ) {
+      const afterAddCoupon =
+        (100 - Number(couponReduxObj.couponDetails.discountPercentage)) / 100;
+      allSub = allSub * afterAddCoupon;
+    }
 
     let allTax = 0;
 
@@ -210,10 +271,19 @@ export default function NewCheckout(props) {
         return;
       }
 
-      const total =
+      let total =
         subTotal +
         (extraSubTotal ? extraSubTotal : 0) +
         (choiceTotal ? choiceTotal : 0);
+
+      if (
+        couponReduxObj &&
+        Number(couponReduxObj.couponDetails.discountPercentage)
+      ) {
+        const afterAddCoupon =
+          (100 - Number(couponReduxObj.couponDetails.discountPercentage)) / 100;
+        total = total * afterAddCoupon;
+      }
 
       let orderDetails = [];
       const allItems = Object.values(cart?.cartItems);
@@ -231,7 +301,10 @@ export default function NewCheckout(props) {
           remarks: allItems[i].specialText,
         };
 
-        if (Object.keys(allItems[i].choiceIng).length > 0) {
+        if (
+          Object.keys(allItems[i].choiceIng).length > 0 &&
+          allItems[i].choiceIng.price
+        ) {
           console.log(allItems[i].choiceIng);
           const objCh = {
             productId: allItems[i].productId,
@@ -239,7 +312,7 @@ export default function NewCheckout(props) {
             subProductId: allItems[i].choiceIng.subProductId
               ? allItems[i].choiceIng.subProductId
               : "NAA",
-            quantity: allItems[i].choiceIng.qty ? allItems[i].choiceIng.qty : 1,
+            quantity: allItems[i].qty ? allItems[i].qty : 1,
             storeId: allItems[i].storeId,
             price: allItems[i].choiceIng.price,
             remarks: allItems[i].choiceIng.specialText
@@ -259,7 +332,7 @@ export default function NewCheckout(props) {
               subProductId: allExtra[k].subProductId
                 ? allExtra[k].subProductId
                 : "NAA",
-              quantity: allExtra[k].qty ? allExtra[k].qty : 1,
+              quantity: allItems[i].qty ? allItems[i].qty : 1,
               storeId: allItems[i].storeId,
               price: allExtra[k].price,
               remarks: allExtra[k].specialText ? allExtra[k].specialText : "",
@@ -297,17 +370,17 @@ export default function NewCheckout(props) {
         restaurantId: props.restaurantId,
         storeId: props.storeId,
         //orderSource: "W",
-        orderSource: "D",
+        orderSource: props.selectedOrderTypeObj.code,
         //customerId: 106,
         customerId: currentCustomer ? currentCustomer.id : 99999,
         orderReceivedDateTime: new Date(),
         //orderDeliveryType: "SELF-COLLECT",
-        orderDeliveryType: "DINE_IN",
+        orderDeliveryType: props.selectedOrderTypeObj.name,
         storeTableId: tableNo,
         orderStatus: "SUBMITTED",
         taxRuleId: 1,
         totalPrice: total,
-        paymentStatus: "PAID",
+        paymentStatus: props.selectedOrderTypeObj.paymentStatus,
         paymentMode: currentPaymentType,
         deliveryCharges: 0,
         customerAddressId: defaultAddress ? 99999 : currentGetAddress.id,
@@ -316,6 +389,13 @@ export default function NewCheckout(props) {
         overallPriceWithTax: overallPriceWithTax,
         orderDetails: orderDetails,
         createdBy: user.firstName,
+        paymentTxnReference: referenceNo,
+        couponCode: couponReduxObj
+          ? couponReduxObj.couponDetails.couponCode
+          : "",
+        discountPercentage: couponReduxObj
+          ? couponReduxObj.couponDetails.discountPercentage
+          : 0,
       };
 
       console.log(NewOrder);
@@ -335,6 +415,18 @@ export default function NewCheckout(props) {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const validateCouponCode = () => {
+    if (!couponCode) {
+      toast.error("Please fill the coupon code!");
+      return;
+    }
+    dispatch(validateCoupon(couponCode)).then((res) => {
+      if (res) {
+        setCouponLocalObj(res);
+      }
+    });
   };
 
   const resetPaymentMethod = () => {
@@ -625,14 +717,19 @@ export default function NewCheckout(props) {
         <Modal.Footer>
           <Row className="w-100">
             <Col className="col-6">
-              <Button
-                color="secondary"
-                onClick={handleCloseInvoice}
-                className="w-100"
-                variant="contained"
-              >
-                Close
-              </Button>
+              <ReactToPrint
+                trigger={() => (
+                  <Button
+                    color="secondary"
+                    //onClick={handleCloseInvoice}
+                    className="w-100"
+                    variant="contained"
+                  >
+                    Print
+                  </Button>
+                )}
+                content={() => ref.current}
+              />
             </Col>
             <Col className="col-6">
               <Pdf
@@ -661,7 +758,15 @@ export default function NewCheckout(props) {
 
   const renderPayUModal = () => {
     return (
-      <Modal show={show} onHide={handleClose}>
+      <Modal
+        show={show}
+        onHide={handleClose}
+        style={{
+          marginTop: "65px",
+          zIndex: 1100,
+          paddingBottom: "60px",
+        }}
+      >
         <Modal.Header closeButton>
           <Modal.Title> Secure Form Example</Modal.Title>
         </Modal.Header>
@@ -743,6 +848,7 @@ export default function NewCheckout(props) {
                     height: "468px",
                     overflowY: "auto",
                   }}
+                  ref={refCardHeight}
                 >
                   <CardContent sx={{ height: "auto" }}>
                     <CartCard
@@ -777,6 +883,35 @@ export default function NewCheckout(props) {
                             </Typography>
                           </div>
                         </Row>
+
+                        {couponReduxObj && couponReduxObj.couponDetails ? (
+                          <Row className="ps-2">
+                            <div className="w75">
+                              <Typography
+                                sx={{
+                                  fontSize: "0.9rem",
+                                  fontWeight: "600",
+                                  fontFamily: "Arial",
+                                  color: "#595959",
+                                }}
+                              >
+                                Coupon Discount
+                              </Typography>
+                            </div>
+                            <div className="w25">
+                              <Typography
+                                sx={{
+                                  fontSize: "0.9rem",
+                                  fontWeight: "600",
+                                  color: "#2e7d32",
+                                }}
+                              >
+                                {renderCouponDiscount()}
+                              </Typography>
+                            </div>
+                          </Row>
+                        ) : null}
+
                         <Row className="pl-2">
                           {taxDetails ? (
                             <>
@@ -839,6 +974,49 @@ export default function NewCheckout(props) {
                         </Row>
                       </Typography>
                     ) : null}
+
+                    <Row className="mt-5">
+                      <Col sm={7}>
+                        <CusTextField
+                          label="Coupon Code"
+                          value={couponCode}
+                          onChange={(event) => {
+                            setCouponCode(event.target.value);
+                          }}
+                          fullWidth
+                        />
+                      </Col>
+                      <Col sm={5}>
+                        <Button
+                          variant="contained"
+                          color="success"
+                          sx={{
+                            fontSize: "0.75rem",
+                            lineHeight: "1rem",
+                            padding: "5px 16px",
+                          }}
+                          onClick={validateCouponCode}
+                        >
+                          APPLY
+                        </Button>
+                      </Col>
+                    </Row>
+                    <div className="text-center mt-2">
+                      {couponReduxObj && couponReduxObj.couponDetails ? (
+                        <Typography
+                          sx={{
+                            fontWeight: "bold",
+                            color: "#2e7d32",
+                            fontSize: "0.9rem",
+                          }}
+                        >
+                          {couponReduxObj.couponDetails.couponCode} Applied!
+                          &nbsp;
+                          {couponReduxObj.couponDetails.discountPercentage}%
+                          Off!
+                        </Typography>
+                      ) : null}
+                    </div>
                   </CardContent>
                 </Card>
               </div>
@@ -861,7 +1039,11 @@ export default function NewCheckout(props) {
                 <Col className="col-12">
                   <Grid sx={{ width: "100%", marginTop: 3 }}>
                     <Card
-                      sx={{ width: "100%", marginTop: 3, minHeight: "468px" }}
+                      sx={{
+                        width: "100%",
+                        marginTop: 3,
+                        minHeight: cardHeight,
+                      }}
                     >
                       <CardContent>
                         <div>
@@ -1120,7 +1302,7 @@ export default function NewCheckout(props) {
                       (defaultAddress ||
                         (address1 && zipCode && city && state && addressType))
                     ) ? (
-                      <Card sx={{ minHeight: "468px" }}>
+                      <Card sx={{ minHeight: cardHeight }}>
                         <FormControl sx={{ marginLeft: 3, marginTop: 2 }}>
                           <RadioGroup
                             aria-labelledby="demo-controlled-radio-buttons-group"
@@ -1140,23 +1322,7 @@ export default function NewCheckout(props) {
                                     fontFamily: "Arial",
                                   }}
                                 >
-                                  Cash
-                                </Typography>
-                              }
-                            />
-                            <FormControlLabel
-                              value="GooglePay"
-                              control={<Radio color="success" />}
-                              label={
-                                <Typography
-                                  sx={{
-                                    color: "#595959",
-                                    fontSize: "0.9rem",
-                                    fontWeight: "600",
-                                    fontFamily: "Arial",
-                                  }}
-                                >
-                                  GooglePay
+                                  CASH
                                 </Typography>
                               }
                             />
@@ -1177,7 +1343,7 @@ export default function NewCheckout(props) {
                               }
                             />
                             <FormControlLabel
-                              value="Credit Card"
+                              value="EDC"
                               control={<Radio color="success" />}
                               label={
                                 <Typography
@@ -1188,12 +1354,12 @@ export default function NewCheckout(props) {
                                     fontFamily: "Arial",
                                   }}
                                 >
-                                  Credit Card
+                                  Credit / Debit
                                 </Typography>
                               }
                             />
                             <FormControlLabel
-                              value="Debit Card"
+                              value="Gpay"
                               control={<Radio color="success" />}
                               label={
                                 <Typography
@@ -1204,10 +1370,11 @@ export default function NewCheckout(props) {
                                     fontFamily: "Arial",
                                   }}
                                 >
-                                  Debit Card
+                                  Google Pay
                                 </Typography>
                               }
                             />
+
                             <FormControlLabel
                               value="PhonePe"
                               control={<Radio color="success" />}
@@ -1225,7 +1392,7 @@ export default function NewCheckout(props) {
                               }
                             />
                             <FormControlLabel
-                              value="Amazon Pay"
+                              value="AmznPay"
                               control={<Radio color="success" />}
                               label={
                                 <Typography
@@ -1274,23 +1441,38 @@ export default function NewCheckout(props) {
                     phoneNo &&
                     (defaultAddress ||
                       (address1 && zipCode && city && state && addressType)) ? (
-                      <Card className="p-3" sx={{ minHeight: "468px" }}>
-                        <Row>
-                          <Col>
-                            <p>You selected {currentPaymentType}!</p>
-                          </Col>
-                          <Col>
-                            <Button
-                              onClick={resetPaymentMethod}
-                              variant="contained"
-                              color="warning"
-                              sx={{ width: "100%", height: "100%" }}
-                            >
-                              Reset
-                            </Button>
-                          </Col>
-                        </Row>
-                      </Card>
+                      <>
+                        {" "}
+                        <Card className="p-3" sx={{ minHeight: cardHeight }}>
+                          <Row>
+                            <Col>
+                              <p>You selected {currentPaymentType}!</p>
+                            </Col>
+                            <Col>
+                              <Button
+                                onClick={resetPaymentMethod}
+                                variant="contained"
+                                color="warning"
+                                sx={{ width: "100%", height: "100%" }}
+                              >
+                                Reset
+                              </Button>
+                            </Col>
+                          </Row>
+                        </Card>
+                        <div
+                          style={{ position: "relative", bottom: "50px" }}
+                          className="text-center"
+                        >
+                          <CusTextField
+                            label="Payment Reference No#"
+                            value={referenceNo}
+                            onChange={(event) => {
+                              setReferenceNo(event.target.value);
+                            }}
+                          />
+                        </div>
+                      </>
                     ) : null}
                   </Grid>
                 </Col>

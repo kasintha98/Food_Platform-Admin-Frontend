@@ -32,6 +32,10 @@ import { DeliveryRiderViewMap } from "../DeliveryRiderViewMap";
 import { DeliveryRiderViewMapNew } from "../DeliveryRiderViewMapNew";
 import { OrderDetailsTable } from "../OrderDetailsTable";
 import "./style.css";
+import ReactExport from "react-export-excel";
+const ExcelFile = ReactExport.ExcelFile;
+const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
+const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
 const CusTableCell1 = styled(TableCell)`
   font-size: 0.68rem;
@@ -260,15 +264,19 @@ export const DeliveryTrackingTable = (props) => {
     }
   };
 
-  const getTimeTakenByDeliveryRider = (id) => {
+  const getTimeTakenByDeliveryRider = (id, isStrng) => {
     const outTime = getTimeByStatus(id, "OUT FOR DELIVERY", false);
     const deliveredTime = getTimeByStatus(id, "DELIVERED", false);
 
     if (outTime && deliveredTime) {
       const timeTaken = new Date(deliveredTime) - new Date(outTime);
-      return <span>{new Date(timeTaken).toISOString().substring(11, 19)}</span>;
+      return isStrng ? (
+        `${new Date(timeTaken).toISOString().substring(11, 19)}`
+      ) : (
+        <span>{new Date(timeTaken).toISOString().substring(11, 19)}</span>
+      );
     } else {
-      return <span>N/A</span>;
+      return isStrng ? "N/A" : <span>N/A</span>;
     }
   };
 
@@ -278,7 +286,11 @@ export const DeliveryTrackingTable = (props) => {
         show={showDetailsModal}
         onHide={handleCloseDetailsModal}
         close
-        style={{ marginTop: "60px" }}
+        style={{
+          marginTop: "65px",
+          zIndex: 1100,
+          paddingBottom: "60px",
+        }}
       >
         <Modal.Header closeButton>
           <Modal.Title>OrderDetails</Modal.Title>
@@ -399,12 +411,40 @@ export const DeliveryTrackingTable = (props) => {
           </Typography>
         </Col>
       </Row>
+      <ExcelFile element={<Button variant="text">Download Full Report</Button>}>
+        <ExcelSheet data={filteredData} name="Orders">
+          <ExcelColumn label="orderId" value="orderId" />
+          <ExcelColumn label="restaurantId" value="restaurantId" />
+          <ExcelColumn label="storeId" value="storeId" />
+          <ExcelColumn label="mobileNumber" value="mobileNumber" />
+          <ExcelColumn label="paymentStatus" value="paymentStatus" />
+          <ExcelColumn label="paymentMode" value="paymentMode" />
+          <ExcelColumn label="customerName" value="customerName" />
+          <ExcelColumn label="address" value="address" />
+          <ExcelColumn
+            label="overallPriceWithTax"
+            value="overallPriceWithTax"
+          />
+          <ExcelColumn label="orderStatus" value="orderStatus" />
+          <ExcelColumn
+            label="ORDER ACCEPTED TIME"
+            value={(col) => getTimeByStatus(col.orderId, "ACCEPTED", false)}
+          />
+          <ExcelColumn
+            label="ORDER DELIVERED TIME"
+            value={(col) => getTimeByStatus(col.orderId, "DELIVERED", false)}
+          />
+          <ExcelColumn
+            label="TIME TAKEN BY DELIVERY BOY (HH:MM:SS)"
+            value={(col) => getTimeTakenByDeliveryRider(col.orderId, true)}
+          />
+        </ExcelSheet>
+      </ExcelFile>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
               <CusTableCell1 align="center">ORDER NO</CusTableCell1>
-
               <CusTableCell1 align="center">CUSTOMER PHONE NO</CusTableCell1>
               <CusTableCell1 align="center">PYMT.</CusTableCell1>
               <CusTableCell1 align="center">PYMT. MODE</CusTableCell1>
@@ -507,8 +547,8 @@ export const DeliveryTrackingTable = (props) => {
         <MapNew></MapNew> */}
         {/* <h3>Delivery Rider View</h3>
         <DeliveryRiderViewMap></DeliveryRiderViewMap> */}
-        <h3>Delivery Rider View New</h3>
-        <DeliveryRiderViewMapNew></DeliveryRiderViewMapNew>
+        {/* <h3>Delivery Rider View New</h3>
+        <DeliveryRiderViewMapNew></DeliveryRiderViewMapNew> */}
       </div>
       {renderDetailsModal()}
     </div>

@@ -32,6 +32,12 @@ const CusTableCell2 = styled(TableCell)`
   font-size: 0.75rem;
 `;
 
+const CusTableCell3 = styled(TableCell)`
+  font-size: 0.75rem;
+  max-width: 120px;
+  word-wrap: break-word;
+`;
+
 const statuses = [
   "SUBMITTED",
   "ACCEPTED",
@@ -147,7 +153,11 @@ export const OrderTable = (props) => {
         show={showDetailsModal}
         onHide={handleCloseDetailsModal}
         close
-        style={{ marginTop: "60px" }}
+        style={{
+          marginTop: "65px",
+          zIndex: 1100,
+          paddingBottom: "60px",
+        }}
       >
         <Modal.Header closeButton>
           <Modal.Title>OrderDetails</Modal.Title>
@@ -317,7 +327,7 @@ export const OrderTable = (props) => {
               <>
                 {orders.map((row) => (
                   <TableRow key={row.orderId}>
-                    <CusTableCell2
+                    <CusTableCell3
                       align="center"
                       onClick={() => {
                         setCurrentOrder(row);
@@ -325,12 +335,11 @@ export const OrderTable = (props) => {
                       }}
                       sx={{ cursor: "pointer" }}
                     >
-                      {row.orderId.slice(0, 11)} <br></br>
-                      {row.orderId.slice(11, 19)}
+                      {row.orderId.substr(0, row.orderId.length - 3)}
                       <span style={{ color: "#4472c4" }}>
-                        {row.orderId.slice(19, 23)}
+                        {row.orderId.substr(row.orderId.length - 3)}
                       </span>
-                    </CusTableCell2>
+                    </CusTableCell3>
                     <CusTableCell2 align="center">
                       {new Date(row.createdDate).getFullYear()}-
                       {new Date(row.createdDate).getMonth() + 1}-

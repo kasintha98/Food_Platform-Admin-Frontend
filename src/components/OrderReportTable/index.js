@@ -45,16 +45,25 @@ export const OrderReportTable = (props) => {
   const refH = useRef(null);
 
   useEffect(() => {
-    const today = new Date();
+    //const today = new Date();
     dispatch(
       getCustomerOrders(
         props.restaurantId,
         props.storeId,
         null,
-        `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
+        `${props.endDate.getFullYear()}-${
+          props.endDate.getMonth() + 1
+        }-${props.endDate.getDate()}`,
+        null,
+        null,
+        null,
+        null,
+        `${props.startDate.getFullYear()}-${
+          props.startDate.getMonth() + 1
+        }-${props.startDate.getDate()}`
       )
     );
-  }, [props.restaurantId, props.storeId]);
+  }, [props.restaurantId, props.storeId, props.endDate, props.startDate]);
 
   useEffect(() => {
     if (refH.current) {
@@ -110,7 +119,11 @@ export const OrderReportTable = (props) => {
       <Modal
         show={showInvoice}
         onHide={handleCloseInvoice}
-        style={{ marginTop: "40px" }}
+        style={{
+          marginTop: "65px",
+          zIndex: 1100,
+          paddingBottom: "60px",
+        }}
       >
         <Modal.Header closeButton>
           <Modal.Title>
@@ -235,6 +248,8 @@ export const OrderReportTable = (props) => {
             value="sgstCalculatedValue"
           />
           <ExcelColumn label="deliveryCharges" value="deliveryCharges" />
+          <ExcelColumn label="discountCode" value="discountCode" />
+          <ExcelColumn label="discountPercentage" value="discountPercentage" />
           {/* <ExcelColumn
             label="orderDetails"
             value={(col) => {
@@ -276,6 +291,8 @@ export const OrderReportTable = (props) => {
               <CusTableCell1 align="center">CGST</CusTableCell1>
               <CusTableCell1 align="center">SGST</CusTableCell1>
               <CusTableCell1 align="center">DELIVERY CHARGES</CusTableCell1>
+              <CusTableCell1 align="center">DISCOUNT CODE</CusTableCell1>
+              <CusTableCell1 align="center">DISCOUNT PERCENTAGE</CusTableCell1>
               <CusTableCell1 align="center">ITEM ORDERED</CusTableCell1>
               <CusTableCell1 align="center">ACTION</CusTableCell1>
               <CusTableCell1 align="center">VIEW | PRINT INVOICE</CusTableCell1>
@@ -351,6 +368,18 @@ export const OrderReportTable = (props) => {
                       sx={{ paddingLeft: 0, paddingRight: 0 }}
                     >
                       Rs. {row.deliveryCharges}
+                    </CusTableCell2>
+                    <CusTableCell2
+                      align="center"
+                      sx={{ paddingLeft: 0, paddingRight: 0 }}
+                    >
+                      {row.discountCode ? row.discountCode : "N/A"}
+                    </CusTableCell2>
+                    <CusTableCell2
+                      align="center"
+                      sx={{ paddingLeft: 0, paddingRight: 0 }}
+                    >
+                      {row.discountPercentage ? row.discountPercentage : "N/A"}
                     </CusTableCell2>
                     <CusTableCell2 align="left">
                       {row.orderDetails.map((item) => (
