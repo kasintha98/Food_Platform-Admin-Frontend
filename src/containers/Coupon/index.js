@@ -90,6 +90,7 @@ const CusTextField = styled(TextField)`
 
 export const Coupon = () => {
   const stores = useSelector((state) => state.store.stores);
+  const user = useSelector((state) => state.auth.user);
 
   const [selectedStore, setSelectedStore] = useState(null);
   const [selectedStoreObj, setSelectedStoreObj] = useState(null);
@@ -174,11 +175,18 @@ export const Coupon = () => {
           : newEndDate.getDate()
       }`,
       activeFlag: newActiveFlag,
+      createdBy: user.loginId,
     };
 
     dispatch(saveNewCoupon(couponObj)).then((res) => {
       if (res) {
         handleIsnewCoupon();
+        setNewCode("");
+        setNewDiscount("");
+        setNewDescription("");
+        setNewStartDate(new Date());
+        setNewEndDate(new Date());
+        setNewActiveFlag("Y");
       }
     });
   };
@@ -270,8 +278,20 @@ export const Coupon = () => {
               <CusTableCell>testing</CusTableCell>
               <CusTableCell>testing</CusTableCell>
               <CusTableCell>testing</CusTableCell>
-              <CusTableCell>testing</CusTableCell>
-              <CusTableCell>testing</CusTableCell>
+              <CusTableCell
+                sx={{
+                  maxWidth: "130px",
+                }}
+              >
+                testing
+              </CusTableCell>
+              <CusTableCell
+                sx={{
+                  maxWidth: "130px",
+                }}
+              >
+                testing
+              </CusTableCell>
               <CusTableCell>testing</CusTableCell>
               <CusTableCell align="center">
                 {isSave[1] ? (
@@ -352,7 +372,7 @@ export const Coupon = () => {
                   align="center"
                   sx={{
                     padding: "10px !important",
-                    maxWidth: "110px",
+                    maxWidth: "130px",
                   }}
                 >
                   <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -369,7 +389,7 @@ export const Coupon = () => {
                   align="center"
                   sx={{
                     padding: "10px !important",
-                    maxWidth: "110px",
+                    maxWidth: "130px",
                   }}
                 >
                   <LocalizationProvider dateAdapter={AdapterDateFns}>
