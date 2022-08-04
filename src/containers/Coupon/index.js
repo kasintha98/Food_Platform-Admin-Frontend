@@ -199,6 +199,7 @@ export const Coupon = () => {
 
   const saveUpdateCouponHandle = (coupon) => {
     const updatedCoupon = {
+      ...coupon,
       id: coupon.id,
       restaurantId: coupon.restaurantId,
       storeId: coupon.storeId,
