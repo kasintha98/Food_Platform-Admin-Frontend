@@ -28,6 +28,7 @@ import {
   AddUpdateCustomerAddress,
   GetCustomerDetails,
   validateCoupon,
+  clearCoupon,
 } from "../../actions";
 import { InvoiceTable } from "../../components/InvoiceTable";
 import Pdf from "react-to-pdf";
@@ -408,6 +409,7 @@ export default function NewCheckout(props) {
           });
           clearCustomer();
           clearAddress();
+          dispatch(clearCoupon());
           return res.data;
         }
       });

@@ -20,6 +20,7 @@ const initState = {
   currentAddress: null,
   currentGetAddress: null,
   coupon: null,
+  allCoupons: [],
 };
 
 export default (state = initState, action) => {
@@ -291,6 +292,33 @@ export default (state = initState, action) => {
       state = {
         ...state,
         coupon: null,
+      };
+      break;
+
+    case userConstants.CLEAR_COUPON_SUCCESS:
+      state = {
+        ...state,
+        coupon: null,
+      };
+      break;
+
+    case userConstants.GET_COUPONS_REQUEST:
+      state = {
+        ...state,
+      };
+      break;
+
+    case userConstants.GET_COUPONS_SUCCESS:
+      state = {
+        ...state,
+        allCoupons: action.payload,
+      };
+      break;
+
+    case userConstants.GET_COUPONS_FAILURE:
+      state = {
+        ...state,
+        allCoupons: [],
       };
       break;
   }

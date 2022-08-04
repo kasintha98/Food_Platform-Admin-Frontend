@@ -467,6 +467,72 @@ export const saveMenuItem = (product) => {
   };
 };
 
+export const saveMenuIngredient = (topping) => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: productConstants.SAVE_NEW_MENU_INGREDIENT_REQUEST,
+      });
+
+      const res = await axios.post(`/saveMenuIngredient`, topping);
+
+      if (res.status === 200) {
+        dispatch({
+          type: productConstants.SAVE_NEW_MENU_INGREDIENT_SUCCESS,
+          payload: res.data,
+        });
+        toast.success("Menu ingredient saved successfully!");
+        return res.data;
+      } else {
+        dispatch({
+          type: productConstants.SAVE_NEW_MENU_INGREDIENT_FAILURE,
+        });
+        console.log("error");
+        toast.error("Error when saving menu ingredient, please try again!");
+      }
+    } catch (error) {
+      dispatch({
+        type: productConstants.SAVE_NEW_MENU_INGREDIENT_FAILURE,
+      });
+      toast.error("Error when saving menu ingredient, please try again!");
+      console.log(error);
+    }
+  };
+};
+
+export const saveSubProduct = (subProduct) => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: productConstants.SAVE_NEW_SUB_PRODUCT_REQUEST,
+      });
+
+      const res = await axios.post(`/saveSubProduct`, subProduct);
+
+      if (res.status === 200) {
+        dispatch({
+          type: productConstants.SAVE_NEW_SUB_PRODUCT_SUCCESS,
+          payload: res.data,
+        });
+        toast.success("Sub product saved successfully!");
+        return res.data;
+      } else {
+        dispatch({
+          type: productConstants.SAVE_NEW_SUB_PRODUCT_FAILURE,
+        });
+        console.log("error");
+        toast.error("Error when saving sub product, please try again!");
+      }
+    } catch (error) {
+      dispatch({
+        type: productConstants.SAVE_NEW_SUB_PRODUCT_FAILURE,
+      });
+      toast.error("Error when saving sub product, please try again!");
+      console.log(error);
+    }
+  };
+};
+
 const filterSearch = (list, sectionKeyword, categoryKeyword, nameKeyword) => {
   console.log(list, sectionKeyword, categoryKeyword, nameKeyword);
   if (sectionKeyword && categoryKeyword && nameKeyword) {

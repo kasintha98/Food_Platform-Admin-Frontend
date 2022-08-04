@@ -618,7 +618,6 @@ export const saveNewCoupon = (payload) => {
           payload: res.data,
         });
         toast.success("Coupon saved successfully!");
-        dispatch(getRoles());
         return res.data;
       } else {
         dispatch({
@@ -651,7 +650,6 @@ export const updateCoupon = (payload) => {
           payload: res.data,
         });
         toast.success("Coupon updated successfully!");
-        dispatch(getRoles());
         return res.data;
       } else {
         dispatch({
@@ -674,10 +672,11 @@ export const updateCoupon = (payload) => {
 export const validateCoupon = (couponCode) => {
   return async (dispatch) => {
     try {
+      dispatch({ type: userConstants.VALIDATE_COUPON_REQUEST });
+
       const res = await axios.post("/validateCoupon", null, {
         params: { couponCode },
       });
-      dispatch({ type: userConstants.VALIDATE_COUPON_REQUEST });
 
       if (res.status === 200 && res.data) {
         if (res.data.validationResult === "VALID_COUPON") {
@@ -707,6 +706,50 @@ export const validateCoupon = (couponCode) => {
         payload: null,
       });
       toast.error("There was an error from our end, Please try again!");
+    }
+  };
+};
+
+export const clearCoupon = () => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: userConstants.CLEAR_COUPON_SUCCESS });
+    } catch (error) {
+      dispatch({
+        type: userConstants.CLEAR_COUPON_FAILURE,
+      });
+    }
+  };
+};
+
+export const getAllCoupons = (restaurantId, storeId) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: userConstants.GET_COUPONS_REQUEST });
+
+      const res = await axios.get("/getCouponsByRestroAndStore", {
+        params: { restaurantId, storeId },
+      });
+
+      if (res.status === 200 && res.data) {
+        dispatch({
+          type: userConstants.GET_COUPONS_SUCCESS,
+          payload: res.data,
+        });
+        return res.data;
+      } else {
+        dispatch({
+          type: userConstants.GET_COUPONS_FAILURE,
+          payload: [],
+        });
+        toast.error("There was an error getting data!");
+      }
+    } catch (error) {
+      dispatch({
+        type: userConstants.GET_COUPONS_FAILURE,
+        payload: [],
+      });
+      toast.error("There was an error getting data!");
     }
   };
 };

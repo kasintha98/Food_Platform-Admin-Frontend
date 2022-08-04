@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { saveNewCoupon, updateCoupon } from "../../actions";
+import { saveNewCoupon, updateCoupon, getAllCoupons } from "../../actions";
 import { toast } from "react-toastify";
 import Layout from "../NewLayout";
 import styled from "@emotion/styled";
@@ -18,6 +18,8 @@ import {
   Select,
   MenuItem,
   TextField,
+  Alert,
+  NativeSelect,
 } from "@mui/material";
 import { Row, Col } from "react-bootstrap";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -59,7 +61,23 @@ const CusMenuItem = styled(MenuItem)``;
 const CusDesktopDatePicker = styled(DesktopDatePicker)`
   & input {
     font-size: 0.75rem;
-    padding: 0.25rem;
+    padding: 0 !important;
+  }
+
+  &.MuiOutlinedInput-input {
+    padding: 0 !important;
+  }
+
+  &.MuiInputBase-input {
+    padding: 0 !important;
+  }
+
+  &.MuiInputBase-inputAdornedEnd {
+    padding: 0 !important;
+  }
+
+  &.css-nxo287-MuiInputBase-input-MuiOutlinedInput-input {
+    padding: 0 !important;
   }
 `;
 
@@ -91,6 +109,7 @@ const CusTextField = styled(TextField)`
 export const Coupon = () => {
   const stores = useSelector((state) => state.store.stores);
   const user = useSelector((state) => state.auth.user);
+  const allCoupons = useSelector((state) => state.user.allCoupons);
 
   const [selectedStore, setSelectedStore] = useState(null);
   const [selectedStoreObj, setSelectedStoreObj] = useState(null);
@@ -102,8 +121,36 @@ export const Coupon = () => {
   const [newStartDate, setNewStartDate] = useState(new Date());
   const [newEndDate, setNewEndDate] = useState(new Date());
   const [newActiveFlag, setNewActiveFlag] = useState("Y");
+  const [updateStartDate, setUpdateStartDate] = useState({});
+  const [updateEndDate, setUpdateEndDate] = useState({});
+  const [isRefresh, setIsRefresh] = useState(false);
+  const [currentCode, setCurrentCode] = useState({});
+  const [currentDiscount, setCurrentDiscount] = useState({});
+  const [currentDescription, setCurrentDescription] = useState({});
+  const [currentActiveFlag, setCurrentActiveFlag] = useState("");
 
   const dispatch = useDispatch();
+  const newRowRef = useRef(null);
+
+  useEffect(() => {
+    if (selectedStoreObj) {
+      dispatch(
+        getAllCoupons(selectedStoreObj.restaurantId, selectedStoreObj.storeId)
+      );
+    }
+  }, [selectedStoreObj, isRefresh]);
+
+  const handleRefresh = () => {
+    if (isRefresh) {
+      setIsRefresh(false);
+    } else {
+      setIsRefresh(true);
+    }
+  };
+
+  const scrollToBottom = () => {
+    newRowRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   const handleChangeStore = (event) => {
     setSelectedStore(event.target.value);
@@ -128,6 +175,7 @@ export const Coupon = () => {
       setIsNewCoupon(false);
     } else {
       setIsNewCoupon(true);
+      scrollToBottom();
     }
   };
 
@@ -137,6 +185,67 @@ export const Coupon = () => {
 
   const handleEndDateChange = (newValue) => {
     setNewEndDate(newValue);
+  };
+
+  const handleUpdateStartDateChange = (newValue, id) => {
+    const start = { ...updateStartDate, [id]: newValue };
+    setUpdateStartDate(start);
+  };
+
+  const handleUpdateEndDateChange = (newValue, id) => {
+    const end = { ...updateEndDate, [id]: newValue };
+    setUpdateEndDate(end);
+  };
+
+  const saveUpdateCouponHandle = (coupon) => {
+    const updatedCoupon = {
+      id: coupon.id,
+      restaurantId: coupon.restaurantId,
+      storeId: coupon.storeId,
+      couponCode: currentCode[coupon.id]
+        ? currentCode[coupon.id]
+        : coupon.couponCode,
+      discountPercentage: currentDiscount[coupon.id]
+        ? currentDiscount[coupon.id]
+        : coupon.discountPercentage,
+      description: currentDescription[coupon.id]
+        ? currentDescription[coupon.id]
+        : coupon.description,
+      effectiveStartDate: updateStartDate[coupon.id]
+        ? `${updateStartDate[coupon.id].getFullYear()}-${
+            Number(updateStartDate[coupon.id].getMonth() + 1).toString()
+              .length < 2
+              ? `0${updateStartDate[coupon.id].getMonth() + 1}`
+              : updateStartDate[coupon.id].getMonth() + 1
+          }-${
+            Number(updateStartDate[coupon.id].getDate()).toString().length < 2
+              ? `0${updateStartDate[coupon.id].getDate()}`
+              : updateStartDate[coupon.id].getDate()
+          }`
+        : coupon.effectiveStartDate,
+      effectiveEndDate: updateEndDate[coupon.id]
+        ? `${updateEndDate[coupon.id].getFullYear()}-${
+            Number(updateEndDate[coupon.id].getMonth() + 1).toString().length <
+            2
+              ? `0${updateEndDate[coupon.id].getMonth() + 1}`
+              : updateEndDate[coupon.id].getMonth() + 1
+          }-${
+            Number(updateEndDate[coupon.id].getDate()).toString().length < 2
+              ? `0${updateEndDate[coupon.id].getDate()}`
+              : updateEndDate[coupon.id].getDate()
+          }`
+        : coupon.effectiveEndDate,
+      activeFlag: currentActiveFlag ? currentActiveFlag : coupon.activeFlag,
+    };
+
+    dispatch(updateCoupon(updatedCoupon)).then((res) => {
+      if (res) {
+      }
+    });
+  };
+
+  const handleCouponActiveFlag = (event) => {
+    setCurrentActiveFlag(event.target.value);
   };
 
   const saveNewCouponHandle = () => {
@@ -187,6 +296,7 @@ export const Coupon = () => {
         setNewStartDate(new Date());
         setNewEndDate(new Date());
         setNewActiveFlag("Y");
+        handleRefresh();
       }
     });
   };
@@ -272,70 +382,292 @@ export const Coupon = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            <TableRow>
-              <CusTableCell align="center">1</CusTableCell>
-              <CusTableCell>testing</CusTableCell>
-              <CusTableCell>testing</CusTableCell>
-              <CusTableCell>testing</CusTableCell>
-              <CusTableCell>testing</CusTableCell>
-              <CusTableCell
-                sx={{
-                  maxWidth: "130px",
-                }}
-              >
-                testing
-              </CusTableCell>
-              <CusTableCell
-                sx={{
-                  maxWidth: "130px",
-                }}
-              >
-                testing
-              </CusTableCell>
-              <CusTableCell>testing</CusTableCell>
-              <CusTableCell align="center">
-                {isSave[1] ? (
-                  <Button
-                    key={1}
-                    variant="contained"
-                    color="success"
-                    sx={{
-                      fontSize: "0.75rem",
-                      lineHeight: "1rem",
-                      padding: "5px 16px",
-                    }}
-                    onClick={() => {
-                      onSaveClickHandle(1);
-                      //saveUpdateProduct(product);
-                    }}
-                  >
-                    Save
-                  </Button>
+            {allCoupons && allCoupons.length > 0 ? (
+              <>
+                {allCoupons.map((coupon, index) => (
+                  <TableRow key={index}>
+                    <CusTableCell align="center">
+                      <Typography
+                        sx={{
+                          fontSize: "0.75rem",
+                          color: isSave[coupon.id] ? "black" : "#404040",
+                        }}
+                      >
+                        {index + 1}
+                      </Typography>
+                    </CusTableCell>
+                    <CusTableCell align="center">
+                      <Typography
+                        sx={{
+                          fontSize: "0.75rem",
+                          color: isSave[coupon.id] ? "black" : "#404040",
+                        }}
+                      >
+                        {selectedStoreObj
+                          ? selectedStoreObj.resturantName
+                          : `${coupon.restaurantId}-${coupon.storeId}`}
+                      </Typography>
+                    </CusTableCell>
+                    <CusTableCell align="center">
+                      <CusTextField
+                        disabled={!isSave[coupon.id]}
+                        key={coupon.id}
+                        defaultValue={coupon.couponCode}
+                        value={currentCode[coupon.id]}
+                        onChange={(event) => {
+                          const codes = {
+                            ...currentCode,
+                            [coupon.id]: event.target.value,
+                          };
+                          setCurrentCode(codes);
+                        }}
+                        sx={{
+                          fontSize: "0.75rem",
+                          "& .MuiInputBase-input.Mui-disabled": {
+                            WebkitTextFillColor: isSave[coupon.id]
+                              ? "black"
+                              : "#404040",
+                          },
+                        }}
+                        fullWidth
+                        variant="standard"
+                      />
+                    </CusTableCell>
+                    <CusTableCell align="center">
+                      <CusTextField
+                        disabled={!isSave[coupon.id]}
+                        key={coupon.id}
+                        defaultValue={coupon.discountPercentage}
+                        value={currentDiscount[coupon.id]}
+                        onChange={(event) => {
+                          const discounts = {
+                            ...currentDiscount,
+                            [coupon.id]: event.target.value,
+                          };
+                          setCurrentDiscount(discounts);
+                        }}
+                        sx={{
+                          fontSize: "0.75rem",
+                          "& .MuiInputBase-input.Mui-disabled": {
+                            WebkitTextFillColor: isSave[coupon.id]
+                              ? "black"
+                              : "#404040",
+                          },
+                        }}
+                        fullWidth
+                        variant="standard"
+                      />
+                    </CusTableCell>
+                    <CusTableCell align="center">
+                      <CusTextField
+                        disabled={!isSave[coupon.id]}
+                        key={coupon.id}
+                        defaultValue={coupon.description}
+                        value={currentDescription[coupon.id]}
+                        onChange={(event) => {
+                          const descs = {
+                            ...currentDescription,
+                            [coupon.id]: event.target.value,
+                          };
+                          setCurrentDescription(descs);
+                        }}
+                        sx={{
+                          fontSize: "0.75rem",
+                          "& .MuiInputBase-input.Mui-disabled": {
+                            WebkitTextFillColor: isSave[coupon.id]
+                              ? "black"
+                              : "#404040",
+                          },
+                        }}
+                        fullWidth
+                        variant="standard"
+                      />
+                    </CusTableCell>
+                    <CusTableCell
+                      sx={{
+                        maxWidth: "130px",
+                      }}
+                      align="center"
+                    >
+                      <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <CusDesktopDatePicker
+                          disabled={!isSave[coupon.id]}
+                          label="Start Date"
+                          inputFormat="MM/dd/yyyy"
+                          value={
+                            updateStartDate[coupon.id]
+                              ? updateStartDate[coupon.id]
+                              : coupon.effectiveStartDate
+                          }
+                          onChange={(e) => {
+                            handleUpdateStartDateChange(e, coupon.id);
+                          }}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              sx={{
+                                fontSize: "0.75rem",
+                                "& .MuiInputBase-input.Mui-disabled": {
+                                  WebkitTextFillColor: isSave[coupon.id]
+                                    ? "black"
+                                    : "#404040",
+                                },
+                                "& .MuiInputBase-input": {
+                                  fontSize: "0.75rem",
+                                  padding: "0.25rem",
+                                },
+                              }}
+                            />
+                          )}
+                        />
+                      </LocalizationProvider>
+                    </CusTableCell>
+                    <CusTableCell
+                      sx={{
+                        maxWidth: "130px",
+                        height: "50px",
+                      }}
+                      align="center"
+                    >
+                      <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <CusDesktopDatePicker
+                          disabled={!isSave[coupon.id]}
+                          label="End Date"
+                          inputFormat="MM/dd/yyyy"
+                          value={
+                            updateEndDate[coupon.id]
+                              ? updateEndDate[coupon.id]
+                              : coupon.effectiveEndDate
+                          }
+                          onChange={(e) => {
+                            handleUpdateEndDateChange(e, coupon.id);
+                          }}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              sx={{
+                                fontSize: "0.75rem",
+                                "& .MuiInputBase-input.Mui-disabled": {
+                                  WebkitTextFillColor: isSave[coupon.id]
+                                    ? "black"
+                                    : "#404040",
+                                },
+                                "& .MuiInputBase-input": {
+                                  fontSize: "0.75rem",
+                                  padding: "0.25rem",
+                                },
+                              }}
+                            />
+                          )}
+                        />
+                      </LocalizationProvider>
+                    </CusTableCell>
+                    <CusTableCell align="center">
+                      <NativeSelect
+                        disabled={!isSave[coupon.id]}
+                        defaultValue={coupon.activeFlag}
+                        inputProps={{
+                          name: "status",
+                          id: "uncontrolled-native",
+                        }}
+                        onChange={handleCouponActiveFlag}
+                        sx={{
+                          fontSize: "0.75rem",
+                          "& .MuiInputBase-input.Mui-disabled": {
+                            WebkitTextFillColor: isSave[coupon.id]
+                              ? "black"
+                              : "#404040",
+                          },
+                        }}
+                      >
+                        <option value={"Y"} style={{ fontSize: "0.75rem" }}>
+                          Y
+                        </option>
+                        <option value={"N"} style={{ fontSize: "0.75rem" }}>
+                          N
+                        </option>
+                      </NativeSelect>
+                    </CusTableCell>
+                    <CusTableCell align="center">
+                      {isSave[coupon.id] ? (
+                        <Button
+                          key={coupon.id}
+                          variant="contained"
+                          color="success"
+                          sx={{
+                            fontSize: "0.75rem",
+                            lineHeight: "1rem",
+                            padding: "5px 16px",
+                          }}
+                          onClick={() => {
+                            onSaveClickHandle(coupon.id);
+                            saveUpdateCouponHandle(coupon);
+                          }}
+                        >
+                          Save
+                        </Button>
+                      ) : (
+                        <Button
+                          key={1}
+                          variant="contained"
+                          color="warning"
+                          sx={{
+                            fontSize: "0.75rem",
+                            lineHeight: "1rem",
+                            padding: "5px 16px",
+                          }}
+                          onClick={() => {
+                            onEditClickHandle(coupon.id);
+                          }}
+                        >
+                          EDIT
+                        </Button>
+                      )}
+                    </CusTableCell>
+                  </TableRow>
+                ))}
+              </>
+            ) : (
+              <>
+                {selectedStoreObj ? (
+                  <TableRow>
+                    <TableCell colSpan={9}>
+                      <Alert severity="warning">No coupons found!</Alert>
+                    </TableCell>
+                  </TableRow>
                 ) : (
-                  <Button
-                    key={1}
-                    variant="contained"
-                    color="warning"
-                    sx={{
-                      fontSize: "0.75rem",
-                      lineHeight: "1rem",
-                      padding: "5px 16px",
-                    }}
-                    onClick={() => {
-                      onEditClickHandle(1);
-                    }}
-                  >
-                    EDIT
-                  </Button>
+                  <TableRow>
+                    <TableCell colSpan={9}>
+                      <Alert severity="warning">
+                        Please select a store first!
+                      </Alert>
+                    </TableCell>
+                  </TableRow>
                 )}
-              </CusTableCell>
-            </TableRow>
+              </>
+            )}
 
             {isNewCoupon ? (
               <TableRow>
-                <CusTableCell align="center">2</CusTableCell>
-                <CusTableCell>{selectedStoreObj.resturantName}</CusTableCell>
-                <CusTableCell>
+                <CusTableCell align="center">
+                  <Typography
+                    sx={{
+                      fontSize: "0.75rem",
+                    }}
+                  >
+                    {allCoupons.length + 1}
+                  </Typography>
+                </CusTableCell>
+                <CusTableCell align="center">
+                  <Typography
+                    sx={{
+                      fontSize: "0.75rem",
+                    }}
+                  >
+                    {selectedStoreObj.resturantName}
+                  </Typography>
+                </CusTableCell>
+                <CusTableCell align="center">
                   <CusTextField
                     label="Code"
                     value={newCode}
@@ -346,7 +678,7 @@ export const Coupon = () => {
                     variant="standard"
                   />
                 </CusTableCell>
-                <CusTableCell>
+                <CusTableCell align="center">
                   <CusTextField
                     label="Discount"
                     value={newDiscount}
@@ -357,7 +689,7 @@ export const Coupon = () => {
                     variant="standard"
                   />
                 </CusTableCell>
-                <CusTableCell>
+                <CusTableCell align="center">
                   <CusTextField
                     label="Description"
                     value={newDescription}
@@ -371,7 +703,6 @@ export const Coupon = () => {
                 <CusTableCell
                   align="center"
                   sx={{
-                    padding: "10px !important",
                     maxWidth: "130px",
                   }}
                 >
@@ -381,15 +712,27 @@ export const Coupon = () => {
                       inputFormat="MM/dd/yyyy"
                       value={newStartDate}
                       onChange={handleStartDateChange}
-                      renderInput={(params) => <TextField {...params} />}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          sx={{
+                            fontSize: "0.75rem",
+
+                            "& .MuiInputBase-input": {
+                              fontSize: "0.75rem",
+                              padding: "0.25rem",
+                            },
+                          }}
+                        />
+                      )}
                     />
                   </LocalizationProvider>
                 </CusTableCell>
                 <CusTableCell
                   align="center"
                   sx={{
-                    padding: "10px !important",
                     maxWidth: "130px",
+                    height: "50px",
                   }}
                 >
                   <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -398,37 +741,38 @@ export const Coupon = () => {
                       inputFormat="MM/dd/yyyy"
                       value={newEndDate}
                       onChange={handleEndDateChange}
-                      renderInput={(params) => <TextField {...params} />}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          sx={{
+                            fontSize: "0.75rem",
+
+                            "& .MuiInputBase-input": {
+                              fontSize: "0.75rem",
+                              padding: "0.25rem",
+                            },
+                          }}
+                        />
+                      )}
                     />
                   </LocalizationProvider>
                 </CusTableCell>
-                <CusTableCell>
-                  <FormControl fullWidth className="mt-3">
-                    <CusInputLabel
-                      sx={{
-                        fontSize: "0.75rem",
-                        lineHeight: "1rem",
-                        top: "-11px",
-                      }}
-                    >
-                      (Y/N)
-                    </CusInputLabel>
-                    <CusSelect
-                      label="(Y/N)"
+                <CusTableCell align="center">
+                  <FormControl className="mt-3">
+                    <NativeSelect
                       onChange={(event) => {
                         setNewActiveFlag(event.target.value);
                       }}
                       sx={{ fontSize: "0.75rem" }}
                       defaultValue="Y"
-                      //variant="standard"
                     >
-                      <CusMenuItem value={"Y"} style={{ fontSize: "0.75rem" }}>
+                      <option value={"Y"} style={{ fontSize: "0.75rem" }}>
                         Y
-                      </CusMenuItem>
-                      <CusMenuItem value={"N"} style={{ fontSize: "0.75rem" }}>
+                      </option>
+                      <option value={"N"} style={{ fontSize: "0.75rem" }}>
                         N
-                      </CusMenuItem>
-                    </CusSelect>
+                      </option>
+                    </NativeSelect>
                   </FormControl>
                 </CusTableCell>
                 <CusTableCell align="center">
@@ -449,6 +793,7 @@ export const Coupon = () => {
             ) : null}
           </TableBody>
         </Table>
+        <div className="mb-4" ref={newRowRef}></div>
       </TableContainer>
     </Layout>
   );
