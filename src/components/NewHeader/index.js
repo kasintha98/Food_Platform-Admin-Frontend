@@ -1,5 +1,6 @@
-import React from "react";
-import { Nav, DropdownButton, Dropdown } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import { Nav, DropdownButton } from "react-bootstrap";
+import { Row, Col, Modal } from "react-bootstrap";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
@@ -7,10 +8,11 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { Link, NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import logo from "../../img/logo.png";
-import { signout } from "../../actions";
+import { signout, performEOD } from "../../actions";
 import "./style.css";
 import styled from "@emotion/styled";
 import { useMediaQuery } from "react-responsive";
+import { Typography, Button } from "@mui/material";
 
 const CusDropdownButton = styled(DropdownButton)`
   & button {
@@ -41,14 +43,48 @@ const CusDropdownButton = styled(DropdownButton)`
   height: 29px;
 `;
 
+const CusButton = styled(Button)`
+  background-color: #fff;
+  color: black;
+  height: 29px;
+  border-radius: 5px;
+  font-size: 12px;
+  width: 90px;
+
+  &:hover {
+    background-color: #ffc000;
+    color: black;
+  }
+
+  &:active {
+    background-color: #ffc000;
+    color: black;
+  }
+
+  &:focus {
+    background-color: #ffc000;
+    color: black;
+  }
+`;
+
 export const NewHeader = (props) => {
   const auth = useSelector((state) => state.auth);
+  const businessDateAll = useSelector((state) => state.user.businessDate);
   const version = useSelector((state) => state.auth.version);
   const modulesForUser = useSelector((state) => state.user.modulesForUser);
   const dispatch = useDispatch();
-  const isMobile = useMediaQuery({ query: `(max-width: 1260px)` });
+  const isMobile = useMediaQuery({ query: `(max-width: 1430px)` });
+
+  const [showEOD, setShowEOD] = useState(false);
+  const [businessDate, setBusinessDate] = useState(null);
 
   const drawerWidth = props.drawerWidth;
+
+  useEffect(() => {
+    if (businessDateAll) {
+      setBusinessDate(new Date(businessDateAll.businessDate));
+    }
+  }, []);
 
   //logout action calling
   const logout = () => {
@@ -163,7 +199,16 @@ export const NewHeader = (props) => {
                   <NavLink exact to={"/coupons"}>
                     Coupon Code
                   </NavLink>
+                  <NavLink exact to={"/eod"}>
+                    End Of Day
+                  </NavLink>
                 </CusDropdownButton>
+              </li>
+            )}
+
+            {modulesForUser.some((module) => module.moduleName === "EOD") && (
+              <li className="nav-item top-module">
+                <CusButton onClick={handleOpenEOD}>EOD</CusButton>
               </li>
             )}
           </>
@@ -200,6 +245,63 @@ export const NewHeader = (props) => {
     );
   };
 
+  const handleCloseEOD = () => {
+    setShowEOD(false);
+  };
+
+  const handleOpenEOD = () => {
+    setShowEOD(true);
+  };
+
+  const renderEODModal = () => {
+    return (
+      <Modal show={showEOD} onHide={handleCloseEOD} style={{ zIndex: 1100 }}>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            <Typography>End Of Day</Typography>
+          </Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body style={{ maxHeight: "75vh", overflowY: "auto" }}>
+          <Typography>Are you sure you want to close today's EOD?</Typography>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Row className="w-100">
+            <Col className="col-6">
+              <Button
+                color="error"
+                onClick={handleCloseEOD}
+                className="w-100"
+                variant="contained"
+              >
+                Close
+              </Button>
+            </Col>
+            <Col className="col-6">
+              <Button
+                color="success"
+                onClick={() => {
+                  dispatch(
+                    performEOD(auth.user.restaurantId, auth.user.storeId)
+                  ).then((res) => {
+                    if (res) {
+                      handleCloseEOD();
+                    }
+                  });
+                }}
+                className="w-100"
+                variant="contained"
+              >
+                Yes
+              </Button>
+            </Col>
+          </Row>
+        </Modal.Footer>
+      </Modal>
+    );
+  };
+
   return (
     <AppBar
       position="fixed"
@@ -220,7 +322,6 @@ export const NewHeader = (props) => {
             <MenuIcon />
           </IconButton>
         ) : null}
-
         <Link className="navbar-brand newLink" to="/">
           <img
             alt="logo"
@@ -239,9 +340,20 @@ export const NewHeader = (props) => {
           <br></br>
           <span>{auth.user.roleCategory}</span>
         </span>
+        &nbsp;&nbsp;
+        {businessDate ? (
+          <span style={{ fontSize: "12px" }}>
+            <span>Billing Date</span>
+            <br></br>
+            <span>{`${businessDate.getFullYear()}-${
+              businessDate.getMonth() + 1
+            }-${businessDate.getDate()}`}</span>
+          </span>
+        ) : null}
         <Nav className="mr-auto"></Nav>
         {auth.authenticate ? renderLoggedInLinks() : renderNonLoggedInLinks()}
       </Toolbar>
+      {renderEODModal()}
     </AppBar>
   );
 };

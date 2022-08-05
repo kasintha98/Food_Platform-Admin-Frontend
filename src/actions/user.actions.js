@@ -753,3 +753,72 @@ export const getAllCoupons = (restaurantId, storeId) => {
     }
   };
 };
+
+export const performEOD = (restaurantId, storeId) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: userConstants.PERFORM_EOD_REQUEST });
+
+      const res = await axios.post(`/performEndOfDay`, null, {
+        params: {
+          restaurantId,
+          storeId,
+        },
+      });
+
+      if (res.status === 200) {
+        dispatch({
+          type: userConstants.PERFORM_EOD_SUCCESS,
+          payload: res.data,
+        });
+        toast.success("End Of Day Performed!");
+        return res.data;
+      } else {
+        dispatch({
+          type: userConstants.PERFORM_EOD_FAILURE,
+          payload: { error: "Error when performing EOD! Please try again!" },
+        });
+        toast.error("Error when performing EOD! Please try again!");
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch({
+        type: userConstants.PERFORM_EOD_FAILURE,
+        payload: { error: "Error when performing EOD! Please try again!" },
+      });
+      toast.error("Error when performing EOD! Please try again!");
+    }
+  };
+};
+
+export const getBusinessDate = (restaurantId, storeId) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: userConstants.GET_BUSINESS_DATE_REQUEST });
+
+      const res = await axios.get("/getBusinessDateByRestroAndStore", {
+        params: { restaurantId, storeId },
+      });
+
+      if (res.status === 200 && res.data) {
+        dispatch({
+          type: userConstants.GET_BUSINESS_DATE_SUCCESS,
+          payload: res.data,
+        });
+        return res.data;
+      } else {
+        dispatch({
+          type: userConstants.GET_BUSINESS_DATE_FAILURE,
+          payload: null,
+        });
+        toast.error("There was an error getting business date!");
+      }
+    } catch (error) {
+      dispatch({
+        type: userConstants.GET_BUSINESS_DATE_FAILURE,
+        payload: null,
+      });
+      toast.error("There was an error getting business date!");
+    }
+  };
+};

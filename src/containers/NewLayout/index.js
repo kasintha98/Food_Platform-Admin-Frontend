@@ -1,5 +1,8 @@
 import * as React from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { performEOD } from "../../actions";
+import { Row, Col, Modal } from "react-bootstrap";
+import { Typography, Button } from "@mui/material";
 import styled from "@emotion/styled";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -19,13 +22,98 @@ const CustToolbar = styled(Toolbar)`
   }
 `;
 
+const CusButton = styled(Button)`
+  background-color: #fff;
+  color: black;
+  height: 29px;
+  border-radius: 5px;
+  font-size: 12px;
+  width: 90px;
+
+  &:hover {
+    background-color: #ffc000;
+    color: black;
+  }
+
+  &:active {
+    background-color: #ffc000;
+    color: black;
+  }
+
+  &:focus {
+    background-color: #ffc000;
+    color: black;
+  }
+`;
+
 function NewLayout(props) {
   const { window } = props;
+  const auth = useSelector((state) => state.auth);
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const modulesForUser = useSelector((state) => state.user.modulesForUser);
+  const [showEOD, setShowEOD] = React.useState(false);
+
+  const dispatch = useDispatch();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
+  };
+
+  const handleCloseEOD = () => {
+    setShowEOD(false);
+  };
+
+  const handleOpenEOD = () => {
+    setShowEOD(true);
+  };
+
+  const renderEODModal = () => {
+    return (
+      <Modal show={showEOD} onHide={handleCloseEOD} style={{ zIndex: 1100 }}>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            <Typography>End Of Day</Typography>
+          </Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body style={{ maxHeight: "75vh", overflowY: "auto" }}>
+          <Typography>Are you sure you want to close today's EOD?</Typography>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Row className="w-100">
+            <Col className="col-6">
+              <Button
+                color="error"
+                onClick={handleCloseEOD}
+                className="w-100"
+                variant="contained"
+              >
+                Close
+              </Button>
+            </Col>
+            <Col className="col-6">
+              <Button
+                color="success"
+                onClick={() => {
+                  dispatch(
+                    performEOD(auth.user.restaurantId, auth.user.storeId)
+                  ).then((res) => {
+                    if (res) {
+                      handleCloseEOD();
+                    }
+                  });
+                }}
+                className="w-100"
+                variant="contained"
+              >
+                Yes
+              </Button>
+            </Col>
+          </Row>
+        </Modal.Footer>
+      </Modal>
+    );
   };
 
   const drawer = (
@@ -200,6 +288,26 @@ function NewLayout(props) {
             </NavLink>
           </ListItem>
         )}
+
+        {modulesForUser.some((module) => module.moduleName === "EOD") && (
+          <ListItem>
+            <a onClick={handleOpenEOD} style={{ color: "#fff" }}>
+              <i className="fa fa-calendar"></i>
+              &nbsp; EOD
+            </a>
+          </ListItem>
+        )}
+
+        {modulesForUser.some(
+          (module) => module.moduleName === "ADMIN FUNCTIONS"
+        ) && (
+          <ListItem>
+            <NavLink to={"/eod"}>
+              <i className="fa fa-calendar"></i>
+              &nbsp; End Of Day
+            </NavLink>
+          </ListItem>
+        )}
       </List>
     </div>
   );
@@ -279,6 +387,7 @@ function NewLayout(props) {
           {props.children ? props.children : null}
         </Box>
       )}
+      {renderEODModal()}
     </Box>
   );
 }

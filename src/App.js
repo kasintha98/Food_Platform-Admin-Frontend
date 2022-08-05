@@ -6,6 +6,7 @@ import {
   getAllStores,
   getModulesForUser,
   updateCart,
+  getBusinessDate,
 } from "./actions";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -41,6 +42,7 @@ import { ForgotPassword } from "./containers/ForgotPassword";
 import { DineIn } from "./containers/DineIn";
 import { AdminMenu } from "./containers/AdminMenu";
 import { Coupon } from "./containers/Coupon";
+import { EOD } from "./containers/EOD";
 
 function App() {
   const dispatch = useDispatch();
@@ -60,6 +62,8 @@ function App() {
       dispatch(
         getModulesForUser(user.restaurantId, user.storeId, user.roleCategory)
       );
+
+      dispatch(getBusinessDate(user.restaurantId, user.storeId));
     }
 
     if (localStorage.getItem("user")) {
@@ -181,6 +185,10 @@ function App() {
         {modulesForUser.some((module) => module.moduleName === "REPORTS") && (
           <PrivateRoute path="/reports" component={NewReports}></PrivateRoute>
         )}
+
+        {modulesForUser.some(
+          (module) => module.moduleName === "ADMIN FUNCTIONS"
+        ) && <PrivateRoute path="/eod" component={EOD}></PrivateRoute>}
 
         {modulesForUser.some(
           (module) => module.moduleName === "ADMIN FUNCTIONS"
