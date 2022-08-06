@@ -345,9 +345,13 @@ export const NewHeader = (props) => {
           <span style={{ fontSize: "12px" }}>
             <span>Billing Date</span>
             <br></br>
-            <span>{`${businessDate.getFullYear()}-${
-              businessDate.getMonth() + 1
-            }-${businessDate.getDate()}`}</span>
+            <span>{`${
+              Number(businessDate.getDate()).toString().length < 2
+                ? `0${businessDate.getDate()}`
+                : businessDate.getDate()
+            }-${businessDate.toLocaleString("default", {
+              month: "short",
+            })}-${businessDate.getFullYear()}`}</span>
           </span>
         ) : null}
         <Nav className="mr-auto"></Nav>
