@@ -15,25 +15,19 @@ import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@mui/material/InputLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormGroup from "@material-ui/core/FormGroup";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import {withStyles} from "@material-ui/core";
 import { Row, Col } from "react-bootstrap";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import styled from "@emotion/styled";
 import {
   Typography,
-  TextField,
-  Button,
   Alert,
-  NativeSelect,
-  Pagination,
 } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -261,28 +255,20 @@ export const AddToppingToDish = () => {
       </Row>
       <div>
           {selectedStore === '' ? <h5 align="center" style={{ color: '#688789', marginTop: '2rem'}}>Please select a store</h5> : (
-            <TableContainer className="mt-2" sx={{ maxHeight: 530, maxWidth: 'full'}} style={{ overflowX: "initial" }}>
-              <Table sx={{ minWidth: 3700 }} stickyHeader>
+            <TableContainer className="mt-2" sx={{ maxHeight: 530, width: 1640, display: "flex", flexDirection: "row" }} style={{  }}>
+              <Table sx={{ }}>
               <TableHead>
-                  <Fragment>
                     <TableRow>
-                      <CusTableCell align="center"  style={{ backgroundColor: '#2f5597', color: '#ffffff', width: 100, position: 'sticky', left: 0}}>Dish<br/>Selection</CusTableCell>
-                      <CusTableCell align="center"  style={{ backgroundColor: '#2f5597', color: '#ffffff', width: 100, position: 'sticky', left: 0 }}>Dish<br/>Category</CusTableCell>
-                      <CusTableCell align="center"  style={{ backgroundColor: '#2f5597', color: '#ffffff', width: 150, position: 'sticky', left: 0 }}>Dish<br/>Name</CusTableCell>
-                      <CusTableCell align="center"  style={{ backgroundColor: '#2f5597', color: '#ffffff', width: 70, position: 'sticky', left: 0 }}>Size</CusTableCell>
-                        {ToppingssOfPage.map((item) => (
-                          <CusTableCell  >
-                            <div align="center" style={{ backgroundColor: '#688789', color: '#ffffff',}} >{item.size}</div>
-                            <div align="center" style={{ backgroundColor: '#fff2cc', color: '#1e1e1e',}}>{item.ingredientType}</div>
-                          </CusTableCell>
-                        ))}
+                      <CusTableCell align="center"  sx={{ backgroundColor: '#2f5597', color: '#ffffff', width: 100, position: 'sticky', left: 0, zIndex: 10}}>Dish<br/>Selection</CusTableCell>
+                      <CusTableCell align="center"  sx={{ backgroundColor: '#2f5597', color: '#ffffff', width: 100, position: 'sticky', left: 0, zIndex: 10 }}>Dish<br/>Category</CusTableCell>
+                      <CusTableCell align="center"  sx={{ backgroundColor: '#2f5597', color: '#ffffff', width: 150, position: 'sticky', left: 0, zIndex: 10 }}>Dish<br/>Name</CusTableCell>
+                      <CusTableCell align="center"  sx={{ backgroundColor: '#2f5597', color: '#ffffff', width: 70, position: 'sticky', left: 0, zIndex: 10 }}>Size</CusTableCell>
                     </TableRow>
-                  </Fragment>
                 </TableHead>
                 <TableBody>
                   {menuIngredientsLoading ? (
                     <TableRow>
-                      <TableCell>
+                      <TableCell colSpan={21}>
                         <div className="d-flex justify-content-center">
                           <div
                             className="spinner-border text-primary"
@@ -298,20 +284,14 @@ export const AddToppingToDish = () => {
                     <>
                       {allMenuIngredients && allMenuIngredients.length > 0 ? (
                         <>
-                          
                             {productsOfPage.map((item) => (
                               <TableRow>
-                              <CusTableCell key={item.id} align="center">{item.section}</CusTableCell>
-                              <CusTableCell key={item.id} align="center">{item.dishCategory}</CusTableCell>
-                              <CusTableCell key={item.id} align="center">{item.dish}</CusTableCell>
-                              <CusTableCell key={item.id} align="center">{item.productSize}</CusTableCell>
-                              {ToppingssOfPage.map((item) => (
-                                <CusTableCell key={item.id}><div style={{ display: 'flex', justifyContent: 'center', paddingLeft: '1rem', paddingTop: '0.3rem'}}><FormControlLabel control={<Checkbox />} /></div></CusTableCell>
-                              ))}
+                                <CusTableCell key={item.id} align="center">{item.section}</CusTableCell>
+                                <CusTableCell key={item.id} align="center">{item.dishCategory}</CusTableCell>
+                                <CusTableCell key={item.id} align="center">{item.dish}</CusTableCell>
+                                <CusTableCell key={item.id} align="center">{item.productSize}</CusTableCell>
                               </TableRow>
                             ))}
-                            
-                          
                         </>
                       ) : (
                         <TableRow>
@@ -324,10 +304,26 @@ export const AddToppingToDish = () => {
                   )}
                 </TableBody>
               </Table>
+              <Table>
+                <TableHead>
+                  {ToppingssOfPage.map((item) => (
+                    <CusTableCell>
+                      <div align="center" style={{ backgroundColor: '#688789', color: '#ffffff',}} >{item.size}</div>
+                      <div align="center" style={{ backgroundColor: '#fff2cc', color: '#1e1e1e',}}>{item.ingredientType}</div>
+                    </CusTableCell>
+                  ))}
+                </TableHead>   
+                <TableBody>
+                  {productsOfPage.map((item) => {
+                    // eslint-disable-next-line no-lone-blocks
+                    return ToppingssOfPage.forEach((items) => (
+                      <CusTableCell ><div style={{ display: 'flex', justifyContent: 'center', paddingLeft: '1rem', paddingTop: '0.3rem'}}><FormControlLabel control={<Checkbox />} /></div></CusTableCell>
+                    ))
+                  })}
+                </TableBody>    
+              </Table>
             </TableContainer>
           )}
-        
-        
       </div>
     </div>
   );
