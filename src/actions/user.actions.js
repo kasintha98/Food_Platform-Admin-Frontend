@@ -618,7 +618,6 @@ export const saveNewCoupon = (payload) => {
           payload: res.data,
         });
         toast.success("Coupon saved successfully!");
-        dispatch(getRoles());
         return res.data;
       } else {
         dispatch({
@@ -651,7 +650,6 @@ export const updateCoupon = (payload) => {
           payload: res.data,
         });
         toast.success("Coupon updated successfully!");
-        dispatch(getRoles());
         return res.data;
       } else {
         dispatch({
@@ -674,10 +672,11 @@ export const updateCoupon = (payload) => {
 export const validateCoupon = (couponCode) => {
   return async (dispatch) => {
     try {
+      dispatch({ type: userConstants.VALIDATE_COUPON_REQUEST });
+
       const res = await axios.post("/validateCoupon", null, {
         params: { couponCode },
       });
-      dispatch({ type: userConstants.VALIDATE_COUPON_REQUEST });
 
       if (res.status === 200 && res.data) {
         if (res.data.validationResult === "VALID_COUPON") {
@@ -707,6 +706,215 @@ export const validateCoupon = (couponCode) => {
         payload: null,
       });
       toast.error("There was an error from our end, Please try again!");
+    }
+  };
+};
+
+export const clearCoupon = () => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: userConstants.CLEAR_COUPON_SUCCESS });
+    } catch (error) {
+      dispatch({
+        type: userConstants.CLEAR_COUPON_FAILURE,
+      });
+    }
+  };
+};
+
+export const getAllCoupons = (restaurantId, storeId) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: userConstants.GET_COUPONS_REQUEST });
+
+      const res = await axios.get("/getCouponsByRestroAndStore", {
+        params: { restaurantId, storeId },
+      });
+
+      if (res.status === 200 && res.data) {
+        dispatch({
+          type: userConstants.GET_COUPONS_SUCCESS,
+          payload: res.data,
+        });
+        return res.data;
+      } else {
+        dispatch({
+          type: userConstants.GET_COUPONS_FAILURE,
+          payload: [],
+        });
+        toast.error("There was an error getting data!");
+      }
+    } catch (error) {
+      dispatch({
+        type: userConstants.GET_COUPONS_FAILURE,
+        payload: [],
+      });
+      toast.error("There was an error getting data!");
+    }
+  };
+};
+
+export const performEOD = (restaurantId, storeId) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: userConstants.PERFORM_EOD_REQUEST });
+
+      const res = await axios.post(`/performEndOfDay`, null, {
+        params: {
+          restaurantId,
+          storeId,
+        },
+      });
+
+      if (res.status === 200) {
+        dispatch({
+          type: userConstants.PERFORM_EOD_SUCCESS,
+          payload: res.data,
+        });
+        toast.success("End Of Day Performed!");
+        return res.data;
+      } else {
+        dispatch({
+          type: userConstants.PERFORM_EOD_FAILURE,
+          payload: { error: "Error when performing EOD! Please try again!" },
+        });
+        toast.error("Error when performing EOD! Please try again!");
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch({
+        type: userConstants.PERFORM_EOD_FAILURE,
+        payload: { error: "Error when performing EOD! Please try again!" },
+      });
+      toast.error("Error when performing EOD! Please try again!");
+    }
+  };
+};
+
+export const getBusinessDate = (restaurantId, storeId) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: userConstants.GET_BUSINESS_DATE_REQUEST });
+
+      const res = await axios.get("/getBusinessDateByRestroAndStore", {
+        params: { restaurantId, storeId },
+      });
+
+      if (res.status === 200 && res.data) {
+        dispatch({
+          type: userConstants.GET_BUSINESS_DATE_SUCCESS,
+          payload: res.data,
+        });
+        return res.data;
+      } else {
+        dispatch({
+          type: userConstants.GET_BUSINESS_DATE_FAILURE,
+          payload: null,
+        });
+        toast.error("There was an error getting business date!");
+      }
+    } catch (error) {
+      dispatch({
+        type: userConstants.GET_BUSINESS_DATE_FAILURE,
+        payload: null,
+      });
+      toast.error("There was an error getting business date!");
+    }
+  };
+};
+
+export const getAllBusinessDates = () => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: userConstants.GET_ALL_BUSINESS_DATES_REQUEST });
+
+      const res = await axios.get("/getAllBusinessDates");
+
+      if (res.status === 200 && res.data) {
+        dispatch({
+          type: userConstants.GET_ALL_BUSINESS_DATES_SUCCESS,
+          payload: res.data,
+        });
+        return res.data;
+      } else {
+        dispatch({
+          type: userConstants.GET_ALL_BUSINESS_DATES_FAILURE,
+          payload: null,
+        });
+        toast.error("There was an error getting business dates!");
+      }
+    } catch (error) {
+      dispatch({
+        type: userConstants.GET_ALL_BUSINESS_DATES_FAILURE,
+        payload: null,
+      });
+      toast.error("There was an error getting business dates!");
+    }
+  };
+};
+
+export const updateBusinessDate = (body) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: userConstants.UPDATE_BUSINESS_DATE_REQUEST });
+
+      const res = await axios.post("/updateBusinessDate", body);
+
+      if (res.status === 200 && res.data) {
+        dispatch({
+          type: userConstants.UPDATE_BUSINESS_DATE_SUCCESS,
+          payload: res.data,
+        });
+        dispatch(getAllBusinessDates());
+        toast.success("Business date updated!");
+        return res.data;
+      } else {
+        dispatch({
+          type: userConstants.UPDATE_BUSINESS_DATE_FAILURE,
+          payload: null,
+        });
+        toast.error("There was an error when updating business date!");
+      }
+    } catch (error) {
+      dispatch({
+        type: userConstants.UPDATE_BUSINESS_DATE_FAILURE,
+        payload: null,
+      });
+      toast.error("There was an error when updating business date!");
+    }
+  };
+};
+
+export const GetDeliveryPrice = (restaurantId, storeId) => {
+  return async (dispatch) => {
+    try {
+      const res = await axios.get("/getDeliveryConfigByCriteria", {
+        params: {
+          restaurantId: restaurantId,
+          storeId: storeId,
+          criteria: "AMOUNT",
+        },
+      });
+      dispatch({ type: userConstants.GET_DELIVERY_PRICE_REQUEST });
+
+      if (res.status === 200) {
+        console.log(res);
+        dispatch({
+          type: userConstants.GET_DELIVERY_PRICE_SUCCESS,
+          payload: res.data,
+        });
+        return res.data;
+      } else {
+        const { error } = res.data;
+        dispatch({
+          type: userConstants.GET_DELIVERY_PRICE_FAILURE,
+          payload: { error },
+        });
+        toast.error("There was an error when getting data!");
+      }
+    } catch (error) {
+      toast.error("There was an error when getting delivery data!");
+      console.log(error);
     }
   };
 };

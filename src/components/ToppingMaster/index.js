@@ -3,6 +3,8 @@ import {
   getAllMenuIngredientsByRestoAndStoreId,
   getAllMenuIngredientsByRestoAndStoreIdWithPaging,
   updateMenuIngredient,
+  saveMenuIngredient,
+  saveSubProduct,
 } from "../../actions";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
@@ -25,6 +27,7 @@ import {
   Pagination,
 } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 
 const itemsPerPage = 10;
 
@@ -80,6 +83,7 @@ const CusMenuItem = styled(MenuItem)``;
 
 export const ToppingMaster = () => {
   const stores = useSelector((state) => state.store.stores);
+  const user = useSelector((state) => state.auth.user);
   const allMenuIngredients = useSelector(
     (state) => state.product.allMenuIngredients
   );
@@ -104,6 +108,11 @@ export const ToppingMaster = () => {
   const [ToppingssOfPage, setToppingssOfPage] = useState([]);
   const [isSave, setIsSave] = useState({});
   const [showAdd, setShowAdd] = useState(false);
+  const [newIngredientType, setNewIngredientType] = useState("");
+  const [newCategory, setNewCategory] = useState("");
+  const [newSize, setNewSize] = useState("");
+  const [newPrice, setNewPrice] = useState(0);
+  const [isRefresh, setIsRefresh] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -116,7 +125,7 @@ export const ToppingMaster = () => {
         )
       );
     }
-  }, [selectedStoreObj]);
+  }, [selectedStoreObj, isRefresh]);
 
   useEffect(() => {
     if (selectedStoreObj) {
@@ -137,6 +146,14 @@ export const ToppingMaster = () => {
   const handleCloseAdd = () => setShowAdd(false);
   const handleShowAdd = () => setShowAdd(true);
 
+  const handleRefresh = () => {
+    if (isRefresh) {
+      setIsRefresh(false);
+    } else {
+      setIsRefresh(true);
+    }
+  };
+
   const handleChangeStore = (event) => {
     setSelectedStore(event.target.value);
   };
@@ -153,8 +170,16 @@ export const ToppingMaster = () => {
     setCurrentToppingType(event.target.value);
   };
 
+  const handleToppingTypeNew = (event) => {
+    setNewCategory(event.target.value);
+  };
+
   const handleSizeUpdate = (event) => {
     setCurrentSize(event.target.value);
+  };
+
+  const handleSizeNew = (event) => {
+    setNewSize(event.target.value);
   };
 
   const handleIngredientFlagUpdate = (event) => {
@@ -175,7 +200,7 @@ export const ToppingMaster = () => {
     setIsSave(edits);
   };
 
-  const saveUpdateTopping = (topping) => {
+  const updateTopping = (topping) => {
     const newTopping = {
       ...topping,
       ingredientType: currentToppingName[topping.id]
@@ -186,9 +211,57 @@ export const ToppingMaster = () => {
         : topping.price,
       category: currentToppingType ? currentToppingType : topping.category,
       size: currentSize ? currentSize : topping.size,
+      updatedBy: user.loginId,
     };
     console.log(newTopping);
     dispatch(updateMenuIngredient(newTopping));
+  };
+
+  const saveNewTopping = () => {
+    if (!newIngredientType || !newCategory || !newSize || !newPrice) {
+      toast.error("Please fill all the fields!");
+      return;
+    }
+
+    if (!Number(newPrice)) {
+      toast.error("Price should be a number!");
+      return;
+    }
+
+    const newSubProduct = {
+      ingredientType: newIngredientType,
+      category: newCategory,
+      size: newSize,
+    };
+
+    dispatch(saveSubProduct(newSubProduct)).then((subProduct) => {
+      if (subProduct) {
+        const newTopping = {
+          storeId: selectedStoreObj.storeId,
+          restaurantId: selectedStoreObj.restaurantId,
+          subProductId: subProduct.subProductId,
+          ingredientType: subProduct.ingredientType,
+          price: newPrice,
+          category: subProduct.category,
+          imagePath: "IMAGE1",
+          createdBy: user.loginId,
+          size: subProduct.size,
+          createdDate: new Date(),
+          updatedBy: user.loginId,
+          updatedDate: new Date(),
+        };
+        dispatch(saveMenuIngredient(newTopping)).then((res) => {
+          if (res) {
+            handleCloseAdd();
+            setNewIngredientType("");
+            setNewCategory("");
+            setNewSize("");
+            setNewPrice(0);
+            handleRefresh();
+          }
+        });
+      }
+    });
   };
 
   const renderAddModal = () => {
@@ -205,13 +278,90 @@ export const ToppingMaster = () => {
         <Modal.Header closeButton>
           <Modal.Title>ADD NEW TOPPING</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+        <Modal.Body>
+          <FormControl fullWidth>
+            <CusInputLabel
+              sx={{ fontSize: "0.75rem", lineHeight: "1rem", top: "-11px" }}
+            >
+              Topping Type
+            </CusInputLabel>
+            <CusSelect
+              label="Topping Type"
+              onChange={handleToppingTypeNew}
+              sx={{ fontSize: "0.75rem" }}
+              fullWidth
+            >
+              <MenuItem value={"Topping"} style={{ fontSize: "0.75rem" }}>
+                Topping
+              </MenuItem>
+              <MenuItem
+                value={"Choise of Base"}
+                style={{ fontSize: "0.75rem" }}
+              >
+                Choice of Base
+              </MenuItem>
+            </CusSelect>
+          </FormControl>
+          <div className="mt-3">
+            <CusTextField
+              label="Topping Name"
+              value={newIngredientType}
+              onChange={(event) => {
+                setNewIngredientType(event.target.value);
+              }}
+              fullWidth
+            />
+          </div>
+          <FormControl className="mt-3" fullWidth>
+            <CusInputLabel
+              sx={{ fontSize: "0.75rem", lineHeight: "1rem", top: "-11px" }}
+            >
+              Size
+            </CusInputLabel>
+            <CusSelect
+              onChange={handleSizeNew}
+              sx={{ fontSize: "0.75rem" }}
+              label="Size"
+              fullWidth
+            >
+              <MenuItem value={"Regular"} style={{ fontSize: "0.75rem" }}>
+                Regular
+              </MenuItem>
+              <MenuItem value={"Small"} style={{ fontSize: "0.75rem" }}>
+                Small
+              </MenuItem>
+              <MenuItem value={"Medium"} style={{ fontSize: "0.75rem" }}>
+                Medium
+              </MenuItem>
+              <MenuItem value={"Large"} style={{ fontSize: "0.75rem" }}>
+                Large
+              </MenuItem>
+            </CusSelect>
+          </FormControl>
+          <div className="mt-3">
+            <CusTextField
+              value={newPrice}
+              onChange={(event) => {
+                setNewPrice(event.target.value);
+              }}
+              fullWidth
+              label="Price"
+            />
+          </div>
+        </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseAdd}>
+          <Button variant="contained" color="error" onClick={handleCloseAdd}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleCloseAdd}>
-            Save Changes
+          &nbsp;
+          <Button
+            variant="contained"
+            color="success"
+            onClick={() => {
+              saveNewTopping();
+            }}
+          >
+            Save
           </Button>
         </Modal.Footer>
       </Modal>
@@ -262,7 +412,13 @@ export const ToppingMaster = () => {
               padding: "5px 16px",
               minWidth: "160px",
             }}
-            onClick={handleShowAdd}
+            onClick={() => {
+              if (selectedStoreObj) {
+                handleShowAdd();
+              } else {
+                toast.error("Please select a store first!");
+              }
+            }}
             variant="contained"
             color="success"
           >
@@ -475,7 +631,7 @@ export const ToppingMaster = () => {
                                 }}
                                 onClick={() => {
                                   onSaveClickHandle(item.id);
-                                  saveUpdateTopping(item);
+                                  updateTopping(item);
                                 }}
                               >
                                 Save

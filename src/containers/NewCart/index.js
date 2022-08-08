@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Card from "@mui/material/Card";
@@ -22,19 +22,36 @@ export const NewCart = (props) => {
   const [subTotal, setSubtotal] = useState(0);
   const [extraSubTotal, setExtraSubTotal] = useState(0);
   const [choiceTotal, setChoiceTotal] = useState(0);
+  const [delCharge, setDelCharge] = useState(0);
 
   const taxDetails = useSelector((state) => state.user.taxDetails);
+  const deliveryPrice = useSelector((state) => state.user.deliveryPrice);
+
+  useEffect(() => {
+    if (!props.isShowDeliveryCharge) {
+      setDelCharge(0);
+    }
+  }, [props.isShowDeliveryCharge]);
 
   const handleSubTotal = (total) => {
     setSubtotal(total);
+    if (props.isShowDeliveryCharge) {
+      calcDeliveryPrice();
+    }
   };
 
   const handleExtraTotal = (total) => {
     setExtraSubTotal(total);
+    if (props.isShowDeliveryCharge) {
+      calcDeliveryPrice();
+    }
   };
 
   const handleChoiceTotal = (total) => {
     setChoiceTotal(total);
+    if (props.isShowDeliveryCharge) {
+      calcDeliveryPrice();
+    }
   };
 
   const renderAllSub = () => {
@@ -43,6 +60,25 @@ export const NewCart = (props) => {
       (extraSubTotal ? extraSubTotal : 0) +
       (choiceTotal ? choiceTotal : 0);
     return <span style={{ fontSize: "0.85rem" }}>₹ {all.toFixed(2)}</span>;
+  };
+
+  const calcDeliveryPrice = () => {
+    const allSub =
+      subTotal +
+      (extraSubTotal ? extraSubTotal : 0) +
+      (choiceTotal ? choiceTotal : 0);
+
+    let deliveryCharge = 0;
+
+    if (deliveryPrice) {
+      deliveryPrice.forEach((delivery) => {
+        if (allSub >= delivery.minAmount && allSub <= delivery.maxAmount) {
+          deliveryCharge = delivery.deliveryFee;
+        }
+      });
+    }
+
+    setDelCharge(deliveryCharge.toFixed(2));
   };
 
   const renderTax = (tax) => {
@@ -69,7 +105,7 @@ export const NewCart = (props) => {
       });
     }
 
-    const grantTot = allSub + allTax;
+    const grantTot = allSub + allTax + Number(delCharge);
 
     return <span style={{ fontSize: "0.85rem" }}>₹ {grantTot.toFixed(2)}</span>;
   };
@@ -130,6 +166,21 @@ export const NewCart = (props) => {
                 </>
               ) : null}
             </Row>
+
+            {props.isShowDeliveryCharge ? (
+              <Row className="pl-2">
+                <Col className="col-7 pr-0">
+                  <span style={{ fontSize: "0.75rem", fontStyle: "italic" }}>
+                    Delivery Charges
+                  </span>
+                </Col>
+                <Col className="col-5 ps-0">
+                  <span style={{ fontSize: "0.75rem", fontStyle: "italic" }}>
+                    ₹ {delCharge}
+                  </span>
+                </Col>
+              </Row>
+            ) : null}
 
             <Row className="pl-2">
               <Col className="col-7 pr-0" style={{ fontSize: "0.85rem" }}>

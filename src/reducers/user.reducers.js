@@ -20,6 +20,10 @@ const initState = {
   currentAddress: null,
   currentGetAddress: null,
   coupon: null,
+  allCoupons: [],
+  businessDate: null,
+  allBusinessDates: [],
+  deliveryPrice: null,
 };
 
 export default (state = initState, action) => {
@@ -291,6 +295,80 @@ export default (state = initState, action) => {
       state = {
         ...state,
         coupon: null,
+      };
+      break;
+
+    case userConstants.CLEAR_COUPON_SUCCESS:
+      state = {
+        ...state,
+        coupon: null,
+      };
+      break;
+
+    case userConstants.GET_COUPONS_REQUEST:
+      state = {
+        ...state,
+      };
+      break;
+
+    case userConstants.GET_COUPONS_SUCCESS:
+      state = {
+        ...state,
+        allCoupons: action.payload,
+      };
+      break;
+
+    case userConstants.GET_COUPONS_FAILURE:
+      state = {
+        ...state,
+        allCoupons: [],
+      };
+      break;
+
+    case userConstants.GET_BUSINESS_DATE_REQUEST:
+      state = {
+        ...state,
+      };
+      break;
+
+    case userConstants.GET_BUSINESS_DATE_SUCCESS:
+      state = {
+        ...state,
+        businessDate: action.payload,
+      };
+      break;
+
+    case userConstants.GET_BUSINESS_DATE_FAILURE:
+      state = {
+        ...state,
+        businessDate: null,
+      };
+      break;
+
+    case userConstants.GET_ALL_BUSINESS_DATES_REQUEST:
+      state = {
+        ...state,
+      };
+      break;
+
+    case userConstants.GET_ALL_BUSINESS_DATES_SUCCESS:
+      state = {
+        ...state,
+        allBusinessDates: action.payload,
+      };
+      break;
+
+    case userConstants.GET_ALL_BUSINESS_DATES_FAILURE:
+      state = {
+        ...state,
+        allBusinessDates: [],
+      };
+      break;
+
+    case userConstants.GET_DELIVERY_PRICE_SUCCESS:
+      state = {
+        ...state,
+        deliveryPrice: action.payload,
       };
       break;
   }

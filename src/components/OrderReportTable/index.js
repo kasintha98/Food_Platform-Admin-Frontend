@@ -373,7 +373,7 @@ export const OrderReportTable = (props) => {
                       align="center"
                       sx={{ paddingLeft: 0, paddingRight: 0 }}
                     >
-                      {row.discountCode ? row.discountCode : "N/A"}
+                      {row.couponCode ? row.couponCode : "N/A"}
                     </CusTableCell2>
                     <CusTableCell2
                       align="center"
