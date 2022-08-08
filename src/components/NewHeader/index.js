@@ -73,7 +73,7 @@ export const NewHeader = (props) => {
   const version = useSelector((state) => state.auth.version);
   const modulesForUser = useSelector((state) => state.user.modulesForUser);
   const dispatch = useDispatch();
-  const isMobile = useMediaQuery({ query: `(max-width: 1430px)` });
+  const isMobile = useMediaQuery({ query: `(max-width: 1380px)` });
 
   const [showEOD, setShowEOD] = useState(false);
   const [businessDate, setBusinessDate] = useState(null);
@@ -310,14 +310,16 @@ export const NewHeader = (props) => {
         ml: { xxl: `${drawerWidth}px` },
       }}
     >
-      <Toolbar>
+      <Toolbar
+        sx={{ paddingLeft: "10px !important", paddingRight: "0px !important" }}
+      >
         {drawerWidth > 0 ? (
           <IconButton
             color="inherit"
             aria-label="open drawer"
             edge="start"
             onClick={props.handleDrawerToggle}
-            sx={{ mr: 2, display: { xxl: "none" } }}
+            sx={{ mr: 2, display: { xxl: "none" }, marginRight: "0px" }}
           >
             <MenuIcon />
           </IconButton>

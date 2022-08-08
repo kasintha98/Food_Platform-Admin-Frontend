@@ -171,12 +171,24 @@ export const DineIn = () => {
             storeId={selectedStoreObj.storeId}
             storeObj={selectedStoreObj}
             selectedOrderTypeObj={selectedOrderTypeObj}
+            isShowDeliveryCharge={
+              selectedOrderTypeObj.code === "SD" ||
+              selectedOrderTypeObj.code === "PD"
+                ? true
+                : false
+            }
           ></NewCheckout>
         ) : (
           <NewMenu
             setShowCheckout={setShowCheckout}
             restaurantId={selectedStoreObj.restaurantId}
             storeId={selectedStoreObj.storeId}
+            isShowDeliveryCharge={
+              selectedOrderTypeObj.code === "SD" ||
+              selectedOrderTypeObj.code === "PD"
+                ? true
+                : false
+            }
           ></NewMenu>
         )}
       </div>

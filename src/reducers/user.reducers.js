@@ -22,6 +22,7 @@ const initState = {
   coupon: null,
   allCoupons: [],
   businessDate: null,
+  allBusinessDates: [],
 };
 
 export default (state = initState, action) => {
@@ -340,6 +341,26 @@ export default (state = initState, action) => {
       state = {
         ...state,
         businessDate: null,
+      };
+      break;
+
+    case userConstants.GET_ALL_BUSINESS_DATES_REQUEST:
+      state = {
+        ...state,
+      };
+      break;
+
+    case userConstants.GET_ALL_BUSINESS_DATES_SUCCESS:
+      state = {
+        ...state,
+        allBusinessDates: action.payload,
+      };
+      break;
+
+    case userConstants.GET_ALL_BUSINESS_DATES_FAILURE:
+      state = {
+        ...state,
+        allBusinessDates: [],
       };
       break;
   }

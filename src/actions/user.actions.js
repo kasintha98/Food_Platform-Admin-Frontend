@@ -822,3 +822,65 @@ export const getBusinessDate = (restaurantId, storeId) => {
     }
   };
 };
+
+export const getAllBusinessDates = () => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: userConstants.GET_ALL_BUSINESS_DATES_REQUEST });
+
+      const res = await axios.get("/getAllBusinessDates");
+
+      if (res.status === 200 && res.data) {
+        dispatch({
+          type: userConstants.GET_ALL_BUSINESS_DATES_SUCCESS,
+          payload: res.data,
+        });
+        return res.data;
+      } else {
+        dispatch({
+          type: userConstants.GET_ALL_BUSINESS_DATES_FAILURE,
+          payload: null,
+        });
+        toast.error("There was an error getting business dates!");
+      }
+    } catch (error) {
+      dispatch({
+        type: userConstants.GET_ALL_BUSINESS_DATES_FAILURE,
+        payload: null,
+      });
+      toast.error("There was an error getting business dates!");
+    }
+  };
+};
+
+export const updateBusinessDate = (body) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: userConstants.UPDATE_BUSINESS_DATE_REQUEST });
+
+      const res = await axios.post("/updateBusinessDate", body);
+
+      if (res.status === 200 && res.data) {
+        dispatch({
+          type: userConstants.UPDATE_BUSINESS_DATE_SUCCESS,
+          payload: res.data,
+        });
+        dispatch(getAllBusinessDates());
+        toast.success("Business date updated!");
+        return res.data;
+      } else {
+        dispatch({
+          type: userConstants.UPDATE_BUSINESS_DATE_FAILURE,
+          payload: null,
+        });
+        toast.error("There was an error when updating business date!");
+      }
+    } catch (error) {
+      dispatch({
+        type: userConstants.UPDATE_BUSINESS_DATE_FAILURE,
+        payload: null,
+      });
+      toast.error("There was an error when updating business date!");
+    }
+  };
+};
