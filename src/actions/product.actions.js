@@ -580,3 +580,119 @@ const filterSearch = (list, sectionKeyword, categoryKeyword, nameKeyword) => {
     return list;
   }
 };
+
+export const getDishToppingMappingByRestoAndStore = (restaurantId, storeId) => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: productConstants.GET_DISH_TOPPING_MAPPING_BY_RESTRO_REQUEST,
+      });
+
+      const res = await axios.get(`/getDishToppingMappingByRestoAndStore`, {
+        params: {
+          restaurantId: restaurantId ? restaurantId : "ALL",
+          storeId: storeId ? storeId : "ALL",
+        },
+      });
+
+      if (res.status === 200) {
+        dispatch({
+          type: productConstants.GET_DISH_TOPPING_MAPPING_BY_RESTRO_SUCCESS,
+          payload: res.data,
+        });
+
+        return res.data;
+      } else {
+        dispatch({
+          type: productConstants.GET_DISH_TOPPING_MAPPING_BY_RESTRO_FAILURE,
+        });
+        console.log("error");
+      }
+    } catch (error) {
+      dispatch({
+        type: productConstants.GET_DISH_TOPPING_MAPPING_BY_RESTRO_FAILURE,
+      });
+      console.log(error);
+    }
+  };
+};
+
+export const saveDishToToppingMapping = (topping) => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: productConstants.SAVE_DISH_TO_TOPPING_REQUEST,
+      });
+
+      const res = await axios.post(`/saveDishToToppingMapping`, topping);
+
+      if (res.status === 200) {
+        dispatch({
+          type: productConstants.SAVE_DISH_TO_TOPPING_SUCCESS,
+          payload: res.data,
+        });
+        dispatch(
+          getDishToppingMappingByRestoAndStore(
+            topping.restaurantId,
+            topping.storeId
+          )
+        );
+        toast.success("Topping added successfully!");
+        return res.data;
+      } else {
+        dispatch({
+          type: productConstants.SAVE_DISH_TO_TOPPING_FAILURE,
+        });
+        console.log("error");
+        toast.error("Error when adding topping, please try again!");
+      }
+    } catch (error) {
+      dispatch({
+        type: productConstants.SAVE_DISH_TO_TOPPING_FAILURE,
+      });
+      toast.error("Error when adding topping, please try again!");
+      console.log(error);
+    }
+  };
+};
+
+export const deleteDishToToppingMapping = (topping) => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: productConstants.DELETE_DISH_TO_TOPPING_REQUEST,
+      });
+
+      const res = await axios.delete(`/deleteDishToToppingMapping`, {
+        data: topping,
+      });
+
+      if (res.status === 200) {
+        dispatch({
+          type: productConstants.DELETE_DISH_TO_TOPPING_SUCCESS,
+          payload: res.data,
+        });
+        dispatch(
+          getDishToppingMappingByRestoAndStore(
+            topping.restaurantId,
+            topping.storeId
+          )
+        );
+        toast.success("Topping deleted successfully!");
+        return res.data;
+      } else {
+        dispatch({
+          type: productConstants.DELETE_DISH_TO_TOPPING_FAILURE,
+        });
+        console.log("error");
+        toast.error("Error when deleting topping, please try again!");
+      }
+    } catch (error) {
+      dispatch({
+        type: productConstants.DELETE_DISH_TO_TOPPING_FAILURE,
+      });
+      toast.error("Error when deleting topping, please try again!");
+      console.log(error);
+    }
+  };
+};
