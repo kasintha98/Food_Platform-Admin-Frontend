@@ -884,3 +884,37 @@ export const updateBusinessDate = (body) => {
     }
   };
 };
+
+export const GetDeliveryPrice = (restaurantId, storeId) => {
+  return async (dispatch) => {
+    try {
+      const res = await axios.get("/getDeliveryConfigByCriteria", {
+        params: {
+          restaurantId: restaurantId,
+          storeId: storeId,
+          criteria: "AMOUNT",
+        },
+      });
+      dispatch({ type: userConstants.GET_DELIVERY_PRICE_REQUEST });
+
+      if (res.status === 200) {
+        console.log(res);
+        dispatch({
+          type: userConstants.GET_DELIVERY_PRICE_SUCCESS,
+          payload: res.data,
+        });
+        return res.data;
+      } else {
+        const { error } = res.data;
+        dispatch({
+          type: userConstants.GET_DELIVERY_PRICE_FAILURE,
+          payload: { error },
+        });
+        toast.error("There was an error when getting data!");
+      }
+    } catch (error) {
+      toast.error("There was an error when getting delivery data!");
+      console.log(error);
+    }
+  };
+};

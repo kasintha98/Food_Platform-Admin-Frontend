@@ -23,6 +23,7 @@ const initState = {
   allCoupons: [],
   businessDate: null,
   allBusinessDates: [],
+  deliveryPrice: null,
 };
 
 export default (state = initState, action) => {
@@ -361,6 +362,13 @@ export default (state = initState, action) => {
       state = {
         ...state,
         allBusinessDates: [],
+      };
+      break;
+
+    case userConstants.GET_DELIVERY_PRICE_SUCCESS:
+      state = {
+        ...state,
+        deliveryPrice: action.payload,
       };
       break;
   }

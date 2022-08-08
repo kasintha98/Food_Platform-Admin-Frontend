@@ -120,6 +120,22 @@ export const InvoiceTable = (props) => {
               </TableRow>
             ) : null}
 
+            {props.isShowDeliveryCharge ? (
+              <TableRow>
+                <CusTableCell component="th" scope="row" colspan="3">
+                  Delivery Charges
+                </CusTableCell>
+                <CusTableCell
+                  component="th"
+                  scope="row"
+                  colspan="1"
+                  sx={{ fontStyle: "italic" }}
+                >
+                  Rs. {props.fullResp.deliveryCharges}
+                </CusTableCell>
+              </TableRow>
+            ) : null}
+
             <TableRow>
               <CusTableCell component="th" scope="row" colspan="3">
                 CGST
@@ -133,6 +149,7 @@ export const InvoiceTable = (props) => {
                 Rs. {props.cgst}
               </CusTableCell>
             </TableRow>
+
             <TableRow>
               <CusTableCell component="th" scope="row" colspan="3">
                 SGST

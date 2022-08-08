@@ -103,6 +103,7 @@ export default function NewCheckout(props) {
   const currentAddress = useSelector((state) => state.user.currentAddress);
   const taxDetails = useSelector((state) => state.user.taxDetails);
   const couponReduxObj = useSelector((state) => state.user.coupon);
+  const deliveryPrice = useSelector((state) => state.user.deliveryPrice);
 
   const cart = useSelector((state) => state.cart);
   const [subTotal, setSubtotal] = useState(0);
@@ -383,7 +384,7 @@ export default function NewCheckout(props) {
         totalPrice: total,
         paymentStatus: props.selectedOrderTypeObj.paymentStatus,
         paymentMode: currentPaymentType,
-        deliveryCharges: 0,
+        deliveryCharges: Number(delCharge) ? Number(delCharge) : 0,
         customerAddressId: defaultAddress ? 99999 : currentGetAddress.id,
         cgstCalculatedValue: cgstCaluclatedValue.toFixed(2),
         sgstCalculatedValue: sgstCalculatedValue.toFixed(2),
@@ -437,18 +438,54 @@ export default function NewCheckout(props) {
 
   const handleSubTotal = (total) => {
     setSubtotal(total);
+    if (props.isShowDeliveryCharge) {
+      calcDeliveryPrice();
+    }
   };
 
   const handleExtraTotal = (total) => {
     setExtraSubTotal(total);
+    if (props.isShowDeliveryCharge) {
+      calcDeliveryPrice();
+    }
   };
 
   const handleChoiceTotal = (total) => {
     setChoiceTotal(total);
+    if (props.isShowDeliveryCharge) {
+      calcDeliveryPrice();
+    }
   };
 
   const handleChangePaymentType = (event) => {
     setPaymentType(event.target.value);
+  };
+
+  const calcDeliveryPrice = () => {
+    let allSub =
+      subTotal +
+      (extraSubTotal ? extraSubTotal : 0) +
+      (choiceTotal ? choiceTotal : 0);
+
+    if (
+      couponReduxObj &&
+      Number(couponReduxObj.couponDetails.discountPercentage)
+    ) {
+      const afterAddCoupon =
+        (100 - Number(couponReduxObj.couponDetails.discountPercentage)) / 100;
+      allSub = allSub * afterAddCoupon;
+    }
+
+    let deliveryCharge = 0;
+
+    if (deliveryPrice) {
+      deliveryPrice.forEach((delivery) => {
+        if (allSub >= delivery.minAmount && allSub <= delivery.maxAmount) {
+          deliveryCharge = delivery.deliveryFee;
+        }
+      });
+    }
+    setDelCharge(deliveryCharge.toFixed(2));
   };
 
   const addUpdateCustomerDetails = () => {
@@ -708,6 +745,7 @@ export default function NewCheckout(props) {
                       overallPriceWithTax={orderResp.overallPriceWithTax}
                       delCharge={delCharge}
                       fullResp={orderResp}
+                      isShowDeliveryCharge={props.isShowDeliveryCharge}
                     ></InvoiceTable>
                   </div>
                 </div>
@@ -887,7 +925,7 @@ export default function NewCheckout(props) {
                         </Row>
 
                         {couponReduxObj && couponReduxObj.couponDetails ? (
-                          <Row className="ps-2">
+                          <Row className="pl-2">
                             <div className="w75">
                               <Typography
                                 sx={{
@@ -909,6 +947,34 @@ export default function NewCheckout(props) {
                                 }}
                               >
                                 {renderCouponDiscount()}
+                              </Typography>
+                            </div>
+                          </Row>
+                        ) : null}
+
+                        {props.isShowDeliveryCharge ? (
+                          <Row className="pl-2">
+                            <div className="w75">
+                              <Typography
+                                sx={{
+                                  fontSize: "0.9rem",
+                                  fontWeight: "600",
+                                  fontFamily: "Arial",
+                                  color: "#595959",
+                                }}
+                              >
+                                Delivery Charges
+                              </Typography>
+                            </div>
+                            <div className="w25">
+                              <Typography
+                                sx={{
+                                  fontSize: "0.9rem",
+                                  fontWeight: "600",
+                                  color: "#2e7d32",
+                                }}
+                              >
+                                ₹ {delCharge}
                               </Typography>
                             </div>
                           </Row>

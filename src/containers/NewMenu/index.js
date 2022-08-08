@@ -11,6 +11,7 @@ import {
   getAllSections,
   getDishesBySection,
   getAllStores,
+  GetDeliveryPrice,
   GetTaxDetails,
 } from "../../actions";
 import TabContext from "@mui/lab/TabContext";
@@ -86,6 +87,7 @@ export default function NewMenu(props) {
 
   useEffect(() => {
     dispatch(getAllStores());
+    dispatch(GetDeliveryPrice(props.restaurantId, props.storeId));
     dispatch(GetTaxDetails(props.restaurantId, props.storeId));
     dispatch(getProductsNew(props.restaurantId, props.storeId));
     dispatch(getAllSections(props.restaurantId, props.storeId)).then((res) => {
@@ -277,7 +279,10 @@ export default function NewMenu(props) {
             </div>
           </Col>
           <CusCol sm={12} md={12} lg={3} xl={3}>
-            <NewCart setShowCheckout={props.setShowCheckout}></NewCart>
+            <NewCart
+              isShowDeliveryCharge={props.isShowDeliveryCharge}
+              setShowCheckout={props.setShowCheckout}
+            ></NewCart>
           </CusCol>
         </Row>
       </CusContainer>
