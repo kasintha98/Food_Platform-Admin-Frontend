@@ -696,3 +696,129 @@ export const deleteDishToToppingMapping = (topping) => {
     }
   };
 };
+
+export const getAllSectionsFromMaster = () => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: productConstants.GET_ALL_SECTIONS_MASTER_REQUEST,
+      });
+
+      const res = await axios.get(`/getAllSectionsFromMaster`);
+
+      if (res && res.status === 200) {
+        dispatch({
+          type: productConstants.GET_ALL_SECTIONS_MASTER_SUCCESS,
+          payload: res.data,
+        });
+
+        return res.data;
+      } else {
+        dispatch({
+          type: productConstants.GET_ALL_SECTIONS_MASTER_FAILURE,
+          payload: [],
+        });
+        console.log("error");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+export const getAllDishesFromMaster = () => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: productConstants.GET_ALL_DISHES_MASTER_REQUEST,
+      });
+
+      const res = await axios.get(`/getAllDishesFromMaster`);
+
+      if (res && res.status === 200) {
+        dispatch({
+          type: productConstants.GET_ALL_DISHES_MASTER_SUCCESS,
+          payload: res.data,
+        });
+
+        return res.data;
+      } else {
+        dispatch({
+          type: productConstants.GET_ALL_DISHES_MASTER_FAILURE,
+          payload: [],
+        });
+        console.log("error");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+export const saveSection = (section) => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: productConstants.SAVE_NEW_SECTION_REQUEST,
+      });
+
+      const res = await axios.post(`/saveSection`, section);
+
+      if (res.status === 200) {
+        dispatch({
+          type: productConstants.SAVE_NEW_SECTION_SUCCESS,
+          payload: res.data,
+        });
+        dispatch(getAllSectionsFromMaster());
+        toast.success("Section added successfully!");
+        return res.data;
+      } else {
+        dispatch({
+          type: productConstants.SAVE_NEW_SECTION_FAILURE,
+        });
+        console.log("error");
+        toast.error("Error when adding section, please try again!");
+      }
+    } catch (error) {
+      dispatch({
+        type: productConstants.SAVE_NEW_SECTION_FAILURE,
+      });
+      toast.error("Error when adding section, please try again!");
+      console.log(error);
+    }
+  };
+};
+
+export const saveDish = (dish) => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: productConstants.SAVE_NEW_DISH_REQUEST,
+      });
+
+      const res = await axios.post(`/saveDish`, dish);
+
+      if (res.status === 200) {
+        dispatch({
+          type: productConstants.SAVE_NEW_DISH_SUCCESS,
+          payload: res.data,
+        });
+        dispatch(getAllDishesFromMaster());
+        toast.success("Dish added successfully!");
+        return res.data;
+      } else {
+        dispatch({
+          type: productConstants.SAVE_NEW_DISH_FAILURE,
+        });
+        console.log("error");
+        toast.error("Error when adding dish, please try again!");
+      }
+    } catch (error) {
+      dispatch({
+        type: productConstants.SAVE_NEW_DISH_FAILURE,
+      });
+      toast.error("Error when adding dish, please try again!");
+      console.log(error);
+    }
+  };
+};

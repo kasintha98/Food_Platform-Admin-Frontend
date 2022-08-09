@@ -15,6 +15,8 @@ const initState = {
   allMenuIngredients: [],
   menuIngredientsLoading: false,
   allDishToppingMappingByRestoAndStore: [],
+  allSectionsFromMaster: [],
+  allDishesFromMaster: [],
 };
 
 export default (state = initState, action) => {
@@ -214,6 +216,42 @@ export default (state = initState, action) => {
       state = {
         ...state,
         allDishToppingMappingByRestoAndStore: [],
+      };
+      break;
+
+    case productConstants.GET_ALL_SECTIONS_MASTER_REQUEST:
+      state = {
+        ...state,
+      };
+      break;
+    case productConstants.GET_ALL_SECTIONS_MASTER_SUCCESS:
+      state = {
+        ...state,
+        allSectionsFromMaster: action.payload,
+      };
+      break;
+    case productConstants.GET_ALL_SECTIONS_MASTER_FAILURE:
+      state = {
+        ...state,
+        allSectionsFromMaster: [],
+      };
+      break;
+
+    case productConstants.GET_ALL_DISHES_MASTER_REQUEST:
+      state = {
+        ...state,
+      };
+      break;
+    case productConstants.GET_ALL_DISHES_MASTER_SUCCESS:
+      state = {
+        ...state,
+        allDishesFromMaster: action.payload,
+      };
+      break;
+    case productConstants.GET_ALL_DISHES_MASTER_FAILURE:
+      state = {
+        ...state,
+        allDishesFromMaster: [],
       };
       break;
   }
