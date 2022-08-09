@@ -1,31 +1,26 @@
+import React, { useEffect, useState } from "react";
 import styled from "@emotion/styled";
-import Checkbox from "@material-ui/core/Checkbox";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import { makeStyles } from "@material-ui/core/styles";
-import {
-  Alert, Typography
-} from "@mui/material";
+import Checkbox from "@mui/material/Checkbox";
+import { Alert, Typography } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import TableContainer from "@mui/material/TableContainer"
+import TableContainer from "@mui/material/TableContainer";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import React, { useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getAllMenuIngredientsByRestoAndStoreId,
-  getAllMenuIngredientsByRestoAndStoreIdWithPaging, getAllSections,
-  getAllSectionsWithDishes, getProductsNew, getProductsNewWithPaging
+  saveDishToToppingMapping,
+  deleteDishToToppingMapping,
+  getProductsNew,
+  getDishToppingMappingByRestoAndStore,
 } from "../../actions";
-import './style.css'
-
-//const itemsPerPage = 50;
 
 const CusSelect = styled(Select)`
   & .MuiSelect-select {
@@ -50,21 +45,15 @@ const CusTableCell = styled(TableCell)`
   border: 1px solid #000;
 `;
 
-const useStyles = makeStyles({
-  sticky: {
-    position: "sticky",
-    left: 0,
-  }
-});
-
 const CusMenuItem = styled(MenuItem)``;
 
 export const AddToppingToDish = () => {
-
   const stores = useSelector((state) => state.store.stores);
   const productList = useSelector((state) => state.product.products);
+  const allDishToppingMappingByRestoAndStore = useSelector(
+    (state) => state.product.allDishToppingMappingByRestoAndStore
+  );
 
-  
   const allMenuIngredients = useSelector(
     (state) => state.product.allMenuIngredients
   );
@@ -72,133 +61,37 @@ export const AddToppingToDish = () => {
     (state) => state.product.menuIngredientsLoading
   );
 
-  const [selectedStore, setSelectedStore] = useState(
-    //stores[0] ? stores[0].resturantName : null
-    ""
-  );
-
-  const [selectedStoreObj, setSelectedStoreObj] = useState(
-    /* stores[0] */ null
-  );
-
-  const [page, setPage] = useState(1);
-  const [ToppingssOfPage, setToppingssOfPage] = useState([]);
-  const [productsOfPage, setProductsOfPage] = useState([]);
-  const [sectionKeyword, setSectionKeyword] = useState("");
-  const [categoryKeyword, setCategoryKeyword] = useState("");
-  const [nameKeyword, setNameKeyword] = useState("");
-  const [firstProductList, setFirstProductList] = useState([]);
-  const [isSearched, setIsSearched] = useState(false);
+  const [selectedStore, setSelectedStore] = useState("");
+  const [selectedStoreObj, setSelectedStoreObj] = useState(null);
+  const [localDishToppingMapping, setLocalDishToppingMapping] = useState([]);
 
   const dispatch = useDispatch();
-  const itemsPerPage = 33;
 
   useEffect(() => {
     if (selectedStoreObj) {
       dispatch(
         getProductsNew(selectedStoreObj.restaurantId, selectedStoreObj.storeId)
-      ).then((res) => {
-        if (res) {
-          setFirstProductList(res);
-        }
-      });
-
-      dispatch(
-        getAllSections(selectedStoreObj.restaurantId, selectedStoreObj.storeId)
       );
 
-      dispatch(
-        getAllSectionsWithDishes(
-          selectedStoreObj.restaurantId,
-          selectedStoreObj.storeId
-        )
-      );
-    }
-  }, [selectedStoreObj]);
-
-  useEffect(() => {
-    
-    if (selectedStoreObj) {
-      
-      if (isSearched && !sectionKeyword && !categoryKeyword && !nameKeyword) {
-        
-        dispatch(
-          getProductsNew(
-            selectedStoreObj.restaurantId,
-            selectedStoreObj.storeId
-          )
-        ).then((res) => {
-          if (res) {
-            setFirstProductList(res);
-            dispatch(
-              getProductsNewWithPaging(
-                selectedStoreObj.restaurantId,
-                selectedStoreObj.storeId,
-                Number(page - 1) * itemsPerPage,
-                page * itemsPerPage,
-                res,
-                sectionKeyword,
-                categoryKeyword,
-                nameKeyword,
-                res
-              )
-            ).then((res) => {
-              setProductsOfPage(res);
-            });
-          }
-        });
-      } else {
-        dispatch(
-          getProductsNewWithPaging(
-            selectedStoreObj.restaurantId,
-            selectedStoreObj.storeId,
-            Number(page - 1) * itemsPerPage,
-            page * itemsPerPage,
-            productList,
-            sectionKeyword,
-            categoryKeyword,
-            nameKeyword,
-            firstProductList
-          )
-        ).then((res) => {
-          setProductsOfPage(res);
-          productsOfPage.map((item) => {
-            console.log(item);
-          })
-        });
-      }
-    }
-  }, [page, selectedStoreObj, sectionKeyword, categoryKeyword, nameKeyword]);
-
-  useEffect(() => {
-    if (selectedStoreObj) {
       dispatch(
         getAllMenuIngredientsByRestoAndStoreId(
           selectedStoreObj.restaurantId,
           selectedStoreObj.storeId
         )
       );
-    }
-  }, [selectedStoreObj]);
 
-  useEffect(() => {
-    if (selectedStoreObj) {
       dispatch(
-        getAllMenuIngredientsByRestoAndStoreIdWithPaging(
+        getDishToppingMappingByRestoAndStore(
           selectedStoreObj.restaurantId,
-          selectedStoreObj.storeId,
-          // Number(page - 1) * itemsPerPage,
-          // page * itemsPerPage,
-          // allMenuIngredients
+          selectedStoreObj.storeId
         )
       ).then((res) => {
-        setToppingssOfPage(res);
-        // ToppingssOfPage.forEach(() => {
-        //   console.log('hi');
-        // })
+        if (res) {
+          setLocalDishToppingMapping(res);
+        }
       });
     }
-  }, [page, selectedStoreObj]);
+  }, [selectedStoreObj]);
 
   const handleChangeStore = (event) => {
     setSelectedStore(event.target.value);
@@ -208,9 +101,29 @@ export const AddToppingToDish = () => {
     setSelectedStoreObj(store);
   };
 
+  const handleChangeSave = (event, ing, productId) => {
+    const newObj = {
+      productId: productId,
+      subProductId: ing.subProductId,
+      restaurantId: ing.restaurantId,
+      storeId: ing.storeId,
+      ingredientAvailableFlag: "Y",
+    };
+    dispatch(saveDishToToppingMapping(newObj));
+  };
+
+  const handleChangeDelete = (event, ing, productId, deleteObj) => {
+    //const newObjD = { ...ing, productId };
+    console.log(deleteObj);
+    dispatch(deleteDishToToppingMapping(deleteObj));
+  };
+
   return (
     <div>
-      <Row className="align-items-center justify-content-center">
+      <Row
+        className="align-items-center justify-content-center"
+        style={{ width: "100vw" }}
+      >
         <div style={{ maxWidth: "125px" }}>
           <Typography sx={{ color: "#7F7F7F", fontWeight: "bold" }}>
             Select Store
@@ -248,79 +161,187 @@ export const AddToppingToDish = () => {
         </Col>
       </Row>
       <div>
-          {selectedStore === '' ? <h5 align="center" style={{ color: '#688789', marginTop: '2rem'}}>Please select a store</h5> : (
-            <TableContainer className="mt-2" sx={{ maxHeight: 530, display: "flex", flexDirection: "row", overflowX: 'scroll', scrollSnapType: "x mandatory", width: "91rem" }}>
-              <Table sx={{minWidth: "20rem"}} className="sticky-conten">
-              <TableHead className="sticky-content-title">
-                    <TableRow>
-                      <CusTableCell align="center"  sx={{ backgroundColor: '#2f5597', color: '#ffffff', height: "3rem"}}>Dish<br/>Selection</CusTableCell>
-                      <CusTableCell align="center"  sx={{ backgroundColor: '#2f5597', color: '#ffffff', height: "3rem" }}>Dish<br/>Category</CusTableCell>
-                      <CusTableCell align="center"  sx={{ backgroundColor: '#2f5597', color: '#ffffff', height: "3rem"}}>Dish<br/>Name</CusTableCell>
-                      <CusTableCell align="center"  sx={{ backgroundColor: '#2f5597', color: '#ffffff', height: "3rem"}}>Size</CusTableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody className="sticky-content-title"> 
-                  {menuIngredientsLoading ? (
-                    <TableRow>
-                      <TableCell colSpan={21}>
-                        <div className="d-flex justify-content-center">
-                          <div
-                            className="spinner-border text-primary"
-                            role="status"
-                          ></div>
-                        </div>
-                        <div className="text-center">
-                          <Typography>Loading Data...</Typography>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ) : (
-                    <>
-                      {allMenuIngredients && allMenuIngredients.length > 0 ? (
-                        <>
-                            {productsOfPage.map((item) => (
-                              <TableRow >
-                                <CusTableCell key={item.id} align="center" sx={{height: "51px", width: '3rem'}} >{item.section}</CusTableCell>
-                                <CusTableCell key={item.id} align="center" sx={{height: "51px", width: '3rem'}}>{item.dishCategory}</CusTableCell>
-                                <CusTableCell key={item.id} align="center" sx={{height: "51px", width: '3rem'}}>{item.dish}</CusTableCell>
-                                <CusTableCell key={item.id} align="center" sx={{height: "51px", width: '3rem'}}>{item.productSize}</CusTableCell>
-                              </TableRow>
-                            ))}
-                        </>
-                      ) : (
-                        <TableRow>
-                          <TableCell colSpan={15}>
-                            <Alert severity="warning">No ingrefients found!</Alert>
-                          </TableCell>
-                        </TableRow>
-                      )}
-                    </> 
-                  )}
-                </TableBody>
-              </Table>
-              <Table sx={{overflowX: 'scroll'}}>
-                <TableHead>
-                  <TableRow>
-                  {ToppingssOfPage.map((item) => (
-                    <CusTableCell sx={{minWidth: "5rem", height: "3rem"}}>
-                      <div align="center" style={{ backgroundColor: '#688789', color: '#ffffff'}} >{item.size}</div>
-                      <div align="center" style={{ backgroundColor: '#fff2cc', color: '#1e1e1e'}}>{item.ingredientType}</div>
+        {!selectedStore ? (
+          <Alert className="mt-4" severity="warning">
+            Please select a store!
+          </Alert>
+        ) : (
+          <TableContainer
+            className="mt-2"
+            sx={{
+              maxHeight: "475px",
+              width: "101%",
+            }}
+          >
+            <Table sx={{ minWidth: "800px" }} stickyHeader>
+              <TableHead>
+                <TableRow>
+                  <CusTableCell
+                    align="center"
+                    sx={{
+                      backgroundColor: "#2f5597",
+                      color: "#ffffff",
+                      height: "3rem",
+                    }}
+                  >
+                    Dish
+                    <br />
+                    Selection
+                  </CusTableCell>
+                  <CusTableCell
+                    align="center"
+                    sx={{
+                      backgroundColor: "#2f5597",
+                      color: "#ffffff",
+                      height: "3rem",
+                    }}
+                  >
+                    Dish
+                    <br />
+                    Category
+                  </CusTableCell>
+                  <CusTableCell
+                    align="center"
+                    sx={{
+                      backgroundColor: "#2f5597",
+                      color: "#ffffff",
+                      height: "3rem",
+                    }}
+                  >
+                    Dish
+                    <br />
+                    Name
+                  </CusTableCell>
+                  <CusTableCell
+                    align="center"
+                    sx={{
+                      backgroundColor: "#2f5597",
+                      color: "#ffffff",
+                      height: "3rem",
+                    }}
+                  >
+                    Size
+                  </CusTableCell>
+                  {allMenuIngredients.map((item) => (
+                    <CusTableCell
+                      sx={{
+                        backgroundColor: "#fff2cc",
+                        verticalAlign: "sub",
+                      }}
+                      align="center"
+                    >
+                      <span
+                        style={{
+                          backgroundColor: "#688789",
+                          color: "#ffffff",
+                          display: "inline-block",
+                          width: "100%",
+                        }}
+                      >
+                        {item.size}
+                      </span>
+                      <br></br>
+                      <span>{item.ingredientType}</span>
                     </CusTableCell>
                   ))}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {menuIngredientsLoading ? (
+                  <TableRow>
+                    <TableCell colSpan={25}>
+                      <div className="d-flex justify-content-center">
+                        <div
+                          className="spinner-border text-primary"
+                          role="status"
+                        ></div>
+                      </div>
+                      <div className="text-center">
+                        <Typography>Loading Data...</Typography>
+                      </div>
+                    </TableCell>
                   </TableRow>
-                </TableHead>   
-                <TableBody>
-                  {productsOfPage.map(() => (
-                    <TableRow>
-                    {ToppingssOfPage.map(() => {
-                      return <CusTableCell><div style={{ display: 'flex', justifyContent: 'center', alignContent: 'center',height: "2.5rem" }}><FormControlLabel control={<Checkbox />} sx={{marginLeft: "0 !important", marginright: "0 !important"}} /></div></CusTableCell>
-                  })}
-                  </TableRow>
-                  ))}
-                </TableBody>  
-              </Table>
-            </TableContainer>
-          )}
+                ) : (
+                  <>
+                    {allMenuIngredients && allMenuIngredients.length > 0 ? (
+                      <>
+                        {productList
+                          .filter(function (el) {
+                            return el.ingredientExistsFalg === "Y";
+                          })
+                          .map((item) => (
+                            <TableRow key={item.id}>
+                              <CusTableCell align="center">
+                                {item.section}
+                              </CusTableCell>
+                              <CusTableCell align="center">
+                                {item.dish}
+                              </CusTableCell>
+                              <CusTableCell align="center">
+                                {item.dishType}
+                              </CusTableCell>
+                              <CusTableCell align="center">
+                                {item.productSize}
+                              </CusTableCell>
+                              {allMenuIngredients.map((ing) => (
+                                <CusTableCell align="center">
+                                  <Checkbox
+                                    sx={{
+                                      "&.Mui-checked": {
+                                        color: "#2e7d32",
+                                      },
+                                    }}
+                                    checked={
+                                      allDishToppingMappingByRestoAndStore.find(
+                                        (x) =>
+                                          x.productId === item.productId &&
+                                          x.subProductId === ing.subProductId
+                                      )
+                                        ? true
+                                        : false
+                                    }
+                                    onChange={(e) => {
+                                      if (e.target.checked) {
+                                        handleChangeSave(
+                                          e,
+                                          ing,
+                                          item.productId
+                                        );
+                                      } else {
+                                        handleChangeDelete(
+                                          e,
+                                          ing,
+                                          item.productId,
+                                          allDishToppingMappingByRestoAndStore.find(
+                                            (x) =>
+                                              x.productId === item.productId &&
+                                              x.subProductId ===
+                                                ing.subProductId
+                                          )
+                                        );
+                                      }
+                                    }}
+                                  />
+                                </CusTableCell>
+                              ))}
+                            </TableRow>
+                          ))}
+                      </>
+                    ) : (
+                      <TableRow>
+                        <TableCell colSpan={25}>
+                          <Alert severity="warning">
+                            No ingredients found!
+                          </Alert>
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
       </div>
     </div>
   );

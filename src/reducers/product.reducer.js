@@ -14,6 +14,7 @@ const initState = {
   allDishesBySection: {},
   allMenuIngredients: [],
   menuIngredientsLoading: false,
+  allDishToppingMappingByRestoAndStore: [],
 };
 
 export default (state = initState, action) => {
@@ -195,6 +196,24 @@ export default (state = initState, action) => {
       state = {
         ...state,
         ingredientsOfPage: [],
+      };
+      break;
+
+    case productConstants.GET_DISH_TOPPING_MAPPING_BY_RESTRO_REQUEST:
+      state = {
+        ...state,
+      };
+      break;
+    case productConstants.GET_DISH_TOPPING_MAPPING_BY_RESTRO_SUCCESS:
+      state = {
+        ...state,
+        allDishToppingMappingByRestoAndStore: action.payload,
+      };
+      break;
+    case productConstants.GET_DISH_TOPPING_MAPPING_BY_RESTRO_FAILURE:
+      state = {
+        ...state,
+        allDishToppingMappingByRestoAndStore: [],
       };
       break;
   }
