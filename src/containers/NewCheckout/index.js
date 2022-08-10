@@ -382,7 +382,10 @@ export default function NewCheckout(props) {
         orderStatus: "SUBMITTED",
         taxRuleId: 1,
         totalPrice: total,
-        paymentStatus: props.selectedOrderTypeObj.paymentStatus,
+        paymentStatus:
+          currentPaymentType === "Not Paid"
+            ? "Not Paid"
+            : props.selectedOrderTypeObj.paymentStatus,
         paymentMode: currentPaymentType,
         deliveryCharges: Number(delCharge) ? Number(delCharge) : 0,
         customerAddressId: defaultAddress ? 99999 : currentGetAddress.id,
@@ -1472,6 +1475,22 @@ export default function NewCheckout(props) {
                                   }}
                                 >
                                   Amazon Pay
+                                </Typography>
+                              }
+                            />
+                            <FormControlLabel
+                              value="Not Paid"
+                              control={<Radio color="success" />}
+                              label={
+                                <Typography
+                                  sx={{
+                                    color: "#595959",
+                                    fontSize: "0.9rem",
+                                    fontWeight: "600",
+                                    fontFamily: "Arial",
+                                  }}
+                                >
+                                  Not Paid
                                 </Typography>
                               }
                             />

@@ -32,6 +32,16 @@ const CusTableCell2 = styled(TableCell)`
   font-size: 0.75rem;
 `;
 
+const paymentModes = [
+  { name: "CASH", code: "CASH" },
+  { name: "PayTM", code: "PayTM" },
+  { name: "Credit / Debit", code: "EDC" },
+  { name: "Google Pay", code: "Gpay" },
+  { name: "PhonePe", code: "PhonePe" },
+  { name: "Amazon Pay", code: "AmznPay" },
+  { name: "COD", code: "COD" },
+];
+
 export const DeliveryBoy = () => {
   const user = useSelector((state) => state.auth.user);
   const usersByRole = useSelector((state) => state.user.usersByRole);
@@ -44,6 +54,7 @@ export const DeliveryBoy = () => {
   const [status, setStatus] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const [selectedDeliBoy, setSelectedDeliBoy] = useState("");
+  const [paymentMode, setPaymentMode] = useState("");
   const [selectedDeliBoyObj, setSelectedDeliBoyObj] = useState("");
   const statuses =
     user.roleCategory === "DELIVERY_BOY"
@@ -116,6 +127,11 @@ export const DeliveryBoy = () => {
 
   const handleChangeKeywords = (event) => {
     setKeywords(event.target.value);
+  };
+
+  const handlePaymentModeUpdate = (event) => {
+    setPaymentMode(event.target.value);
+    console.log(event.target.value);
   };
 
   const resetState = () => {
@@ -360,7 +376,33 @@ export const DeliveryBoy = () => {
                       {row.paymentStatus}
                     </CusTableCell2>
                     <CusTableCell2 align="center">
-                      {row.paymentMode}
+                      <FormControl fullWidth>
+                        <InputLabel
+                          id="demo-simple-select-label"
+                          sx={{ fontSize: "0.75rem" }}
+                        >
+                          Payment Mode
+                        </InputLabel>
+                        <NativeSelect
+                          defaultValue={row.paymentMode}
+                          inputProps={{
+                            name: "status",
+                            id: "uncontrolled-native",
+                          }}
+                          onChange={handlePaymentModeUpdate}
+                          sx={{ fontSize: "0.75rem" }}
+                        >
+                          {paymentModes.map((mode) => (
+                            <option
+                              key={mode.code}
+                              value={mode.code}
+                              style={{ fontSize: "0.75rem" }}
+                            >
+                              {mode.name}
+                            </option>
+                          ))}
+                        </NativeSelect>
+                      </FormControl>
                     </CusTableCell2>
                     <CusTableCell2 align="center">
                       {row.customerName}
