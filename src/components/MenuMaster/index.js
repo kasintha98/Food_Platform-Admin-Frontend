@@ -190,7 +190,7 @@ export const MenuMaster = () => {
   const [newSection, setNewSection] = useState("");
   const [newDish, setNewDish] = useState("");
   const [newVeg, setNewVeg] = useState("");
-  const [newSpice, setNewSpice] = useState("");
+  const [newSpice, setNewSpice] = useState("None");
   const [newDishType, setNewDishType] = useState("");
   const [newDishDesc, setNewDishDesc] = useState("");
   const [newPrice, setNewPrice] = useState("");
@@ -1079,7 +1079,7 @@ export const MenuMaster = () => {
                 }}
                 sx={{ fontSize: "0.75rem" }}
               >
-                <CusMenuItem value={""} style={{ fontSize: "0.75rem" }}>
+                <CusMenuItem value={"None"} style={{ fontSize: "0.75rem" }}>
                   None
                 </CusMenuItem>
                 <CusMenuItem
@@ -1318,7 +1318,7 @@ export const MenuMaster = () => {
           </Button>
         </Col>
       </Row>
-      <Row className="align-items-center mt-2">
+      {/* <Row className="align-items-center mt-2">
         <div style={{ minWidth: "180px" }}>
           <Typography sx={{ color: "#7F7F7F", fontWeight: "bold" }}>
             Add new Dish Section
@@ -1377,7 +1377,7 @@ export const MenuMaster = () => {
             SAVE
           </Button>
         </Col>
-      </Row>
+      </Row> */}
       <div>
         <TableContainer className="mt-2" sx={{ maxHeight: 430, width: "101%" }}>
           <Table sx={{ minWidth: 1700 }} aria-label="simple table" stickyHeader>
