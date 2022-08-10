@@ -469,7 +469,7 @@ export const MenuMaster = () => {
       section: newSection,
       dish: newDish,
       dishCategory: newVeg,
-      dishSpiceIndicatory: newSpice,
+      dishSpiceIndicatory: newSpice === "None" ? "" : newSpice,
       dishType: newDishType,
       dishDescriptionId: newDishDesc,
       productSize: newSize,
