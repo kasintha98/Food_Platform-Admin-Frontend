@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getCustomerOrders, updateOrder, getUsersByRole } from "../../actions";
+import {
+  getCustomerOrders,
+  updateOrder,
+  getUsersByRole,
+  updateOrderPaymentAndStatus,
+} from "../../actions";
 import Layout from "../NewLayout";
 import { Row, Col, Modal } from "react-bootstrap";
 import styled from "@emotion/styled";
@@ -181,16 +186,32 @@ export const DeliveryBoy = () => {
     toast.success("Reset Orders!");
   };
 
-  const onClickUpdateStatus = (id) => {
-    if (status && status !== "none") {
-      dispatch(updateOrder(id, status, null)).then((res) => {
+  const onClickUpdateStatus = (id, order) => {
+    if ((status && status !== "none") || paymentMode) {
+      /* dispatch(updateOrder(id, status, null)).then((res) => {
+        if (res) {
+          resetState();
+        }
+      }); */
+
+      dispatch(
+        updateOrderPaymentAndStatus(
+          id,
+          paymentMode ? paymentMode : order.paymentMode,
+          "PAID",
+          status ? status : order.orderStatus,
+          null
+        )
+      ).then((res) => {
         if (res) {
           resetState();
         }
       });
+
       setStatus("");
+      setPaymentMode("");
     } else {
-      toast.error("Please select a status!");
+      toast.error("Please select a status/ payment mode!");
     }
   };
 
@@ -492,7 +513,7 @@ export const DeliveryBoy = () => {
                             className="mt-2"
                             sx={{ fontSize: "0.75rem" }}
                             onClick={() => {
-                              onClickUpdateStatus(row.orderId);
+                              onClickUpdateStatus(row.orderId, row);
                             }}
                             disabled={row.orderStatus === "DELIVERED"}
                           >

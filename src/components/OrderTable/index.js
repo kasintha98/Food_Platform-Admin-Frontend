@@ -1,6 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getCustomerOrders, updateOrder } from "../../actions";
+import {
+  getCustomerOrders,
+  updateOrder,
+  updateOrderPaymentAndStatus,
+} from "../../actions";
 import styled from "@emotion/styled";
 import {
   TableContainer,
@@ -110,14 +114,30 @@ export const OrderTable = (props) => {
     console.log(event.target.value);
   };
 
-  const onClickUpdateStatus = (id) => {
-    if (status) {
-      dispatch(updateOrder(id, status, props.type)).then((res) => {
+  const onClickUpdateStatus = (id, order) => {
+    if (status || paymentMode) {
+      /* dispatch(updateOrder(id, status, props.type)).then((res) => {
+        if (res) {
+          handleIsReset();
+        }
+      }); */
+
+      dispatch(
+        updateOrderPaymentAndStatus(
+          id,
+          paymentMode ? paymentMode : order.paymentMode,
+          "PAID",
+          status ? status : order.orderStatus,
+          props.type
+        )
+      ).then((res) => {
         if (res) {
           handleIsReset();
         }
       });
+
       setStatus("");
+      setPaymentMode("");
     }
   };
 
@@ -467,7 +487,7 @@ export const OrderTable = (props) => {
                             className="mt-2"
                             sx={{ fontSize: "0.75rem" }}
                             onClick={() => {
-                              onClickUpdateStatus(row.orderId);
+                              onClickUpdateStatus(row.orderId, row);
                             }}
                             disabled={row.orderStatus === "DELIVERED"}
                           >

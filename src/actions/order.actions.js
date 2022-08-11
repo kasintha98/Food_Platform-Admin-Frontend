@@ -261,3 +261,59 @@ export const updateFoodPackagedFlag = (orderId, foodPackagedFlag) => {
     }
   };
 };
+
+export const updateOrderPaymentAndStatus = (
+  orderId,
+  paymentMode,
+  paymentStatus,
+  orderStatus,
+  tabType
+) => {
+  return async (dispatch) => {
+    dispatch({ type: orderConstants.UPDATE_STATUS_PAYMENT_ORDER_REQUEST });
+
+    try {
+      const res = await axios.post("/updatePaymentModeByOrderId", null, {
+        params: {
+          orderId,
+          paymentMode,
+          paymentStatus,
+          orderStatus,
+        },
+      });
+
+      const today = new Date();
+
+      if (res.status === 200) {
+        dispatch({
+          type: orderConstants.UPDATE_STATUS_PAYMENT_ORDER_SUCCESS,
+        });
+
+        if (tabType) {
+          dispatch(
+            getCustomerOrders(
+              null,
+              null,
+              tabType,
+              `${today.getFullYear()}-${
+                today.getMonth() + 1
+              }-${today.getDate()}`
+            )
+          );
+        }
+        toast.success("Order updated successfully!");
+
+        return res.data;
+      } else {
+        const { error } = res.data;
+        dispatch({
+          type: orderConstants.UPDATE_STATUS_PAYMENT_ORDER_FAILURE,
+          payload: { error },
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Error when updating please try again!");
+    }
+  };
+};
