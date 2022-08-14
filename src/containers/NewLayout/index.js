@@ -289,6 +289,15 @@ function NewLayout(props) {
           </ListItem>
         )}
 
+        {modulesForUser.some((module) => module.moduleName === "DINE-IN") && (
+          <ListItem>
+            <NavLink to={"/dine-in"}>
+              <i className="fa fa-coffee"></i>
+              &nbsp; Dine-In
+            </NavLink>
+          </ListItem>
+        )}
+
         {modulesForUser.some((module) => module.moduleName === "EOD") && (
           <ListItem>
             <a onClick={handleOpenEOD} style={{ color: "#fff" }}>

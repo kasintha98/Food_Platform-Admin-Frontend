@@ -105,7 +105,10 @@ export const SalesByDishReportTable = (props) => {
                     <CusTableCell2 align="center">{row.dishName}</CusTableCell2>
                     <CusTableCell2 align="center">{row.size}</CusTableCell2>
                     <CusTableCell2 align="center">
-                      Rs. {Number(row.totalPrice) / Number(row.totalQty)}
+                      Rs.{" "}
+                      {Number(
+                        Number(row.totalPrice) / Number(row.totalQty)
+                      ).toFixed(2)}
                     </CusTableCell2>
                     <CusTableCell2 align="center">{row.totalQty}</CusTableCell2>
                     <CusTableCell2 align="center">
