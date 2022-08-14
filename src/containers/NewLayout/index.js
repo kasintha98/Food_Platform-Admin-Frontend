@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { performEOD } from "../../actions";
+import { performEOD, getBusinessDate } from "../../actions";
 import { Row, Col, Modal } from "react-bootstrap";
 import { Typography, Button } from "@mui/material";
 import styled from "@emotion/styled";
@@ -100,6 +100,12 @@ function NewLayout(props) {
                     performEOD(auth.user.restaurantId, auth.user.storeId)
                   ).then((res) => {
                     if (res) {
+                      dispatch(
+                        getBusinessDate(
+                          auth.user.restaurantId,
+                          auth.user.storeId
+                        )
+                      );
                       handleCloseEOD();
                     }
                   });

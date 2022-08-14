@@ -805,6 +805,7 @@ export const getBusinessDate = (restaurantId, storeId) => {
           type: userConstants.GET_BUSINESS_DATE_SUCCESS,
           payload: res.data,
         });
+        toast.success("Business date fetched successfully!");
         return res.data;
       } else {
         dispatch({

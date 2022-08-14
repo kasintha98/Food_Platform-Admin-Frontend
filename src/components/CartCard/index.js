@@ -56,6 +56,7 @@ export default function CartCard(props) {
   const onQuantityIncrement = (productId) => {
     dispatch(addToCartNew({ ...cart.cartItems[productId], key: productId }, 1));
     calculateSubTotal();
+    props.onChangeSpecialOfferCheckBOGO();
   };
 
   const onQuantityDecrement = (productId) => {
@@ -63,6 +64,7 @@ export default function CartCard(props) {
       addToCartNew({ ...cart.cartItems[productId], key: productId }, -1)
     );
     calculateSubTotal();
+    props.onChangeSpecialOfferCheckBOGO();
   };
 
   const calculateSubTotal = () => {
@@ -179,15 +181,22 @@ export default function CartCard(props) {
                             }}
                           >
                             ₹{" "}
-                            {cart?.cartItems[key].qty *
-                              cart?.cartItems[key].price +
-                              (cart?.cartItems[key].extraSubTotalWithQty
-                                ? cart?.cartItems[key].extraSubTotalWithQty
-                                : 0) +
-                              (Object.keys(cart?.cartItems[key]?.choiceIng)
-                                .length > 0
-                                ? cart?.cartItems[key]?.choiceIng.choiceTotal
-                                : 0)}
+                            {props.bOGOLowestPizzaKey === key ? (
+                              <>0</>
+                            ) : (
+                              <>
+                                {cart?.cartItems[key].qty *
+                                  cart?.cartItems[key].price +
+                                  (cart?.cartItems[key].extraSubTotalWithQty
+                                    ? cart?.cartItems[key].extraSubTotalWithQty
+                                    : 0) +
+                                  (Object.keys(cart?.cartItems[key]?.choiceIng)
+                                    .length > 0
+                                    ? cart?.cartItems[key]?.choiceIng
+                                        .choiceTotal
+                                    : 0)}
+                              </>
+                            )}
                             .00
                           </p>
                         </div>
@@ -234,8 +243,14 @@ export default function CartCard(props) {
                               }}
                             >
                               {"₹ "}
-                              {cart?.cartItems[key].price *
-                                cart?.cartItems[key].qty}
+                              {props.bOGOLowestPizzaKey === key ? (
+                                <>0</>
+                              ) : (
+                                <>
+                                  {cart?.cartItems[key].price *
+                                    cart?.cartItems[key].qty}
+                                </>
+                              )}
                               .00
                             </span>
                           </div>
@@ -296,8 +311,17 @@ export default function CartCard(props) {
                                             }}
                                           >
                                             {"₹ "}
-                                            {cart?.cartItems[key]?.extra[index]
-                                              .price * cart?.cartItems[key].qty}
+                                            {props.bOGOLowestPizzaKey ===
+                                            key ? (
+                                              <>0</>
+                                            ) : (
+                                              <>
+                                                {cart?.cartItems[key]?.extra[
+                                                  index
+                                                ].price *
+                                                  cart?.cartItems[key].qty}
+                                              </>
+                                            )}
                                             .00
                                           </span>
                                         </div>
@@ -354,8 +378,14 @@ export default function CartCard(props) {
                                   }}
                                 >
                                   {"₹ "}
-                                  {cart?.cartItems[key]?.choiceIng.price *
-                                    cart?.cartItems[key].qty}
+                                  {props.bOGOLowestPizzaKey === key ? (
+                                    <>0</>
+                                  ) : (
+                                    <>
+                                      {cart?.cartItems[key]?.choiceIng.price *
+                                        cart?.cartItems[key].qty}
+                                    </>
+                                  )}
                                   .00
                                 </span>
                               </div>

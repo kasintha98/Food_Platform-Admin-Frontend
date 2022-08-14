@@ -8,7 +8,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { Link, NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import logo from "../../img/logo.png";
-import { signout, performEOD } from "../../actions";
+import { signout, performEOD, getBusinessDate } from "../../actions";
 import "./style.css";
 import styled from "@emotion/styled";
 import { useMediaQuery } from "react-responsive";
@@ -286,6 +286,12 @@ export const NewHeader = (props) => {
                     performEOD(auth.user.restaurantId, auth.user.storeId)
                   ).then((res) => {
                     if (res) {
+                      dispatch(
+                        getBusinessDate(
+                          auth.user.restaurantId,
+                          auth.user.storeId
+                        )
+                      );
                       handleCloseEOD();
                     }
                   });

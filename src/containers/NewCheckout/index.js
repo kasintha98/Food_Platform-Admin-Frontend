@@ -136,6 +136,7 @@ export default function NewCheckout(props) {
   const [isNewCustomerFunc, setIsNewCustomerFunc] = useState(false);
   const [cardHeight, setCardHeight] = useState(0);
   const [couponLocalObj, setCouponLocalObj] = useState(null);
+  const [bOGOLowestPizzaKey, setBOGOLowestPizzaKey] = useState(null);
 
   const dispatch = useDispatch();
   const ref = React.createRef();
@@ -176,6 +177,10 @@ export default function NewCheckout(props) {
       all = all * afterAddCoupon;
     }
 
+    if (bOGOLowestPizzaKey) {
+      all = all - Number(bOGOLowestPizzaKey.cost);
+    }
+
     return <span>₹ {all.toFixed(2)}</span>;
   };
 
@@ -194,6 +199,10 @@ export default function NewCheckout(props) {
       all = all * afterAddCoupon;
     }
 
+    if (bOGOLowestPizzaKey) {
+      all = all - Number(bOGOLowestPizzaKey.cost);
+    }
+
     return <span>₹ {all.toFixed(2)}</span>;
   };
 
@@ -210,6 +219,10 @@ export default function NewCheckout(props) {
       const afterAddCoupon =
         (100 - Number(couponReduxObj.couponDetails.discountPercentage)) / 100;
       allSub = allSub * afterAddCoupon;
+    }
+
+    if (bOGOLowestPizzaKey) {
+      allSub = allSub - Number(bOGOLowestPizzaKey.cost);
     }
 
     const all = (allSub * (tax.taxPercentage / 100)).toFixed(2);
@@ -232,6 +245,10 @@ export default function NewCheckout(props) {
       const afterAddCoupon =
         (100 - Number(couponReduxObj.couponDetails.discountPercentage)) / 100;
       allSub = allSub * afterAddCoupon;
+    }
+
+    if (bOGOLowestPizzaKey) {
+      allSub = allSub - Number(bOGOLowestPizzaKey.cost);
     }
 
     let allTax = 0;
@@ -285,6 +302,10 @@ export default function NewCheckout(props) {
         const afterAddCoupon =
           (100 - Number(couponReduxObj.couponDetails.discountPercentage)) / 100;
         total = total * afterAddCoupon;
+      }
+
+      if (bOGOLowestPizzaKey) {
+        total = total - Number(bOGOLowestPizzaKey.cost);
       }
 
       let orderDetails = [];
@@ -428,11 +449,62 @@ export default function NewCheckout(props) {
       toast.error("Please fill the coupon code!");
       return;
     }
+
+    if (couponCode === "BOGO") {
+      specialOfferCheckBOGO();
+      return;
+    }
+
     dispatch(validateCoupon(couponCode)).then((res) => {
       if (res) {
         setCouponLocalObj(res);
       }
     });
+  };
+
+  const specialOfferCheckBOGO = () => {
+    const d = new Date();
+    const day = d.getDay();
+    const wednesday = 0;
+    let pizzaCount = 0;
+    let pizzaKeys = [];
+    let lowestPizzaKey = null;
+
+    if (day === wednesday && Object.keys(cart?.cartItems).length > 1) {
+      for (let i = 0; i < Object.keys(cart?.cartItems).length; i++) {
+        if (Object.values(cart?.cartItems)[i].section === "Pizza") {
+          pizzaKeys.push(Object.keys(cart?.cartItems)[i]);
+          pizzaCount = pizzaCount + Object.values(cart?.cartItems)[i].qty;
+        }
+      }
+
+      if (pizzaCount === 2) {
+        if (
+          cart?.cartItems[pizzaKeys[0]].price >
+          cart?.cartItems[pizzaKeys[1]].price
+        ) {
+          lowestPizzaKey = pizzaKeys[1];
+        }
+        if (
+          cart?.cartItems[pizzaKeys[0]].price <
+          cart?.cartItems[pizzaKeys[1]].price
+        ) {
+          lowestPizzaKey = pizzaKeys[0];
+        }
+
+        let cost =
+          cart?.cartItems[lowestPizzaKey].price *
+            cart?.cartItems[lowestPizzaKey].qty +
+          cart?.cartItems[lowestPizzaKey].extraSubTotalWithQty +
+          cart?.cartItems[lowestPizzaKey].choiceIng.choiceTotal;
+        setBOGOLowestPizzaKey({ key: lowestPizzaKey, cost: cost });
+        toast.success("Hurray!! BOGO Offer has been applied!");
+      } else {
+        setBOGOLowestPizzaKey(null);
+      }
+    } else {
+      setBOGOLowestPizzaKey(null);
+    }
   };
 
   const resetPaymentMethod = () => {
@@ -477,6 +549,10 @@ export default function NewCheckout(props) {
       const afterAddCoupon =
         (100 - Number(couponReduxObj.couponDetails.discountPercentage)) / 100;
       allSub = allSub * afterAddCoupon;
+    }
+
+    if (bOGOLowestPizzaKey) {
+      allSub = allSub - Number(bOGOLowestPizzaKey.cost);
     }
 
     let deliveryCharge = 0;
@@ -749,6 +825,9 @@ export default function NewCheckout(props) {
                       delCharge={delCharge}
                       fullResp={orderResp}
                       isShowDeliveryCharge={props.isShowDeliveryCharge}
+                      bOGOLowestPizzaKey={
+                        bOGOLowestPizzaKey ? bOGOLowestPizzaKey.key : null
+                      }
                     ></InvoiceTable>
                   </div>
                 </div>
@@ -898,6 +977,10 @@ export default function NewCheckout(props) {
                       onChangeSubTotal={handleSubTotal}
                       onChangeExtraSubTotal={handleExtraTotal}
                       onChangeChoiceTotal={handleChoiceTotal}
+                      bOGOLowestPizzaKey={
+                        bOGOLowestPizzaKey ? bOGOLowestPizzaKey.key : null
+                      }
+                      onChangeSpecialOfferCheckBOGO={specialOfferCheckBOGO}
                     ></CartCard>
                     {Object.keys(cart.cartItems).length > 0 ? (
                       <Typography>
@@ -954,6 +1037,34 @@ export default function NewCheckout(props) {
                             </div>
                           </Row>
                         ) : null}
+
+                        {/* {bOGOLowestPizzaKey ? (
+                          <Row className="pl-2">
+                            <div className="w75">
+                              <Typography
+                                sx={{
+                                  fontSize: "0.9rem",
+                                  fontWeight: "600",
+                                  fontFamily: "Arial",
+                                  color: "#595959",
+                                }}
+                              >
+                                Coupon Discount
+                              </Typography>
+                            </div>
+                            <div className="w25">
+                              <Typography
+                                sx={{
+                                  fontSize: "0.9rem",
+                                  fontWeight: "600",
+                                  color: "#2e7d32",
+                                }}
+                              >
+                                ₹ {bOGOLowestPizzaKey.cost}
+                              </Typography>
+                            </div>
+                          </Row>
+                        ) : null} */}
 
                         {props.isShowDeliveryCharge ? (
                           <Row className="pl-2">
@@ -1085,6 +1196,18 @@ export default function NewCheckout(props) {
                           &nbsp;
                           {couponReduxObj.couponDetails.discountPercentage}%
                           Off!
+                        </Typography>
+                      ) : null}
+
+                      {bOGOLowestPizzaKey ? (
+                        <Typography
+                          sx={{
+                            fontWeight: "bold",
+                            color: "#2e7d32",
+                            fontSize: "0.9rem",
+                          }}
+                        >
+                          Hurray!! BOGO Offer has been applied!
                         </Typography>
                       ) : null}
                     </div>
