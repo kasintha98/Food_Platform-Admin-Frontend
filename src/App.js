@@ -7,6 +7,7 @@ import {
   getModulesForUser,
   updateCart,
   getBusinessDate,
+  getPaymentModes,
 } from "./actions";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -68,6 +69,7 @@ function App() {
 
     if (localStorage.getItem("user")) {
       dispatch(getVersion());
+      dispatch(getPaymentModes());
     }
   }, []);
 

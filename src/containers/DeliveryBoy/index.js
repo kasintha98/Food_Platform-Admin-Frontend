@@ -37,7 +37,7 @@ const CusTableCell2 = styled(TableCell)`
   font-size: 0.75rem;
 `;
 
-const paymentModes = [
+/* const paymentModes = [
   { name: "CASH", code: "CASH" },
   { name: "PayTM", code: "PayTM" },
   { name: "Credit / Debit", code: "EDC" },
@@ -45,11 +45,12 @@ const paymentModes = [
   { name: "PhonePe", code: "PhonePe" },
   { name: "Amazon Pay", code: "AmznPay" },
   { name: "COD", code: "COD" },
-];
+]; */
 
 export const DeliveryBoy = () => {
   const user = useSelector((state) => state.auth.user);
   const businessDateAll = useSelector((state) => state.user.businessDate);
+  const paymentModes = useSelector((state) => state.user.paymentModes);
   const usersByRole = useSelector((state) => state.user.usersByRole);
   const orders = useSelector((state) => state.order.orders);
   const loading = useSelector((state) => state.order.loading);
@@ -416,11 +417,11 @@ export const DeliveryBoy = () => {
                         >
                           {paymentModes.map((mode) => (
                             <option
-                              key={mode.code}
-                              value={mode.code}
+                              key={mode.value}
+                              value={mode.value}
                               style={{ fontSize: "0.75rem" }}
                             >
-                              {mode.name}
+                              {mode.description}
                             </option>
                           ))}
                         </NativeSelect>

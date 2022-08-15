@@ -90,7 +90,7 @@ export const getAllOrders = (orderReceivedDate) => {
 //action to update order status
 export const updateOrder = (orderId, orderStatus, tabType, hideToast) => {
   return async (dispatch) => {
-    const businessDateAll = useSelector((state) => state.user.businessDate);
+    //const businessDateAll = useSelector((state) => state.user.businessDate);
 
     dispatch({ type: orderConstants.UPDATE_CUSTOMER_ORDER_REQUEST });
 
@@ -102,7 +102,8 @@ export const updateOrder = (orderId, orderStatus, tabType, hideToast) => {
         },
       });
 
-      const today = new Date(businessDateAll && businessDateAll.businessDate);
+      const today =
+        new Date(/* businessDateAll && businessDateAll.businessDate */);
 
       if (res.status === 200) {
         dispatch({
@@ -206,9 +207,10 @@ export const updateOrderDeliBoy = (orderId, deliveryUser) => {
           type: orderConstants.UPDATE_ORDER_DELI_BOY_SUCCESS,
         });
 
-        const businessDateAll = useSelector((state) => state.user.businessDate);
+        //const businessDateAll = useSelector((state) => state.user.businessDate);
 
-        const today = new Date(businessDateAll && businessDateAll.businessDate);
+        const today =
+          new Date(/* businessDateAll && businessDateAll.businessDate */);
         dispatch(
           getCustomerOrders(
             null,
@@ -287,8 +289,9 @@ export const updateOrderPaymentAndStatus = (
         },
       });
 
-      const businessDateAll = useSelector((state) => state.user.businessDate);
-      const today = new Date(businessDateAll && businessDateAll.businessDate);
+      //const businessDateAll = useSelector((state) => state.user.businessDate);
+      const today =
+        new Date(/* businessDateAll && businessDateAll.businessDate */);
 
       if (res.status === 200) {
         dispatch({

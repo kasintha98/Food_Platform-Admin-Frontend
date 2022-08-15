@@ -919,3 +919,33 @@ export const GetDeliveryPrice = (restaurantId, storeId) => {
     }
   };
 };
+
+export const getPaymentModes = () => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: userConstants.GET_PAYMENT_MODES_REQUEST });
+
+      const res = await axios.get("/getPaymentModes");
+
+      if (res.status === 200 && res.data) {
+        dispatch({
+          type: userConstants.GET_PAYMENT_MODES_SUCCESS,
+          payload: res.data,
+        });
+        return res.data;
+      } else {
+        dispatch({
+          type: userConstants.GET_PAYMENT_MODES_FAILURE,
+          payload: null,
+        });
+        toast.error("There was an error getting payment modes!");
+      }
+    } catch (error) {
+      dispatch({
+        type: userConstants.GET_PAYMENT_MODES_FAILURE,
+        payload: null,
+      });
+      toast.error("There was an error getting payment modes!");
+    }
+  };
+};

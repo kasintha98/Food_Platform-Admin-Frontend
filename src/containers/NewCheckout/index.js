@@ -104,6 +104,7 @@ export default function NewCheckout(props) {
   const taxDetails = useSelector((state) => state.user.taxDetails);
   const couponReduxObj = useSelector((state) => state.user.coupon);
   const deliveryPrice = useSelector((state) => state.user.deliveryPrice);
+  const paymentModes = useSelector((state) => state.user.paymentModes);
 
   const cart = useSelector((state) => state.cart);
   const [subTotal, setSubtotal] = useState(0);
@@ -1565,7 +1566,25 @@ export default function NewCheckout(props) {
                             value={paymentType}
                             onChange={handleChangePaymentType}
                           >
-                            <FormControlLabel
+                            {paymentModes.map((option) => (
+                              <FormControlLabel
+                                value={option.value}
+                                control={<Radio color="success" />}
+                                label={
+                                  <Typography
+                                    sx={{
+                                      color: "#595959",
+                                      fontSize: "0.9rem",
+                                      fontWeight: "600",
+                                      fontFamily: "Arial",
+                                    }}
+                                  >
+                                    {option.description}
+                                  </Typography>
+                                }
+                              />
+                            ))}
+                            {/* <FormControlLabel
                               value="CASH"
                               control={<Radio color="success" />}
                               label={
@@ -1677,7 +1696,7 @@ export default function NewCheckout(props) {
                                   Not Paid
                                 </Typography>
                               }
-                            />
+                            /> */}
                           </RadioGroup>
                         </FormControl>
                         <CardActions>
