@@ -26,6 +26,10 @@ import { SalesByDishReportTable } from "../../components/SalesByDishReportTable"
 import { MenuReport } from "../../components/MenuReport";
 import { CashSalesReport } from "../../components/CashSalesReport";
 import { CashierSummaryReport } from "../../components/CashierSummaryReport";
+import { SalesSummeryByDateListReport } from "../../components/SalesSummeryByDateListReport";
+import { SalesSummeryByDishType } from "../../components/SalesSummeryByDishType";
+import { SalesSummeryByOrderSourceReport } from "../../components/SalesSummeryByOrderSourceReport";
+import { SalesSummeryByPaymentMode } from "../../components/SalesSummeryByPaymentMode";
 
 const CusDDT = styled(Dropdown.Toggle)`
   font-weight: 500;
@@ -74,15 +78,23 @@ const reportTypes = [
   "Menu Report",
   "Cash Sales Report",
   "Cashier Summary",
+  "Sales Summery By Date List",
+  "Sales Summery By Dish Type",
+  "Sales Summery By Order Source",
+  "Sales Summery By Payment Mode",
 ];
 
 export const NewReports = () => {
   const allReports = useSelector((state) => state.report.allReports);
+  const businessDateAll = useSelector((state) => state.user.businessDate);
   const stores = useSelector((state) => state.store.stores);
   const [dateState, setDateState] = useState([
     {
-      startDate: new Date(),
-      endDate: addDays(new Date(), 0),
+      startDate: new Date(businessDateAll && businessDateAll.businessDate),
+      endDate: addDays(
+        new Date(businessDateAll && businessDateAll.businessDate),
+        0
+      ),
       key: "selection",
     },
   ]);
@@ -299,6 +311,42 @@ export const NewReports = () => {
               storeId={selectedStoreObj.storeId}
               restaurantId={selectedStoreObj.restaurantId}
             ></CashierSummaryReport>
+          )}
+
+          {selectedReport === "Sales Summery By Date List" && (
+            <SalesSummeryByDateListReport
+              startDate={dateState[0].startDate}
+              endDate={dateState[0].endDate}
+              storeId={selectedStoreObj.storeId}
+              restaurantId={selectedStoreObj.restaurantId}
+            ></SalesSummeryByDateListReport>
+          )}
+
+          {selectedReport === "Sales Summery By Dish Type" && (
+            <SalesSummeryByDishType
+              startDate={dateState[0].startDate}
+              endDate={dateState[0].endDate}
+              storeId={selectedStoreObj.storeId}
+              restaurantId={selectedStoreObj.restaurantId}
+            ></SalesSummeryByDishType>
+          )}
+
+          {selectedReport === "Sales Summery By Order Source" && (
+            <SalesSummeryByOrderSourceReport
+              startDate={dateState[0].startDate}
+              endDate={dateState[0].endDate}
+              storeId={selectedStoreObj.storeId}
+              restaurantId={selectedStoreObj.restaurantId}
+            ></SalesSummeryByOrderSourceReport>
+          )}
+
+          {selectedReport === "Sales Summery By Payment Mode" && (
+            <SalesSummeryByPaymentMode
+              startDate={dateState[0].startDate}
+              endDate={dateState[0].endDate}
+              storeId={selectedStoreObj.storeId}
+              restaurantId={selectedStoreObj.restaurantId}
+            ></SalesSummeryByPaymentMode>
           )}
         </div>
       </div>

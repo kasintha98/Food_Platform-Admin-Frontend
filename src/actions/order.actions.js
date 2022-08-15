@@ -1,6 +1,7 @@
 import axios from "../helpers/axios";
 import { orderConstants } from "./constants";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 //action to get customer orders from the database
 export const getCustomerOrders = (
@@ -89,6 +90,8 @@ export const getAllOrders = (orderReceivedDate) => {
 //action to update order status
 export const updateOrder = (orderId, orderStatus, tabType, hideToast) => {
   return async (dispatch) => {
+    const businessDateAll = useSelector((state) => state.user.businessDate);
+
     dispatch({ type: orderConstants.UPDATE_CUSTOMER_ORDER_REQUEST });
 
     try {
@@ -99,7 +102,7 @@ export const updateOrder = (orderId, orderStatus, tabType, hideToast) => {
         },
       });
 
-      const today = new Date();
+      const today = new Date(businessDateAll && businessDateAll.businessDate);
 
       if (res.status === 200) {
         dispatch({
@@ -203,7 +206,9 @@ export const updateOrderDeliBoy = (orderId, deliveryUser) => {
           type: orderConstants.UPDATE_ORDER_DELI_BOY_SUCCESS,
         });
 
-        const today = new Date();
+        const businessDateAll = useSelector((state) => state.user.businessDate);
+
+        const today = new Date(businessDateAll && businessDateAll.businessDate);
         dispatch(
           getCustomerOrders(
             null,
@@ -282,7 +287,8 @@ export const updateOrderPaymentAndStatus = (
         },
       });
 
-      const today = new Date();
+      const businessDateAll = useSelector((state) => state.user.businessDate);
+      const today = new Date(businessDateAll && businessDateAll.businessDate);
 
       if (res.status === 200) {
         dispatch({

@@ -68,6 +68,7 @@ const NumberDiv = styled.div`
 
 export const AdminDashboard = () => {
   const stores = useSelector((state) => state.store.stores);
+  const businessDateAll = useSelector((state) => state.user.businessDate);
   const allReports = useSelector((state) => state.report.allReports);
   const [selectedStore, setSelectedStore] = useState("ALL");
   const [selectedStoreObj, setSelectedStoreObj] = useState({
@@ -78,8 +79,11 @@ export const AdminDashboard = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [dateState, setDateState] = useState([
     {
-      startDate: new Date(),
-      endDate: addDays(new Date(), 0),
+      startDate: new Date(businessDateAll && businessDateAll.businessDate),
+      endDate: addDays(
+        new Date(businessDateAll && businessDateAll.businessDate),
+        0
+      ),
       key: "selection",
     },
   ]);
