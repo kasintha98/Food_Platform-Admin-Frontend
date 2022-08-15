@@ -31,13 +31,14 @@ const CusTableCell = styled(TableCell)`
 
 export const KDSTable = forwardRef((props, ref) => {
   const loading = useSelector((state) => state.order.loading);
+  const businessDateAll = useSelector((state) => state.user.businessDate);
   const [filteredData, setFilteredData] = useState([]);
   const [newSubStatus, setNewSubStatus] = useState(false);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const today = new Date();
+    const today = new Date(businessDateAll && businessDateAll.businessDate);
     dispatch(
       getCustomerOrders(
         props.restaurantId,

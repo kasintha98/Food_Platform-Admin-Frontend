@@ -45,7 +45,7 @@ export const OrderReportTable = (props) => {
   const refH = useRef(null);
 
   useEffect(() => {
-    //const today = new Date();
+    //const today = new Date(businessDateAll && businessDateAll.businessDate);
     dispatch(
       getCustomerOrders(
         props.restaurantId,

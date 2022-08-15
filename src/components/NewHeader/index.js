@@ -84,7 +84,7 @@ export const NewHeader = (props) => {
     if (businessDateAll) {
       setBusinessDate(new Date(businessDateAll.businessDate));
     }
-  }, []);
+  }, [businessDateAll]);
 
   //logout action calling
   const logout = () => {

@@ -56,6 +56,7 @@ const CusMenuItem = styled(MenuItem)``;
 
 export const DeliveryManagement = () => {
   const user = useSelector((state) => state.auth.user);
+  const businessDateAll = useSelector((state) => state.user.businessDate);
   //const orders = useSelector((state) => state.order.orders);
   const stores = useSelector((state) => state.store.stores);
   const usersByRole = useSelector((state) => state.user.usersByRole);
@@ -80,7 +81,7 @@ export const DeliveryManagement = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const today = new Date();
+    const today = new Date(businessDateAll && businessDateAll.businessDate);
     dispatch(
       getCustomerOrders(
         selectedStoreObj.restaurantId,
@@ -149,7 +150,7 @@ export const DeliveryManagement = () => {
   };
 
   const searchOrder = () => {
-    const today = new Date();
+    const today = new Date(businessDateAll && businessDateAll.businessDate);
     dispatch(
       getCustomerOrders(
         user.restaurantId,

@@ -5,7 +5,11 @@ import styled from "@emotion/styled";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { subDays, addDays } from "date-fns";
-import { getAllBusinessDates, updateBusinessDate } from "../../actions";
+import {
+  getAllBusinessDates,
+  updateBusinessDate,
+  getBusinessDate,
+} from "../../actions";
 import {
   TableContainer,
   Paper,
@@ -33,6 +37,7 @@ const CusTableCell2 = styled(TableCell)`
 
 export const EOD = () => {
   const allBusinessDates = useSelector((state) => state.user.allBusinessDates);
+  const user = useSelector((state) => state.auth.user);
   const stores = useSelector((state) => state.store.stores);
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -79,6 +84,7 @@ export const EOD = () => {
     };
     dispatch(updateBusinessDate(obj)).then((res) => {
       if (res) {
+        dispatch(getBusinessDate(user.restaurantId, user.storeId));
         handleClose(busDate.id);
       }
     });

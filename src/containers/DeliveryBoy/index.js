@@ -49,6 +49,7 @@ const paymentModes = [
 
 export const DeliveryBoy = () => {
   const user = useSelector((state) => state.auth.user);
+  const businessDateAll = useSelector((state) => state.user.businessDate);
   const usersByRole = useSelector((state) => state.user.usersByRole);
   const orders = useSelector((state) => state.order.orders);
   const loading = useSelector((state) => state.order.loading);
@@ -75,7 +76,7 @@ export const DeliveryBoy = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const today = new Date();
+    const today = new Date(businessDateAll && businessDateAll.businessDate);
 
     if (user.roleCategory === "DELIVERY_BOY") {
       setSelectedDeliBoy(user.firstName);
@@ -159,7 +160,7 @@ export const DeliveryBoy = () => {
   };
 
   const searchOrder = () => {
-    const today = new Date();
+    const today = new Date(businessDateAll && businessDateAll.businessDate);
     dispatch(
       getCustomerOrders(
         user.restaurantId,
@@ -224,7 +225,7 @@ export const DeliveryBoy = () => {
     setSelectedDeliBoy(event.target.value);
 
     if (event.target.value) {
-      const today = new Date();
+      const today = new Date(businessDateAll && businessDateAll.businessDate);
       dispatch(
         getCustomerOrders(
           null,

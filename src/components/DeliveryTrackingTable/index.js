@@ -63,6 +63,7 @@ export const DeliveryTrackingTable = (props) => {
   const loading = useSelector((state) => state.order.loading);
   const allRiderLocations = useSelector((state) => state.rider.allLocations);
   const stores = useSelector((state) => state.store.stores);
+  const businessDateAll = useSelector((state) => state.user.businessDate);
 
   const [currentOrder, setCurrentOrder] = useState(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
@@ -83,7 +84,7 @@ export const DeliveryTrackingTable = (props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const today = new Date();
+    const today = new Date(businessDateAll && businessDateAll.businessDate);
     dispatch(
       getCustomerOrders(
         selectedStoreObj.restaurantId,
@@ -151,7 +152,7 @@ export const DeliveryTrackingTable = (props) => {
   };
 
   const searchOrder = () => {
-    const today = new Date();
+    const today = new Date(businessDateAll && businessDateAll.businessDate);
     dispatch(
       getCustomerOrders(
         user.restaurantId,

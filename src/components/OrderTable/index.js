@@ -64,6 +64,7 @@ const paymentModes = [
 
 export const OrderTable = (props) => {
   const orders = useSelector((state) => state.order.orders);
+  const businessDateAll = useSelector((state) => state.user.businessDate);
   const loading = useSelector((state) => state.order.loading);
   const [status, setStatus] = useState("");
   const [paymentMode, setPaymentMode] = useState("");
@@ -79,7 +80,7 @@ export const OrderTable = (props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const today = new Date();
+    const today = new Date(businessDateAll && businessDateAll.businessDate);
     dispatch(
       getCustomerOrders(
         null,
@@ -282,7 +283,7 @@ export const OrderTable = (props) => {
   };
 
   const searchOrder = () => {
-    const today = new Date();
+    const today = new Date(businessDateAll && businessDateAll.businessDate);
     dispatch(
       getCustomerOrders(
         null,
