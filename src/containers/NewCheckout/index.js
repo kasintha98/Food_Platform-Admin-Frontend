@@ -137,6 +137,7 @@ export default function NewCheckout(props) {
   const [cardHeight, setCardHeight] = useState(0);
   const [couponLocalObj, setCouponLocalObj] = useState(null);
   const [bOGOLowestPizzaKey, setBOGOLowestPizzaKey] = useState(null);
+  const [comboReduceKey, setComboReduceKey] = useState(null);
 
   const dispatch = useDispatch();
   const ref = React.createRef();
@@ -181,6 +182,10 @@ export default function NewCheckout(props) {
       all = all - Number(bOGOLowestPizzaKey.cost);
     }
 
+    if (comboReduceKey) {
+      all = all - Number(comboReduceKey.reducingCost);
+    }
+
     return <span>₹ {all.toFixed(2)}</span>;
   };
 
@@ -203,6 +208,10 @@ export default function NewCheckout(props) {
       all = all - Number(bOGOLowestPizzaKey.cost);
     }
 
+    if (comboReduceKey) {
+      all = all - Number(comboReduceKey.reducingCost);
+    }
+
     return <span>₹ {all.toFixed(2)}</span>;
   };
 
@@ -223,6 +232,10 @@ export default function NewCheckout(props) {
 
     if (bOGOLowestPizzaKey) {
       allSub = allSub - Number(bOGOLowestPizzaKey.cost);
+    }
+
+    if (comboReduceKey) {
+      allSub = allSub - Number(comboReduceKey.reducingCost);
     }
 
     const all = (allSub * (tax.taxPercentage / 100)).toFixed(2);
@@ -249,6 +262,10 @@ export default function NewCheckout(props) {
 
     if (bOGOLowestPizzaKey) {
       allSub = allSub - Number(bOGOLowestPizzaKey.cost);
+    }
+
+    if (comboReduceKey) {
+      allSub = allSub - Number(comboReduceKey.reducingCost);
     }
 
     let allTax = 0;
@@ -306,6 +323,10 @@ export default function NewCheckout(props) {
 
       if (bOGOLowestPizzaKey) {
         total = total - Number(bOGOLowestPizzaKey.cost);
+      }
+
+      if (comboReduceKey) {
+        total = total - Number(comboReduceKey.reducingCost);
       }
 
       let orderDetails = [];
@@ -455,6 +476,11 @@ export default function NewCheckout(props) {
       return;
     }
 
+    if (couponCode === "COMBO1") {
+      specialOfferCheckCOMBO1();
+      return;
+    }
+
     dispatch(validateCoupon(couponCode)).then((res) => {
       if (res) {
         setCouponLocalObj(res);
@@ -507,6 +533,35 @@ export default function NewCheckout(props) {
     }
   };
 
+  const specialOfferCheckCOMBO1 = () => {
+    if (Object.keys(cart?.cartItems).length === 2) {
+      let drinkCount = 0;
+      let drinkKey = null;
+      let drinkObj = null;
+
+      for (let i = 0; i < Object.keys(cart?.cartItems).length; i++) {
+        if (Object.values(cart?.cartItems)[i].section === "Shakes & Drinks") {
+          drinkKey = Object.keys(cart?.cartItems)[i];
+          drinkObj = Object.values(cart?.cartItems)[i];
+          drinkCount = drinkCount + Object.values(cart?.cartItems)[i].qty;
+        }
+      }
+
+      if (drinkCount === 1) {
+        setComboReduceKey({
+          key: drinkKey,
+          price: 29,
+          reducingCost: Number(drinkObj.price) - 29,
+        });
+        toast.success("Hurray!! COMBO1 Offer has been applied");
+      } else {
+        setComboReduceKey(null);
+      }
+    } else {
+      setComboReduceKey(null);
+    }
+  };
+
   const resetPaymentMethod = () => {
     setCurrentPaymentType("");
   };
@@ -553,6 +608,10 @@ export default function NewCheckout(props) {
 
     if (bOGOLowestPizzaKey) {
       allSub = allSub - Number(bOGOLowestPizzaKey.cost);
+    }
+
+    if (comboReduceKey) {
+      allSub = allSub - Number(comboReduceKey.reducingCost);
     }
 
     let deliveryCharge = 0;
@@ -981,6 +1040,8 @@ export default function NewCheckout(props) {
                         bOGOLowestPizzaKey ? bOGOLowestPizzaKey.key : null
                       }
                       onChangeSpecialOfferCheckBOGO={specialOfferCheckBOGO}
+                      onChangeSpecialOfferCheckCOMBO1={specialOfferCheckCOMBO1}
+                      comboReduceKey={comboReduceKey}
                     ></CartCard>
                     {Object.keys(cart.cartItems).length > 0 ? (
                       <Typography>

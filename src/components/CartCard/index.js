@@ -57,6 +57,7 @@ export default function CartCard(props) {
     dispatch(addToCartNew({ ...cart.cartItems[productId], key: productId }, 1));
     calculateSubTotal();
     props.onChangeSpecialOfferCheckBOGO();
+    props.onChangeSpecialOfferCheckCOMBO1();
   };
 
   const onQuantityDecrement = (productId) => {
@@ -65,6 +66,7 @@ export default function CartCard(props) {
     );
     calculateSubTotal();
     props.onChangeSpecialOfferCheckBOGO();
+    props.onChangeSpecialOfferCheckCOMBO1();
   };
 
   const calculateSubTotal = () => {
@@ -186,7 +188,10 @@ export default function CartCard(props) {
                             ) : (
                               <>
                                 {cart?.cartItems[key].qty *
-                                  cart?.cartItems[key].price +
+                                  (props.comboReduceKey &&
+                                  props.comboReduceKey.key === key
+                                    ? props.comboReduceKey.price
+                                    : cart?.cartItems[key].price) +
                                   (cart?.cartItems[key].extraSubTotalWithQty
                                     ? cart?.cartItems[key].extraSubTotalWithQty
                                     : 0) +
