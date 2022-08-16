@@ -400,7 +400,7 @@ export const AdminDashboard = () => {
                   )}
                 </Col>
               </Row>
-              <Row>
+              {/* <Row>
                 <Col sm={6} className="pl-0">
                   {allReports.salesSummeryByDishType &&
                   allReports.salesSummeryByDishType.length > 0 ? (
@@ -431,7 +431,7 @@ export const AdminDashboard = () => {
                     </div>
                   )}
                 </Col>
-              </Row>
+              </Row> */}
               <Row>
                 <Col sm={6} className="pl-0">
                   {allReports.salesSummeryByPaymentMode &&

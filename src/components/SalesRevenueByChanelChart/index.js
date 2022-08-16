@@ -66,7 +66,7 @@ export const SalesRevenueByChanelChart = () => {
     "SELF-COLLECT",
     "DINE-IN",
     "ZOMATO",
-    "SWIZY",
+    "SWIGGY",
   ];
 
   useEffect(() => {
@@ -118,7 +118,7 @@ export const SalesRevenueByChanelChart = () => {
     setSwizyOrders(
       allReports.salesSummeryByOrderSource
         .filter(function (el) {
-          return el.orderSource === "SWIZY";
+          return el.orderSource === "SWIGGY";
         })
         .map((a) => a.orderValue)
         .reduce((a, b) => a + b, 0)
@@ -171,18 +171,18 @@ export const SalesRevenueByChanelChart = () => {
         >
           <ExcelSheet
             data={allReports.salesSummeryByOrderSource}
-            name="Sales Over Time"
+            name="Sales Revenue by Channels"
           >
-            <ExcelColumn label="Year" value="year" />
-            <ExcelColumn label="Month" value="month" />
-            <ExcelColumn label="Full Date" value="orderDate" />
             <ExcelColumn label="Restaurant ID" value="restaurantId" />
             <ExcelColumn label="Store ID" value="storeId" />
             <ExcelColumn label="Restaurant Name" value="restaurantName" />
             <ExcelColumn label="Number Of Orders" value="noOfOrders" />
             <ExcelColumn label="Total Order Value" value="orderValue" />
             <ExcelColumn label="Order Source" value="orderSource" />
-            <ExcelColumn label="Report Name" value="reportName" />
+            <ExcelColumn
+              label="Order Source Description"
+              value="orderSourceDescription"
+            />
             {/* <ExcelColumn label="Marital Status"
                                  value={(col) => col.is_married ? "Married" : "Single"}/> */}
           </ExcelSheet>

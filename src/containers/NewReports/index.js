@@ -77,9 +77,9 @@ const reportTypes = [
   "Sales By Dish Item",
   "Menu Report",
   "Cash Sales Report",
-  "Cashier Summary",
+  /* "Cashier Summary", */
   "Sales Summery By Date List",
-  "Sales Summery By Dish Type",
+  /* "Sales Summery By Dish Type", */
   "Sales Summery By Order Source",
   "Sales Summery By Payment Mode",
 ];

@@ -1566,24 +1566,30 @@ export default function NewCheckout(props) {
                             value={paymentType}
                             onChange={handleChangePaymentType}
                           >
-                            {paymentModes.map((option) => (
-                              <FormControlLabel
-                                value={option.value}
-                                control={<Radio color="success" />}
-                                label={
-                                  <Typography
-                                    sx={{
-                                      color: "#595959",
-                                      fontSize: "0.9rem",
-                                      fontWeight: "600",
-                                      fontFamily: "Arial",
-                                    }}
-                                  >
-                                    {option.description}
-                                  </Typography>
-                                }
-                              />
-                            ))}
+                            {paymentModes
+                              .filter(function (el) {
+                                return (
+                                  el.value !== "SWIGGY" && el.value !== "ZOMATO"
+                                );
+                              })
+                              .map((option) => (
+                                <FormControlLabel
+                                  value={option.value}
+                                  control={<Radio color="success" />}
+                                  label={
+                                    <Typography
+                                      sx={{
+                                        color: "#595959",
+                                        fontSize: "0.9rem",
+                                        fontWeight: "600",
+                                        fontFamily: "Arial",
+                                      }}
+                                    >
+                                      {option.description}
+                                    </Typography>
+                                  }
+                                />
+                              ))}
                             {/* <FormControlLabel
                               value="CASH"
                               control={<Radio color="success" />}

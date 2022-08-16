@@ -415,15 +415,21 @@ export const DeliveryBoy = () => {
                           onChange={handlePaymentModeUpdate}
                           sx={{ fontSize: "0.75rem" }}
                         >
-                          {paymentModes.map((mode) => (
-                            <option
-                              key={mode.value}
-                              value={mode.value}
-                              style={{ fontSize: "0.75rem" }}
-                            >
-                              {mode.description}
-                            </option>
-                          ))}
+                          {paymentModes
+                            .filter(function (el) {
+                              return (
+                                el.value !== "SWIGGY" && el.value !== "ZOMATO"
+                              );
+                            })
+                            .map((mode) => (
+                              <option
+                                key={mode.value}
+                                value={mode.value}
+                                style={{ fontSize: "0.75rem" }}
+                              >
+                                {mode.description}
+                              </option>
+                            ))}
                         </NativeSelect>
                       </FormControl>
                     </CusTableCell2>

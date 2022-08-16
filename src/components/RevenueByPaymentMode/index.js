@@ -21,6 +21,9 @@ export const RevenueByPaymentMode = (props) => {
   const [payuOrders, setPayuOrders] = useState([]);
   const [gPOrders, setGPOrders] = useState([]);
   const [cODOrders, setCODOrders] = useState([]);
+  const [phonePeOrders, setPhonePeOrders] = useState([]);
+  const [amznOrders, setAmznOrders] = useState([]);
+  const [notPaidOrders, setNotPaidOrders] = useState([]);
 
   const ref = React.createRef();
 
@@ -33,7 +36,7 @@ export const RevenueByPaymentMode = (props) => {
 
     setCcOrders(
       allReports.salesSummeryByPaymentMode.filter(function (el) {
-        return el.paymentMode === "CREDITCARD";
+        return el.paymentMode === "EDC";
       })
     );
 
@@ -43,21 +46,39 @@ export const RevenueByPaymentMode = (props) => {
       })
     );
 
-    setPayuOrders(
+    /* setPayuOrders(
       allReports.salesSummeryByPaymentMode.filter(function (el) {
         return el.paymentMode === "PayU";
       })
-    );
+    ); */
 
     setGPOrders(
       allReports.salesSummeryByPaymentMode.filter(function (el) {
-        return el.paymentMode === "GOOGLEPAY";
+        return el.paymentMode === "GPAY";
       })
     );
 
     setCODOrders(
       allReports.salesSummeryByPaymentMode.filter(function (el) {
         return el.paymentMode === "COD";
+      })
+    );
+
+    setPhonePeOrders(
+      allReports.salesSummeryByPaymentMode.filter(function (el) {
+        return el.paymentMode === "PHONEPE";
+      })
+    );
+
+    setAmznOrders(
+      allReports.salesSummeryByPaymentMode.filter(function (el) {
+        return el.paymentMode === "AMZNPAY";
+      })
+    );
+
+    setNotPaidOrders(
+      allReports.salesSummeryByPaymentMode.filter(function (el) {
+        return el.paymentMode === "NOTPAID";
       })
     );
   }, [allReports]);
@@ -76,6 +97,9 @@ export const RevenueByPaymentMode = (props) => {
                 Payment Mode
               </TableCell>
               <TableCell sx={{ color: "#fff" }} align="left">
+                Payment Mode Desc.
+              </TableCell>
+              <TableCell sx={{ color: "#fff" }} align="left">
                 No of Orders
               </TableCell>
               <TableCell sx={{ color: "#fff" }} align="left">
@@ -88,6 +112,7 @@ export const RevenueByPaymentMode = (props) => {
           </TableHead>
           <TableBody>
             <TableRow>
+              <TableCell align="left">CASH</TableCell>
               <TableCell align="left">Cash</TableCell>
               <TableCell align="center">
                 {cashOrders.length > 0 ? (
@@ -128,7 +153,8 @@ export const RevenueByPaymentMode = (props) => {
             </TableRow>
 
             <TableRow>
-              <TableCell align="left">Credit Card</TableCell>
+              <TableCell align="left">EDC</TableCell>
+              <TableCell align="left">Credit/Debit</TableCell>
               <TableCell align="center">
                 {ccOrders.length > 0 ? (
                   <>
@@ -168,6 +194,7 @@ export const RevenueByPaymentMode = (props) => {
             </TableRow>
 
             <TableRow>
+              <TableCell align="left">PAYTM</TableCell>
               <TableCell align="left">PayTM</TableCell>
               <TableCell align="center">
                 {payTmOrders.length > 0 ? (
@@ -207,7 +234,7 @@ export const RevenueByPaymentMode = (props) => {
               </TableCell>
             </TableRow>
 
-            <TableRow>
+            {/* <TableRow>
               <TableCell align="left">Payu</TableCell>
               <TableCell align="center">
                 {payuOrders.length > 0 ? (
@@ -245,10 +272,11 @@ export const RevenueByPaymentMode = (props) => {
                   "Rs. 0.00"
                 )}
               </TableCell>
-            </TableRow>
+            </TableRow> */}
 
             <TableRow>
-              <TableCell align="left">GooglePay</TableCell>
+              <TableCell align="left">GPAY</TableCell>
+              <TableCell align="left">Google Pay</TableCell>
               <TableCell align="center">
                 {gPOrders.length > 0 ? (
                   <>
@@ -288,7 +316,8 @@ export const RevenueByPaymentMode = (props) => {
             </TableRow>
 
             <TableRow>
-              <TableCell align="left">Cash on Delivery</TableCell>
+              <TableCell align="left">COD</TableCell>
+              <TableCell align="left">Cash On Delivery</TableCell>
               <TableCell align="center">
                 {cODOrders.length > 0 ? (
                   <>
@@ -326,6 +355,129 @@ export const RevenueByPaymentMode = (props) => {
                 )}
               </TableCell>
             </TableRow>
+
+            <TableRow>
+              <TableCell align="left">PHONEPE</TableCell>
+              <TableCell align="left">PhonePe</TableCell>
+              <TableCell align="center">
+                {phonePeOrders.length > 0 ? (
+                  <>
+                    {phonePeOrders
+                      .map((a) => a.noOfOrders)
+                      .reduce((a, b) => a + b, 0)}
+                  </>
+                ) : (
+                  0
+                )}
+              </TableCell>
+              <TableCell align="center">
+                {Number(
+                  Number(
+                    phonePeOrders.length > 0
+                      ? phonePeOrders
+                          .map((a) => a.noOfOrders)
+                          .reduce((a, b) => a + b, 0) * 100
+                      : 0
+                  ) / props.totalOrders
+                ).toFixed(2)}{" "}
+                %
+              </TableCell>
+              <TableCell align="center">
+                {phonePeOrders.length > 0 ? (
+                  <>
+                    Rs.{" "}
+                    {phonePeOrders
+                      .map((a) => a.orderValue)
+                      .reduce((a, b) => a + b, 0)
+                      .toFixed(2)}
+                  </>
+                ) : (
+                  "Rs. 0.00"
+                )}
+              </TableCell>
+            </TableRow>
+
+            <TableRow>
+              <TableCell align="left">AMZNPAY</TableCell>
+              <TableCell align="left">Amazon Pay</TableCell>
+              <TableCell align="center">
+                {amznOrders.length > 0 ? (
+                  <>
+                    {amznOrders
+                      .map((a) => a.noOfOrders)
+                      .reduce((a, b) => a + b, 0)}
+                  </>
+                ) : (
+                  0
+                )}
+              </TableCell>
+              <TableCell align="center">
+                {Number(
+                  Number(
+                    amznOrders.length > 0
+                      ? amznOrders
+                          .map((a) => a.noOfOrders)
+                          .reduce((a, b) => a + b, 0) * 100
+                      : 0
+                  ) / props.totalOrders
+                ).toFixed(2)}{" "}
+                %
+              </TableCell>
+              <TableCell align="center">
+                {amznOrders.length > 0 ? (
+                  <>
+                    Rs.{" "}
+                    {amznOrders
+                      .map((a) => a.orderValue)
+                      .reduce((a, b) => a + b, 0)
+                      .toFixed(2)}
+                  </>
+                ) : (
+                  "Rs. 0.00"
+                )}
+              </TableCell>
+            </TableRow>
+
+            <TableRow>
+              <TableCell align="left">NOTPAID</TableCell>
+              <TableCell align="left">Not Paid</TableCell>
+              <TableCell align="center">
+                {notPaidOrders.length > 0 ? (
+                  <>
+                    {notPaidOrders
+                      .map((a) => a.noOfOrders)
+                      .reduce((a, b) => a + b, 0)}
+                  </>
+                ) : (
+                  0
+                )}
+              </TableCell>
+              <TableCell align="center">
+                {Number(
+                  Number(
+                    notPaidOrders.length > 0
+                      ? notPaidOrders
+                          .map((a) => a.noOfOrders)
+                          .reduce((a, b) => a + b, 0) * 100
+                      : 0
+                  ) / props.totalOrders
+                ).toFixed(2)}{" "}
+                %
+              </TableCell>
+              <TableCell align="center">
+                {notPaidOrders.length > 0 ? (
+                  <>
+                    Rs.{" "}
+                    {notPaidOrders
+                      .map((a) => a.orderValue)
+                      .reduce((a, b) => a + b, 0)
+                      .toFixed(2)}
+                  </>
+                ) : (
+                  "Rs. 0.00"
+                )}
+              </TableCell>
+            </TableRow>
           </TableBody>
         </Table>
       </TableContainer>
@@ -344,16 +496,20 @@ export const RevenueByPaymentMode = (props) => {
             data={allReports.salesSummeryByPaymentMode}
             name="Revenue By Payment Mode"
           >
-            <ExcelColumn label="Year" value="year" />
+            {/* <ExcelColumn label="Year" value="year" />
             <ExcelColumn label="Month" value="month" />
-            <ExcelColumn label="Full Date" value="orderDate" />
+            <ExcelColumn label="Full Date" value="orderDate" /> */}
             <ExcelColumn label="Restaurant ID" value="restaurantId" />
             <ExcelColumn label="Store ID" value="storeId" />
             <ExcelColumn label="Restaurant Name" value="restaurantName" />
             <ExcelColumn label="Number Of Orders" value="noOfOrders" />
             <ExcelColumn label="Total Order Value" value="orderValue" />
             <ExcelColumn label="Payment Mode" value="paymentMode" />
-            <ExcelColumn label="Report Name" value="reportName" />
+            <ExcelColumn
+              label="Payment Mode Description"
+              value="paymentModeDescription"
+            />
+
             {/* <ExcelColumn label="Marital Status"
                                  value={(col) => col.is_married ? "Married" : "Single"}/> */}
           </ExcelSheet>
