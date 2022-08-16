@@ -492,7 +492,7 @@ export default function NewCheckout(props) {
   const specialOfferCheckBOGO = () => {
     const d = new Date();
     const day = d.getDay();
-    const wednesday = 2;
+    const wednesday = 3;
     let pizzaCount = 0;
     let pizzaKeys = [];
     let lowestPizzaKey = null;
