@@ -492,7 +492,7 @@ export default function NewCheckout(props) {
   const specialOfferCheckBOGO = () => {
     const d = new Date();
     const day = d.getDay();
-    const wednesday = 3;
+    const wednesday = 2;
     let pizzaCount = 0;
     let pizzaKeys = [];
     let lowestPizzaKey = null;
@@ -528,9 +528,15 @@ export default function NewCheckout(props) {
         toast.success("Hurray!! BOGO Offer has been applied!");
       } else {
         setBOGOLowestPizzaKey(null);
+        toast.error("BOGO is not applicable for this cart!");
       }
     } else {
       setBOGOLowestPizzaKey(null);
+      if (day !== wednesday) {
+        toast.error("BOGO is not applicable today! Only on wednesday!");
+      } else {
+        toast.error("BOGO is not applicable for this cart!");
+      }
     }
   };
 
@@ -556,10 +562,12 @@ export default function NewCheckout(props) {
         });
         toast.success("Hurray!! COMBO1 Offer has been applied");
       } else {
+        toast.error("COMBO1 is not applicable for this cart!");
         setComboReduceKey(null);
       }
     } else {
       setComboReduceKey(null);
+      toast.error("COMBO1 is not applicable for this cart!");
     }
   };
 
