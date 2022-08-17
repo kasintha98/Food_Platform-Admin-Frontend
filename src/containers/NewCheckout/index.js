@@ -491,84 +491,88 @@ export default function NewCheckout(props) {
   };
 
   const specialOfferCheckBOGO = () => {
-    const d = new Date(businessDateAll && businessDateAll.businessDate);
-    const day = d.getDay();
-    const wednesday = 3;
-    let pizzaCount = 0;
-    let pizzaKeys = [];
-    let lowestPizzaKey = null;
+    if (couponCode === "BOGO") {
+      const d = new Date(businessDateAll && businessDateAll.businessDate);
+      const day = d.getDay();
+      const wednesday = 3;
+      let pizzaCount = 0;
+      let pizzaKeys = [];
+      let lowestPizzaKey = null;
 
-    if (day === wednesday && Object.keys(cart?.cartItems).length > 1) {
-      for (let i = 0; i < Object.keys(cart?.cartItems).length; i++) {
-        if (Object.values(cart?.cartItems)[i].section === "Pizza") {
-          pizzaKeys.push(Object.keys(cart?.cartItems)[i]);
-          pizzaCount = pizzaCount + Object.values(cart?.cartItems)[i].qty;
-        }
-      }
-
-      if (pizzaCount === 2) {
-        if (
-          cart?.cartItems[pizzaKeys[0]].price >
-          cart?.cartItems[pizzaKeys[1]].price
-        ) {
-          lowestPizzaKey = pizzaKeys[1];
-        }
-        if (
-          cart?.cartItems[pizzaKeys[0]].price <
-          cart?.cartItems[pizzaKeys[1]].price
-        ) {
-          lowestPizzaKey = pizzaKeys[0];
+      if (day === wednesday && Object.keys(cart?.cartItems).length > 1) {
+        for (let i = 0; i < Object.keys(cart?.cartItems).length; i++) {
+          if (Object.values(cart?.cartItems)[i].section === "Pizza") {
+            pizzaKeys.push(Object.keys(cart?.cartItems)[i]);
+            pizzaCount = pizzaCount + Object.values(cart?.cartItems)[i].qty;
+          }
         }
 
-        let cost =
-          cart?.cartItems[lowestPizzaKey].price *
-            cart?.cartItems[lowestPizzaKey].qty +
-          cart?.cartItems[lowestPizzaKey].extraSubTotalWithQty +
-          cart?.cartItems[lowestPizzaKey].choiceIng.choiceTotal;
-        setBOGOLowestPizzaKey({ key: lowestPizzaKey, cost: cost });
-        toast.success("Hurray!! BOGO Offer has been applied!");
+        if (pizzaCount === 2) {
+          if (
+            cart?.cartItems[pizzaKeys[0]].price >
+            cart?.cartItems[pizzaKeys[1]].price
+          ) {
+            lowestPizzaKey = pizzaKeys[1];
+          }
+          if (
+            cart?.cartItems[pizzaKeys[0]].price <
+            cart?.cartItems[pizzaKeys[1]].price
+          ) {
+            lowestPizzaKey = pizzaKeys[0];
+          }
+
+          let cost =
+            cart?.cartItems[lowestPizzaKey].price *
+              cart?.cartItems[lowestPizzaKey].qty +
+            cart?.cartItems[lowestPizzaKey].extraSubTotalWithQty +
+            cart?.cartItems[lowestPizzaKey].choiceIng.choiceTotal;
+          setBOGOLowestPizzaKey({ key: lowestPizzaKey, cost: cost });
+          toast.success("Hurray!! BOGO Offer has been applied!");
+        } else {
+          setBOGOLowestPizzaKey(null);
+          toast.error("BOGO is not applicable for this cart!");
+        }
       } else {
         setBOGOLowestPizzaKey(null);
-        toast.error("BOGO is not applicable for this cart!");
-      }
-    } else {
-      setBOGOLowestPizzaKey(null);
-      if (day !== wednesday) {
-        toast.error("BOGO is not applicable today! Only on wednesday!");
-      } else {
-        toast.error("BOGO is not applicable for this cart!");
+        if (day !== wednesday) {
+          toast.error("BOGO is not applicable today! Only on wednesday!");
+        } else {
+          toast.error("BOGO is not applicable for this cart!");
+        }
       }
     }
   };
 
   const specialOfferCheckCOMBO1 = () => {
-    if (Object.keys(cart?.cartItems).length === 2) {
-      let drinkCount = 0;
-      let drinkKey = null;
-      let drinkObj = null;
+    if (couponCode === "COMBO1") {
+      if (Object.keys(cart?.cartItems).length === 2) {
+        let drinkCount = 0;
+        let drinkKey = null;
+        let drinkObj = null;
 
-      for (let i = 0; i < Object.keys(cart?.cartItems).length; i++) {
-        if (Object.values(cart?.cartItems)[i].section === "Shakes & Drinks") {
-          drinkKey = Object.keys(cart?.cartItems)[i];
-          drinkObj = Object.values(cart?.cartItems)[i];
-          drinkCount = drinkCount + Object.values(cart?.cartItems)[i].qty;
+        for (let i = 0; i < Object.keys(cart?.cartItems).length; i++) {
+          if (Object.values(cart?.cartItems)[i].section === "Shakes & Drinks") {
+            drinkKey = Object.keys(cart?.cartItems)[i];
+            drinkObj = Object.values(cart?.cartItems)[i];
+            drinkCount = drinkCount + Object.values(cart?.cartItems)[i].qty;
+          }
         }
-      }
 
-      if (drinkCount === 1) {
-        setComboReduceKey({
-          key: drinkKey,
-          price: 29,
-          reducingCost: Number(drinkObj.price) - 29,
-        });
-        toast.success("Hurray!! COMBO1 Offer has been applied");
+        if (drinkCount === 1) {
+          setComboReduceKey({
+            key: drinkKey,
+            price: 29,
+            reducingCost: Number(drinkObj.price) - 29,
+          });
+          toast.success("Hurray!! COMBO1 Offer has been applied");
+        } else {
+          toast.error("COMBO1 is not applicable for this cart!");
+          setComboReduceKey(null);
+        }
       } else {
-        toast.error("COMBO1 is not applicable for this cart!");
         setComboReduceKey(null);
+        toast.error("COMBO1 is not applicable for this cart!");
       }
-    } else {
-      setComboReduceKey(null);
-      toast.error("COMBO1 is not applicable for this cart!");
     }
   };
 

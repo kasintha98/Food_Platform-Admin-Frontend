@@ -89,7 +89,7 @@ export const RevenueByPaymentMode = (props) => {
           Revenue By Payment Mode
         </Typography>
       </div>
-      <TableContainer ref={ref} component={Paper}>
+      <TableContainer ref={ref} component={Paper} sx={{ maxHeight: "234px" }}>
         <Table sx={{ minWidth: 500 }} aria-label="simple table">
           <TableHead>
             <TableRow sx={{ backgroundColor: "#ED7D31", color: "#fff" }}>

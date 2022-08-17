@@ -55,6 +55,11 @@ export const SalesRevenueByChanelChart = () => {
   const [dineOrders, setDineOrders] = useState([]);
   const [zomatoOrders, setZomatoOrders] = useState([]);
   const [swizyOrders, setSwizyOrders] = useState([]);
+  const [dineInOrders, setDineInOrders] = useState([]);
+  const [storeTakeAwayOrders, setStoreTakeAwayOrders] = useState([]);
+  const [storeDeliveryOrders, setStoreDeliveryOrders] = useState([]);
+  const [phoneSelfCollectOrders, setPhoneSelfCollectOrders] = useState([]);
+  const [phoneDeliveryOrders, setPhoneDeliveryOrders] = useState([]);
 
   /* defaults.font.size = "10px"; */
 
@@ -67,6 +72,11 @@ export const SalesRevenueByChanelChart = () => {
     "DINE-IN",
     "ZOMATO",
     "SWIGGY",
+    "DINE-IN",
+    "STORE TAKE-AWAY",
+    "STORE DELIVERY",
+    "PHONE SELF-COLLECT",
+    "PHONE DELIVERY",
   ];
 
   useEffect(() => {
@@ -123,6 +133,51 @@ export const SalesRevenueByChanelChart = () => {
         .map((a) => a.orderValue)
         .reduce((a, b) => a + b, 0)
     );
+
+    setDineInOrders(
+      allReports.salesSummeryByOrderSource
+        .filter(function (el) {
+          return el.orderSource === "D";
+        })
+        .map((a) => a.orderValue)
+        .reduce((a, b) => a + b, 0)
+    );
+
+    setStoreTakeAwayOrders(
+      allReports.salesSummeryByOrderSource
+        .filter(function (el) {
+          return el.orderSource === "ST";
+        })
+        .map((a) => a.orderValue)
+        .reduce((a, b) => a + b, 0)
+    );
+
+    setStoreDeliveryOrders(
+      allReports.salesSummeryByOrderSource
+        .filter(function (el) {
+          return el.orderSource === "SD";
+        })
+        .map((a) => a.orderValue)
+        .reduce((a, b) => a + b, 0)
+    );
+
+    setPhoneSelfCollectOrders(
+      allReports.salesSummeryByOrderSource
+        .filter(function (el) {
+          return el.orderSource === "PT";
+        })
+        .map((a) => a.orderValue)
+        .reduce((a, b) => a + b, 0)
+    );
+
+    setPhoneDeliveryOrders(
+      allReports.salesSummeryByOrderSource
+        .filter(function (el) {
+          return el.orderSource === "PD";
+        })
+        .map((a) => a.orderValue)
+        .reduce((a, b) => a + b, 0)
+    );
   }, [allReports]);
 
   const data = {
@@ -142,6 +197,11 @@ export const SalesRevenueByChanelChart = () => {
           dineOrders,
           zomatoOrders,
           swizyOrders,
+          dineInOrders,
+          storeTakeAwayOrders,
+          storeDeliveryOrders,
+          phoneSelfCollectOrders,
+          phoneDeliveryOrders,
         ],
         backgroundColor: "rgba(53, 162, 235, 0.5)",
       },
