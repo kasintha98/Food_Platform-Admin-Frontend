@@ -105,6 +105,7 @@ export default function NewCheckout(props) {
   const couponReduxObj = useSelector((state) => state.user.coupon);
   const deliveryPrice = useSelector((state) => state.user.deliveryPrice);
   const paymentModes = useSelector((state) => state.user.paymentModes);
+  const businessDateAll = useSelector((state) => state.user.businessDate);
 
   const cart = useSelector((state) => state.cart);
   const [subTotal, setSubtotal] = useState(0);
@@ -490,7 +491,7 @@ export default function NewCheckout(props) {
   };
 
   const specialOfferCheckBOGO = () => {
-    const d = new Date();
+    const d = new Date(businessDateAll && businessDateAll.businessDate);
     const day = d.getDay();
     const wednesday = 3;
     let pizzaCount = 0;
