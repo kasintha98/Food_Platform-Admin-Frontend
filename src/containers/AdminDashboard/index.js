@@ -369,7 +369,7 @@ export const AdminDashboard = () => {
             </div>
             <div>
               <Row>
-                <Col sm={6} className="pl-0">
+                <Col sm={12} className="pl-0">
                   {allReports.salesSummeryByDateList &&
                   allReports.salesSummeryByDateList.length > 0 ? (
                     <SalesOverTimeChart></SalesOverTimeChart>
@@ -384,34 +384,6 @@ export const AdminDashboard = () => {
                     </div>
                   )}
                 </Col>
-
-                <Col sm={6} className="pl-0">
-                  {allReports.salesSummeryByPaymentMode &&
-                  allReports.salesSummeryByPaymentMode.length > 0 ? (
-                    <RevenueByPaymentMode
-                      totalOrders={
-                        allReports.salesSummeryByDateList &&
-                        allReports.salesSummeryByDateList.length
-                          ? Number(
-                              allReports.salesSummeryByDateList
-                                .map((a) => a.noOfOrders)
-                                .reduce((a, b) => a + b, 0)
-                            )
-                          : 0
-                      }
-                    ></RevenueByPaymentMode>
-                  ) : (
-                    <div className="mb-3 pl-3 pt-3">
-                      <Typography sx={{ fontWeight: "bold", color: "#7F7F7F" }}>
-                        Revenue By Payment Mode
-                      </Typography>
-                      <Alert severity="warning" className="mt-4">
-                        No reports to show!
-                      </Alert>
-                    </div>
-                  )}
-                </Col>
-                <Col sm={6} className="pl-0"></Col>
               </Row>
               {/* <Row>
                 <Col sm={6} className="pl-0">
@@ -454,6 +426,35 @@ export const AdminDashboard = () => {
                     <div className="mb-3 pl-3 pt-3">
                       <Typography sx={{ fontWeight: "bold", color: "#7F7F7F" }}>
                         Sales Revenue by Channels
+                      </Typography>
+                      <Alert severity="warning" className="mt-4">
+                        No reports to show!
+                      </Alert>
+                    </div>
+                  )}
+                </Col>
+              </Row>
+
+              <Row>
+                <Col sm={12} className="pl-0">
+                  {allReports.salesSummeryByPaymentMode &&
+                  allReports.salesSummeryByPaymentMode.length > 0 ? (
+                    <RevenueByPaymentMode
+                      totalOrders={
+                        allReports.salesSummeryByDateList &&
+                        allReports.salesSummeryByDateList.length
+                          ? Number(
+                              allReports.salesSummeryByDateList
+                                .map((a) => a.noOfOrders)
+                                .reduce((a, b) => a + b, 0)
+                            )
+                          : 0
+                      }
+                    ></RevenueByPaymentMode>
+                  ) : (
+                    <div className="mb-3 pl-3 pt-3">
+                      <Typography sx={{ fontWeight: "bold", color: "#7F7F7F" }}>
+                        Revenue By Payment Mode
                       </Typography>
                       <Alert severity="warning" className="mt-4">
                         No reports to show!
