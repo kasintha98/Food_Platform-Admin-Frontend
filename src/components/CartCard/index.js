@@ -56,8 +56,10 @@ export default function CartCard(props) {
   const onQuantityIncrement = (productId) => {
     dispatch(addToCartNew({ ...cart.cartItems[productId], key: productId }, 1));
     calculateSubTotal();
-    props.onChangeSpecialOfferCheckBOGO();
-    props.onChangeSpecialOfferCheckCOMBO1();
+    props.onChangeSpecialOfferCheckBOGO &&
+      props.onChangeSpecialOfferCheckBOGO();
+    props.onChangeSpecialOfferCheckCOMBO1 &&
+      props.onChangeSpecialOfferCheckCOMBO1();
   };
 
   const onQuantityDecrement = (productId) => {
@@ -65,8 +67,10 @@ export default function CartCard(props) {
       addToCartNew({ ...cart.cartItems[productId], key: productId }, -1)
     );
     calculateSubTotal();
-    props.onChangeSpecialOfferCheckBOGO();
-    props.onChangeSpecialOfferCheckCOMBO1();
+    props.onChangeSpecialOfferCheckBOGO &&
+      props.onChangeSpecialOfferCheckBOGO();
+    props.onChangeSpecialOfferCheckCOMBO1 &&
+      props.onChangeSpecialOfferCheckCOMBO1();
   };
 
   const calculateSubTotal = () => {
@@ -183,8 +187,38 @@ export default function CartCard(props) {
                             }}
                           >
                             ₹{" "}
-                            {props.bOGOLowestPizzaKey === key ? (
-                              <>0</>
+                            {props.bOGOLowestPizzaKey?.some(
+                              (el) => el.key === key
+                            ) ? (
+                              <>
+                                {props.bOGOLowestPizzaKey.find(
+                                  (x) => x.key === key
+                                ).qty *
+                                  (props.comboReduceKey &&
+                                  props.comboReduceKey.key === key
+                                    ? props.comboReduceKey.price
+                                    : props.bOGOLowestPizzaKey.find(
+                                        (x) => x.key === key
+                                      ).price) +
+                                  (props.bOGOLowestPizzaKey.find(
+                                    (x) => x.key === key
+                                  ).extraSubTotalWithQty
+                                    ? props.bOGOLowestPizzaKey.find(
+                                        (x) => x.key === key
+                                      ).extraSubTotalWithQty
+                                    : 0) +
+                                  (Object.keys(
+                                    props.bOGOLowestPizzaKey.find(
+                                      (x) => x.key === key
+                                    )?.choiceIng
+                                  ).length > 0
+                                    ? Number(
+                                        props.bOGOLowestPizzaKey.find(
+                                          (x) => x.key === key
+                                        )?.choiceIng.choiceTotal
+                                      )
+                                    : 0)}
+                              </>
                             ) : (
                               <>
                                 {cart?.cartItems[key].qty *
@@ -248,8 +282,18 @@ export default function CartCard(props) {
                               }}
                             >
                               {"₹ "}
-                              {props.bOGOLowestPizzaKey === key ? (
-                                <>0</>
+                              {props.bOGOLowestPizzaKey?.some(
+                                (el) => el.key === key
+                              ) ? (
+                                <>
+                                  {" "}
+                                  {props.bOGOLowestPizzaKey.find(
+                                    (x) => x.key === key
+                                  ).price *
+                                    props.bOGOLowestPizzaKey.find(
+                                      (x) => x.key === key
+                                    ).qty}
+                                </>
                               ) : (
                                 <>
                                   {cart?.cartItems[key].price *
@@ -316,9 +360,17 @@ export default function CartCard(props) {
                                             }}
                                           >
                                             {"₹ "}
-                                            {props.bOGOLowestPizzaKey ===
-                                            key ? (
-                                              <>0</>
+                                            {props.bOGOLowestPizzaKey?.some(
+                                              (el) => el.key === key
+                                            ) ? (
+                                              <>
+                                                {props.bOGOLowestPizzaKey.find(
+                                                  (x) => x.key === key
+                                                )?.extra[index].price *
+                                                  props.bOGOLowestPizzaKey.find(
+                                                    (x) => x.key === key
+                                                  ).qty}
+                                              </>
                                             ) : (
                                               <>
                                                 {cart?.cartItems[key]?.extra[
@@ -383,8 +435,17 @@ export default function CartCard(props) {
                                   }}
                                 >
                                   {"₹ "}
-                                  {props.bOGOLowestPizzaKey === key ? (
-                                    <>0</>
+                                  {props.bOGOLowestPizzaKey?.some(
+                                    (el) => el.key === key
+                                  ) ? (
+                                    <>
+                                      {props.bOGOLowestPizzaKey.find(
+                                        (x) => x.key === key
+                                      )?.choiceIng.price *
+                                        props.bOGOLowestPizzaKey.find(
+                                          (x) => x.key === key
+                                        ).qty}
+                                    </>
                                   ) : (
                                     <>
                                       {cart?.cartItems[key]?.choiceIng.price *

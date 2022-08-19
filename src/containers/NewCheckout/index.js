@@ -140,6 +140,7 @@ export default function NewCheckout(props) {
   const [couponLocalObj, setCouponLocalObj] = useState(null);
   const [bOGOLowestPizzaKey, setBOGOLowestPizzaKey] = useState(null);
   const [comboReduceKey, setComboReduceKey] = useState(null);
+  const [allBogoReduceCost, setAllBogoReduceCost] = useState(0);
 
   const dispatch = useDispatch();
   const ref = React.createRef();
@@ -180,8 +181,8 @@ export default function NewCheckout(props) {
       all = all * afterAddCoupon;
     }
 
-    if (bOGOLowestPizzaKey) {
-      all = all - Number(bOGOLowestPizzaKey.cost);
+    if (allBogoReduceCost) {
+      all = all - Number(allBogoReduceCost);
     }
 
     if (comboReduceKey) {
@@ -206,8 +207,8 @@ export default function NewCheckout(props) {
       all = all * afterAddCoupon;
     }
 
-    if (bOGOLowestPizzaKey) {
-      all = all - Number(bOGOLowestPizzaKey.cost);
+    if (allBogoReduceCost) {
+      all = all - Number(allBogoReduceCost);
     }
 
     if (comboReduceKey) {
@@ -232,8 +233,8 @@ export default function NewCheckout(props) {
       allSub = allSub * afterAddCoupon;
     }
 
-    if (bOGOLowestPizzaKey) {
-      allSub = allSub - Number(bOGOLowestPizzaKey.cost);
+    if (allBogoReduceCost) {
+      allSub = allSub - Number(allBogoReduceCost);
     }
 
     if (comboReduceKey) {
@@ -262,8 +263,8 @@ export default function NewCheckout(props) {
       allSub = allSub * afterAddCoupon;
     }
 
-    if (bOGOLowestPizzaKey) {
-      allSub = allSub - Number(bOGOLowestPizzaKey.cost);
+    if (allBogoReduceCost) {
+      allSub = allSub - Number(allBogoReduceCost);
     }
 
     if (comboReduceKey) {
@@ -323,8 +324,8 @@ export default function NewCheckout(props) {
         total = total * afterAddCoupon;
       }
 
-      if (bOGOLowestPizzaKey) {
-        total = total - Number(bOGOLowestPizzaKey.cost);
+      if (allBogoReduceCost) {
+        total = total - Number(allBogoReduceCost);
       }
 
       if (comboReduceKey) {
@@ -497,18 +498,101 @@ export default function NewCheckout(props) {
       const wednesday = 3;
       let pizzaCount = 0;
       let pizzaKeys = [];
+      let pizzaValues = [];
       let lowestPizzaKey = null;
+      let lowestPizzaKeysList = [];
+      let allReduceCost = 0;
 
-      if (day === wednesday && Object.keys(cart?.cartItems).length > 1) {
+      if (day === wednesday) {
         for (let i = 0; i < Object.keys(cart?.cartItems).length; i++) {
           if (Object.values(cart?.cartItems)[i].section === "Pizza") {
             pizzaKeys.push(Object.keys(cart?.cartItems)[i]);
+            pizzaValues.push({
+              ...Object.values(cart?.cartItems)[i],
+              cost:
+                Object.values(cart?.cartItems)[i].price *
+                  Object.values(cart?.cartItems)[i].qty +
+                Object.values(cart?.cartItems)[i].extraSubTotalWithQty +
+                Object.values(cart?.cartItems)[i].choiceIng.choiceTotal,
+              oneItemFullCost:
+                Number(
+                  Object.values(cart?.cartItems)[i].price *
+                    Object.values(cart?.cartItems)[i].qty +
+                    Object.values(cart?.cartItems)[i].extraSubTotalWithQty +
+                    Object.values(cart?.cartItems)[i].choiceIng.choiceTotal
+                ) / Number(Object.values(cart?.cartItems)[i].qty),
+            });
             pizzaCount = pizzaCount + Object.values(cart?.cartItems)[i].qty;
           }
         }
 
-        if (pizzaCount === 2) {
-          if (
+        if (pizzaCount >= 2) {
+          const pizzaValuesSortedByPrice = pizzaValues.sort(
+            (a, b) => a.oneItemFullCost - b.oneItemFullCost
+          );
+
+          const numberOfPizzasToReducePrice = Math.floor(pizzaCount / 2);
+
+          let pizzaValuesWithReduceQty = [];
+          let reduceCount = numberOfPizzasToReducePrice;
+
+          for (let j = 0; j < pizzaValuesSortedByPrice.length; j++) {
+            if (reduceCount > pizzaValuesSortedByPrice[j].qty) {
+              allReduceCost =
+                allReduceCost +
+                pizzaValuesSortedByPrice[j].qty *
+                  pizzaValuesSortedByPrice[j].oneItemFullCost;
+              let obj1 = {
+                ...pizzaValuesSortedByPrice[j],
+                qty: 0,
+                extraSubTotal: 0,
+                extraSubTotalWithQty: 0,
+                choiceIng: {
+                  ...pizzaValuesSortedByPrice[j].choiceIng,
+                  choiceTotal: 0,
+                },
+              };
+              pizzaValuesWithReduceQty.push(obj1);
+              reduceCount = reduceCount - pizzaValuesSortedByPrice[j].qty;
+            } else {
+              allReduceCost =
+                allReduceCost +
+                reduceCount * pizzaValuesSortedByPrice[j].oneItemFullCost;
+              let obj2 = {
+                ...pizzaValuesSortedByPrice[j],
+                qty: pizzaValuesSortedByPrice[j].qty - reduceCount,
+                extraSubTotalWithQty: Number(
+                  pizzaValuesSortedByPrice[j].extraSubTotal *
+                    (pizzaValuesSortedByPrice[j].qty - reduceCount)
+                ),
+                choiceIng: {
+                  ...pizzaValuesSortedByPrice[j].choiceIng,
+                  choiceTotal: Number(
+                    pizzaValuesSortedByPrice[j].choiceIng.price *
+                      (pizzaValuesSortedByPrice[j].qty - reduceCount)
+                  ),
+                },
+              };
+              pizzaValuesWithReduceQty.push(obj2);
+              reduceCount = 0;
+            }
+          }
+
+          console.log(pizzaValuesWithReduceQty);
+
+          /* const pizzasToReducePrice = pizzaValuesSortedByPrice.slice(
+            0,
+            numberOfPizzasToReducePrice
+          ); */
+
+          /* for (let i = 0; i < pizzasToReducePrice.length; i++) {
+            allReduceCost =
+              allReduceCost +
+              numberOfPizzasToReducePrice *
+                pizzasToReducePrice[i].oneItemFullCost;
+          } */
+
+          /* if (
             cart?.cartItems[pizzaKeys[0]].price >
             cart?.cartItems[pizzaKeys[1]].price
           ) {
@@ -525,8 +609,10 @@ export default function NewCheckout(props) {
             cart?.cartItems[lowestPizzaKey].price *
               cart?.cartItems[lowestPizzaKey].qty +
             cart?.cartItems[lowestPizzaKey].extraSubTotalWithQty +
-            cart?.cartItems[lowestPizzaKey].choiceIng.choiceTotal;
-          setBOGOLowestPizzaKey({ key: lowestPizzaKey, cost: cost });
+            cart?.cartItems[lowestPizzaKey].choiceIng.choiceTotal; */
+
+          setAllBogoReduceCost(allReduceCost);
+          setBOGOLowestPizzaKey(pizzaValuesWithReduceQty);
           toast.success("Hurray!! BOGO Offer has been applied!");
         } else {
           setBOGOLowestPizzaKey(null);
@@ -620,8 +706,8 @@ export default function NewCheckout(props) {
       allSub = allSub * afterAddCoupon;
     }
 
-    if (bOGOLowestPizzaKey) {
-      allSub = allSub - Number(bOGOLowestPizzaKey.cost);
+    if (allBogoReduceCost) {
+      allSub = allSub - Number(allBogoReduceCost);
     }
 
     if (comboReduceKey) {
@@ -899,7 +985,7 @@ export default function NewCheckout(props) {
                       fullResp={orderResp}
                       isShowDeliveryCharge={props.isShowDeliveryCharge}
                       bOGOLowestPizzaKey={
-                        bOGOLowestPizzaKey ? bOGOLowestPizzaKey.key : null
+                        bOGOLowestPizzaKey ? bOGOLowestPizzaKey : []
                       }
                     ></InvoiceTable>
                   </div>
@@ -1051,7 +1137,7 @@ export default function NewCheckout(props) {
                       onChangeExtraSubTotal={handleExtraTotal}
                       onChangeChoiceTotal={handleChoiceTotal}
                       bOGOLowestPizzaKey={
-                        bOGOLowestPizzaKey ? bOGOLowestPizzaKey.key : null
+                        bOGOLowestPizzaKey ? bOGOLowestPizzaKey : []
                       }
                       onChangeSpecialOfferCheckBOGO={specialOfferCheckBOGO}
                       onChangeSpecialOfferCheckCOMBO1={specialOfferCheckCOMBO1}
@@ -1135,7 +1221,7 @@ export default function NewCheckout(props) {
                                   color: "#2e7d32",
                                 }}
                               >
-                                ₹ {bOGOLowestPizzaKey.cost}
+                                ₹ {allBogoReduceCost}
                               </Typography>
                             </div>
                           </Row>
