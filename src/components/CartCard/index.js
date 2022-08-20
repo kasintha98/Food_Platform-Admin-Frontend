@@ -216,6 +216,10 @@ export default function CartCard(props) {
                                         props.bOGOLowestPizzaKey.find(
                                           (x) => x.key === key
                                         )?.choiceIng.choiceTotal
+                                          ? props.bOGOLowestPizzaKey.find(
+                                              (x) => x.key === key
+                                            )?.choiceIng.choiceTotal
+                                          : 0
                                       )
                                     : 0)}
                               </>
