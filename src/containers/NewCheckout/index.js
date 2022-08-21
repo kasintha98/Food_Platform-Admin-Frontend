@@ -505,10 +505,7 @@ export default function NewCheckout(props) {
 
       if (day === wednesday) {
         for (let i = 0; i < Object.keys(cart?.cartItems).length; i++) {
-          if (
-            Object.values(cart?.cartItems)[i].section === "Pizza" ||
-            Object.values(cart?.cartItems)[i].section === "Mania Range"
-          ) {
+          if (Object.values(cart?.cartItems)[i].section === "Pizza") {
             pizzaKeys.push(Object.keys(cart?.cartItems)[i]);
             pizzaValues.push({
               ...Object.values(cart?.cartItems)[i],
