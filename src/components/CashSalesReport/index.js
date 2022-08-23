@@ -135,7 +135,7 @@ export const CashSalesReport = (props) => {
                         ? row.details.ORDER_SOURCE.find(
                             (x) => x.category === "Dine In"
                           ).totalQty
-                        : "N/A"}
+                        : 0}
 
                       <br></br>
                       <div
@@ -147,7 +147,7 @@ export const CashSalesReport = (props) => {
                         ? row.details.ORDER_SOURCE.find(
                             (x) => x.category === "Dine In"
                           ).totalPrice
-                        : "N/A"}
+                        : 0}
                     </CusTableCell2>
                     <CusTableCell2 align="center">
                       {row.details.ORDER_SOURCE.find(
@@ -156,7 +156,7 @@ export const CashSalesReport = (props) => {
                         ? row.details.ORDER_SOURCE.find(
                             (x) => x.category === "Store Take Away"
                           ).totalQty
-                        : "N/A"}
+                        : 0}
                       <br></br>
                       <div
                         style={{ borderBottom: "1px solid lightgray" }}
@@ -168,7 +168,7 @@ export const CashSalesReport = (props) => {
                         ? row.details.ORDER_SOURCE.find(
                             (x) => x.category === "Store Take Away"
                           ).totalPrice
-                        : "N/A"}
+                        : 0}
                     </CusTableCell2>
                     <CusTableCell2 align="center">
                       {row.details.ORDER_SOURCE.find(
@@ -177,7 +177,7 @@ export const CashSalesReport = (props) => {
                         ? row.details.ORDER_SOURCE.find(
                             (x) => x.category === "Store Delivery"
                           ).totalQty
-                        : "N/A"}
+                        : 0}
                       <br></br>
                       <div
                         style={{ borderBottom: "1px solid lightgray" }}
@@ -189,7 +189,7 @@ export const CashSalesReport = (props) => {
                         ? row.details.ORDER_SOURCE.find(
                             (x) => x.category === "Store Delivery"
                           ).totalPrice
-                        : "N/A"}
+                        : 0}
                     </CusTableCell2>
                     <CusTableCell2 align="center">
                       {row.details.ORDER_SOURCE.find(
@@ -198,7 +198,7 @@ export const CashSalesReport = (props) => {
                         ? row.details.ORDER_SOURCE.find(
                             (x) => x.category === "Phone Self Collect"
                           ).totalQty
-                        : "N/A"}
+                        : 0}
                       <br></br>
                       <div
                         style={{ borderBottom: "1px solid lightgray" }}
@@ -209,7 +209,7 @@ export const CashSalesReport = (props) => {
                         ? row.details.ORDER_SOURCE.find(
                             (x) => x.category === "Phone Self Collect"
                           ).totalPrice
-                        : "N/A"}
+                        : 0}
                     </CusTableCell2>
                     <CusTableCell2 align="center">
                       {row.details.ORDER_SOURCE.find(
@@ -218,7 +218,7 @@ export const CashSalesReport = (props) => {
                         ? row.details.ORDER_SOURCE.find(
                             (x) => x.category === "Phone Delivery"
                           ).totalQty
-                        : "N/A"}
+                        : 0}
                       <br></br>
                       <div
                         style={{ borderBottom: "1px solid lightgray" }}
@@ -229,7 +229,7 @@ export const CashSalesReport = (props) => {
                         ? row.details.ORDER_SOURCE.find(
                             (x) => x.category === "Phone Delivery"
                           ).totalPrice
-                        : "N/A"}
+                        : 0}
                     </CusTableCell2>
                     <CusTableCell2 align="center">
                       {Number(
@@ -319,7 +319,7 @@ export const CashSalesReport = (props) => {
                         ? row.details.PAYMENT_MODE.find(
                             (x) => x.category === "Cash"
                           ).totalQty
-                        : "N/A"}
+                        : 0}
                       <br></br>
                       <div
                         style={{ borderBottom: "1px solid lightgray" }}
@@ -330,7 +330,7 @@ export const CashSalesReport = (props) => {
                         ? row.details.PAYMENT_MODE.find(
                             (x) => x.category === "Cash"
                           ).totalPrice
-                        : "N/A"}
+                        : 0}
                     </CusTableCell2>
                     <CusTableCell2 align="center">
                       {row.details.PAYMENT_MODE.find(
@@ -339,7 +339,7 @@ export const CashSalesReport = (props) => {
                         ? row.details.PAYMENT_MODE.find(
                             (x) => x.category === "PayTM"
                           ).totalQty
-                        : "N/A"}
+                        : 0}
                       <br></br>
                       <div
                         style={{ borderBottom: "1px solid lightgray" }}
@@ -350,7 +350,7 @@ export const CashSalesReport = (props) => {
                         ? row.details.PAYMENT_MODE.find(
                             (x) => x.category === "PayTM"
                           ).totalPrice
-                        : "N/A"}
+                        : 0}
                     </CusTableCell2>
                     <CusTableCell2 align="center">
                       {row.details.PAYMENT_MODE.find(
@@ -359,7 +359,7 @@ export const CashSalesReport = (props) => {
                         ? row.details.PAYMENT_MODE.find(
                             (x) => x.category === "Credit/Debit"
                           ).totalQty
-                        : "N/A"}
+                        : 0}
                       <br></br>
                       <div
                         style={{ borderBottom: "1px solid lightgray" }}
@@ -370,7 +370,7 @@ export const CashSalesReport = (props) => {
                         ? row.details.PAYMENT_MODE.find(
                             (x) => x.category === "Credit/Debit"
                           ).totalPrice
-                        : "N/A"}
+                        : 0}
                     </CusTableCell2>
                     <CusTableCell2 align="center">
                       {row.details.PAYMENT_MODE.find(
@@ -379,7 +379,7 @@ export const CashSalesReport = (props) => {
                         ? row.details.PAYMENT_MODE.find(
                             (x) => x.category === "Amazon Pay"
                           ).totalQty
-                        : "N/A"}
+                        : 0}
                       <br></br>
                       <div
                         style={{ borderBottom: "1px solid lightgray" }}
@@ -390,7 +390,7 @@ export const CashSalesReport = (props) => {
                         ? row.details.PAYMENT_MODE.find(
                             (x) => x.category === "Amazon Pay"
                           ).totalPrice
-                        : "N/A"}
+                        : 0}
                     </CusTableCell2>
                     <CusTableCell2 align="center">
                       {row.details.PAYMENT_MODE.find(
@@ -399,7 +399,7 @@ export const CashSalesReport = (props) => {
                         ? row.details.PAYMENT_MODE.find(
                             (x) => x.category === "PhonePe"
                           ).totalQty
-                        : "N/A"}
+                        : 0}
                       <br></br>
                       <div
                         style={{ borderBottom: "1px solid lightgray" }}
@@ -411,7 +411,7 @@ export const CashSalesReport = (props) => {
                         ? row.details.PAYMENT_MODE.find(
                             (x) => x.category === "PhonePe"
                           ).totalPrice
-                        : "N/A"}
+                        : 0}
                     </CusTableCell2>
                     <CusTableCell2 align="center">
                       {Number(
