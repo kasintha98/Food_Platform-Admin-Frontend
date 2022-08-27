@@ -139,7 +139,7 @@ export default function NewCheckout(props) {
   const [cardHeight, setCardHeight] = useState(0);
   const [couponLocalObj, setCouponLocalObj] = useState(null);
   const [bOGOLowestPizzaKey, setBOGOLowestPizzaKey] = useState(null);
-  const [comboReduceKey, setComboReduceKey] = useState(null);
+  const [drinkReduceKey, setdrinkReduceKey] = useState(null);
   const [allBogoReduceCost, setAllBogoReduceCost] = useState(0);
 
   const dispatch = useDispatch();
@@ -185,8 +185,8 @@ export default function NewCheckout(props) {
       all = all - Number(allBogoReduceCost);
     }
 
-    if (comboReduceKey) {
-      all = all - Number(comboReduceKey.reducingCost);
+    if (drinkReduceKey) {
+      all = all - Number(drinkReduceKey.reducingCost);
     }
 
     return <span>₹ {all.toFixed(2)}</span>;
@@ -211,8 +211,8 @@ export default function NewCheckout(props) {
       all = all - Number(allBogoReduceCost);
     }
 
-    if (comboReduceKey) {
-      all = all - Number(comboReduceKey.reducingCost);
+    if (drinkReduceKey) {
+      all = all - Number(drinkReduceKey.reducingCost);
     }
 
     return <span>₹ {all.toFixed(2)}</span>;
@@ -237,8 +237,8 @@ export default function NewCheckout(props) {
       allSub = allSub - Number(allBogoReduceCost);
     }
 
-    if (comboReduceKey) {
-      allSub = allSub - Number(comboReduceKey.reducingCost);
+    if (drinkReduceKey) {
+      allSub = allSub - Number(drinkReduceKey.reducingCost);
     }
 
     const all = (allSub * (tax.taxPercentage / 100)).toFixed(2);
@@ -267,8 +267,8 @@ export default function NewCheckout(props) {
       allSub = allSub - Number(allBogoReduceCost);
     }
 
-    if (comboReduceKey) {
-      allSub = allSub - Number(comboReduceKey.reducingCost);
+    if (drinkReduceKey) {
+      allSub = allSub - Number(drinkReduceKey.reducingCost);
     }
 
     let allTax = 0;
@@ -328,8 +328,8 @@ export default function NewCheckout(props) {
         total = total - Number(allBogoReduceCost);
       }
 
-      if (comboReduceKey) {
-        total = total - Number(comboReduceKey.reducingCost);
+      if (drinkReduceKey) {
+        total = total - Number(drinkReduceKey.reducingCost);
       }
 
       let orderDetails = [];
@@ -479,8 +479,8 @@ export default function NewCheckout(props) {
       return;
     }
 
-    if (couponCode === "COMBO1") {
-      specialOfferCheckCOMBO1();
+    if (couponCode === "DRINK29") {
+      specialOfferCheckDRINK29();
       return;
     }
 
@@ -629,15 +629,19 @@ export default function NewCheckout(props) {
     }
   };
 
-  const specialOfferCheckCOMBO1 = () => {
-    if (couponCode === "COMBO1") {
+  const specialOfferCheckDRINK29 = () => {
+    if (couponCode === "DRINK29") {
       if (Object.keys(cart?.cartItems).length === 2) {
         let drinkCount = 0;
         let drinkKey = null;
         let drinkObj = null;
 
         for (let i = 0; i < Object.keys(cart?.cartItems).length; i++) {
-          if (Object.values(cart?.cartItems)[i].section === "Shakes & Drinks") {
+          if (
+            Object.values(cart?.cartItems)[i].section === "Shakes & Drinks" &&
+            (Object.values(cart?.cartItems)[i].productId === "P113" ||
+              Object.values(cart?.cartItems)[i].productId === "P114")
+          ) {
             drinkKey = Object.keys(cart?.cartItems)[i];
             drinkObj = Object.values(cart?.cartItems)[i];
             drinkCount = drinkCount + Object.values(cart?.cartItems)[i].qty;
@@ -645,19 +649,19 @@ export default function NewCheckout(props) {
         }
 
         if (drinkCount === 1) {
-          setComboReduceKey({
+          setdrinkReduceKey({
             key: drinkKey,
             price: 29,
             reducingCost: Number(drinkObj.price) - 29,
           });
-          toast.success("Hurray!! COMBO1 Offer has been applied");
+          toast.success("Hurray!! DRINK29 Offer has been applied");
         } else {
-          toast.error("COMBO1 is not applicable for this cart!");
-          setComboReduceKey(null);
+          toast.error("DRINK29 is not applicable for this cart!");
+          setdrinkReduceKey(null);
         }
       } else {
-        setComboReduceKey(null);
-        toast.error("COMBO1 is not applicable for this cart!");
+        setdrinkReduceKey(null);
+        toast.error("DRINK29 is not applicable for this cart!");
       }
     }
   };
@@ -710,8 +714,8 @@ export default function NewCheckout(props) {
       allSub = allSub - Number(allBogoReduceCost);
     }
 
-    if (comboReduceKey) {
-      allSub = allSub - Number(comboReduceKey.reducingCost);
+    if (drinkReduceKey) {
+      allSub = allSub - Number(drinkReduceKey.reducingCost);
     }
 
     let deliveryCharge = 0;
@@ -1140,8 +1144,10 @@ export default function NewCheckout(props) {
                         bOGOLowestPizzaKey ? bOGOLowestPizzaKey : []
                       }
                       onChangeSpecialOfferCheckBOGO={specialOfferCheckBOGO}
-                      onChangeSpecialOfferCheckCOMBO1={specialOfferCheckCOMBO1}
-                      comboReduceKey={comboReduceKey}
+                      onChangeSpecialOfferCheckDRINK29={
+                        specialOfferCheckDRINK29
+                      }
+                      drinkReduceKey={drinkReduceKey}
                     ></CartCard>
                     {Object.keys(cart.cartItems).length > 0 ? (
                       <Typography>

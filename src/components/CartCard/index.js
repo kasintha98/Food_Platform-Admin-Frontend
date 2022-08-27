@@ -58,8 +58,8 @@ export default function CartCard(props) {
     calculateSubTotal();
     props.onChangeSpecialOfferCheckBOGO &&
       props.onChangeSpecialOfferCheckBOGO();
-    props.onChangeSpecialOfferCheckCOMBO1 &&
-      props.onChangeSpecialOfferCheckCOMBO1();
+    props.onChangeSpecialOfferCheckDRINK29 &&
+      props.onChangeSpecialOfferCheckDRINK29();
   };
 
   const onQuantityDecrement = (productId) => {
@@ -69,8 +69,8 @@ export default function CartCard(props) {
     calculateSubTotal();
     props.onChangeSpecialOfferCheckBOGO &&
       props.onChangeSpecialOfferCheckBOGO();
-    props.onChangeSpecialOfferCheckCOMBO1 &&
-      props.onChangeSpecialOfferCheckCOMBO1();
+    props.onChangeSpecialOfferCheckDRINK29 &&
+      props.onChangeSpecialOfferCheckDRINK29();
   };
 
   const calculateSubTotal = () => {
@@ -194,9 +194,9 @@ export default function CartCard(props) {
                                 {props.bOGOLowestPizzaKey.find(
                                   (x) => x.key === key
                                 ).qty *
-                                  (props.comboReduceKey &&
-                                  props.comboReduceKey.key === key
-                                    ? props.comboReduceKey.price
+                                  (props.drinkReduceKey &&
+                                  props.drinkReduceKey.key === key
+                                    ? props.drinkReduceKey.price
                                     : props.bOGOLowestPizzaKey.find(
                                         (x) => x.key === key
                                       ).price) +
@@ -226,9 +226,9 @@ export default function CartCard(props) {
                             ) : (
                               <>
                                 {cart?.cartItems[key].qty *
-                                  (props.comboReduceKey &&
-                                  props.comboReduceKey.key === key
-                                    ? props.comboReduceKey.price
+                                  (props.drinkReduceKey &&
+                                  props.drinkReduceKey.key === key
+                                    ? props.drinkReduceKey.price
                                     : cart?.cartItems[key].price) +
                                   (cart?.cartItems[key].extraSubTotalWithQty
                                     ? cart?.cartItems[key].extraSubTotalWithQty
