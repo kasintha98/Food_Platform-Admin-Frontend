@@ -13,6 +13,7 @@ import {
   getAllSectionsFromMaster,
   saveSection,
   saveDish,
+  uploadImage,
 } from "../../actions";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
@@ -427,7 +428,7 @@ export const MenuMaster = () => {
         ? currentPrice[product.id]
         : product.price,
       imagePath: productImage[product.id]
-        ? productImage[product.id].name
+        ? productImage[product.id].name.split(".").slice(0, -1).join(".")
         : product.imagePath,
       menuAvailableFlag: currentMenuFlag
         ? currentMenuFlag
@@ -438,8 +439,14 @@ export const MenuMaster = () => {
       commonImage: product.commonImage,
     };
 
-    dispatch(updateMenuItem(newProduct));
-    //uploadImage();
+    const formDataImage = new FormData();
+    formDataImage.append("files", productImage[product.id]);
+
+    dispatch(updateMenuItem(newProduct)).then((res) => {
+      if (res) {
+        dispatch(uploadImage(formDataImage));
+      }
+    });
     console.log(newProduct);
   };
 
@@ -474,21 +481,24 @@ export const MenuMaster = () => {
       dishDescriptionId: newDishDesc,
       productSize: newSize,
       price: newPrice,
-      imagePath: newProductImage.name,
+      imagePath: newProductImage.name.split(".").slice(0, -1).join("."),
       menuAvailableFlag: newMenuFlag,
       commonImage: newCommonImage,
       ingredientExistsFalg: newIngredientFlag,
     };
-    console.log(newProduct);
+
+    const formDataImage = new FormData();
+    formDataImage.append("files", newProductImage);
+
     dispatch(saveMenuItem(newProduct)).then((res) => {
       if (res) {
         handleCloseAdd();
-        //uploadImage();
+        dispatch(uploadImage(formDataImage));
       }
     });
   };
 
-  const uploadImage = async () => {
+  /* const uploadImageJpg = async () => {
     try {
       const res = await axios.post(
         "https://storage.googleapis.com/upload/storage/v1/b/hangries/o",
@@ -505,7 +515,7 @@ export const MenuMaster = () => {
     } catch (error) {
       console.log(error);
     }
-  };
+  }; */
 
   const renderAddModal = () => {
     return (

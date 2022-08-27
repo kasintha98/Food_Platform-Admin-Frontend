@@ -822,3 +822,38 @@ export const saveDish = (dish) => {
     }
   };
 };
+
+export const uploadImage = (image) => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: productConstants.UPLOAD_IMAGE_REQUEST,
+      });
+
+      const res = await axios.post(`/uploadFile`, image, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      if (res.status === 200) {
+        dispatch({
+          type: productConstants.UPLOAD_IMAGE_SUCCESS,
+          payload: res.data,
+        });
+        toast.success("Image uploaded successfully!");
+        return res.data;
+      } else {
+        dispatch({
+          type: productConstants.UPLOAD_IMAGE_FAILURE,
+        });
+        console.log("error");
+        toast.error("Error when uploading image, please try again!");
+      }
+    } catch (error) {
+      dispatch({
+        type: productConstants.UPLOAD_IMAGE_FAILURE,
+      });
+      toast.error("Error when uploading image, please try again!");
+      console.log(error);
+    }
+  };
+};
