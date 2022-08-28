@@ -69,6 +69,9 @@ export default function CartCard(props) {
 
     props.onChangeSpecialOfferCheckCOMBO2 &&
       props.onChangeSpecialOfferCheckCOMBO2();
+
+    props.onChangeSpecialOfferCheckPASTA69 &&
+      props.onChangeSpecialOfferCheckPASTA69();
   };
 
   const onQuantityDecrement = (productId) => {
@@ -89,6 +92,9 @@ export default function CartCard(props) {
 
     props.onChangeSpecialOfferCheckCOMBO2 &&
       props.onChangeSpecialOfferCheckCOMBO2();
+
+    props.onChangeSpecialOfferCheckPASTA69 &&
+      props.onChangeSpecialOfferCheckPASTA69();
   };
 
   const calculateSubTotal = () => {
@@ -247,6 +253,9 @@ export default function CartCard(props) {
                                   (props.drinkReduceKey &&
                                   props.drinkReduceKey.key === key
                                     ? props.drinkReduceKey.price
+                                    : props.pastaReduceKey &&
+                                      props.pastaReduceKey.pastaKey === key
+                                    ? props.pastaReduceKey.newPrice
                                     : cart?.cartItems[key].price) +
                                   (cart?.cartItems[key].extraSubTotalWithQty
                                     ? cart?.cartItems[key].extraSubTotalWithQty

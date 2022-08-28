@@ -144,6 +144,7 @@ export default function NewCheckout(props) {
   const [friesOfferReduceTotal, setfriesOfferReduceTotal] = useState(null);
   const [combo1OfferReduceTotal, setcombo1OfferReduceTotal] = useState(null);
   const [combo2OfferReduceTotal, setcombo2OfferReduceTotal] = useState(null);
+  const [pasta69OfferReduceTotal, setPASTA69OfferReduceTotal] = useState(null);
 
   const dispatch = useDispatch();
   const ref = React.createRef();
@@ -204,6 +205,10 @@ export default function NewCheckout(props) {
       all = all - Number(combo2OfferReduceTotal.reducingCost);
     }
 
+    if (pasta69OfferReduceTotal) {
+      all = all - Number(pasta69OfferReduceTotal.reducingCost);
+    }
+
     return <span>₹ {all.toFixed(2)}</span>;
   };
 
@@ -242,6 +247,10 @@ export default function NewCheckout(props) {
       all = all - Number(combo2OfferReduceTotal.reducingCost);
     }
 
+    if (pasta69OfferReduceTotal) {
+      all = all - Number(pasta69OfferReduceTotal.reducingCost);
+    }
+
     return <span>₹ {all.toFixed(2)}</span>;
   };
 
@@ -278,6 +287,10 @@ export default function NewCheckout(props) {
 
     if (combo2OfferReduceTotal) {
       allSub = allSub - Number(combo2OfferReduceTotal.reducingCost);
+    }
+
+    if (pasta69OfferReduceTotal) {
+      allSub = allSub - Number(pasta69OfferReduceTotal.reducingCost);
     }
 
     const all = (allSub * (tax.taxPercentage / 100)).toFixed(2);
@@ -320,6 +333,10 @@ export default function NewCheckout(props) {
 
     if (combo2OfferReduceTotal) {
       allSub = allSub - Number(combo2OfferReduceTotal.reducingCost);
+    }
+
+    if (pasta69OfferReduceTotal) {
+      allSub = allSub - Number(pasta69OfferReduceTotal.reducingCost);
     }
 
     let allTax = 0;
@@ -369,6 +386,10 @@ export default function NewCheckout(props) {
 
     if (combo2OfferReduceTotal) {
       allSub = allSub - Number(combo2OfferReduceTotal.reducingCost);
+    }
+
+    if (pasta69OfferReduceTotal) {
+      allSub = allSub - Number(pasta69OfferReduceTotal.reducingCost);
     }
 
     let deliveryCharge = 0;
@@ -440,6 +461,10 @@ export default function NewCheckout(props) {
 
       if (combo2OfferReduceTotal) {
         total = total - Number(combo2OfferReduceTotal.reducingCost);
+      }
+
+      if (pasta69OfferReduceTotal) {
+        total = total - Number(pasta69OfferReduceTotal.reducingCost);
       }
 
       let orderDetails = [];
@@ -606,6 +631,11 @@ export default function NewCheckout(props) {
 
     if (couponCode === "COMBO2") {
       specialOfferCheckCOMBO2();
+      return;
+    }
+
+    if (couponCode === "PASTA69") {
+      specialOfferCheckPASTA69();
       return;
     }
 
@@ -1048,6 +1078,55 @@ export default function NewCheckout(props) {
       } else {
         setcombo2OfferReduceTotal(null);
         toast.error("COMBO2 is not applicable for this cart!");
+      }
+    }
+  };
+
+  const specialOfferCheckPASTA69 = () => {
+    if (couponCode === "PASTA69") {
+      if (Object.keys(cart?.cartItems).length === 2) {
+        let pizzaCount = 0;
+        let pizzaKey = null;
+        let pizzaObj = null;
+
+        let pastaCount = 0;
+        let pastaKey = null;
+        let pastaObj = null;
+
+        for (let i = 0; i < Object.keys(cart?.cartItems).length; i++) {
+          if (Object.values(cart?.cartItems)[i].section === "Pizza") {
+            pizzaKey = Object.keys(cart?.cartItems)[i];
+            pizzaObj = Object.values(cart?.cartItems)[i];
+            pizzaCount = pizzaCount + Object.values(cart?.cartItems)[i].qty;
+          }
+          if (
+            Object.values(cart?.cartItems)[i].section === "Pasta" &&
+            (Object.values(cart?.cartItems)[i].productId === "P018" ||
+              Object.values(cart?.cartItems)[i].productId === "P019")
+          ) {
+            pastaKey = Object.keys(cart?.cartItems)[i];
+            pastaObj = Object.values(cart?.cartItems)[i];
+            pastaCount = pastaCount + Object.values(cart?.cartItems)[i].qty;
+          }
+        }
+
+        if (pizzaCount === 1 && pastaCount === 1) {
+          setPASTA69OfferReduceTotal({
+            pizzaKey,
+            pastaKey,
+            pizzaObj,
+            pastaObj,
+            newPrice: 69,
+            reducingCost: Number(pastaObj.price) - 69,
+          });
+          toast.success("Hurray!! PASTA69 Offer has been applied");
+        } else {
+          toast.error("PASTA69 is not applicable for this cart!");
+          setPASTA69OfferReduceTotal(null);
+        }
+      } else {
+        setPASTA69OfferReduceTotal(null);
+        toast.error("PASTA69 is not applicable for this cart!");
       }
     }
   };
@@ -1503,7 +1582,11 @@ export default function NewCheckout(props) {
                       }
                       onChangeSpecialOfferCheckCOMBO1={specialOfferCheckCOMBO1}
                       onChangeSpecialOfferCheckCOMBO2={specialOfferCheckCOMBO2}
+                      onChangeSpecialOfferCheckPASTA69={
+                        specialOfferCheckPASTA69
+                      }
                       drinkReduceKey={drinkReduceKey}
+                      pastaReduceKey={pasta69OfferReduceTotal}
                     ></CartCard>
                     {Object.keys(cart.cartItems).length > 0 ? (
                       <Typography>
