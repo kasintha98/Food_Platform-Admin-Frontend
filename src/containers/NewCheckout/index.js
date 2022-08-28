@@ -872,7 +872,7 @@ export default function NewCheckout(props) {
 
   const specialOfferCheckCOMBO1 = () => {
     if (couponCode === "COMBO1") {
-      if (Object.keys(cart?.cartItems).length === 4) {
+      if (Object.keys(cart?.cartItems).length === 5) {
         let drinkCount = 0;
         let drinkKey = [];
         let drinkObj = [];
@@ -906,7 +906,8 @@ export default function NewCheckout(props) {
           }
           if (
             Object.values(cart?.cartItems)[i].section === "Pizza" &&
-            Object.values(cart?.cartItems)[i].productSize === "Medium"
+            Object.values(cart?.cartItems)[i].productSize === "Medium" &&
+            Object.values(cart?.cartItems)[i].dish === "Simply Veg 1"
           ) {
             pizzaKey = Object.keys(cart?.cartItems)[i];
             pizzaObj = Object.values(cart?.cartItems)[i];
@@ -918,9 +919,8 @@ export default function NewCheckout(props) {
             noodlesCount = noodlesCount + Object.values(cart?.cartItems)[i].qty;
           }
           if (
-            Object.values(cart?.cartItems)
-              [i].dishType.toLowerCase()
-              .includes("manchurian")
+            Object.values(cart?.cartItems)[i].productId === "P125" ||
+            Object.values(cart?.cartItems)[i].productId === "P126"
           ) {
             manchuriKey = Object.keys(cart?.cartItems)[i];
             manchuriObj = Object.values(cart?.cartItems)[i];
