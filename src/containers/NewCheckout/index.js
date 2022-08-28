@@ -143,6 +143,7 @@ export default function NewCheckout(props) {
   const [allBogoReduceCost, setAllBogoReduceCost] = useState(0);
   const [friesOfferReduceTotal, setfriesOfferReduceTotal] = useState(null);
   const [combo1OfferReduceTotal, setcombo1OfferReduceTotal] = useState(null);
+  const [combo2OfferReduceTotal, setcombo2OfferReduceTotal] = useState(null);
 
   const dispatch = useDispatch();
   const ref = React.createRef();
@@ -199,6 +200,10 @@ export default function NewCheckout(props) {
       all = all - Number(combo1OfferReduceTotal.reducingCost);
     }
 
+    if (combo2OfferReduceTotal) {
+      all = all - Number(combo2OfferReduceTotal.reducingCost);
+    }
+
     return <span>₹ {all.toFixed(2)}</span>;
   };
 
@@ -233,6 +238,10 @@ export default function NewCheckout(props) {
       all = all - Number(combo1OfferReduceTotal.reducingCost);
     }
 
+    if (combo2OfferReduceTotal) {
+      all = all - Number(combo2OfferReduceTotal.reducingCost);
+    }
+
     return <span>₹ {all.toFixed(2)}</span>;
   };
 
@@ -265,6 +274,10 @@ export default function NewCheckout(props) {
 
     if (combo1OfferReduceTotal) {
       allSub = allSub - Number(combo1OfferReduceTotal.reducingCost);
+    }
+
+    if (combo2OfferReduceTotal) {
+      allSub = allSub - Number(combo2OfferReduceTotal.reducingCost);
     }
 
     const all = (allSub * (tax.taxPercentage / 100)).toFixed(2);
@@ -303,6 +316,10 @@ export default function NewCheckout(props) {
 
     if (combo1OfferReduceTotal) {
       allSub = allSub - Number(combo1OfferReduceTotal.reducingCost);
+    }
+
+    if (combo2OfferReduceTotal) {
+      allSub = allSub - Number(combo2OfferReduceTotal.reducingCost);
     }
 
     let allTax = 0;
@@ -348,6 +365,10 @@ export default function NewCheckout(props) {
 
     if (combo1OfferReduceTotal) {
       allSub = allSub - Number(combo1OfferReduceTotal.reducingCost);
+    }
+
+    if (combo2OfferReduceTotal) {
+      allSub = allSub - Number(combo2OfferReduceTotal.reducingCost);
     }
 
     let deliveryCharge = 0;
@@ -415,6 +436,10 @@ export default function NewCheckout(props) {
 
       if (combo1OfferReduceTotal) {
         total = total - Number(combo1OfferReduceTotal.reducingCost);
+      }
+
+      if (combo2OfferReduceTotal) {
+        total = total - Number(combo2OfferReduceTotal.reducingCost);
       }
 
       let orderDetails = [];
@@ -576,6 +601,11 @@ export default function NewCheckout(props) {
 
     if (couponCode === "COMBO1") {
       specialOfferCheckCOMBO1();
+      return;
+    }
+
+    if (couponCode === "COMBO2") {
+      specialOfferCheckCOMBO2();
       return;
     }
 
@@ -880,7 +910,7 @@ export default function NewCheckout(props) {
             pizzaKey,
             noodlesKey,
             manchuriKey,
-            newTotal: 69,
+            newTotal: 499,
             drinkObj,
             pizzaObj,
             noodlesObj,
@@ -904,6 +934,120 @@ export default function NewCheckout(props) {
       } else {
         setcombo1OfferReduceTotal(null);
         toast.error("COMBO1 is not applicable for this cart!");
+      }
+    }
+  };
+
+  const specialOfferCheckCOMBO2 = () => {
+    if (couponCode === "COMBO2") {
+      if (Object.keys(cart?.cartItems).length === 5) {
+        let drinkCount = 0;
+        let drinkKey = [];
+        let drinkObj = [];
+        let drinkTotalCost = 0;
+
+        let pizzaCount = 0;
+        let pizzaKey = null;
+        let pizzaObj = null;
+
+        let pastaCount = 0;
+        let pastaKey = null;
+        let pastaObj = null;
+
+        let garBreadCount = 0;
+        let garBreadKey = null;
+        let garBreadObj = null;
+
+        let lavaCakeCount = 0;
+        let lavaCakeKey = null;
+        let lavaCakeObj = null;
+
+        for (let i = 0; i < Object.keys(cart?.cartItems).length; i++) {
+          if (
+            Object.values(cart?.cartItems)[i].section === "Shakes & Drinks" &&
+            (Object.values(cart?.cartItems)[i].productId === "P113" ||
+              Object.values(cart?.cartItems)[i].productId === "P114")
+          ) {
+            drinkKey.push(Object.keys(cart?.cartItems)[i]);
+            drinkObj.push(Object.values(cart?.cartItems)[i]);
+            drinkCount = drinkCount + Object.values(cart?.cartItems)[i].qty;
+            drinkTotalCost =
+              drinkTotalCost +
+              Number(Object.values(cart?.cartItems)[i].qty) *
+                Number(Object.values(cart?.cartItems)[i].price);
+          }
+          if (
+            Object.values(cart?.cartItems)[i].section === "Pizza" &&
+            Object.values(cart?.cartItems)[i].productSize === "Medium"
+          ) {
+            pizzaKey = Object.keys(cart?.cartItems)[i];
+            pizzaObj = Object.values(cart?.cartItems)[i];
+            pizzaCount = pizzaCount + Object.values(cart?.cartItems)[i].qty;
+          }
+          if (Object.values(cart?.cartItems)[i].section === "Pasta") {
+            pastaKey = Object.keys(cart?.cartItems)[i];
+            pastaObj = Object.values(cart?.cartItems)[i];
+            pastaCount = pastaCount + Object.values(cart?.cartItems)[i].qty;
+          }
+          if (
+            Object.values(cart?.cartItems)[i].section === "Sides" &&
+            Object.values(cart?.cartItems)[i].productId === "P028"
+          ) {
+            garBreadKey = Object.keys(cart?.cartItems)[i];
+            garBreadObj = Object.values(cart?.cartItems)[i];
+            garBreadCount =
+              garBreadCount + Object.values(cart?.cartItems)[i].qty;
+          }
+          if (
+            Object.values(cart?.cartItems)[i].section === "Desserts" &&
+            Object.values(cart?.cartItems)[i].productId === "P104"
+          ) {
+            lavaCakeKey = Object.keys(cart?.cartItems)[i];
+            lavaCakeObj = Object.values(cart?.cartItems)[i];
+            lavaCakeCount =
+              lavaCakeCount + Object.values(cart?.cartItems)[i].qty;
+          }
+        }
+
+        if (
+          drinkCount === 2 &&
+          pizzaCount === 1 &&
+          lavaCakeCount === 1 &&
+          garBreadCount === 1 &&
+          pastaCount === 1
+        ) {
+          setcombo2OfferReduceTotal({
+            drinkKey,
+            pizzaKey,
+            pastaKey,
+            garBreadKey,
+            lavaCakeKey,
+            newTotal: 499,
+            drinkObj,
+            pizzaObj,
+            pastaObj,
+            garBreadObj,
+            lavaCakeObj,
+            reducingCost:
+              Number(drinkTotalCost) +
+              Number(
+                pizzaObj.price +
+                  pizzaObj.extraSubTotalWithQty +
+                  pizzaObj.choiceIng.choiceTotal
+              ) +
+              Number(pastaObj.price) +
+              Number(lavaCakeObj.price) +
+              Number(garBreadObj.price) -
+              499,
+          });
+          toast.success("Hurray!! COMBO2 Offer has been applied");
+        } else {
+          toast.error("COMBO2 is not applicable for this cart!");
+          setcombo2OfferReduceTotal(null);
+        }
+      } else {
+        setcombo2OfferReduceTotal(null);
+        toast.error("COMBO2 is not applicable for this cart!");
       }
     }
   };
@@ -1358,6 +1502,7 @@ export default function NewCheckout(props) {
                         specialOfferCheckFRIES69
                       }
                       onChangeSpecialOfferCheckCOMBO1={specialOfferCheckCOMBO1}
+                      onChangeSpecialOfferCheckCOMBO2={specialOfferCheckCOMBO2}
                       drinkReduceKey={drinkReduceKey}
                     ></CartCard>
                     {Object.keys(cart.cartItems).length > 0 ? (
