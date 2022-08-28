@@ -970,7 +970,7 @@ export default function NewCheckout(props) {
 
   const specialOfferCheckCOMBO2 = () => {
     if (couponCode === "COMBO2") {
-      if (Object.keys(cart?.cartItems).length === 5) {
+      if (Object.keys(cart?.cartItems).length === 6) {
         let drinkCount = 0;
         let drinkKey = [];
         let drinkObj = [];
@@ -1008,13 +1008,18 @@ export default function NewCheckout(props) {
           }
           if (
             Object.values(cart?.cartItems)[i].section === "Pizza" &&
-            Object.values(cart?.cartItems)[i].productSize === "Medium"
+            Object.values(cart?.cartItems)[i].productSize === "Medium" &&
+            Object.values(cart?.cartItems)[i].dish === "Simply Veg 1"
           ) {
             pizzaKey = Object.keys(cart?.cartItems)[i];
             pizzaObj = Object.values(cart?.cartItems)[i];
             pizzaCount = pizzaCount + Object.values(cart?.cartItems)[i].qty;
           }
-          if (Object.values(cart?.cartItems)[i].section === "Pasta") {
+          if (
+            Object.values(cart?.cartItems)[i].section === "Pasta" &&
+            (Object.values(cart?.cartItems)[i].productId === "P018" ||
+              Object.values(cart?.cartItems)[i].productId === "P019")
+          ) {
             pastaKey = Object.keys(cart?.cartItems)[i];
             pastaObj = Object.values(cart?.cartItems)[i];
             pastaCount = pastaCount + Object.values(cart?.cartItems)[i].qty;
