@@ -190,7 +190,11 @@ export default function NewCheckout(props) {
     }
 
     if (drinkReduceKey) {
-      all = all - Number(drinkReduceKey.reducingCost);
+      all =
+        all -
+        Number(
+          drinkReduceKey.drinkObj.price * drinkReduceKey.reducingDrinkaQty
+        );
     }
 
     if (friesOfferReduceTotal) {
@@ -791,7 +795,7 @@ export default function NewCheckout(props) {
 
   const specialOfferCheckDRINK29 = () => {
     if (couponCode === "DRINK29") {
-      if (Object.keys(cart?.cartItems).length === 2) {
+      if (Object.keys(cart?.cartItems).length >= 2) {
         let drinkCount = 0;
         let drinkKey = null;
         let drinkObj = null;
@@ -808,10 +812,12 @@ export default function NewCheckout(props) {
           }
         }
 
-        if (drinkCount === 1) {
+        if (drinkCount >= 1) {
           setdrinkReduceKey({
             key: drinkKey,
             price: 29,
+            reducingDrinkaQty: 1,
+            drinkObj,
             reducingCost: Number(drinkObj.price) - 29,
           });
           toast.success("Hurray!! DRINK29 Offer has been applied");
@@ -1650,6 +1656,34 @@ export default function NewCheckout(props) {
                                 }}
                               >
                                 ₹ {pasta69OfferReduceTotal.newPrice}.00
+                              </Typography>
+                            </div>
+                          </Row>
+                        ) : null}
+
+                        {drinkReduceKey ? (
+                          <Row className="pl-2">
+                            <div className="w75">
+                              <Typography
+                                sx={{
+                                  fontSize: "0.9rem",
+                                  fontWeight: "600",
+                                  fontFamily: "Arial",
+                                  color: "#595959",
+                                }}
+                              >
+                                DRINK29 Offer
+                              </Typography>
+                            </div>
+                            <div className="w25">
+                              <Typography
+                                sx={{
+                                  fontSize: "0.9rem",
+                                  fontWeight: "600",
+                                  color: "#2e7d32",
+                                }}
+                              >
+                                ₹ {drinkReduceKey.price}.00
                               </Typography>
                             </div>
                           </Row>

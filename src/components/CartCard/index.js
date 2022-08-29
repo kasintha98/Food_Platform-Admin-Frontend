@@ -150,7 +150,16 @@ export default function CartCard(props) {
     } else if (props.drinkReduceKey && props.drinkReduceKey.key === key) {
       return (
         <>
-          {cart?.cartItems[key].qty * props.drinkReduceKey.price +
+          {/* {cart?.cartItems[key].qty * props.drinkReduceKey.price +
+            (cart?.cartItems[key].extraSubTotalWithQty
+              ? cart?.cartItems[key].extraSubTotalWithQty
+              : 0) +
+            (Object.keys(cart?.cartItems[key]?.choiceIng).length > 0
+              ? cart?.cartItems[key]?.choiceIng.choiceTotal
+              : 0)} */}
+          {(Number(cart?.cartItems[key].qty) -
+            Number(props.drinkReduceKey.reducingDrinkaQty)) *
+            cart?.cartItems[key].price +
             (cart?.cartItems[key].extraSubTotalWithQty
               ? cart?.cartItems[key].extraSubTotalWithQty
               : 0) +
