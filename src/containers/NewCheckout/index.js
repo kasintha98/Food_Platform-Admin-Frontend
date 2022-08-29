@@ -206,7 +206,12 @@ export default function NewCheckout(props) {
     }
 
     if (pasta69OfferReduceTotal) {
-      all = all - Number(pasta69OfferReduceTotal.reducingCost);
+      all =
+        all -
+        Number(
+          pasta69OfferReduceTotal.pastaObj.price *
+            pasta69OfferReduceTotal.reducingPastaQty
+        );
     }
 
     return <span>₹ {all.toFixed(2)}</span>;
@@ -1089,7 +1094,7 @@ export default function NewCheckout(props) {
 
   const specialOfferCheckPASTA69 = () => {
     if (couponCode === "PASTA69") {
-      if (Object.keys(cart?.cartItems).length === 2) {
+      if (Object.keys(cart?.cartItems).length >= 2) {
         let pizzaCount = 0;
         let pizzaKey = null;
         let pizzaObj = null;
@@ -1115,13 +1120,14 @@ export default function NewCheckout(props) {
           }
         }
 
-        if (pizzaCount === 1 && pastaCount === 1) {
+        if (pizzaCount >= 1 && pastaCount >= 1) {
           setPASTA69OfferReduceTotal({
             pizzaKey,
             pastaKey,
             pizzaObj,
             pastaObj,
             newPrice: 69,
+            reducingPastaQty: 1,
             reducingCost: Number(pastaObj.price) - 69,
           });
           toast.success("Hurray!! PASTA69 Offer has been applied");
@@ -1620,6 +1626,34 @@ export default function NewCheckout(props) {
                             </Typography>
                           </div>
                         </Row>
+
+                        {pasta69OfferReduceTotal ? (
+                          <Row className="pl-2">
+                            <div className="w75">
+                              <Typography
+                                sx={{
+                                  fontSize: "0.9rem",
+                                  fontWeight: "600",
+                                  fontFamily: "Arial",
+                                  color: "#595959",
+                                }}
+                              >
+                                PASTA69 Offer
+                              </Typography>
+                            </div>
+                            <div className="w25">
+                              <Typography
+                                sx={{
+                                  fontSize: "0.9rem",
+                                  fontWeight: "600",
+                                  color: "#2e7d32",
+                                }}
+                              >
+                                ₹ {pasta69OfferReduceTotal.newPrice}.00
+                              </Typography>
+                            </div>
+                          </Row>
+                        ) : null}
 
                         {couponReduxObj && couponReduxObj.couponDetails ? (
                           <Row className="pl-2">

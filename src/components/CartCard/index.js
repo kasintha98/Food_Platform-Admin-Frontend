@@ -123,6 +123,78 @@ export default function CartCard(props) {
     props.onChangeChoiceTotal(total);
   };
 
+  const renderAllTotal = (key) => {
+    if (props.bOGOLowestPizzaKey?.some((el) => el.key === key)) {
+      return (
+        <>
+          {props.bOGOLowestPizzaKey.find((x) => x.key === key).qty *
+            props.bOGOLowestPizzaKey.find((x) => x.key === key).price +
+            (props.bOGOLowestPizzaKey.find((x) => x.key === key)
+              .extraSubTotalWithQty
+              ? props.bOGOLowestPizzaKey.find((x) => x.key === key)
+                  .extraSubTotalWithQty
+              : 0) +
+            (Object.keys(
+              props.bOGOLowestPizzaKey.find((x) => x.key === key)?.choiceIng
+            ).length > 0
+              ? Number(
+                  props.bOGOLowestPizzaKey.find((x) => x.key === key)?.choiceIng
+                    .choiceTotal
+                    ? props.bOGOLowestPizzaKey.find((x) => x.key === key)
+                        ?.choiceIng.choiceTotal
+                    : 0
+                )
+              : 0)}
+        </>
+      );
+    } else if (props.drinkReduceKey && props.drinkReduceKey.key === key) {
+      return (
+        <>
+          {cart?.cartItems[key].qty * props.drinkReduceKey.price +
+            (cart?.cartItems[key].extraSubTotalWithQty
+              ? cart?.cartItems[key].extraSubTotalWithQty
+              : 0) +
+            (Object.keys(cart?.cartItems[key]?.choiceIng).length > 0
+              ? cart?.cartItems[key]?.choiceIng.choiceTotal
+              : 0)}
+        </>
+      );
+    } else if (props.pastaReduceKey && props.pastaReduceKey.pastaKey === key) {
+      return (
+        <>
+          {/* {cart?.cartItems[key].qty * props.pastaReduceKey.newPrice +
+            (cart?.cartItems[key].extraSubTotalWithQty
+              ? cart?.cartItems[key].extraSubTotalWithQty
+              : 0) +
+            (Object.keys(cart?.cartItems[key]?.choiceIng).length > 0
+              ? cart?.cartItems[key]?.choiceIng.choiceTotal
+              : 0)} */}
+          {(Number(cart?.cartItems[key].qty) -
+            Number(props.pastaReduceKey.reducingPastaQty)) *
+            cart?.cartItems[key].price +
+            (cart?.cartItems[key].extraSubTotalWithQty
+              ? cart?.cartItems[key].extraSubTotalWithQty
+              : 0) +
+            (Object.keys(cart?.cartItems[key]?.choiceIng).length > 0
+              ? cart?.cartItems[key]?.choiceIng.choiceTotal
+              : 0)}
+        </>
+      );
+    } else {
+      return (
+        <>
+          {cart?.cartItems[key].qty * cart?.cartItems[key].price +
+            (cart?.cartItems[key].extraSubTotalWithQty
+              ? cart?.cartItems[key].extraSubTotalWithQty
+              : 0) +
+            (Object.keys(cart?.cartItems[key]?.choiceIng).length > 0
+              ? cart?.cartItems[key]?.choiceIng.choiceTotal
+              : 0)}
+        </>
+      );
+    }
+  };
+
   return (
     <div ref={ref}>
       {Object.keys(cart?.cartItems).length > 0 ? (
@@ -210,63 +282,7 @@ export default function CartCard(props) {
                               color: "#2e7d32",
                             }}
                           >
-                            ₹{" "}
-                            {props.bOGOLowestPizzaKey?.some(
-                              (el) => el.key === key
-                            ) ? (
-                              <>
-                                {props.bOGOLowestPizzaKey.find(
-                                  (x) => x.key === key
-                                ).qty *
-                                  (props.drinkReduceKey &&
-                                  props.drinkReduceKey.key === key
-                                    ? props.drinkReduceKey.price
-                                    : props.bOGOLowestPizzaKey.find(
-                                        (x) => x.key === key
-                                      ).price) +
-                                  (props.bOGOLowestPizzaKey.find(
-                                    (x) => x.key === key
-                                  ).extraSubTotalWithQty
-                                    ? props.bOGOLowestPizzaKey.find(
-                                        (x) => x.key === key
-                                      ).extraSubTotalWithQty
-                                    : 0) +
-                                  (Object.keys(
-                                    props.bOGOLowestPizzaKey.find(
-                                      (x) => x.key === key
-                                    )?.choiceIng
-                                  ).length > 0
-                                    ? Number(
-                                        props.bOGOLowestPizzaKey.find(
-                                          (x) => x.key === key
-                                        )?.choiceIng.choiceTotal
-                                          ? props.bOGOLowestPizzaKey.find(
-                                              (x) => x.key === key
-                                            )?.choiceIng.choiceTotal
-                                          : 0
-                                      )
-                                    : 0)}
-                              </>
-                            ) : (
-                              <>
-                                {cart?.cartItems[key].qty *
-                                  (props.drinkReduceKey &&
-                                  props.drinkReduceKey.key === key
-                                    ? props.drinkReduceKey.price
-                                    : props.pastaReduceKey &&
-                                      props.pastaReduceKey.pastaKey === key
-                                    ? props.pastaReduceKey.newPrice
-                                    : cart?.cartItems[key].price) +
-                                  (cart?.cartItems[key].extraSubTotalWithQty
-                                    ? cart?.cartItems[key].extraSubTotalWithQty
-                                    : 0) +
-                                  (Object.keys(cart?.cartItems[key]?.choiceIng)
-                                    .length > 0
-                                    ? cart?.cartItems[key]?.choiceIng
-                                        .choiceTotal
-                                    : 0)}
-                              </>
-                            )}
+                            ₹ {renderAllTotal(key)}
                             .00
                           </p>
                         </div>
