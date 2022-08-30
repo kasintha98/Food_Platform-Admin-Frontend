@@ -202,11 +202,17 @@ export default function NewCheckout(props) {
     }
 
     if (combo1OfferReduceTotal) {
-      all = all - Number(combo1OfferReduceTotal.reducingCost);
+      all =
+        all -
+        Number(combo1OfferReduceTotal.reducingCost) -
+        Number(combo1OfferReduceTotal.price);
     }
 
     if (combo2OfferReduceTotal) {
-      all = all - Number(combo2OfferReduceTotal.reducingCost);
+      all =
+        all -
+        Number(combo2OfferReduceTotal.reducingCost) -
+        Number(combo2OfferReduceTotal.price);
     }
 
     if (pasta69OfferReduceTotal) {
@@ -883,7 +889,7 @@ export default function NewCheckout(props) {
 
   const specialOfferCheckCOMBO1 = () => {
     if (couponCode === "COMBO1") {
-      if (Object.keys(cart?.cartItems).length === 5) {
+      if (Object.keys(cart?.cartItems).length >= 4) {
         let drinkCount = 0;
         let drinkKey = [];
         let drinkObj = [];
@@ -901,30 +907,50 @@ export default function NewCheckout(props) {
         let manchuriKey = null;
         let manchuriObj = null;
 
+        let maxDrinkReduceCount = 2;
+
         for (let i = 0; i < Object.keys(cart?.cartItems).length; i++) {
           if (
             Object.values(cart?.cartItems)[i].section === "Shakes & Drinks" &&
+            maxDrinkReduceCount > 0 &&
             (Object.values(cart?.cartItems)[i].productId === "P113" ||
               Object.values(cart?.cartItems)[i].productId === "P114")
           ) {
+            let reduceQty = Object.values(cart?.cartItems)[i].qty >= 2 ? 2 : 1;
             drinkKey.push(Object.keys(cart?.cartItems)[i]);
-            drinkObj.push(Object.values(cart?.cartItems)[i]);
+            drinkObj.push({
+              ...Object.values(cart?.cartItems)[i],
+              reducingDrinkQty: reduceQty,
+            });
             drinkCount = drinkCount + Object.values(cart?.cartItems)[i].qty;
             drinkTotalCost =
               drinkTotalCost +
               Number(Object.values(cart?.cartItems)[i].qty) *
                 Number(Object.values(cart?.cartItems)[i].price);
+            maxDrinkReduceCount = maxDrinkReduceCount - reduceQty;
           }
           if (
             Object.values(cart?.cartItems)[i].section === "Pizza" &&
-            Object.values(cart?.cartItems)[i].productSize === "Medium" &&
-            Object.values(cart?.cartItems)[i].dish === "Simply Veg 1"
+            (Object.values(cart?.cartItems)[i].productId === "P046" ||
+              Object.values(cart?.cartItems)[i].productId === "P049" ||
+              Object.values(cart?.cartItems)[i].productId === "P053")
           ) {
             pizzaKey = Object.keys(cart?.cartItems)[i];
             pizzaObj = Object.values(cart?.cartItems)[i];
             pizzaCount = pizzaCount + Object.values(cart?.cartItems)[i].qty;
           }
-          if (Object.values(cart?.cartItems)[i].dish === "Noodles") {
+          if (
+            Object.values(cart?.cartItems)[i].dish === "Noodles" &&
+            (Object.values(cart?.cartItems)[i].productId === "P152" ||
+              Object.values(cart?.cartItems)[i].productId === "P153" ||
+              Object.values(cart?.cartItems)[i].productId === "P154" ||
+              Object.values(cart?.cartItems)[i].productId === "P155" ||
+              Object.values(cart?.cartItems)[i].productId === "P156" ||
+              Object.values(cart?.cartItems)[i].productId === "P157" ||
+              Object.values(cart?.cartItems)[i].productId === "P158" ||
+              Object.values(cart?.cartItems)[i].productId === "P159" ||
+              Object.values(cart?.cartItems)[i].productId === "P160")
+          ) {
             noodlesKey = Object.keys(cart?.cartItems)[i];
             noodlesObj = Object.values(cart?.cartItems)[i];
             noodlesCount = noodlesCount + Object.values(cart?.cartItems)[i].qty;
@@ -941,10 +967,10 @@ export default function NewCheckout(props) {
         }
 
         if (
-          drinkCount === 2 &&
-          pizzaCount === 1 &&
-          noodlesCount === 1 &&
-          manchuriCount === 1
+          drinkCount >= 2 &&
+          pizzaCount >= 1 &&
+          noodlesCount >= 1 &&
+          manchuriCount >= 1
         ) {
           setcombo1OfferReduceTotal({
             drinkKey,
@@ -952,17 +978,17 @@ export default function NewCheckout(props) {
             noodlesKey,
             manchuriKey,
             newTotal: 499,
+            price: 499,
             drinkObj,
             pizzaObj,
+            reducingPizzaQty: 1,
+            reducingNoodlesQty: 1,
+            reducingManchuriQty: 1,
             noodlesObj,
             manchuriObj,
             reducingCost:
               Number(drinkTotalCost) +
-              Number(
-                pizzaObj.price +
-                  pizzaObj.extraSubTotalWithQty +
-                  pizzaObj.choiceIng.choiceTotal
-              ) +
+              Number(pizzaObj.price) +
               Number(noodlesObj.price) +
               Number(manchuriObj.price) -
               499,
@@ -981,7 +1007,7 @@ export default function NewCheckout(props) {
 
   const specialOfferCheckCOMBO2 = () => {
     if (couponCode === "COMBO2") {
-      if (Object.keys(cart?.cartItems).length === 6) {
+      if (Object.keys(cart?.cartItems).length >= 6) {
         let drinkCount = 0;
         let drinkKey = [];
         let drinkObj = [];
@@ -1003,24 +1029,33 @@ export default function NewCheckout(props) {
         let lavaCakeKey = null;
         let lavaCakeObj = null;
 
+        let maxDrinkReduceCount = 2;
+
         for (let i = 0; i < Object.keys(cart?.cartItems).length; i++) {
           if (
             Object.values(cart?.cartItems)[i].section === "Shakes & Drinks" &&
+            maxDrinkReduceCount > 0 &&
             (Object.values(cart?.cartItems)[i].productId === "P113" ||
               Object.values(cart?.cartItems)[i].productId === "P114")
           ) {
+            let reduceQty = Object.values(cart?.cartItems)[i].qty >= 2 ? 2 : 1;
             drinkKey.push(Object.keys(cart?.cartItems)[i]);
-            drinkObj.push(Object.values(cart?.cartItems)[i]);
+            drinkObj.push({
+              ...Object.values(cart?.cartItems)[i],
+              reducingDrinkQty: reduceQty,
+            });
             drinkCount = drinkCount + Object.values(cart?.cartItems)[i].qty;
             drinkTotalCost =
               drinkTotalCost +
               Number(Object.values(cart?.cartItems)[i].qty) *
                 Number(Object.values(cart?.cartItems)[i].price);
+            maxDrinkReduceCount = maxDrinkReduceCount - reduceQty;
           }
           if (
             Object.values(cart?.cartItems)[i].section === "Pizza" &&
-            Object.values(cart?.cartItems)[i].productSize === "Medium" &&
-            Object.values(cart?.cartItems)[i].dish === "Simply Veg 1"
+            (Object.values(cart?.cartItems)[i].productId === "P046" ||
+              Object.values(cart?.cartItems)[i].productId === "P049" ||
+              Object.values(cart?.cartItems)[i].productId === "P053")
           ) {
             pizzaKey = Object.keys(cart?.cartItems)[i];
             pizzaObj = Object.values(cart?.cartItems)[i];
@@ -1056,11 +1091,11 @@ export default function NewCheckout(props) {
         }
 
         if (
-          drinkCount === 2 &&
-          pizzaCount === 1 &&
-          lavaCakeCount === 1 &&
-          garBreadCount === 1 &&
-          pastaCount === 1
+          drinkCount >= 2 &&
+          pizzaCount >= 1 &&
+          lavaCakeCount >= 1 &&
+          garBreadCount >= 1 &&
+          pastaCount >= 1
         ) {
           setcombo2OfferReduceTotal({
             drinkKey,
@@ -1069,6 +1104,11 @@ export default function NewCheckout(props) {
             garBreadKey,
             lavaCakeKey,
             newTotal: 499,
+            price: 499,
+            reducingPizzaQty: 1,
+            reducingPastaQty: 1,
+            reducingBreadQty: 1,
+            reducingLavaQty: 1,
             drinkObj,
             pizzaObj,
             pastaObj,
@@ -1076,11 +1116,7 @@ export default function NewCheckout(props) {
             lavaCakeObj,
             reducingCost:
               Number(drinkTotalCost) +
-              Number(
-                pizzaObj.price +
-                  pizzaObj.extraSubTotalWithQty +
-                  pizzaObj.choiceIng.choiceTotal
-              ) +
+              Number(pizzaObj.price) +
               Number(pastaObj.price) +
               Number(lavaCakeObj.price) +
               Number(garBreadObj.price) -
@@ -1604,6 +1640,8 @@ export default function NewCheckout(props) {
                       }
                       drinkReduceKey={drinkReduceKey}
                       pastaReduceKey={pasta69OfferReduceTotal}
+                      combo1OfferReduceTotal={combo1OfferReduceTotal}
+                      combo2OfferReduceTotal={combo2OfferReduceTotal}
                     ></CartCard>
                     {Object.keys(cart.cartItems).length > 0 ? (
                       <Typography>
@@ -1684,6 +1722,62 @@ export default function NewCheckout(props) {
                                 }}
                               >
                                 ₹ {drinkReduceKey.price}.00
+                              </Typography>
+                            </div>
+                          </Row>
+                        ) : null}
+
+                        {combo1OfferReduceTotal ? (
+                          <Row className="pl-2">
+                            <div className="w75">
+                              <Typography
+                                sx={{
+                                  fontSize: "0.9rem",
+                                  fontWeight: "600",
+                                  fontFamily: "Arial",
+                                  color: "#595959",
+                                }}
+                              >
+                                COMBO1 Offer
+                              </Typography>
+                            </div>
+                            <div className="w25">
+                              <Typography
+                                sx={{
+                                  fontSize: "0.9rem",
+                                  fontWeight: "600",
+                                  color: "#2e7d32",
+                                }}
+                              >
+                                ₹ {combo1OfferReduceTotal.price}.00
+                              </Typography>
+                            </div>
+                          </Row>
+                        ) : null}
+
+                        {combo2OfferReduceTotal ? (
+                          <Row className="pl-2">
+                            <div className="w75">
+                              <Typography
+                                sx={{
+                                  fontSize: "0.9rem",
+                                  fontWeight: "600",
+                                  fontFamily: "Arial",
+                                  color: "#595959",
+                                }}
+                              >
+                                COMBO2 Offer
+                              </Typography>
+                            </div>
+                            <div className="w25">
+                              <Typography
+                                sx={{
+                                  fontSize: "0.9rem",
+                                  fontWeight: "600",
+                                  color: "#2e7d32",
+                                }}
+                              >
+                                ₹ {combo2OfferReduceTotal.price}.00
                               </Typography>
                             </div>
                           </Row>

@@ -189,6 +189,170 @@ export default function CartCard(props) {
               : 0)}
         </>
       );
+    } else if (props.combo1OfferReduceTotal) {
+      if (props.combo1OfferReduceTotal.pizzaKey === key) {
+        return (
+          <>
+            {(Number(cart?.cartItems[key].qty) -
+              Number(props.combo1OfferReduceTotal.reducingPizzaQty)) *
+              cart?.cartItems[key].price +
+              (cart?.cartItems[key].extraSubTotalWithQty
+                ? cart?.cartItems[key].extraSubTotalWithQty
+                : 0) +
+              (Object.keys(cart?.cartItems[key]?.choiceIng).length > 0
+                ? cart?.cartItems[key]?.choiceIng.choiceTotal
+                : 0)}
+          </>
+        );
+      } else if (props.combo1OfferReduceTotal.noodlesKey === key) {
+        return (
+          <>
+            {(Number(cart?.cartItems[key].qty) -
+              Number(props.combo1OfferReduceTotal.reducingNoodlesQty)) *
+              cart?.cartItems[key].price +
+              (cart?.cartItems[key].extraSubTotalWithQty
+                ? cart?.cartItems[key].extraSubTotalWithQty
+                : 0) +
+              (Object.keys(cart?.cartItems[key]?.choiceIng).length > 0
+                ? cart?.cartItems[key]?.choiceIng.choiceTotal
+                : 0)}
+          </>
+        );
+      } else if (props.combo1OfferReduceTotal.manchuriKey === key) {
+        return (
+          <>
+            {(Number(cart?.cartItems[key].qty) -
+              Number(props.combo1OfferReduceTotal.reducingManchuriQty)) *
+              cart?.cartItems[key].price +
+              (cart?.cartItems[key].extraSubTotalWithQty
+                ? cart?.cartItems[key].extraSubTotalWithQty
+                : 0) +
+              (Object.keys(cart?.cartItems[key]?.choiceIng).length > 0
+                ? cart?.cartItems[key]?.choiceIng.choiceTotal
+                : 0)}
+          </>
+        );
+      } else if (
+        props.combo1OfferReduceTotal.drinkObj.some((el) => el.productId === key)
+      ) {
+        return (
+          <>
+            {(Number(cart?.cartItems[key].qty) -
+              Number(
+                props.combo1OfferReduceTotal.drinkObj.find((x) => x.key === key)
+                  .reducingDrinkQty
+              )) *
+              cart?.cartItems[key].price +
+              (cart?.cartItems[key].extraSubTotalWithQty
+                ? cart?.cartItems[key].extraSubTotalWithQty
+                : 0) +
+              (Object.keys(cart?.cartItems[key]?.choiceIng).length > 0
+                ? cart?.cartItems[key]?.choiceIng.choiceTotal
+                : 0)}
+          </>
+        );
+      } else {
+        return (
+          <>
+            {cart?.cartItems[key].qty * cart?.cartItems[key].price +
+              (cart?.cartItems[key].extraSubTotalWithQty
+                ? cart?.cartItems[key].extraSubTotalWithQty
+                : 0) +
+              (Object.keys(cart?.cartItems[key]?.choiceIng).length > 0
+                ? cart?.cartItems[key]?.choiceIng.choiceTotal
+                : 0)}
+          </>
+        );
+      }
+    } else if (props.combo2OfferReduceTotal) {
+      if (props.combo2OfferReduceTotal.pizzaKey === key) {
+        return (
+          <>
+            {(Number(cart?.cartItems[key].qty) -
+              Number(props.combo2OfferReduceTotal.reducingPizzaQty)) *
+              cart?.cartItems[key].price +
+              (cart?.cartItems[key].extraSubTotalWithQty
+                ? cart?.cartItems[key].extraSubTotalWithQty
+                : 0) +
+              (Object.keys(cart?.cartItems[key]?.choiceIng).length > 0
+                ? cart?.cartItems[key]?.choiceIng.choiceTotal
+                : 0)}
+          </>
+        );
+      } else if (props.combo2OfferReduceTotal.garBreadKey === key) {
+        return (
+          <>
+            {(Number(cart?.cartItems[key].qty) -
+              Number(props.combo2OfferReduceTotal.reducingBreadQty)) *
+              cart?.cartItems[key].price +
+              (cart?.cartItems[key].extraSubTotalWithQty
+                ? cart?.cartItems[key].extraSubTotalWithQty
+                : 0) +
+              (Object.keys(cart?.cartItems[key]?.choiceIng).length > 0
+                ? cart?.cartItems[key]?.choiceIng.choiceTotal
+                : 0)}
+          </>
+        );
+      } else if (props.combo2OfferReduceTotal.lavaCakeKey === key) {
+        return (
+          <>
+            {(Number(cart?.cartItems[key].qty) -
+              Number(props.combo2OfferReduceTotal.reducingLavaQty)) *
+              cart?.cartItems[key].price +
+              (cart?.cartItems[key].extraSubTotalWithQty
+                ? cart?.cartItems[key].extraSubTotalWithQty
+                : 0) +
+              (Object.keys(cart?.cartItems[key]?.choiceIng).length > 0
+                ? cart?.cartItems[key]?.choiceIng.choiceTotal
+                : 0)}
+          </>
+        );
+      } else if (props.combo2OfferReduceTotal.pastaKey === key) {
+        return (
+          <>
+            {(Number(cart?.cartItems[key].qty) -
+              Number(props.combo2OfferReduceTotal.reducingPastaQty)) *
+              cart?.cartItems[key].price +
+              (cart?.cartItems[key].extraSubTotalWithQty
+                ? cart?.cartItems[key].extraSubTotalWithQty
+                : 0) +
+              (Object.keys(cart?.cartItems[key]?.choiceIng).length > 0
+                ? cart?.cartItems[key]?.choiceIng.choiceTotal
+                : 0)}
+          </>
+        );
+      } else if (
+        props.combo2OfferReduceTotal.drinkObj.some((el) => el.productId === key)
+      ) {
+        return (
+          <>
+            {(Number(cart?.cartItems[key].qty) -
+              Number(
+                props.combo2OfferReduceTotal.drinkObj.find((x) => x.key === key)
+                  .reducingDrinkQty
+              )) *
+              cart?.cartItems[key].price +
+              (cart?.cartItems[key].extraSubTotalWithQty
+                ? cart?.cartItems[key].extraSubTotalWithQty
+                : 0) +
+              (Object.keys(cart?.cartItems[key]?.choiceIng).length > 0
+                ? cart?.cartItems[key]?.choiceIng.choiceTotal
+                : 0)}
+          </>
+        );
+      } else {
+        return (
+          <>
+            {cart?.cartItems[key].qty * cart?.cartItems[key].price +
+              (cart?.cartItems[key].extraSubTotalWithQty
+                ? cart?.cartItems[key].extraSubTotalWithQty
+                : 0) +
+              (Object.keys(cart?.cartItems[key]?.choiceIng).length > 0
+                ? cart?.cartItems[key]?.choiceIng.choiceTotal
+                : 0)}
+          </>
+        );
+      }
     } else {
       return (
         <>
@@ -201,6 +365,44 @@ export default function CartCard(props) {
               : 0)}
         </>
       );
+    }
+  };
+
+  const pizzaProductPriceRender = (key) => {
+    if (
+      props.bOGOLowestPizzaKey &&
+      props.bOGOLowestPizzaKey.some((el) => el.key === key)
+    ) {
+      return (
+        <>
+          {props.bOGOLowestPizzaKey.find((x) => x.key === key).price *
+            props.bOGOLowestPizzaKey.find((x) => x.key === key).qty}
+        </>
+      );
+    } else if (
+      props.combo1OfferReduceTotal &&
+      props.combo1OfferReduceTotal.pizzaKey === key
+    ) {
+      return (
+        <>
+          {cart?.cartItems[key].price *
+            (Number(cart?.cartItems[key].qty) -
+              Number(props.combo1OfferReduceTotal.reducingPizzaQty))}
+        </>
+      );
+    } else if (
+      props.combo2OfferReduceTotal &&
+      props.combo2OfferReduceTotal.pizzaKey === key
+    ) {
+      return (
+        <>
+          {cart?.cartItems[key].price *
+            (Number(cart?.cartItems[key].qty) -
+              Number(props.combo2OfferReduceTotal.reducingPizzaQty))}
+        </>
+      );
+    } else {
+      return <>{cart?.cartItems[key].price * cart?.cartItems[key].qty}</>;
     }
   };
 
@@ -338,24 +540,7 @@ export default function CartCard(props) {
                               }}
                             >
                               {"₹ "}
-                              {props.bOGOLowestPizzaKey?.some(
-                                (el) => el.key === key
-                              ) ? (
-                                <>
-                                  {" "}
-                                  {props.bOGOLowestPizzaKey.find(
-                                    (x) => x.key === key
-                                  ).price *
-                                    props.bOGOLowestPizzaKey.find(
-                                      (x) => x.key === key
-                                    ).qty}
-                                </>
-                              ) : (
-                                <>
-                                  {cart?.cartItems[key].price *
-                                    cart?.cartItems[key].qty}
-                                </>
-                              )}
+                              {pizzaProductPriceRender(key)}
                               .00
                             </span>
                           </div>
