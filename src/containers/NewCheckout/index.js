@@ -198,7 +198,10 @@ export default function NewCheckout(props) {
     }
 
     if (friesOfferReduceTotal) {
-      all = all - Number(friesOfferReduceTotal.reducingCost);
+      all =
+        all -
+        Number(friesOfferReduceTotal.reducingCost) -
+        Number(friesOfferReduceTotal.price);
     }
 
     if (combo1OfferReduceTotal) {
@@ -840,7 +843,7 @@ export default function NewCheckout(props) {
 
   const specialOfferCheckFRIES69 = () => {
     if (couponCode === "FRIES69") {
-      if (Object.keys(cart?.cartItems).length === 2) {
+      if (Object.keys(cart?.cartItems).length >= 2) {
         let drinkCount = 0;
         let drinkKey = null;
         let drinkObj = null;
@@ -859,18 +862,24 @@ export default function NewCheckout(props) {
             drinkObj = Object.values(cart?.cartItems)[i];
             drinkCount = drinkCount + Object.values(cart?.cartItems)[i].qty;
           }
-          if (Object.values(cart?.cartItems)[i].dish === "Fries") {
+          if (
+            Object.values(cart?.cartItems)[i].dish === "Fries" &&
+            Object.values(cart?.cartItems)[i].productId === "P011"
+          ) {
             friesKey = Object.keys(cart?.cartItems)[i];
             friesObj = Object.values(cart?.cartItems)[i];
             friesCount = drinkCount + Object.values(cart?.cartItems)[i].qty;
           }
         }
 
-        if (drinkCount === 1 && friesCount === 1) {
+        if (drinkCount >= 1 && friesCount >= 1) {
           setfriesOfferReduceTotal({
             drinkKey,
             friesKey,
             newTotal: 69,
+            price: 69,
+            reducingDrinkQty: 1,
+            reducingFriesQty: 1,
             drinkObj,
             friesObj,
             reducingCost: Number(drinkObj.price) + Number(friesObj.price) - 69,
@@ -1642,6 +1651,7 @@ export default function NewCheckout(props) {
                       pastaReduceKey={pasta69OfferReduceTotal}
                       combo1OfferReduceTotal={combo1OfferReduceTotal}
                       combo2OfferReduceTotal={combo2OfferReduceTotal}
+                      friesOfferReduceTotal={friesOfferReduceTotal}
                     ></CartCard>
                     {Object.keys(cart.cartItems).length > 0 ? (
                       <Typography>
@@ -1750,6 +1760,34 @@ export default function NewCheckout(props) {
                                 }}
                               >
                                 ₹ {combo1OfferReduceTotal.price}.00
+                              </Typography>
+                            </div>
+                          </Row>
+                        ) : null}
+
+                        {friesOfferReduceTotal ? (
+                          <Row className="pl-2">
+                            <div className="w75">
+                              <Typography
+                                sx={{
+                                  fontSize: "0.9rem",
+                                  fontWeight: "600",
+                                  fontFamily: "Arial",
+                                  color: "#595959",
+                                }}
+                              >
+                                FRIES69 Offer
+                              </Typography>
+                            </div>
+                            <div className="w25">
+                              <Typography
+                                sx={{
+                                  fontSize: "0.9rem",
+                                  fontWeight: "600",
+                                  color: "#2e7d32",
+                                }}
+                              >
+                                ₹ {friesOfferReduceTotal.price}.00
                               </Typography>
                             </div>
                           </Row>

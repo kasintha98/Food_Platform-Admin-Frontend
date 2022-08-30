@@ -353,6 +353,48 @@ export default function CartCard(props) {
           </>
         );
       }
+    } else if (props.friesOfferReduceTotal) {
+      if (props.friesOfferReduceTotal.drinkKey === key) {
+        return (
+          <>
+            {(Number(cart?.cartItems[key].qty) -
+              Number(props.friesOfferReduceTotal.reducingDrinkQty)) *
+              cart?.cartItems[key].price +
+              (cart?.cartItems[key].extraSubTotalWithQty
+                ? cart?.cartItems[key].extraSubTotalWithQty
+                : 0) +
+              (Object.keys(cart?.cartItems[key]?.choiceIng).length > 0
+                ? cart?.cartItems[key]?.choiceIng.choiceTotal
+                : 0)}
+          </>
+        );
+      } else if (props.friesOfferReduceTotal.friesKey === key) {
+        return (
+          <>
+            {(Number(cart?.cartItems[key].qty) -
+              Number(props.friesOfferReduceTotal.reducingFriesQty)) *
+              cart?.cartItems[key].price +
+              (cart?.cartItems[key].extraSubTotalWithQty
+                ? cart?.cartItems[key].extraSubTotalWithQty
+                : 0) +
+              (Object.keys(cart?.cartItems[key]?.choiceIng).length > 0
+                ? cart?.cartItems[key]?.choiceIng.choiceTotal
+                : 0)}
+          </>
+        );
+      } else {
+        return (
+          <>
+            {cart?.cartItems[key].qty * cart?.cartItems[key].price +
+              (cart?.cartItems[key].extraSubTotalWithQty
+                ? cart?.cartItems[key].extraSubTotalWithQty
+                : 0) +
+              (Object.keys(cart?.cartItems[key]?.choiceIng).length > 0
+                ? cart?.cartItems[key]?.choiceIng.choiceTotal
+                : 0)}
+          </>
+        );
+      }
     } else {
       return (
         <>
