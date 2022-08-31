@@ -72,11 +72,7 @@ export const InvoiceTable = (props) => {
         <>
           {(Number(item.quantity) -
             Number(props.pastaReduceKey.reducingPastaQty)) *
-            item.price +
-            (item.extraSubTotalWithQty ? item.extraSubTotalWithQty : 0) +
-            (Object.keys(item?.choiceIng).length > 0
-              ? item?.choiceIng.choiceTotal
-              : 0)}
+            item.price}
         </>
       );
     } else if (props.combo1OfferReduceTotal) {
@@ -271,6 +267,14 @@ export const InvoiceTable = (props) => {
             Number(props.drinkReduceKey.price)}
         </>
       );
+    } else if (props.pastaReduceKey) {
+      return (
+        <>
+          {Number(props.grandTot) +
+            Number(renderDiscount(true)) -
+            Number(props.pastaReduceKey.newPrice)}
+        </>
+      );
     } else {
       return <>{Number(props.grandTot) + Number(renderDiscount(true))}</>;
     }
@@ -393,7 +397,7 @@ export const InvoiceTable = (props) => {
                   colspan="1"
                   sx={{ fontStyle: "italic" }}
                 >
-                  Rs. {props.pastaReduceKey.price}.00
+                  Rs. {props.pastaReduceKey.newPrice}.00
                 </CusTableCell>
               </TableRow>
             ) : null}
