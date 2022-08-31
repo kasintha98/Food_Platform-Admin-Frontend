@@ -923,7 +923,7 @@ export default function NewCheckout(props) {
         let manchuriKey = null;
         let manchuriObj = null;
 
-        let maxDrinkReduceCount = 2;
+        let maxDrinkReduceCount = /* 2 */ 1;
 
         for (let i = 0; i < Object.keys(cart?.cartItems).length; i++) {
           if (
@@ -932,7 +932,7 @@ export default function NewCheckout(props) {
             (Object.values(cart?.cartItems)[i].productId === "P113" ||
               Object.values(cart?.cartItems)[i].productId === "P114")
           ) {
-            let reduceQty = Object.values(cart?.cartItems)[i].qty >= 2 ? 2 : 1;
+            let reduceQty = /* Object.values(cart?.cartItems)[i].qty >= 2 ? 2 : 1 */ 1;
             drinkKey.push(Object.keys(cart?.cartItems)[i]);
             drinkObj.push({
               ...Object.values(cart?.cartItems)[i],
@@ -983,7 +983,7 @@ export default function NewCheckout(props) {
         }
 
         if (
-          drinkCount >= 2 &&
+          drinkCount >= 1 &&
           pizzaCount >= 1 &&
           noodlesCount >= 1 &&
           manchuriCount >= 1
