@@ -76,7 +76,6 @@ export const InvoiceTable = (props) => {
         </>
       );
     } else if (props.combo1OfferReduceTotal) {
-      console.log(props.combo1OfferReduceTotal.pizzaObj);
       if (
         props.combo1OfferReduceTotal.pizzaObj.productId === key &&
         props.combo1OfferReduceTotal.pizzaObj.price === item.price
@@ -126,16 +125,15 @@ export const InvoiceTable = (props) => {
         );
       }
     } else if (props.combo2OfferReduceTotal) {
-      if (props.combo2OfferReduceTotal.pizzaKey === key) {
+      if (
+        props.combo2OfferReduceTotal.pizzaObj.productId === key &&
+        props.combo2OfferReduceTotal.pizzaObj.price === item.price
+      ) {
         return (
           <>
             {(Number(item.quantity) -
               Number(props.combo2OfferReduceTotal.reducingPizzaQty)) *
-              item.price +
-              (item.extraSubTotalWithQty ? item.extraSubTotalWithQty : 0) +
-              (Object.keys(item?.choiceIng).length > 0
-                ? item?.choiceIng.choiceTotal
-                : 0)}
+              item.price}
           </>
         );
       } else if (props.combo2OfferReduceTotal.garBreadKey === key) {
@@ -143,11 +141,7 @@ export const InvoiceTable = (props) => {
           <>
             {(Number(item.quantity) -
               Number(props.combo2OfferReduceTotal.reducingBreadQty)) *
-              item.price +
-              (item.extraSubTotalWithQty ? item.extraSubTotalWithQty : 0) +
-              (Object.keys(item?.choiceIng).length > 0
-                ? item?.choiceIng.choiceTotal
-                : 0)}
+              item.price}
           </>
         );
       } else if (props.combo2OfferReduceTotal.lavaCakeKey === key) {
@@ -155,11 +149,7 @@ export const InvoiceTable = (props) => {
           <>
             {(Number(item.quantity) -
               Number(props.combo2OfferReduceTotal.reducingLavaQty)) *
-              item.price +
-              (item.extraSubTotalWithQty ? item.extraSubTotalWithQty : 0) +
-              (Object.keys(item?.choiceIng).length > 0
-                ? item?.choiceIng.choiceTotal
-                : 0)}
+              item.price}
           </>
         );
       } else if (props.combo2OfferReduceTotal.pastaKey === key) {
@@ -167,11 +157,7 @@ export const InvoiceTable = (props) => {
           <>
             {(Number(item.quantity) -
               Number(props.combo2OfferReduceTotal.reducingPastaQty)) *
-              item.price +
-              (item.extraSubTotalWithQty ? item.extraSubTotalWithQty : 0) +
-              (Object.keys(item?.choiceIng).length > 0
-                ? item?.choiceIng.choiceTotal
-                : 0)}
+              item.price}
           </>
         );
       } else if (
@@ -184,23 +170,11 @@ export const InvoiceTable = (props) => {
                 props.combo2OfferReduceTotal.drinkObj.find((x) => x.key === key)
                   .reducingDrinkQty
               )) *
-              item.price +
-              (item.extraSubTotalWithQty ? item.extraSubTotalWithQty : 0) +
-              (Object.keys(item?.choiceIng).length > 0
-                ? item?.choiceIng.choiceTotal
-                : 0)}
+              item.price}
           </>
         );
       } else {
-        return (
-          <>
-            {item.quantity * item.price +
-              (item.extraSubTotalWithQty ? item.extraSubTotalWithQty : 0) +
-              (Object.keys(item?.choiceIng).length > 0
-                ? item?.choiceIng.choiceTotal
-                : 0)}
-          </>
-        );
+        return <>{item.quantity * item.price}</>;
       }
     } else if (props.friesOfferReduceTotal) {
       if (props.friesOfferReduceTotal.drinkKey === key) {
@@ -258,6 +232,14 @@ export const InvoiceTable = (props) => {
           {Number(props.grandTot) +
             Number(renderDiscount(true)) -
             Number(props.combo1OfferReduceTotal.price)}
+        </>
+      );
+    } else if (props.combo2OfferReduceTotal) {
+      return (
+        <>
+          {Number(props.grandTot) +
+            Number(renderDiscount(true)) -
+            Number(props.combo2OfferReduceTotal.price)}
         </>
       );
     } else {
@@ -383,6 +365,22 @@ export const InvoiceTable = (props) => {
                   sx={{ fontStyle: "italic" }}
                 >
                   Rs. {props.combo1OfferReduceTotal.price}.00
+                </CusTableCell>
+              </TableRow>
+            ) : null}
+
+            {props.combo2OfferReduceTotal ? (
+              <TableRow>
+                <CusTableCell component="th" scope="row" colspan="3">
+                  COMBO2 Offer
+                </CusTableCell>
+                <CusTableCell
+                  component="th"
+                  scope="row"
+                  colspan="1"
+                  sx={{ fontStyle: "italic" }}
+                >
+                  Rs. {props.combo2OfferReduceTotal.price}.00
                 </CusTableCell>
               </TableRow>
             ) : null}
