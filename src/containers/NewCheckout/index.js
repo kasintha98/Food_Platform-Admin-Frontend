@@ -1054,8 +1054,7 @@ export default function NewCheckout(props) {
             drinkCount = drinkCount + Object.values(cart?.cartItems)[i].qty;
             drinkTotalCost =
               drinkTotalCost +
-              Number(Object.values(cart?.cartItems)[i].qty) *
-                Number(Object.values(cart?.cartItems)[i].price);
+              reduceQty * Number(Object.values(cart?.cartItems)[i].price);
             maxDrinkReduceCount = maxDrinkReduceCount - reduceQty;
           }
           if (
