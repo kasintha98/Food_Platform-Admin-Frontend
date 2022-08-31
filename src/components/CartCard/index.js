@@ -70,8 +70,8 @@ export default function CartCard(props) {
     props.onChangeSpecialOfferCheckCOMBO2 &&
       props.onChangeSpecialOfferCheckCOMBO2();
 
-    props.onChangeSpecialOfferCheckPASTA69 &&
-      props.onChangeSpecialOfferCheckPASTA69();
+    props.onChangeSpecialOfferCheckPASTA59 &&
+      props.onChangeSpecialOfferCheckPASTA59();
   };
 
   const onQuantityDecrement = (productId) => {
@@ -93,8 +93,8 @@ export default function CartCard(props) {
     props.onChangeSpecialOfferCheckCOMBO2 &&
       props.onChangeSpecialOfferCheckCOMBO2();
 
-    props.onChangeSpecialOfferCheckPASTA69 &&
-      props.onChangeSpecialOfferCheckPASTA69();
+    props.onChangeSpecialOfferCheckPASTA59 &&
+      props.onChangeSpecialOfferCheckPASTA59();
   };
 
   const calculateSubTotal = () => {

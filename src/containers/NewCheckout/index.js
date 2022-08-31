@@ -144,7 +144,7 @@ export default function NewCheckout(props) {
   const [friesOfferReduceTotal, setfriesOfferReduceTotal] = useState(null);
   const [combo1OfferReduceTotal, setcombo1OfferReduceTotal] = useState(null);
   const [combo2OfferReduceTotal, setcombo2OfferReduceTotal] = useState(null);
-  const [pasta69OfferReduceTotal, setPASTA69OfferReduceTotal] = useState(null);
+  const [pasta59OfferReduceTotal, setPASTA59OfferReduceTotal] = useState(null);
 
   const dispatch = useDispatch();
   const ref = React.createRef();
@@ -218,12 +218,12 @@ export default function NewCheckout(props) {
         Number(combo2OfferReduceTotal.price);
     }
 
-    if (pasta69OfferReduceTotal) {
+    if (pasta59OfferReduceTotal) {
       all =
         all -
         Number(
-          pasta69OfferReduceTotal.pastaObj.price *
-            pasta69OfferReduceTotal.reducingPastaQty
+          pasta59OfferReduceTotal.pastaObj.price *
+            pasta59OfferReduceTotal.reducingPastaQty
         );
     }
 
@@ -265,8 +265,8 @@ export default function NewCheckout(props) {
       all = all - Number(combo2OfferReduceTotal.reducingCost);
     }
 
-    if (pasta69OfferReduceTotal) {
-      all = all - Number(pasta69OfferReduceTotal.reducingCost);
+    if (pasta59OfferReduceTotal) {
+      all = all - Number(pasta59OfferReduceTotal.reducingCost);
     }
 
     return <span>₹ {all.toFixed(2)}</span>;
@@ -307,8 +307,8 @@ export default function NewCheckout(props) {
       allSub = allSub - Number(combo2OfferReduceTotal.reducingCost);
     }
 
-    if (pasta69OfferReduceTotal) {
-      allSub = allSub - Number(pasta69OfferReduceTotal.reducingCost);
+    if (pasta59OfferReduceTotal) {
+      allSub = allSub - Number(pasta59OfferReduceTotal.reducingCost);
     }
 
     const all = (allSub * (tax.taxPercentage / 100)).toFixed(2);
@@ -353,8 +353,8 @@ export default function NewCheckout(props) {
       allSub = allSub - Number(combo2OfferReduceTotal.reducingCost);
     }
 
-    if (pasta69OfferReduceTotal) {
-      allSub = allSub - Number(pasta69OfferReduceTotal.reducingCost);
+    if (pasta59OfferReduceTotal) {
+      allSub = allSub - Number(pasta59OfferReduceTotal.reducingCost);
     }
 
     let allTax = 0;
@@ -406,8 +406,8 @@ export default function NewCheckout(props) {
       allSub = allSub - Number(combo2OfferReduceTotal.reducingCost);
     }
 
-    if (pasta69OfferReduceTotal) {
-      allSub = allSub - Number(pasta69OfferReduceTotal.reducingCost);
+    if (pasta59OfferReduceTotal) {
+      allSub = allSub - Number(pasta59OfferReduceTotal.reducingCost);
     }
 
     let deliveryCharge = 0;
@@ -481,8 +481,8 @@ export default function NewCheckout(props) {
         total = total - Number(combo2OfferReduceTotal.reducingCost);
       }
 
-      if (pasta69OfferReduceTotal) {
-        total = total - Number(pasta69OfferReduceTotal.reducingCost);
+      if (pasta59OfferReduceTotal) {
+        total = total - Number(pasta59OfferReduceTotal.reducingCost);
       }
 
       let orderDetails = [];
@@ -655,8 +655,8 @@ export default function NewCheckout(props) {
       return;
     }
 
-    if (couponCode === "PASTA69") {
-      specialOfferCheckPASTA69();
+    if (couponCode === "PASTA59") {
+      specialOfferCheckPASTA59();
       return;
     }
 
@@ -1150,8 +1150,8 @@ export default function NewCheckout(props) {
     }
   };
 
-  const specialOfferCheckPASTA69 = () => {
-    if (couponCode === "PASTA69") {
+  const specialOfferCheckPASTA59 = () => {
+    if (couponCode === "PASTA59") {
       if (Object.keys(cart?.cartItems).length >= 2) {
         let pizzaCount = 0;
         let pizzaKey = null;
@@ -1179,23 +1179,23 @@ export default function NewCheckout(props) {
         }
 
         if (pizzaCount >= 1 && pastaCount >= 1) {
-          setPASTA69OfferReduceTotal({
+          setPASTA59OfferReduceTotal({
             pizzaKey,
             pastaKey,
             pizzaObj,
             pastaObj,
-            newPrice: 69,
+            newPrice: 59,
             reducingPastaQty: 1,
-            reducingCost: Number(pastaObj.price) - 69,
+            reducingCost: Number(pastaObj.price) - 59,
           });
-          toast.success("Hurray!! PASTA69 Offer has been applied");
+          toast.success("Hurray!! PASTA59 Offer has been applied");
         } else {
-          toast.error("PASTA69 is not applicable for this cart!");
-          setPASTA69OfferReduceTotal(null);
+          toast.error("PASTA59 is not applicable for this cart!");
+          setPASTA59OfferReduceTotal(null);
         }
       } else {
-        setPASTA69OfferReduceTotal(null);
-        toast.error("PASTA69 is not applicable for this cart!");
+        setPASTA59OfferReduceTotal(null);
+        toast.error("PASTA59 is not applicable for this cart!");
       }
     }
   };
@@ -1651,11 +1651,11 @@ export default function NewCheckout(props) {
                       }
                       onChangeSpecialOfferCheckCOMBO1={specialOfferCheckCOMBO1}
                       onChangeSpecialOfferCheckCOMBO2={specialOfferCheckCOMBO2}
-                      onChangeSpecialOfferCheckPASTA69={
-                        specialOfferCheckPASTA69
+                      onChangeSpecialOfferCheckPASTA59={
+                        specialOfferCheckPASTA59
                       }
                       drinkReduceKey={drinkReduceKey}
-                      pastaReduceKey={pasta69OfferReduceTotal}
+                      pastaReduceKey={pasta59OfferReduceTotal}
                       combo1OfferReduceTotal={combo1OfferReduceTotal}
                       combo2OfferReduceTotal={combo2OfferReduceTotal}
                       friesOfferReduceTotal={friesOfferReduceTotal}
@@ -1688,7 +1688,7 @@ export default function NewCheckout(props) {
                           </div>
                         </Row>
 
-                        {pasta69OfferReduceTotal ? (
+                        {pasta59OfferReduceTotal ? (
                           <Row className="pl-2">
                             <div className="w75">
                               <Typography
@@ -1699,7 +1699,7 @@ export default function NewCheckout(props) {
                                   color: "#595959",
                                 }}
                               >
-                                PASTA69 Offer
+                                PASTA59 Offer
                               </Typography>
                             </div>
                             <div className="w25">
@@ -1710,7 +1710,7 @@ export default function NewCheckout(props) {
                                   color: "#2e7d32",
                                 }}
                               >
-                                ₹ {pasta69OfferReduceTotal.newPrice}.00
+                                ₹ {pasta59OfferReduceTotal.newPrice}.00
                               </Typography>
                             </div>
                           </Row>
