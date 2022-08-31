@@ -1480,6 +1480,11 @@ export default function NewCheckout(props) {
                       bOGOLowestPizzaKey={
                         bOGOLowestPizzaKey ? bOGOLowestPizzaKey : []
                       }
+                      drinkReduceKey={drinkReduceKey}
+                      pastaReduceKey={pasta59OfferReduceTotal}
+                      combo1OfferReduceTotal={combo1OfferReduceTotal}
+                      combo2OfferReduceTotal={combo2OfferReduceTotal}
+                      friesOfferReduceTotal={friesOfferReduceTotal}
                     ></InvoiceTable>
                   </div>
                 </div>

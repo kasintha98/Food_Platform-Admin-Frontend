@@ -34,6 +34,248 @@ export const InvoiceTable = (props) => {
     }
   };
 
+  const renderAllTotal = (key, item) => {
+    if (props.bOGOLowestPizzaKey?.some((el) => el.key === key)) {
+      return (
+        <>
+          {props.bOGOLowestPizzaKey.find((x) => x.key === key).quantity *
+            props.bOGOLowestPizzaKey.find((x) => x.key === key).price +
+            (props.bOGOLowestPizzaKey.find((x) => x.key === key)
+              .extraSubTotalWithQty
+              ? props.bOGOLowestPizzaKey.find((x) => x.key === key)
+                  .extraSubTotalWithQty
+              : 0) +
+            (Object.keys(
+              props.bOGOLowestPizzaKey.find((x) => x.key === key)?.choiceIng
+            ).length > 0
+              ? Number(
+                  props.bOGOLowestPizzaKey.find((x) => x.key === key)?.choiceIng
+                    .choiceTotal
+                    ? props.bOGOLowestPizzaKey.find((x) => x.key === key)
+                        ?.choiceIng.choiceTotal
+                    : 0
+                )
+              : 0)}
+        </>
+      );
+    } else if (props.drinkReduceKey && props.drinkReduceKey.key === key) {
+      return (
+        <>
+          {(Number(item.quantity) -
+            Number(props.drinkReduceKey.reducingDrinkaQty)) *
+            item.price +
+            (item.extraSubTotalWithQty ? item.extraSubTotalWithQty : 0)}
+        </>
+      );
+    } else if (props.pastaReduceKey && props.pastaReduceKey.pastaKey === key) {
+      return (
+        <>
+          {(Number(item.quantity) -
+            Number(props.pastaReduceKey.reducingPastaQty)) *
+            item.price +
+            (item.extraSubTotalWithQty ? item.extraSubTotalWithQty : 0) +
+            (Object.keys(item?.choiceIng).length > 0
+              ? item?.choiceIng.choiceTotal
+              : 0)}
+        </>
+      );
+    } else if (props.combo1OfferReduceTotal) {
+      if (props.combo1OfferReduceTotal.pizzaKey === key) {
+        return (
+          <>
+            {(Number(item.quantity) -
+              Number(props.combo1OfferReduceTotal.reducingPizzaQty)) *
+              item.price +
+              (item.extraSubTotalWithQty ? item.extraSubTotalWithQty : 0) +
+              (Object.keys(item?.choiceIng).length > 0
+                ? item?.choiceIng.choiceTotal
+                : 0)}
+          </>
+        );
+      } else if (props.combo1OfferReduceTotal.noodlesKey === key) {
+        return (
+          <>
+            {(Number(item.quantity) -
+              Number(props.combo1OfferReduceTotal.reducingNoodlesQty)) *
+              item.price +
+              (item.extraSubTotalWithQty ? item.extraSubTotalWithQty : 0) +
+              (Object.keys(item?.choiceIng).length > 0
+                ? item?.choiceIng.choiceTotal
+                : 0)}
+          </>
+        );
+      } else if (props.combo1OfferReduceTotal.manchuriKey === key) {
+        return (
+          <>
+            {(Number(item.quantity) -
+              Number(props.combo1OfferReduceTotal.reducingManchuriQty)) *
+              item.price +
+              (item.extraSubTotalWithQty ? item.extraSubTotalWithQty : 0) +
+              (Object.keys(item?.choiceIng).length > 0
+                ? item?.choiceIng.choiceTotal
+                : 0)}
+          </>
+        );
+      } else if (
+        props.combo1OfferReduceTotal.drinkObj.some((el) => el.productId === key)
+      ) {
+        return (
+          <>
+            {(Number(item.quantity) -
+              Number(
+                props.combo1OfferReduceTotal.drinkObj.find((x) => x.key === key)
+                  .reducingDrinkQty
+              )) *
+              item.price +
+              (item.extraSubTotalWithQty ? item.extraSubTotalWithQty : 0) +
+              (Object.keys(item?.choiceIng).length > 0
+                ? item?.choiceIng.choiceTotal
+                : 0)}
+          </>
+        );
+      } else {
+        return (
+          <>
+            {item.quantity * item.price +
+              (item.extraSubTotalWithQty ? item.extraSubTotalWithQty : 0) +
+              (Object.keys(item?.choiceIng).length > 0
+                ? item?.choiceIng.choiceTotal
+                : 0)}
+          </>
+        );
+      }
+    } else if (props.combo2OfferReduceTotal) {
+      if (props.combo2OfferReduceTotal.pizzaKey === key) {
+        return (
+          <>
+            {(Number(item.quantity) -
+              Number(props.combo2OfferReduceTotal.reducingPizzaQty)) *
+              item.price +
+              (item.extraSubTotalWithQty ? item.extraSubTotalWithQty : 0) +
+              (Object.keys(item?.choiceIng).length > 0
+                ? item?.choiceIng.choiceTotal
+                : 0)}
+          </>
+        );
+      } else if (props.combo2OfferReduceTotal.garBreadKey === key) {
+        return (
+          <>
+            {(Number(item.quantity) -
+              Number(props.combo2OfferReduceTotal.reducingBreadQty)) *
+              item.price +
+              (item.extraSubTotalWithQty ? item.extraSubTotalWithQty : 0) +
+              (Object.keys(item?.choiceIng).length > 0
+                ? item?.choiceIng.choiceTotal
+                : 0)}
+          </>
+        );
+      } else if (props.combo2OfferReduceTotal.lavaCakeKey === key) {
+        return (
+          <>
+            {(Number(item.quantity) -
+              Number(props.combo2OfferReduceTotal.reducingLavaQty)) *
+              item.price +
+              (item.extraSubTotalWithQty ? item.extraSubTotalWithQty : 0) +
+              (Object.keys(item?.choiceIng).length > 0
+                ? item?.choiceIng.choiceTotal
+                : 0)}
+          </>
+        );
+      } else if (props.combo2OfferReduceTotal.pastaKey === key) {
+        return (
+          <>
+            {(Number(item.quantity) -
+              Number(props.combo2OfferReduceTotal.reducingPastaQty)) *
+              item.price +
+              (item.extraSubTotalWithQty ? item.extraSubTotalWithQty : 0) +
+              (Object.keys(item?.choiceIng).length > 0
+                ? item?.choiceIng.choiceTotal
+                : 0)}
+          </>
+        );
+      } else if (
+        props.combo2OfferReduceTotal.drinkObj.some((el) => el.productId === key)
+      ) {
+        return (
+          <>
+            {(Number(item.quantity) -
+              Number(
+                props.combo2OfferReduceTotal.drinkObj.find((x) => x.key === key)
+                  .reducingDrinkQty
+              )) *
+              item.price +
+              (item.extraSubTotalWithQty ? item.extraSubTotalWithQty : 0) +
+              (Object.keys(item?.choiceIng).length > 0
+                ? item?.choiceIng.choiceTotal
+                : 0)}
+          </>
+        );
+      } else {
+        return (
+          <>
+            {item.quantity * item.price +
+              (item.extraSubTotalWithQty ? item.extraSubTotalWithQty : 0) +
+              (Object.keys(item?.choiceIng).length > 0
+                ? item?.choiceIng.choiceTotal
+                : 0)}
+          </>
+        );
+      }
+    } else if (props.friesOfferReduceTotal) {
+      if (props.friesOfferReduceTotal.drinkKey === key) {
+        return (
+          <>
+            {(Number(item.quantity) -
+              Number(props.friesOfferReduceTotal.reducingDrinkQty)) *
+              item.price +
+              (item.extraSubTotalWithQty ? item.extraSubTotalWithQty : 0) +
+              (Object.keys(item?.choiceIng).length > 0
+                ? item?.choiceIng.choiceTotal
+                : 0)}
+          </>
+        );
+      } else if (props.friesOfferReduceTotal.friesKey === key) {
+        return (
+          <>
+            {(Number(item.quantity) -
+              Number(props.friesOfferReduceTotal.reducingFriesQty)) *
+              item.price +
+              (item.extraSubTotalWithQty ? item.extraSubTotalWithQty : 0) +
+              (Object.keys(item?.choiceIng).length > 0
+                ? item?.choiceIng.choiceTotal
+                : 0)}
+          </>
+        );
+      } else {
+        return (
+          <>
+            {item.quantity * item.price +
+              (item.extraSubTotalWithQty ? item.extraSubTotalWithQty : 0) +
+              (Object.keys(item?.choiceIng).length > 0
+                ? item?.choiceIng.choiceTotal
+                : 0)}
+          </>
+        );
+      }
+    } else {
+      return <>{item.quantity * item.price}</>;
+    }
+  };
+
+  const renderNewSubTotal = () => {
+    if (props.drinkReduceKey) {
+      return (
+        <>
+          {Number(props.grandTot) +
+            Number(renderDiscount(true)) -
+            Number(props.drinkReduceKey.price)}
+        </>
+      );
+    } else {
+      return <>{Number(props.grandTot) + Number(renderDiscount(true))}</>;
+    }
+  };
+
   return (
     <div>
       {props.allProducts ? (
@@ -66,9 +308,13 @@ export const InvoiceTable = (props) => {
                     )}
                   </CusTableCell>
                   <CusTableCell>{row.quantity}</CusTableCell>
-                  <CusTableCell>Rs. {row.price}.00</CusTableCell>
                   <CusTableCell>
-                    Rs. {Number(row.quantity) * Number(row.price)}.00
+                    Rs. {row.price}
+                    .00
+                  </CusTableCell>
+                  <CusTableCell>
+                    Rs. {/* {Number(row.quantity) * Number(row.price)} */}
+                    {renderAllTotal(row.productId, row)}.00
                   </CusTableCell>
                 </TableRow>
               </>
@@ -83,7 +329,7 @@ export const InvoiceTable = (props) => {
                 colspan="1"
                 sx={{ fontStyle: "italic" }}
               >
-                Rs. {Number(props.grandTot) + Number(renderDiscount(true))}
+                Rs. {renderNewSubTotal()}
               </CusTableCell>
             </TableRow>
 
@@ -116,6 +362,38 @@ export const InvoiceTable = (props) => {
                   sx={{ fontStyle: "italic" }}
                 >
                   {props.fullResp.couponCode}
+                </CusTableCell>
+              </TableRow>
+            ) : null}
+
+            {props.drinkReduceKey ? (
+              <TableRow>
+                <CusTableCell component="th" scope="row" colspan="3">
+                  DRINK29 Offer
+                </CusTableCell>
+                <CusTableCell
+                  component="th"
+                  scope="row"
+                  colspan="1"
+                  sx={{ fontStyle: "italic" }}
+                >
+                  Rs. {props.drinkReduceKey.price}.00
+                </CusTableCell>
+              </TableRow>
+            ) : null}
+
+            {props.pastaReduceKey ? (
+              <TableRow>
+                <CusTableCell component="th" scope="row" colspan="3">
+                  PASTA59 Offer
+                </CusTableCell>
+                <CusTableCell
+                  component="th"
+                  scope="row"
+                  colspan="1"
+                  sx={{ fontStyle: "italic" }}
+                >
+                  Rs. {props.pastaReduceKey.price}.00
                 </CusTableCell>
               </TableRow>
             ) : null}
