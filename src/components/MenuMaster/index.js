@@ -456,7 +456,7 @@ export const MenuMaster = () => {
     formDataImage.append("files", productImage[product.id]);
 
     dispatch(updateMenuItem(newProduct)).then((res) => {
-      if (res) {
+      if (res && productImage[product.id]) {
         dispatch(uploadImage(formDataImage));
       }
     });
@@ -477,7 +477,8 @@ export const MenuMaster = () => {
       !newProductImage ||
       !newMenuFlag ||
       !newCommonImage ||
-      !newIngredientFlag
+      !newIngredientFlag ||
+      !newKdsRoutingName
     ) {
       toast.error("Please fill all the fields!");
       return;
@@ -1172,7 +1173,7 @@ export const MenuMaster = () => {
                 KDS Routing Name
               </CusInputLabel>
               <CusSelect
-                label="Size"
+                label="KDS Routing Name"
                 onChange={(event) => {
                   setNewKdsRoutingName(event.target.value);
                 }}
