@@ -137,6 +137,8 @@ const CusNativeSelect = styled(NativeSelect)`
 
 const itemsPerPage = 33;
 
+const kdsRouters = ["PIZZA", "CHINESE", "DRINKS", "FAST FOOD"];
+
 export const MenuMaster = () => {
   const stores = useSelector((state) => state.store.stores);
   const productList = useSelector((state) => state.product.products);
@@ -173,6 +175,8 @@ export const MenuMaster = () => {
   const [currentSpice, setCurrentSpice] = useState("");
   const [currentDishType, setCurrentDishType] = useState({});
   const [currentDishDesc, setCurrentDishDesc] = useState({});
+  const [currentKdsRoutingName, setCurrentKdsRoutingName] = useState("");
+
   //const [currentImageName, setCurrentImageName] = useState({});
   const [currentPrice, setCurrentPrice] = useState({});
   const [currentMenuFlag, setCurrentMenuFlag] = useState("");
@@ -200,6 +204,7 @@ export const MenuMaster = () => {
   const [newSize, setNewSize] = useState("");
   const [newProductImage, setNewProductImage] = useState("");
   const [newCommonImage, setNewCommonImage] = useState("");
+  const [newKdsRoutingName, setNewKdsRoutingName] = useState("");
   const [newSelectedStore, setNewSelectedStore] = useState(null);
   const [newSelectedStoreObj, setNewSelectedStoreObj] = useState(null);
   const [isAddNewSection, setIsAddNewSection] = useState(false);
@@ -351,6 +356,11 @@ export const MenuMaster = () => {
     setCurrentMenuFlag(event.target.value);
   };
 
+  const handleKdsRoutingNameUpdate = (event) => {
+    console.log(event.target.value);
+    setCurrentKdsRoutingName(event.target.value);
+  };
+
   const handleIngredientFlagUpdate = (event) => {
     console.log(event.target.value);
     setCurrentIngredientFlag(event.target.value);
@@ -437,6 +447,9 @@ export const MenuMaster = () => {
         ? currentIngredientFlag
         : product.ingredientExistsFalg,
       commonImage: product.commonImage,
+      kdsRoutingName: currentKdsRoutingName
+        ? currentKdsRoutingName
+        : product.kdsRoutingName,
     };
 
     const formDataImage = new FormData();
@@ -485,6 +498,7 @@ export const MenuMaster = () => {
       menuAvailableFlag: newMenuFlag,
       commonImage: newCommonImage,
       ingredientExistsFalg: newIngredientFlag,
+      kdsRoutingName: newKdsRoutingName,
     };
 
     const formDataImage = new FormData();
@@ -1148,6 +1162,27 @@ export const MenuMaster = () => {
                 <CusMenuItem value={"Large"} style={{ fontSize: "0.75rem" }}>
                   Large
                 </CusMenuItem>
+              </CusSelect>
+            </FormControl>
+
+            <FormControl fullWidth className="mt-3">
+              <CusInputLabel
+                sx={{ fontSize: "0.75rem", lineHeight: "1rem", top: "-11px" }}
+              >
+                KDS Routing Name
+              </CusInputLabel>
+              <CusSelect
+                label="Size"
+                onChange={(event) => {
+                  setNewKdsRoutingName(event.target.value);
+                }}
+                sx={{ fontSize: "0.75rem" }}
+              >
+                {kdsRouters.map((item) => (
+                  <CusMenuItem value={item} style={{ fontSize: "0.75rem" }}>
+                    {item}
+                  </CusMenuItem>
+                ))}
               </CusSelect>
             </FormControl>
 
@@ -1979,7 +2014,32 @@ export const MenuMaster = () => {
                             </NativeSelect>
                           </CusTableCell>
                           <CusTableCell align="center">
-                            {product.kdsRoutingName}
+                            <NativeSelect
+                              disabled={!isSave[product.id]}
+                              defaultValue={product.kdsRoutingName}
+                              inputProps={{
+                                name: "status",
+                                id: "uncontrolled-native",
+                              }}
+                              onChange={handleKdsRoutingNameUpdate}
+                              sx={{
+                                fontSize: "0.75rem",
+                                "& .MuiInputBase-input.Mui-disabled": {
+                                  WebkitTextFillColor: isSave[product.id]
+                                    ? "black"
+                                    : "#404040",
+                                },
+                              }}
+                            >
+                              {kdsRouters.map((item) => (
+                                <option
+                                  value={item}
+                                  style={{ fontSize: "0.75rem" }}
+                                >
+                                  {item}
+                                </option>
+                              ))}
+                            </NativeSelect>
                           </CusTableCell>
                           <CusTableCell
                             align="center"
