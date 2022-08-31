@@ -941,8 +941,7 @@ export default function NewCheckout(props) {
             drinkCount = drinkCount + Object.values(cart?.cartItems)[i].qty;
             drinkTotalCost =
               drinkTotalCost +
-              Number(Object.values(cart?.cartItems)[i].qty) *
-                Number(Object.values(cart?.cartItems)[i].price);
+              reduceQty * Number(Object.values(cart?.cartItems)[i].price);
             maxDrinkReduceCount = maxDrinkReduceCount - reduceQty;
           }
           if (
@@ -957,15 +956,7 @@ export default function NewCheckout(props) {
           }
           if (
             Object.values(cart?.cartItems)[i].dish === "Noodles" &&
-            (Object.values(cart?.cartItems)[i].productId === "P152" ||
-              Object.values(cart?.cartItems)[i].productId === "P153" ||
-              Object.values(cart?.cartItems)[i].productId === "P154" ||
-              Object.values(cart?.cartItems)[i].productId === "P155" ||
-              Object.values(cart?.cartItems)[i].productId === "P156" ||
-              Object.values(cart?.cartItems)[i].productId === "P157" ||
-              Object.values(cart?.cartItems)[i].productId === "P158" ||
-              Object.values(cart?.cartItems)[i].productId === "P159" ||
-              Object.values(cart?.cartItems)[i].productId === "P160")
+            Object.values(cart?.cartItems)[i].productId === "P152"
           ) {
             noodlesKey = Object.keys(cart?.cartItems)[i];
             noodlesObj = Object.values(cart?.cartItems)[i];
