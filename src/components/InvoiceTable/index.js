@@ -76,16 +76,16 @@ export const InvoiceTable = (props) => {
         </>
       );
     } else if (props.combo1OfferReduceTotal) {
-      if (props.combo1OfferReduceTotal.pizzaKey === key) {
+      console.log(props.combo1OfferReduceTotal.pizzaObj);
+      if (
+        props.combo1OfferReduceTotal.pizzaObj.productId === key &&
+        props.combo1OfferReduceTotal.pizzaObj.price === item.price
+      ) {
         return (
           <>
             {(Number(item.quantity) -
               Number(props.combo1OfferReduceTotal.reducingPizzaQty)) *
-              item.price +
-              (item.extraSubTotalWithQty ? item.extraSubTotalWithQty : 0) +
-              (Object.keys(item?.choiceIng).length > 0
-                ? item?.choiceIng.choiceTotal
-                : 0)}
+              item.price}
           </>
         );
       } else if (props.combo1OfferReduceTotal.noodlesKey === key) {
@@ -93,11 +93,7 @@ export const InvoiceTable = (props) => {
           <>
             {(Number(item.quantity) -
               Number(props.combo1OfferReduceTotal.reducingNoodlesQty)) *
-              item.price +
-              (item.extraSubTotalWithQty ? item.extraSubTotalWithQty : 0) +
-              (Object.keys(item?.choiceIng).length > 0
-                ? item?.choiceIng.choiceTotal
-                : 0)}
+              item.price}
           </>
         );
       } else if (props.combo1OfferReduceTotal.manchuriKey === key) {
@@ -105,11 +101,7 @@ export const InvoiceTable = (props) => {
           <>
             {(Number(item.quantity) -
               Number(props.combo1OfferReduceTotal.reducingManchuriQty)) *
-              item.price +
-              (item.extraSubTotalWithQty ? item.extraSubTotalWithQty : 0) +
-              (Object.keys(item?.choiceIng).length > 0
-                ? item?.choiceIng.choiceTotal
-                : 0)}
+              item.price}
           </>
         );
       } else if (
@@ -122,21 +114,14 @@ export const InvoiceTable = (props) => {
                 props.combo1OfferReduceTotal.drinkObj.find((x) => x.key === key)
                   .reducingDrinkQty
               )) *
-              item.price +
-              (item.extraSubTotalWithQty ? item.extraSubTotalWithQty : 0) +
-              (Object.keys(item?.choiceIng).length > 0
-                ? item?.choiceIng.choiceTotal
-                : 0)}
+              item.price}
           </>
         );
       } else {
         return (
           <>
             {item.quantity * item.price +
-              (item.extraSubTotalWithQty ? item.extraSubTotalWithQty : 0) +
-              (Object.keys(item?.choiceIng).length > 0
-                ? item?.choiceIng.choiceTotal
-                : 0)}
+              (item.extraSubTotalWithQty ? item.extraSubTotalWithQty : 0)}
           </>
         );
       }
@@ -267,6 +252,14 @@ export const InvoiceTable = (props) => {
             Number(props.friesOfferReduceTotal.price)}
         </>
       );
+    } else if (props.combo1OfferReduceTotal) {
+      return (
+        <>
+          {Number(props.grandTot) +
+            Number(renderDiscount(true)) -
+            Number(props.combo1OfferReduceTotal.price)}
+        </>
+      );
     } else {
       return <>{Number(props.grandTot) + Number(renderDiscount(true))}</>;
     }
@@ -374,6 +367,22 @@ export const InvoiceTable = (props) => {
                   sx={{ fontStyle: "italic" }}
                 >
                   Rs. {props.drinkReduceKey.price}.00
+                </CusTableCell>
+              </TableRow>
+            ) : null}
+
+            {props.combo1OfferReduceTotal ? (
+              <TableRow>
+                <CusTableCell component="th" scope="row" colspan="3">
+                  COMBO1 Offer
+                </CusTableCell>
+                <CusTableCell
+                  component="th"
+                  scope="row"
+                  colspan="1"
+                  sx={{ fontStyle: "italic" }}
+                >
+                  Rs. {props.combo1OfferReduceTotal.price}.00
                 </CusTableCell>
               </TableRow>
             ) : null}
