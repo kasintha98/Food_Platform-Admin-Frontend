@@ -223,11 +223,7 @@ export const InvoiceTable = (props) => {
           <>
             {(Number(item.quantity) -
               Number(props.friesOfferReduceTotal.reducingDrinkQty)) *
-              item.price +
-              (item.extraSubTotalWithQty ? item.extraSubTotalWithQty : 0) +
-              (Object.keys(item?.choiceIng).length > 0
-                ? item?.choiceIng.choiceTotal
-                : 0)}
+              item.price}
           </>
         );
       } else if (props.friesOfferReduceTotal.friesKey === key) {
@@ -235,23 +231,11 @@ export const InvoiceTable = (props) => {
           <>
             {(Number(item.quantity) -
               Number(props.friesOfferReduceTotal.reducingFriesQty)) *
-              item.price +
-              (item.extraSubTotalWithQty ? item.extraSubTotalWithQty : 0) +
-              (Object.keys(item?.choiceIng).length > 0
-                ? item?.choiceIng.choiceTotal
-                : 0)}
+              item.price}
           </>
         );
       } else {
-        return (
-          <>
-            {item.quantity * item.price +
-              (item.extraSubTotalWithQty ? item.extraSubTotalWithQty : 0) +
-              (Object.keys(item?.choiceIng).length > 0
-                ? item?.choiceIng.choiceTotal
-                : 0)}
-          </>
-        );
+        return <>{item.quantity * item.price}</>;
       }
     } else {
       return <>{item.quantity * item.price}</>;
@@ -273,6 +257,14 @@ export const InvoiceTable = (props) => {
           {Number(props.grandTot) +
             Number(renderDiscount(true)) -
             Number(props.pastaReduceKey.newPrice)}
+        </>
+      );
+    } else if (props.friesOfferReduceTotal) {
+      return (
+        <>
+          {Number(props.grandTot) +
+            Number(renderDiscount(true)) -
+            Number(props.friesOfferReduceTotal.price)}
         </>
       );
     } else {
@@ -398,6 +390,22 @@ export const InvoiceTable = (props) => {
                   sx={{ fontStyle: "italic" }}
                 >
                   Rs. {props.pastaReduceKey.newPrice}.00
+                </CusTableCell>
+              </TableRow>
+            ) : null}
+
+            {props.friesOfferReduceTotal ? (
+              <TableRow>
+                <CusTableCell component="th" scope="row" colspan="3">
+                  FRIES69 Offer
+                </CusTableCell>
+                <CusTableCell
+                  component="th"
+                  scope="row"
+                  colspan="1"
+                  sx={{ fontStyle: "italic" }}
+                >
+                  Rs. {props.friesOfferReduceTotal.price}.00
                 </CusTableCell>
               </TableRow>
             ) : null}
