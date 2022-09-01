@@ -326,3 +326,44 @@ export const updateOrderPaymentAndStatus = (
     }
   };
 };
+
+export const updateFoodPackagedFlagByItem = (
+  orderId,
+  productId,
+  subProductId,
+  foodPackagedFlag
+) => {
+  return async (dispatch) => {
+    dispatch({
+      type: orderConstants.UPDATE_FOOD_PACKAGED_FLAG_BY_ITEM_REQUEST,
+    });
+    try {
+      const res = await axios.post(
+        "/updateFoodPackagedFlagForOrderItem",
+        null,
+        {
+          params: { orderId, productId, subProductId, foodPackagedFlag },
+        }
+      );
+
+      if (res.status === 200) {
+        dispatch({
+          type: orderConstants.UPDATE_FOOD_PACKAGED_FLAG_BY_ITEM_SUCCESS,
+          payload: res.data,
+        });
+        toast.success("Food package released successfully!");
+        return res.data;
+      } else {
+        dispatch({
+          type: orderConstants.UPDATE_FOOD_PACKAGED_FLAG_BY_ITEM_FAILURE,
+          payload: res.data,
+        });
+        toast.success("Error please try again!!");
+        return false;
+      }
+    } catch (error) {
+      toast.success("Error please try again!!");
+      console.log(error);
+    }
+  };
+};

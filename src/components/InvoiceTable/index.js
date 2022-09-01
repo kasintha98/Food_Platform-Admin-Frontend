@@ -35,8 +35,22 @@ export const InvoiceTable = (props) => {
   };
 
   const renderAllTotal = (key, item) => {
-    if (props.bOGOLowestPizzaKey?.some((el) => el.key === key)) {
-      return (
+    /* if (props.bOGOLowestPizzaKey?.some((el) => el.productId === key)) {
+      console.log(props.bOGOLowestPizzaKey, key);
+      if (props.bOGOLowestPizzaKey.find((x) => x.productId === key)) {
+        return (
+          <>
+            {props.bOGOLowestPizzaKey.find((x) => x.productId === key)
+              .quantity *
+              props.bOGOLowestPizzaKey.find((x) => x.productId === key).price}
+          </>
+        );
+      }  else if(Object.keys(
+  props.bOGOLowestPizzaKey.find((x) => x.key === key))){
+
+  } */
+
+    /* return (
         <>
           {props.bOGOLowestPizzaKey.find((x) => x.key === key).quantity *
             props.bOGOLowestPizzaKey.find((x) => x.key === key).price +
@@ -57,8 +71,9 @@ export const InvoiceTable = (props) => {
                 )
               : 0)}
         </>
-      );
-    } else if (props.drinkReduceKey && props.drinkReduceKey.key === key) {
+      ); 
+    }*/
+    if (props.drinkReduceKey && props.drinkReduceKey.key === key) {
       return (
         <>
           {(Number(item.quantity) -

@@ -21,6 +21,7 @@ import {
   updateOrderSubProdStatus,
   updateOrder,
   updateFoodPackagedFlag,
+  updateFoodPackagedFlagByItem,
 } from "../../actions";
 import { Button } from "@mui/material";
 
@@ -190,6 +191,26 @@ export const KDSTable = forwardRef((props, ref) => {
     });
   };
 
+  const updateFoodPackageFlagEachItem = (
+    orderId,
+    productId,
+    subProductId,
+    foodPackagedFlag
+  ) => {
+    dispatch(
+      updateFoodPackagedFlagByItem(
+        orderId,
+        productId,
+        subProductId,
+        foodPackagedFlag
+      )
+    ).then((res) => {
+      if (res) {
+        handleRefresh();
+      }
+    });
+  };
+
   const handleSubProductFromTopProduct = (
     productId,
     orderDetails,
@@ -214,6 +235,303 @@ export const KDSTable = forwardRef((props, ref) => {
           );
         }
       }
+    }
+  };
+
+  const renderTableBody = () => {
+    if (!props.counter) {
+      return (
+        <>
+          {filteredData.map((order) => (
+            <>
+              {order.orderDetails.map((item, index) => (
+                <>
+                  {item.orderDetailFoodPackagedFlag === "N" ? (
+                    <TableRow>
+                      <CusTableCell
+                        align="center"
+                        sx={{ border: "1px solid #000" }}
+                      >
+                        {item.orderId.substr(item.orderId.length - 3)} &nbsp;
+                        <>
+                          <Button
+                            sx={{ padding: 0 }}
+                            color="error"
+                            variant="contained"
+                            onClick={() => {
+                              //updateFoodPackageFlag(order.orderId, "Y");
+                              updateFoodPackageFlagEachItem(
+                                item.orderId,
+                                item.productId,
+                                item.subProductId,
+                                "Y"
+                              );
+                            }}
+                            disabled={
+                              item.orderDetailStatus === "SUBMITTED" ||
+                              item.orderDetailStatus === "ACCEPTED" ||
+                              item.orderDetailStatus === "PROCESSING"
+                            }
+                          >
+                            Release
+                          </Button>
+                        </>
+                      </CusTableCell>
+                      <CusTableCell
+                        align="center"
+                        sx={{ border: "1px solid #000" }}
+                      >
+                        <Timer
+                          active
+                          duration={null}
+                          time={new Date() - new Date(order.createdDate)}
+                        >
+                          <Timecode />
+                        </Timer>
+                      </CusTableCell>
+                      <CusTableCell
+                        align="center"
+                        sx={{ border: "1px solid #000" }}
+                      >
+                        {order.orderSource}
+                      </CusTableCell>
+                      <CusTableCell
+                        align="center"
+                        sx={{ border: "1px solid #000" }}
+                      >
+                        {order.orderDeliveryType}
+                      </CusTableCell>
+                      <CusTableCell
+                        align="center"
+                        sx={{ border: "1px solid #000" }}
+                      >
+                        {order.storeTableId ? order.storeTableId : "N/A"}
+                      </CusTableCell>
+                      <CusTableCell
+                        align="center"
+                        sx={{ border: "1px solid #000" }}
+                      >
+                        {order.customerName}
+                      </CusTableCell>
+                      <CusTableCell
+                        align="left"
+                        sx={{ border: "1px solid #000" }}
+                      >
+                        <div key={index}>
+                          {item.ingredient === "No Ingredient" ? (
+                            <div
+                              style={{
+                                borderBottom: "1px solid #000",
+                                minHeight: "25px",
+                              }}
+                            >
+                              {item.productName}
+                            </div>
+                          ) : (
+                            <div
+                              style={{
+                                borderBottom: "1px solid #000",
+                                color: "red",
+                                paddingLeft: "2em",
+                                minHeight: "25px",
+                              }}
+                            >
+                              {item.ingredient}
+                            </div>
+                          )}
+                        </div>
+                      </CusTableCell>
+                      <CusTableCell
+                        align="center"
+                        sx={{ border: "1px solid #000" }}
+                      >
+                        <div
+                          key={index}
+                          style={{
+                            borderBottom: "1px solid #000",
+                            minHeight: "25px",
+                          }}
+                        >
+                          {item.quantity}
+                        </div>
+                      </CusTableCell>
+                      <CusTableCell
+                        align="center"
+                        sx={{ border: "1px solid #000" }}
+                      >
+                        <div
+                          key={index}
+                          style={{
+                            borderBottom: "1px solid #000",
+                            minHeight: "25px",
+                          }}
+                        >
+                          {item.remarks ? item.remarks : "No Data"}
+                        </div>
+                      </CusTableCell>
+                      <CusTableCell
+                        align="center"
+                        sx={{ border: "1px solid #000" }}
+                      >
+                        <div
+                          key={index}
+                          className={
+                            item.orderDetailStatus === "FOOD READY"
+                              ? "back-green"
+                              : item.orderDetailStatus === "PROCESSING"
+                              ? "back-yellow"
+                              : item.orderDetailStatus === "ACCEPTED"
+                              ? "back-orange"
+                              : ""
+                          }
+                          onClick={() => {
+                            handleUpdateOrderItemStatus(
+                              item.orderId,
+                              item.productId,
+                              item.subProductId,
+                              item.orderDetailStatus,
+                              order
+                            );
+                          }}
+                        >
+                          <div
+                            style={{
+                              borderBottom: "1px solid #000",
+                              minHeight: "25px",
+                            }}
+                          >
+                            {item.orderDetailStatus}
+                          </div>
+                        </div>
+                      </CusTableCell>
+                    </TableRow>
+                  ) : null}
+                </>
+              ))}
+            </>
+          ))}
+        </>
+      );
+    } else {
+      return (
+        <>
+          {filteredData.map((order) => (
+            <TableRow>
+              <CusTableCell align="center" sx={{ border: "1px solid #000" }}>
+                {order.orderId.substr(order.orderId.length - 3)} &nbsp;
+              </CusTableCell>
+              <CusTableCell align="center" sx={{ border: "1px solid #000" }}>
+                <Timer
+                  active
+                  duration={null}
+                  time={new Date() - new Date(order.createdDate)}
+                >
+                  <Timecode />
+                </Timer>
+              </CusTableCell>
+              <CusTableCell align="center" sx={{ border: "1px solid #000" }}>
+                {order.orderSource}
+              </CusTableCell>
+              <CusTableCell align="center" sx={{ border: "1px solid #000" }}>
+                {order.orderDeliveryType}
+              </CusTableCell>
+              <CusTableCell align="center" sx={{ border: "1px solid #000" }}>
+                {order.storeTableId ? order.storeTableId : "N/A"}
+              </CusTableCell>
+              <CusTableCell align="center" sx={{ border: "1px solid #000" }}>
+                {order.customerName}
+              </CusTableCell>
+              <CusTableCell align="left" sx={{ border: "1px solid #000" }}>
+                {order.orderDetails.map((item, index) => (
+                  <div key={index}>
+                    {item.ingredient === "No Ingredient" ? (
+                      <div
+                        style={{
+                          borderBottom: "1px solid #000",
+                          minHeight: "25px",
+                        }}
+                      >
+                        {item.productName}
+                      </div>
+                    ) : (
+                      <div
+                        style={{
+                          borderBottom: "1px solid #000",
+                          color: "red",
+                          paddingLeft: "2em",
+                          minHeight: "25px",
+                        }}
+                      >
+                        {item.ingredient}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </CusTableCell>
+              <CusTableCell align="center" sx={{ border: "1px solid #000" }}>
+                {order.orderDetails.map((item, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      borderBottom: "1px solid #000",
+                      minHeight: "25px",
+                    }}
+                  >
+                    {item.quantity}
+                  </div>
+                ))}
+              </CusTableCell>
+              <CusTableCell align="center" sx={{ border: "1px solid #000" }}>
+                {order.orderDetails.map((item, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      borderBottom: "1px solid #000",
+                      minHeight: "25px",
+                    }}
+                  >
+                    {item.remarks ? item.remarks : "No Data"}
+                  </div>
+                ))}
+              </CusTableCell>
+              <CusTableCell align="center" sx={{ border: "1px solid #000" }}>
+                {order.orderDetails.map((item, index) => (
+                  <div
+                    key={index}
+                    className={
+                      item.orderDetailStatus === "FOOD READY"
+                        ? "back-green"
+                        : item.orderDetailStatus === "PROCESSING"
+                        ? "back-yellow"
+                        : item.orderDetailStatus === "ACCEPTED"
+                        ? "back-orange"
+                        : ""
+                    }
+                    onClick={() => {
+                      handleUpdateOrderItemStatus(
+                        item.orderId,
+                        item.productId,
+                        item.subProductId,
+                        item.orderDetailStatus,
+                        order
+                      );
+                    }}
+                  >
+                    <div
+                      style={{
+                        borderBottom: "1px solid #000",
+                        minHeight: "25px",
+                      }}
+                    >
+                      {item.orderDetailStatus}
+                    </div>
+                  </div>
+                ))}
+              </CusTableCell>
+            </TableRow>
+          ))}
+        </>
+      );
     }
   };
 
@@ -295,172 +613,7 @@ export const KDSTable = forwardRef((props, ref) => {
             </TableHead>
             <TableBody>
               {filteredData && filteredData.length > 0 && !loading ? (
-                <>
-                  {filteredData.map((order) => (
-                    <TableRow>
-                      <CusTableCell
-                        align="center"
-                        sx={{ border: "1px solid #000" }}
-                      >
-                        {order.orderId.substr(order.orderId.length - 3)} &nbsp;
-                        {!props.counter && (
-                          <>
-                            <Button
-                              sx={{ padding: 0 }}
-                              color="error"
-                              variant="contained"
-                              onClick={() => {
-                                updateFoodPackageFlag(order.orderId, "Y");
-                              }}
-                              disabled={
-                                order.orderStatus === "SUBMITTED" ||
-                                order.orderStatus === "ACCEPTED" ||
-                                order.orderStatus === "PROCESSING"
-                              }
-                            >
-                              Release
-                            </Button>
-                          </>
-                        )}
-                      </CusTableCell>
-                      <CusTableCell
-                        align="center"
-                        sx={{ border: "1px solid #000" }}
-                      >
-                        <Timer
-                          active
-                          duration={null}
-                          time={new Date() - new Date(order.createdDate)}
-                        >
-                          <Timecode />
-                        </Timer>
-                      </CusTableCell>
-                      <CusTableCell
-                        align="center"
-                        sx={{ border: "1px solid #000" }}
-                      >
-                        {order.orderSource}
-                      </CusTableCell>
-                      <CusTableCell
-                        align="center"
-                        sx={{ border: "1px solid #000" }}
-                      >
-                        {order.orderDeliveryType}
-                      </CusTableCell>
-                      <CusTableCell
-                        align="center"
-                        sx={{ border: "1px solid #000" }}
-                      >
-                        {order.storeTableId ? order.storeTableId : "N/A"}
-                      </CusTableCell>
-                      <CusTableCell
-                        align="center"
-                        sx={{ border: "1px solid #000" }}
-                      >
-                        {order.customerName}
-                      </CusTableCell>
-                      <CusTableCell
-                        align="left"
-                        sx={{ border: "1px solid #000" }}
-                      >
-                        {order.orderDetails.map((item, index) => (
-                          <div key={index}>
-                            {item.ingredient === "No Ingredient" ? (
-                              <div
-                                style={{
-                                  borderBottom: "1px solid #000",
-                                  minHeight: "25px",
-                                }}
-                              >
-                                {item.productName}
-                              </div>
-                            ) : (
-                              <div
-                                style={{
-                                  borderBottom: "1px solid #000",
-                                  color: "red",
-                                  paddingLeft: "2em",
-                                  minHeight: "25px",
-                                }}
-                              >
-                                {item.ingredient}
-                              </div>
-                            )}
-                          </div>
-                        ))}
-                      </CusTableCell>
-                      <CusTableCell
-                        align="center"
-                        sx={{ border: "1px solid #000" }}
-                      >
-                        {order.orderDetails.map((item, index) => (
-                          <div
-                            key={index}
-                            style={{
-                              borderBottom: "1px solid #000",
-                              minHeight: "25px",
-                            }}
-                          >
-                            {item.quantity}
-                          </div>
-                        ))}
-                      </CusTableCell>
-                      <CusTableCell
-                        align="center"
-                        sx={{ border: "1px solid #000" }}
-                      >
-                        {order.orderDetails.map((item, index) => (
-                          <div
-                            key={index}
-                            style={{
-                              borderBottom: "1px solid #000",
-                              minHeight: "25px",
-                            }}
-                          >
-                            {item.remarks ? item.remarks : "No Data"}
-                          </div>
-                        ))}
-                      </CusTableCell>
-                      <CusTableCell
-                        align="center"
-                        sx={{ border: "1px solid #000" }}
-                      >
-                        {order.orderDetails.map((item, index) => (
-                          <div
-                            key={index}
-                            className={
-                              item.orderDetailStatus === "FOOD READY"
-                                ? "back-green"
-                                : item.orderDetailStatus === "PROCESSING"
-                                ? "back-yellow"
-                                : item.orderDetailStatus === "ACCEPTED"
-                                ? "back-orange"
-                                : ""
-                            }
-                            onClick={() => {
-                              handleUpdateOrderItemStatus(
-                                item.orderId,
-                                item.productId,
-                                item.subProductId,
-                                item.orderDetailStatus,
-                                order
-                              );
-                            }}
-                          >
-                            <div
-                              style={{
-                                borderBottom: "1px solid #000",
-                                minHeight: "25px",
-                              }}
-                            >
-                              {item.orderDetailStatus}
-                            </div>
-                          </div>
-                        ))}
-                      </CusTableCell>
-                    </TableRow>
-                  ))}
-                </>
+                <>{renderTableBody()}</>
               ) : (
                 <TableRow>
                   <CusTableCell scope="row" colspan="9">
