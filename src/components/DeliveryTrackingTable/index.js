@@ -181,11 +181,13 @@ export const DeliveryTrackingTable = (props) => {
 
   const onClickUpdateStatus = (id) => {
     if (status) {
-      dispatch(updateOrder(id, status, null)).then((res) => {
-        if (res) {
-          resetState();
+      dispatch(updateOrder(id, status, null, null, user.loginId)).then(
+        (res) => {
+          if (res) {
+            resetState();
+          }
         }
-      });
+      );
       setStatus("");
     }
   };

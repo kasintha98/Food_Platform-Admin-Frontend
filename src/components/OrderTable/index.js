@@ -64,6 +64,7 @@ const statuses = [
 
 export const OrderTable = (props) => {
   const orders = useSelector((state) => state.order.orders);
+  const user = useSelector((state) => state.auth.user);
   const businessDateAll = useSelector((state) => state.user.businessDate);
   const paymentModes = useSelector((state) => state.user.paymentModes);
   const loading = useSelector((state) => state.order.loading);
@@ -118,7 +119,7 @@ export const OrderTable = (props) => {
 
   const onClickUpdateStatus = (id, order) => {
     if (status || paymentMode) {
-      /* dispatch(updateOrder(id, status, props.type)).then((res) => {
+      /* dispatch(updateOrder(id, status, props.type,user.loginId)).then((res) => {
         if (res) {
           handleIsReset();
         }
@@ -130,7 +131,8 @@ export const OrderTable = (props) => {
           paymentMode ? paymentMode : order.paymentMode,
           "PAID",
           status ? status : order.orderStatus,
-          props.type
+          props.type,
+          user.loginId
         )
       ).then((res) => {
         if (res) {

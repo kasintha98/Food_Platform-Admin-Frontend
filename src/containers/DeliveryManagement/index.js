@@ -217,7 +217,7 @@ export const DeliveryManagement = () => {
 
   const onClickSelectDeliBoy = (id) => {
     if (selectedDeliBoy) {
-      dispatch(updateOrderDeliBoy(id, selectedDeliBoy));
+      dispatch(updateOrderDeliBoy(id, selectedDeliBoy, user.loginId));
     } else {
       toast.error("Please select a new delivery boy!");
     }

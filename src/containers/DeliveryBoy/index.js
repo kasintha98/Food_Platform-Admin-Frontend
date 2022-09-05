@@ -190,7 +190,7 @@ export const DeliveryBoy = () => {
 
   const onClickUpdateStatus = (id, order) => {
     if ((status && status !== "none") || paymentMode) {
-      /* dispatch(updateOrder(id, status, null)).then((res) => {
+      /* dispatch(updateOrder(id, status, null,user.loginId)).then((res) => {
         if (res) {
           resetState();
         }
@@ -202,7 +202,8 @@ export const DeliveryBoy = () => {
           paymentMode ? paymentMode : order.paymentMode,
           "PAID",
           status ? status : order.orderStatus,
-          null
+          null,
+          user.loginId
         )
       ).then((res) => {
         if (res) {
@@ -458,7 +459,13 @@ export const DeliveryBoy = () => {
                         }
                         onClick={() => {
                           dispatch(
-                            updateOrder(row.orderId, "OUT FOR DELIVERY", null)
+                            updateOrder(
+                              row.orderId,
+                              "OUT FOR DELIVERY",
+                              null,
+                              null,
+                              user.loginId
+                            )
                           ).then((res) => {
                             if (res) {
                               resetState();

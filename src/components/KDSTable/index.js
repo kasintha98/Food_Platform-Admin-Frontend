@@ -32,6 +32,7 @@ const CusTableCell = styled(TableCell)`
 
 export const KDSTable = forwardRef((props, ref) => {
   const loading = useSelector((state) => state.order.loading);
+  const user = useSelector((state) => state.auth.user);
   const businessDateAll = useSelector((state) => state.user.businessDate);
   const [filteredData, setFilteredData] = useState([]);
   const [newSubStatus, setNewSubStatus] = useState(false);
@@ -125,7 +126,15 @@ export const KDSTable = forwardRef((props, ref) => {
       );
 
       dispatch(
-        updateOrderSubProdStatus(orderId, productId, subProductId, "ACCEPTED")
+        updateOrderSubProdStatus(
+          orderId,
+          productId,
+          subProductId,
+          "ACCEPTED",
+          null,
+          null,
+          user.loginId
+        )
       ).then((res) => {
         if (res) {
           newSubStatus ? setNewSubStatus(false) : setNewSubStatus(true);
@@ -141,7 +150,15 @@ export const KDSTable = forwardRef((props, ref) => {
       );
 
       dispatch(
-        updateOrderSubProdStatus(orderId, productId, subProductId, "PROCESSING")
+        updateOrderSubProdStatus(
+          orderId,
+          productId,
+          subProductId,
+          "PROCESSING",
+          null,
+          null,
+          user.loginId
+        )
       ).then((res) => {
         if (res) {
           newSubStatus ? setNewSubStatus(false) : setNewSubStatus(true);
@@ -149,7 +166,7 @@ export const KDSTable = forwardRef((props, ref) => {
       });
 
       if (order.orderStatus === "ACCEPTED") {
-        dispatch(updateOrder(orderId, "PROCESSING", null, true));
+        dispatch(updateOrder(orderId, "PROCESSING", null, true, user.loginId));
       }
     }
     if (currentOrderDetailStatus === "PROCESSING") {
@@ -161,7 +178,15 @@ export const KDSTable = forwardRef((props, ref) => {
       );
 
       dispatch(
-        updateOrderSubProdStatus(orderId, productId, subProductId, "FOOD READY")
+        updateOrderSubProdStatus(
+          orderId,
+          productId,
+          subProductId,
+          "FOOD READY",
+          null,
+          null,
+          user.loginId
+        )
       ).then((res) => {
         //If all order items are food ready then whole order is food ready
         if (
@@ -169,13 +194,13 @@ export const KDSTable = forwardRef((props, ref) => {
             (e) => e.orderDetailStatus === "FOOD READY"
           ).length === res[0].orderDetails.length
         ) {
-          dispatch(updateOrder(orderId, "FOOD READY", null, true)).then(
-            (res) => {
-              if (res) {
-                newSubStatus ? setNewSubStatus(false) : setNewSubStatus(true);
-              }
+          dispatch(
+            updateOrder(orderId, "FOOD READY", null, true, user.loginId)
+          ).then((res) => {
+            if (res) {
+              newSubStatus ? setNewSubStatus(false) : setNewSubStatus(true);
             }
-          );
+          });
         } else {
           newSubStatus ? setNewSubStatus(false) : setNewSubStatus(true);
         }
@@ -184,7 +209,9 @@ export const KDSTable = forwardRef((props, ref) => {
   };
 
   const updateFoodPackageFlag = (orderId, foodPackagedFlag) => {
-    dispatch(updateFoodPackagedFlag(orderId, foodPackagedFlag)).then((res) => {
+    dispatch(
+      updateFoodPackagedFlag(orderId, foodPackagedFlag, user.loginId)
+    ).then((res) => {
       if (res) {
         handleRefresh();
       }
@@ -202,7 +229,8 @@ export const KDSTable = forwardRef((props, ref) => {
         orderId,
         productId,
         subProductId,
-        foodPackagedFlag
+        foodPackagedFlag,
+        user.loginId
       )
     ).then((res) => {
       if (res) {
@@ -230,7 +258,8 @@ export const KDSTable = forwardRef((props, ref) => {
               orderDetails[i].subProductId,
               status,
               null,
-              true
+              true,
+              user.loginId
             )
           );
         }

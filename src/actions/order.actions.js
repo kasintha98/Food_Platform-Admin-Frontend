@@ -1,7 +1,6 @@
 import axios from "../helpers/axios";
 import { orderConstants } from "./constants";
 import { toast } from "react-toastify";
-import { useSelector } from "react-redux";
 
 //action to get customer orders from the database
 export const getCustomerOrders = (
@@ -88,7 +87,13 @@ export const getAllOrders = (orderReceivedDate) => {
 };
 
 //action to update order status
-export const updateOrder = (orderId, orderStatus, tabType, hideToast) => {
+export const updateOrder = (
+  orderId,
+  orderStatus,
+  tabType,
+  hideToast,
+  updatedBy
+) => {
   return async (dispatch) => {
     //const businessDateAll = useSelector((state) => state.user.businessDate);
 
@@ -99,6 +104,7 @@ export const updateOrder = (orderId, orderStatus, tabType, hideToast) => {
         params: {
           orderId,
           orderStatus,
+          updatedBy,
         },
       });
 
@@ -148,7 +154,8 @@ export const updateOrderSubProdStatus = (
   subProductId,
   orderStatus,
   tabType,
-  isAutoSubProductUpdate
+  isAutoSubProductUpdate,
+  updatedBy
 ) => {
   return async (dispatch) => {
     dispatch({ type: orderConstants.UPDATE_ORDER_SUBPROD_STATUS_REQUEST });
@@ -163,6 +170,7 @@ export const updateOrderSubProdStatus = (
             productId,
             subProductId,
             status: orderStatus,
+            updatedBy,
           },
         }
       );
@@ -190,7 +198,7 @@ export const updateOrderSubProdStatus = (
   };
 };
 
-export const updateOrderDeliBoy = (orderId, deliveryUser) => {
+export const updateOrderDeliBoy = (orderId, deliveryUser, updatedBy) => {
   return async (dispatch) => {
     dispatch({ type: orderConstants.UPDATE_ORDER_DELI_BOY_REQUEST });
 
@@ -199,6 +207,7 @@ export const updateOrderDeliBoy = (orderId, deliveryUser) => {
         params: {
           orderId,
           deliveryUser,
+          updatedBy,
         },
       });
 
@@ -239,12 +248,16 @@ export const updateOrderDeliBoy = (orderId, deliveryUser) => {
   };
 };
 
-export const updateFoodPackagedFlag = (orderId, foodPackagedFlag) => {
+export const updateFoodPackagedFlag = (
+  orderId,
+  foodPackagedFlag,
+  updatedBy
+) => {
   return async (dispatch) => {
     dispatch({ type: orderConstants.UPDATE_ORDER_SUBPROD_STATUS_REQUEST });
     try {
       const res = await axios.post("/updateFoodPackagedFlagByOrderId", null, {
-        params: { orderId, foodPackagedFlag },
+        params: { orderId, foodPackagedFlag, updatedBy },
       });
 
       if (res.status === 200) {
@@ -274,7 +287,8 @@ export const updateOrderPaymentAndStatus = (
   paymentMode,
   paymentStatus,
   orderStatus,
-  tabType
+  tabType,
+  updatedBy
 ) => {
   return async (dispatch) => {
     dispatch({ type: orderConstants.UPDATE_STATUS_PAYMENT_ORDER_REQUEST });
@@ -286,6 +300,7 @@ export const updateOrderPaymentAndStatus = (
           paymentMode,
           paymentStatus,
           orderStatus,
+          updatedBy,
         },
       });
 
@@ -331,7 +346,8 @@ export const updateFoodPackagedFlagByItem = (
   orderId,
   productId,
   subProductId,
-  foodPackagedFlag
+  foodPackagedFlag,
+  updatedBy
 ) => {
   return async (dispatch) => {
     dispatch({
@@ -342,7 +358,13 @@ export const updateFoodPackagedFlagByItem = (
         "/updateFoodPackagedFlagForOrderItem",
         null,
         {
-          params: { orderId, productId, subProductId, foodPackagedFlag },
+          params: {
+            orderId,
+            productId,
+            subProductId,
+            foodPackagedFlag,
+            updatedBy,
+          },
         }
       );
 
