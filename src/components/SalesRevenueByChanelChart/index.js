@@ -55,7 +55,6 @@ export const SalesRevenueByChanelChart = () => {
   const [dineOrders, setDineOrders] = useState([]);
   const [zomatoOrders, setZomatoOrders] = useState([]);
   const [swizyOrders, setSwizyOrders] = useState([]);
-  const [dineInOrders, setDineInOrders] = useState([]);
   const [storeTakeAwayOrders, setStoreTakeAwayOrders] = useState([]);
   const [storeDeliveryOrders, setStoreDeliveryOrders] = useState([]);
   const [phoneSelfCollectOrders, setPhoneSelfCollectOrders] = useState([]);
@@ -72,7 +71,6 @@ export const SalesRevenueByChanelChart = () => {
     "DINE-IN",
     "ZOMATO",
     "SWIGGY",
-    "DINE-IN",
     "STORE TAKE-AWAY",
     "STORE DELIVERY",
     "PHONE SELF-COLLECT",
@@ -134,15 +132,6 @@ export const SalesRevenueByChanelChart = () => {
         .reduce((a, b) => a + b, 0)
     );
 
-    setDineInOrders(
-      allReports.salesSummeryByOrderSource
-        .filter(function (el) {
-          return el.orderSource === "D";
-        })
-        .map((a) => a.orderValue)
-        .reduce((a, b) => a + b, 0)
-    );
-
     setStoreTakeAwayOrders(
       allReports.salesSummeryByOrderSource
         .filter(function (el) {
@@ -197,7 +186,6 @@ export const SalesRevenueByChanelChart = () => {
           dineOrders,
           zomatoOrders,
           swizyOrders,
-          dineInOrders,
           storeTakeAwayOrders,
           storeDeliveryOrders,
           phoneSelfCollectOrders,
