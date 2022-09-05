@@ -228,6 +228,10 @@ export const OrderReportTable = (props) => {
           <ExcelColumn label="restaurantId" value="restaurantId" />
           <ExcelColumn label="orderStatus" value="orderStatus" />
           <ExcelColumn label="orderId" value="orderId" />
+          <ExcelColumn
+            label="paymentTxnReference"
+            value="paymentTxnReference"
+          />
           <ExcelColumn label="createdDate" value="createdDate" />
           <ExcelColumn label="orderSource" value="orderSource" />
           <ExcelColumn label="orderDeliveryType" value="orderDeliveryType" />
@@ -277,6 +281,7 @@ export const OrderReportTable = (props) => {
               <CusTableCell1 align="center">STORE NAME</CusTableCell1>
               <CusTableCell1 align="center">ORDER STATUS</CusTableCell1>
               <CusTableCell1 align="center">ORDER NO</CusTableCell1>
+              <CusTableCell1 align="center">REFERENCE NO</CusTableCell1>
               <CusTableCell1 align="center">ORDER DATE</CusTableCell1>
               <CusTableCell1 align="center">SOURCE</CusTableCell1>
               <CusTableCell1 align="center">ORDER TYPE</CusTableCell1>
@@ -320,6 +325,11 @@ export const OrderReportTable = (props) => {
                       <span style={{ color: "#4472c4" }}>
                         {row.orderId.slice(19, 23)}
                       </span>
+                    </CusTableCell2>
+                    <CusTableCell2 align="center">
+                      {row.paymentTxnReference
+                        ? row.paymentTxnReference
+                        : "N/A"}
                     </CusTableCell2>
                     <CusTableCell2 align="center">
                       {new Date(row.createdDate).getFullYear()}-
