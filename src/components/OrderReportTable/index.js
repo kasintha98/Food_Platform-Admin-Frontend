@@ -268,6 +268,7 @@ export const OrderReportTable = (props) => {
           />
           <ExcelColumn label="orderStatus" value="orderStatus" />
           <ExcelColumn label="createdBy" value="createdBy" />
+          <ExcelColumn label="updatedBy" value="updatedBy" />
           {/* <ExcelColumn label="Marital Status"
                                  value={(col) => col.is_married ? "Married" : "Single"}/> */}
         </ExcelSheet>
@@ -302,6 +303,7 @@ export const OrderReportTable = (props) => {
               <CusTableCell1 align="center">ACTION</CusTableCell1>
               <CusTableCell1 align="center">VIEW | PRINT INVOICE</CusTableCell1>
               <CusTableCell1 align="center">ORDER ENTERED BY</CusTableCell1>
+              <CusTableCell1 align="center">ORDER UPDATED BY</CusTableCell1>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -425,6 +427,9 @@ export const OrderReportTable = (props) => {
                     </CusTableCell2>
                     <CusTableCell2 align="center">
                       {row.createdBy}
+                    </CusTableCell2>
+                    <CusTableCell2 align="center">
+                      {row.updatedBy}
                     </CusTableCell2>
                   </TableRow>
                 ))}
