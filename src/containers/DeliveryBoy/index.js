@@ -414,7 +414,13 @@ export const DeliveryBoy = () => {
                             id: "uncontrolled-native",
                           }}
                           onChange={handlePaymentModeUpdate}
-                          sx={{ fontSize: "0.75rem" }}
+                          disabled={row.orderStatus === "DELIVERED"}
+                          sx={{
+                            fontSize: "0.75rem",
+                            "& .MuiInputBase-input.Mui-disabled": {
+                              WebkitTextFillColor: "black",
+                            },
+                          }}
                         >
                           {paymentModes.map((mode) => (
                             <option
