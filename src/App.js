@@ -45,6 +45,7 @@ import { DineIn } from "./containers/DineIn";
 import { AdminMenu } from "./containers/AdminMenu";
 import { Coupon } from "./containers/Coupon";
 import { EOD } from "./containers/EOD";
+import { ForgotPasswordAdmin } from "./containers/ForgotPasswordAdmin";
 
 function App() {
   const dispatch = useDispatch();
@@ -211,8 +212,17 @@ function App() {
           (module) => module.moduleName === "ADMIN FUNCTIONS"
         ) && <PrivateRoute path="/coupons" component={Coupon}></PrivateRoute>}
 
+        {modulesForUser.some(
+          (module) => module.moduleName === "PASSWORD RESET"
+        ) && (
+          <PrivateRoute
+            path="/password-reset-admin"
+            component={ForgotPasswordAdmin}
+          ></PrivateRoute>
+        )}
+
         <Route path="/signin" component={Signin}></Route>
-        <Route path="/forgot-password" component={ForgotPassword}></Route>
+        {/* <Route path="/forgot-password" component={ForgotPassword}></Route> */}
         <Route path="*" component={PageNotFound} />
       </Switch>
     </div>

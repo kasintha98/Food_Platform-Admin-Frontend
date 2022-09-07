@@ -12,12 +12,14 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import TextField from "@mui/material/TextField";
 import { Typography } from "@mui/material";
+import { ForgotPassword } from "../ForgotPassword";
 
 function Signin(props) {
   //initial state of email
   const [loginId, setLoginId] = useState("");
   //initial state of password
   const [password, setPassword] = useState("");
+  const [isResetPasswordpassword, setIsResetPasswordPassword] = useState(false);
 
   //geting user's authenticate status (from auth.reducers.js) and storing in the auth variable
   const auth = useSelector((state) => state.auth);
@@ -30,9 +32,14 @@ function Signin(props) {
     const user = { loginId, password };
     dispatch(newLogin(user)).then((res) => {
       if (res && res.isFirstTime) {
-        history.push("/forgot-password");
+        //history.push("/forgot-password");
+        setIsResetPasswordPassword(true);
       }
     });
+  };
+
+  const closeResetPassword = () => {
+    setIsResetPasswordPassword(false);
   };
 
   if (auth.authenticate === true) {
@@ -42,60 +49,66 @@ function Signin(props) {
 
   return (
     <div>
-      <ToastContainer />
-      <Layout>
-        <Row style={{ height: "100vh" }}>
-          <Col className="main col-4"></Col>
-          <Col className="col-8">
-            <Row
-              style={{ marginTop: "50px", padding: "20px" }}
-              className="text-center"
-            >
-              <Col md={{ span: 6, offset: 3 }}>
-                <img width="100px" src={logo} alt="logo" />
+      {isResetPasswordpassword ? (
+        <ForgotPassword
+          closeResetPassword={closeResetPassword}
+        ></ForgotPassword>
+      ) : (
+        <>
+          <ToastContainer />
+          <Layout>
+            <Row style={{ height: "100vh" }}>
+              <Col className="main col-4"></Col>
+              <Col className="col-8">
+                <Row
+                  style={{ marginTop: "50px", padding: "20px" }}
+                  className="text-center"
+                >
+                  <Col md={{ span: 6, offset: 3 }}>
+                    <img width="100px" src={logo} alt="logo" />
 
-                <h2 className="text-center">Sign In</h2>
-                <br></br>
-                <h3 className="text-center">Hangries Admin Dashboard</h3>
-                <br></br>
-                <Form onSubmit={userLogin}>
-                  <TextField
-                    variant="standard"
-                    label="Login ID"
-                    type="text"
-                    value={loginId}
-                    className="w-100"
-                    onChange={(e) => {
-                      setLoginId(e.target.value);
-                    }}
-                  />
+                    <h2 className="text-center">Sign In</h2>
+                    <br></br>
+                    <h3 className="text-center">Hangries Admin Dashboard</h3>
+                    <br></br>
+                    <Form onSubmit={userLogin}>
+                      <TextField
+                        variant="standard"
+                        label="Login ID"
+                        type="text"
+                        value={loginId}
+                        className="w-100"
+                        onChange={(e) => {
+                          setLoginId(e.target.value);
+                        }}
+                      />
 
-                  <TextField
-                    variant="standard"
-                    label="Password"
-                    type="password"
-                    value={password}
-                    className="w-100"
-                    onChange={(e) => {
-                      setPassword(e.target.value);
-                    }}
-                  />
+                      <TextField
+                        variant="standard"
+                        label="Password"
+                        type="password"
+                        value={password}
+                        className="w-100"
+                        onChange={(e) => {
+                          setPassword(e.target.value);
+                        }}
+                      />
 
-                  <Form.Group className="mt-3">
-                    <Form.Check
-                      className="text-center"
-                      type="checkbox"
-                      label="Remember Me"
-                    />
-                  </Form.Group>
-                  <Button
-                    variant="primary"
-                    type="submit"
-                    style={{ width: "100%" }}
-                  >
-                    Sign In
-                  </Button>
-                  <div
+                      <Form.Group className="mt-3">
+                        <Form.Check
+                          className="text-center"
+                          type="checkbox"
+                          label="Remember Me"
+                        />
+                      </Form.Group>
+                      <Button
+                        variant="primary"
+                        type="submit"
+                        style={{ width: "100%" }}
+                      >
+                        Sign In
+                      </Button>
+                      {/* <div
                     style={{
                       display: "flex",
                       alignItems: "center",
@@ -111,13 +124,15 @@ function Signin(props) {
                     >
                       Reset Password Now!
                     </NavLink>
-                  </div>
-                </Form>
+                  </div> */}
+                    </Form>
+                  </Col>
+                </Row>
               </Col>
             </Row>
-          </Col>
-        </Row>
-      </Layout>
+          </Layout>
+        </>
+      )}
     </div>
   );
 }

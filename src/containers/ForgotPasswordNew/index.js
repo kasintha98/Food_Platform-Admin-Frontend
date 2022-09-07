@@ -10,7 +10,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import TextField from "@mui/material/TextField";
 
-export const ForgotPassword = (props) => {
+export const ForgotPasswordNew = () => {
   const [loginId, setLoginId] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [passwordRepeat, setPasswordRepeat] = useState("");
@@ -40,21 +40,20 @@ export const ForgotPassword = (props) => {
         setNewPassword("");
         setPasswordRepeat("");
         //history.push("/signin");
-        props.closeResetPassword && props.closeResetPassword();
       }
     });
   };
 
   if (auth.authenticate === true) {
     //if authenticate is true (this means  user's LOGIN_SUCCESS) redirecting the user to the home page
-    return <Redirect to={"/"} />;
+    //return <Redirect to={"/"} />;
   }
 
   return (
     <div>
       <ToastContainer />
       <Layout>
-        <Row style={{ height: "100vh" }}>
+        <Row style={{ height: "100vh", marginTop: "-90px" }}>
           <Col className="main col-4"></Col>
           <Col className="col-8">
             <Row

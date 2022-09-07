@@ -304,6 +304,17 @@ function NewLayout(props) {
           </ListItem>
         )}
 
+        {modulesForUser.some(
+          (module) => module.moduleName === "PASSWORD RESET"
+        ) && (
+          <ListItem>
+            <NavLink to={"/password-reset-admin"}>
+              <i className="fa fa-gear"></i>
+              &nbsp; Password Reset
+            </NavLink>
+          </ListItem>
+        )}
+
         {modulesForUser.some((module) => module.moduleName === "EOD") && (
           <ListItem>
             <a onClick={handleOpenEOD} style={{ color: "#fff" }}>
