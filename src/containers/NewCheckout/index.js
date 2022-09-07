@@ -592,7 +592,7 @@ export default function NewCheckout(props) {
         customerAddressId: defaultAddress ? 99999 : currentGetAddress.id,
         cgstCalculatedValue: cgstCaluclatedValue.toFixed(2),
         sgstCalculatedValue: sgstCalculatedValue.toFixed(2),
-        overallPriceWithTax: overallPriceWithTax,
+        overallPriceWithTax: Math.round(overallPriceWithTax),
         orderDetails: orderDetails,
         createdBy: user.firstName,
         paymentTxnReference: referenceNo,
