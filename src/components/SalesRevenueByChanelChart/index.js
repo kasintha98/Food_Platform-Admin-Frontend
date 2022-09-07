@@ -49,6 +49,7 @@ export const options = {
 
 export const SalesRevenueByChanelChart = () => {
   const allReports = useSelector((state) => state.report.allReports);
+  const orderSources = useSelector((state) => state.user.orderSources);
   const [webOrders, setWebOrders] = useState([]);
   const [mobileOrders, setMobileOrders] = useState([]);
   const [selfOrders, setSelfOrders] = useState([]);
@@ -64,18 +65,20 @@ export const SalesRevenueByChanelChart = () => {
 
   const ref = React.createRef();
 
-  const labels = [
+  /* const labels = [
+    "DELIVERY",
+    "DINE IN",
     "MOBILE",
+    "PHONE DELIVERY",
     "WEB",
     "SELF-COLLECT",
-    "DINE-IN",
     "ZOMATO",
     "SWIGGY",
     "STORE TAKE-AWAY",
     "STORE DELIVERY",
     "PHONE SELF-COLLECT",
-    "PHONE DELIVERY",
-  ];
+ 
+  ]; */
 
   useEffect(() => {
     setWebOrders(
@@ -170,7 +173,7 @@ export const SalesRevenueByChanelChart = () => {
   }, [allReports]);
 
   const data = {
-    labels,
+    labels: orderSources.map((value) => value.configCriteriaDesc),
     datasets: [
       /* {
         label: "Sale",

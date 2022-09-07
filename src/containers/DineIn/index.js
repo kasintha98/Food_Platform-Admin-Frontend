@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { getOrderSourceConfigDetails } from "../../actions";
+import { useSelector, useDispatch } from "react-redux";
 import { Row, Col } from "react-bootstrap";
 import { Typography, Button } from "@mui/material";
 import Layout from "../NewLayout";
@@ -23,7 +24,7 @@ const CusSelect = styled(Select)`
 `;
 
 const orderTypes = [
-  { name: "DINE-IN", code: "D", paymentStatus: "PAID" },
+  { name: "DINE IN", code: "D", paymentStatus: "PAID" },
   { name: "STORE TAKE-AWAY", code: "ST", paymentStatus: "PAID" },
   { name: "STORE DELIVERY", code: "SD", paymentStatus: "PAID" },
   { name: "PHONE SELF-COLLECT", code: "PT", paymentStatus: "Not Paid" },
@@ -34,6 +35,8 @@ export const DineIn = () => {
   const user = useSelector((state) => state.auth.user);
   const auth = useSelector((state) => state.auth);
   const stores = useSelector((state) => state.store.stores);
+
+  const dispatch = useDispatch();
 
   const [selectedStore, setSelectedStore] = useState(
     stores[0] ? stores[0].resturantName : user.resturantName
@@ -47,10 +50,44 @@ export const DineIn = () => {
         }
   );
   const [ShowCheckout, setShowCheckout] = useState(false);
-  const [selectedOrderType, setSelectedOrderType] = useState("DINE-IN");
+  //const [orderTypesT, setOrderTypesT] = useState([]);
+  const [selectedOrderType, setSelectedOrderType] = useState("DINE IN");
   const [selectedOrderTypeObj, setSelectedOrderTypeObj] = useState(
     orderTypes[0]
   );
+
+  /* useEffect(() => {
+    dispatch(getOrderSourceConfigDetails(user.restaurantId, user.storeId)).then(
+      (res) => {
+        if (res) {
+          let newOrderSources = [];
+
+          for (let i = 0; i < res.length; i++) {
+            if (
+              res[i].configCriteriaDesc === "DINE IN" ||
+              res[i].configCriteriaDesc === "STORE TAKE AWAY" ||
+              res[i].configCriteriaDesc === "STORE DELIVERY" ||
+              res[i].configCriteriaDesc === "PHONE SELF COLLECT" ||
+              res[i].configCriteriaDesc === "PHONE DELIVERY"
+            )
+              newOrderSources.push({
+                ...res[i],
+                name: res[i].configCriteriaDesc,
+                code: res[i].configCriteriaValue,
+                paymentStatus:
+                  res[i].configCriteriaDesc === "DINE IN" ||
+                  res[i].configCriteriaDesc === "STORE TAKE AWAY" ||
+                  res[i].configCriteriaDesc === "STORE DELIVERY"
+                    ? "PAID"
+                    : "Not Paid",
+              });
+          }
+
+          setOrderTypesT(newOrderSources);
+        }
+      }
+    );
+  }, []); */
 
   if (auth.authenticate !== true) {
     return <Redirect to={"/signin"} />;

@@ -25,6 +25,7 @@ const initState = {
   allBusinessDates: [],
   deliveryPrice: null,
   paymentModes: [],
+  orderSources: [],
 };
 
 export default (state = initState, action) => {
@@ -390,6 +391,26 @@ export default (state = initState, action) => {
       state = {
         ...state,
         paymentModes: [],
+      };
+      break;
+
+    case userConstants.GET_ORDER_SOURCE_CONFIG_REQUEST:
+      state = {
+        ...state,
+      };
+      break;
+
+    case userConstants.GET_ORDER_SOURCE_CONFIG_SUCCESS:
+      state = {
+        ...state,
+        orderSources: action.payload,
+      };
+      break;
+
+    case userConstants.GET_ORDER_SOURCE_CONFIG_FAILURE:
+      state = {
+        ...state,
+        orderSources: [],
       };
       break;
   }

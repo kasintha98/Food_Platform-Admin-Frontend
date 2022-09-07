@@ -8,6 +8,7 @@ import {
   updateCart,
   getBusinessDate,
   getPaymentModes,
+  getOrderSourceConfigDetails,
 } from "./actions";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -68,8 +69,10 @@ function App() {
     }
 
     if (localStorage.getItem("user")) {
+      const user = JSON.parse(localStorage.getItem("user"));
       dispatch(getVersion());
       dispatch(getPaymentModes());
+      dispatch(getOrderSourceConfigDetails(user.restaurantId, user.storeId));
     }
   }, []);
 
