@@ -70,7 +70,7 @@ export const SalesRevenueByChanelChart = () => {
   const ref = React.createRef();
 
   const labels = [
-    "WEB",
+    /* "WEB", */
     "MOBILE",
     "SWIGGY",
     "ZOMATO",
@@ -86,14 +86,14 @@ export const SalesRevenueByChanelChart = () => {
   ];
 
   useEffect(() => {
-    setWebOrders(
+    /* setWebOrders(
       allReports.salesSummeryByOrderSource
         .filter(function (el) {
           return el.orderSource === "W";
         })
         .map((a) => a.orderValue)
         .reduce((a, b) => a + b, 0)
-    );
+    ); */
 
     setMobileOrders(
       allReports.salesSummeryByOrderSource
@@ -225,7 +225,7 @@ export const SalesRevenueByChanelChart = () => {
       {
         label: "Order",
         data: [
-          webOrders,
+          /* webOrders, */
           mobileOrders,
           swizyOrders,
           zomatoOrders,
