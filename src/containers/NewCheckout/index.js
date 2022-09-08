@@ -594,7 +594,8 @@ export default function NewCheckout(props) {
         sgstCalculatedValue: sgstCalculatedValue.toFixed(2),
         overallPriceWithTax: Math.round(overallPriceWithTax),
         orderDetails: orderDetails,
-        createdBy: user.firstName,
+        createdBy: user.loginId,
+        updatedBy: user.loginId,
         paymentTxnReference: referenceNo,
         couponCode: couponReduxObj
           ? couponReduxObj.couponDetails.couponCode
@@ -1497,6 +1498,7 @@ export default function NewCheckout(props) {
           <Row className="w-100">
             <Col className="col-6">
               <ReactToPrint
+                //pageStyle="@page { fontSize: 40px !important; }"
                 trigger={() => (
                   <Button
                     color="secondary"
