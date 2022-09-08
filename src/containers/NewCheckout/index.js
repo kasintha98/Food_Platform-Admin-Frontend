@@ -1498,7 +1498,6 @@ export default function NewCheckout(props) {
           <Row className="w-100">
             <Col className="col-6">
               <ReactToPrint
-                //pageStyle="@page { fontSize: 40px !important; }"
                 trigger={() => (
                   <Button
                     color="secondary"

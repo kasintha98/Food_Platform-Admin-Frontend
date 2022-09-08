@@ -52,3 +52,25 @@
     margin-top: 40vh;
   }
 }
+
+@media print {
+  div {
+    font-size: 30px !important;
+  }
+
+  span {
+    font-size: 30px !important;
+  }
+
+  p {
+    font-size: 30px !important;
+  }
+
+  th {
+    font-size: 30px !important;
+  }
+
+  td {
+    font-size: 30px !important;
+  }
+}
