@@ -368,7 +368,7 @@ export default function NewCheckout(props) {
     const grantTot = allSub + allTax + Number(delCharge);
     grandTotalForPayU = grantTot.toFixed(2);
 
-    return <span>₹ {grantTot.toFixed(2)}</span>;
+    return <span>₹ {Math.round(grantTot.toFixed(2))}.00</span>;
   };
 
   const calcDeliveryPrice = () => {
