@@ -97,6 +97,9 @@ export const CashSalesReport = (props) => {
                   <CusTableCell1 align="center">STORE NAME</CusTableCell1>
                   <CusTableCell1 align="center">CRITERIA</CusTableCell1>
                   <CusTableCell3 align="center">DINE-IN</CusTableCell3>
+
+<CusTableCell3 align="center">WEB SELF COLLECT</CusTableCell3>
+
                   <CusTableCell3 align="center">STORE TAKE-AWAY</CusTableCell3>
                   <CusTableCell3 align="center">STORE DELIVERY</CusTableCell3>
                   <CusTableCell3 align="center">
@@ -149,6 +152,32 @@ export const CashSalesReport = (props) => {
                           ).totalPrice
                         : 0}
                     </CusTableCell2>
+
+<CusTableCell2 align="center">
+                      {row.details.ORDER_SOURCE.find(
+                        (x) => x.category === "WEB SELF COLLECT"
+                      )
+                        ? row.details.ORDER_SOURCE.find(
+                            (x) => x.category === "WEB SELF COLLECT"
+                          ).totalQty
+                        : 0}
+
+                      <br></br>
+                      <div
+                        style={{ borderBottom: "1px solid lightgray" }}
+                      ></div>
+                      {row.details.ORDER_SOURCE.find(
+                        (x) => x.category === "WEB SELF COLLECT"
+                      )
+                        ? row.details.ORDER_SOURCE.find(
+                            (x) => x.category === "WEB SELF COLLECT"
+                          ).totalPrice
+                        : 0}
+                    </CusTableCell2>
+
+
+
+
                     <CusTableCell2 align="center">
                       {row.details.ORDER_SOURCE.find(
                         (x) => x.category === "Store Take Away"
