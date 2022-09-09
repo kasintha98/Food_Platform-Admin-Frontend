@@ -1426,6 +1426,12 @@ export default function NewCheckout(props) {
                       )}
                     </Typography>
                     <Typography sx={{ fontWeight: "600" }}>
+                      Table No:{" "}
+                      {orderResp && orderResp.storeTableId
+                        ? orderResp.storeTableId
+                        : "N/A"}
+                    </Typography>
+                    <Typography sx={{ fontWeight: "600" }}>
                       <span>
                         {orderResp ? orderResp.orderDeliveryType : null}
                       </span>

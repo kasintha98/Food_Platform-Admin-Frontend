@@ -239,6 +239,7 @@ export const OrderReportTable = (props) => {
           <ExcelColumn label="paymentMode" value="paymentMode" />
           <ExcelColumn label="customerName" value="customerName" />
           <ExcelColumn label="mobileNumber" value="mobileNumber" />
+          <ExcelColumn label="storeTableId" value="storeTableId" />
           <ExcelColumn
             label="overallPriceWithTax"
             value="overallPriceWithTax"
@@ -291,6 +292,7 @@ export const OrderReportTable = (props) => {
               <CusTableCell1 align="center">CUSTOMER NAME</CusTableCell1>
               <CusTableCell1 align="center">CUSTOMER ADDRESS</CusTableCell1>
               <CusTableCell1 align="center">CUSTOMER PHONE NO</CusTableCell1>
+              <CusTableCell1 align="center">TABLE NO</CusTableCell1>
               <CusTableCell1 align="center">
                 TOTAL AMOUNT INC. TAX
               </CusTableCell1>
@@ -356,6 +358,9 @@ export const OrderReportTable = (props) => {
                     <CusTableCell2 align="center">{row.address}</CusTableCell2>
                     <CusTableCell2 align="center">
                       {row.mobileNumber}
+                    </CusTableCell2>
+                    <CusTableCell2 align="center">
+                      {row.storeTableId ? row.storeTableId : "N/A"}
                     </CusTableCell2>
                     <CusTableCell2
                       align="center"
