@@ -90,7 +90,7 @@ export const DeliveryManagement = () => {
         `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,
         null,
         null,
-        "DELIVERY"
+        "WEB DELIVERY"
       )
     ).then((res) => {
       if (res) {
@@ -159,7 +159,7 @@ export const DeliveryManagement = () => {
         `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,
         keywords,
         null,
-        "DELIVERY"
+        "WEB DELIVERY"
       )
     ).then((res) => {
       if (res) {
