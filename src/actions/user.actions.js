@@ -957,8 +957,8 @@ export const getOrderSourceConfigDetails = (restaurantId, storeId) => {
 
       const res = await axios.get(`/getConfigDetailsByCriteria`, {
         params: {
-          restaurantId,
-          storeId,
+          restaurantId: "R001",
+          storeId: "ALL",
           criteria: "ORDER_SOURCE",
         },
       });
@@ -994,7 +994,7 @@ export const getPaymentConfigDetailsCashierReport = (restaurantId) => {
 
       const res = await axios.get(`/getConfigDetailsByCriteria`, {
         params: {
-          restaurantId,
+          restaurantId: "R001",
           storeId: "ALL",
           criteria: "PAYMENT_MODE_CASHIER_REPORT",
         },
@@ -1034,8 +1034,8 @@ export const getOrderSourceConfigDetailsCashierReport = (
 
       const res = await axios.get(`/getConfigDetailsByCriteria`, {
         params: {
-          restaurantId,
-          storeId,
+          restaurantId: "R001",
+          storeId: "ALL",
           criteria: "ORDER_SOURCE_CASHIER_REPORT",
         },
       });

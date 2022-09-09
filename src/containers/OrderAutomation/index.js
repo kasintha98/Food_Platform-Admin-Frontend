@@ -69,21 +69,21 @@ export const OrderAutomation = () => {
   };
 
   const handleSelectedStore = (store) => {
-    dispatch(
-      getConfigDetails(store.restaurantId, store.storeId, "ORDER_SOURCE")
-    ).then((data) => {
-      let ob = {};
-      console.log(data);
-      if (data) {
-        for (let i = 0; i < data.length; i++) {
-          if (data[i].configValue === "Y") {
-            Object.assign(ob, { [data[i].configCriteriaValue]: true });
+    dispatch(getConfigDetails(store.restaurantId, "ALL", "ORDER_SOURCE")).then(
+      (data) => {
+        let ob = {};
+        console.log(data);
+        if (data) {
+          for (let i = 0; i < data.length; i++) {
+            if (data[i].configValue === "Y") {
+              Object.assign(ob, { [data[i].configCriteriaValue]: true });
+            }
           }
         }
+        //setPrevCheckedRoles(ob);
+        setCheckedRoles(ob);
       }
-      //setPrevCheckedRoles(ob);
-      setCheckedRoles(ob);
-    });
+    );
     setSelectedStoreObj(store);
   };
 

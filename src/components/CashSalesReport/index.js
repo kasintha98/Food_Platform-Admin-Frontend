@@ -87,20 +87,22 @@ export const CashSalesReport = (props) => {
   }, [props.restaurantId, props.storeId, props.startDate, props.endDate]);
 
   const renderSourceTotal = (data) => {
-    let totalQtyN = 0;
-    let totalPriceN = 0;
-    for (let i = 0; i < data.length; i++) {
-      totalQtyN = totalQtyN + data[i].totalQty;
-      totalPriceN = totalPriceN + data[i].totalPrice;
-    }
+    if (data) {
+      let totalQtyN = 0;
+      let totalPriceN = 0;
+      for (let i = 0; i < data.length; i++) {
+        totalQtyN = totalQtyN + data[i].totalQty;
+        totalPriceN = totalPriceN + data[i].totalPrice;
+      }
 
-    return (
-      <>
-        <span>{totalQtyN}</span>
-        <br></br>
-        <div style={{ borderTop: "1px solid lightgray" }}>{totalPriceN}</div>
-      </>
-    );
+      return (
+        <>
+          <span>{totalQtyN}</span>
+          <br></br>
+          <div style={{ borderTop: "1px solid lightgray" }}>{totalPriceN}</div>
+        </>
+      );
+    }
   };
 
   const renderPaymentTotal = (data) => {
@@ -242,7 +244,13 @@ export const CashSalesReport = (props) => {
                             </div>
                           </>
                         ) : (
-                          "N/A"
+                          <>
+                            <span>0</span>
+                            <br></br>
+                            <div style={{ borderTop: "1px solid lightgray" }}>
+                              0
+                            </div>
+                          </>
                         )}
                       </CusTableCell2>
                     ))}
@@ -276,7 +284,13 @@ export const CashSalesReport = (props) => {
                             </div>
                           </>
                         ) : (
-                          "N/A"
+                          <>
+                            <span>0</span>
+                            <br></br>
+                            <div style={{ borderTop: "1px solid lightgray" }}>
+                              0
+                            </div>
+                          </>
                         )}
                       </CusTableCell2>
                     ))}
