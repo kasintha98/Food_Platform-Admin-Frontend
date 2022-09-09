@@ -90,9 +90,14 @@ export const NewReports = () => {
   const stores = useSelector((state) => state.store.stores);
   const [dateState, setDateState] = useState([
     {
-      startDate: new Date(businessDateAll && businessDateAll.businessDate),
+      startDate:
+        businessDateAll && businessDateAll.businessDate
+          ? new Date(businessDateAll.businessDate)
+          : new Date(),
       endDate: addDays(
-        new Date(businessDateAll && businessDateAll.businessDate),
+        businessDateAll && businessDateAll.businessDate
+          ? new Date(businessDateAll.businessDate)
+          : new Date(),
         0
       ),
       key: "selection",
