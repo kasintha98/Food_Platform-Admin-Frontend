@@ -1,6 +1,10 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllReports } from "../../actions";
+import {
+  getAllReports,
+  getPaymentConfigDetailsCashierReport,
+  getOrderSourceConfigDetailsCashierReport,
+} from "../../actions";
 import styled from "@emotion/styled";
 import {
   TableContainer,
@@ -46,6 +50,12 @@ const CusTableCell2 = styled(TableCell)`
 export const CashSalesReport = (props) => {
   const allReports = useSelector((state) => state.report.allReports);
   const loading = useSelector((state) => state.report.loading);
+  const paymentModesForCashierReport = useSelector(
+    (state) => state.user.paymentModesForCashierReport
+  );
+  const orderSourcesForCashierReport = useSelector(
+    (state) => state.user.orderSourcesForCashierReport
+  );
 
   const dispatch = useDispatch();
 
@@ -62,7 +72,72 @@ export const CashSalesReport = (props) => {
         }-${props.endDate.getDate()}`
       )
     );
+
+    dispatch(
+      getPaymentConfigDetailsCashierReport(
+        props.restaurantId ? props.restaurantId : "ALL"
+      )
+    );
+    dispatch(
+      getOrderSourceConfigDetailsCashierReport(
+        props.restaurantId ? props.restaurantId : "ALL",
+        props.storeId ? props.storeId : "ALL"
+      )
+    );
   }, [props.restaurantId, props.storeId, props.startDate, props.endDate]);
+
+  const renderSourceTotal = (data) => {
+    let totalQtyN = 0;
+    let totalPriceN = 0;
+    for (let i = 0; i < data.length; i++) {
+      totalQtyN = totalQtyN + data[i].totalQty;
+      totalPriceN = totalPriceN + data[i].totalPrice;
+    }
+
+    return (
+      <>
+        <span>{totalQtyN}</span>
+        <br></br>
+        <div style={{ borderTop: "1px solid lightgray" }}>{totalPriceN}</div>
+      </>
+    );
+  };
+
+  const renderPaymentTotal = (data) => {
+    let totalQtyN = 0;
+    let totalPriceN = 0;
+    for (let i = 0; i < data.length; i++) {
+      totalQtyN = totalQtyN + data[i].totalQty;
+      totalPriceN = totalPriceN + data[i].totalPrice;
+    }
+
+    return (
+      <>
+        <span>{totalQtyN}</span>
+        <br></br>
+        <div style={{ borderTop: "1px solid lightgray" }}>{totalPriceN}</div>
+      </>
+    );
+  };
+
+  const getExcelDetailString = (details) => {
+    let strOrderSource = `ORDER_SOURCE \n`;
+    let strPaymentType = "\nPAYMENT_MODE\n";
+
+    for (let i = 0; i < details.ORDER_SOURCE.length; i++) {
+      strOrderSource =
+        strOrderSource +
+        `category - ${details.ORDER_SOURCE[i].category}, totalPrice - ${details.ORDER_SOURCE[i].totalPrice}, totalQty - ${details.ORDER_SOURCE[i].totalQty} \n`;
+    }
+
+    for (let i = 0; i < details.PAYMENT_MODE.length; i++) {
+      strPaymentType =
+        strPaymentType +
+        `category - ${details.PAYMENT_MODE[i].category}, totalPrice - ${details.PAYMENT_MODE[i].totalPrice}, totalQty - ${details.PAYMENT_MODE[i].totalQty} \n`;
+    }
+
+    return strOrderSource + strPaymentType;
+  };
 
   return (
     <div>
@@ -72,12 +147,28 @@ export const CashSalesReport = (props) => {
         <div>
           <ExcelFile
             element={<Button variant="text">Download Full Report</Button>}
+            filename="Cash Sales Report"
           >
-            <ExcelSheet data={[]} name="Cash Sales Report">
-              <ExcelColumn label="CASHIER NAME" value="restaurantName" />
-              <ExcelColumn label="STORE NAME" value="dishId" />
-              <ExcelColumn label="CRITERIA" value="dishName" />
-              <ExcelColumn label="DINE-IN" value="size" />
+            <ExcelSheet
+              data={allReports.reportCashierSummery}
+              name="Cash Sales Report"
+            >
+              <ExcelColumn label="CASHIER NAME" value="cashierName" />
+              <ExcelColumn label="STORE NAME" value="storeName" />
+              <ExcelColumn label="RESTAURANT ID" value="restaurantId" />
+              <ExcelColumn label="STORE ID" value="storeId" />
+              <ExcelColumn
+                style={{ wrapText: true }}
+                label="DETAILS"
+                value={(col) => getExcelDetailString(col.details)}
+              />
+              {/* {orderSourcesForCashierReport.map((item) => (
+                    <ExcelColumn label={item.configCriteriaDesc.details.ORDER_SOURCE}  value={(col) => getItemString(col.orderDetails)}>
+                      {item.configCriteriaDesc}
+                    </ExcelColumn>
+                  ))} */}
+
+              {/* <ExcelColumn label="DINE-IN" value="size" />
               <ExcelColumn label="STORE TAKE-AWAY" value="takeaway" />
               <ExcelColumn label="STORE DELIVERY" value="totalQty" />
               <ExcelColumn label="PHONE SELF-COLLECT" value="totalPrice" />
@@ -86,7 +177,7 @@ export const CashSalesReport = (props) => {
               <ExcelColumn label="CASH" value="dishName" />
               <ExcelColumn label="PayTM" value="dishName" />
               <ExcelColumn label="EDC" value="dishName" />
-              <ExcelColumn label="TOTAL" value="dishName" />
+              <ExcelColumn label="TOTAL" value="dishName" /> */}
             </ExcelSheet>
           </ExcelFile>
           <TableContainer component={Paper}>
@@ -96,22 +187,17 @@ export const CashSalesReport = (props) => {
                   <CusTableCell1 align="center">CASHIER NAME</CusTableCell1>
                   <CusTableCell1 align="center">STORE NAME</CusTableCell1>
                   <CusTableCell1 align="center">CRITERIA</CusTableCell1>
-                  <CusTableCell3 align="center">DINE-IN</CusTableCell3>
-
-                  <CusTableCell3 align="center">WEB SELF COLLECT</CusTableCell3>
-
-                  <CusTableCell3 align="center">STORE TAKE-AWAY</CusTableCell3>
-                  <CusTableCell3 align="center">STORE DELIVERY</CusTableCell3>
-                  <CusTableCell3 align="center">
-                    PHONE SELF-COLLECT
-                  </CusTableCell3>
-                  <CusTableCell3 align="center">PHONE DELIVERY</CusTableCell3>
+                  {orderSourcesForCashierReport.map((item) => (
+                    <CusTableCell3 align="center">
+                      {item.configCriteriaDesc}
+                    </CusTableCell3>
+                  ))}
                   <CusTableCell3 align="center">TOTAL</CusTableCell3>
-                  <CusTableCell4 align="center">CASH</CusTableCell4>
-                  <CusTableCell4 align="center">PayTM</CusTableCell4>
-                  <CusTableCell4 align="center">EDC</CusTableCell4>
-                  <CusTableCell4 align="center">AMAZON PAY</CusTableCell4>
-                  <CusTableCell4 align="center">PHONEPE</CusTableCell4>
+                  {paymentModesForCashierReport.map((item) => (
+                    <CusTableCell4 align="center">
+                      {item.configCriteriaDesc}
+                    </CusTableCell4>
+                  ))}
                   <CusTableCell4 align="center">TOTAL</CusTableCell4>
                 </TableRow>
               </TableHead>
@@ -131,393 +217,72 @@ export const CashSalesReport = (props) => {
                       ></div>
                       Amount
                     </CusTableCell2>
-                    <CusTableCell2 align="center">
-                      {row.details.ORDER_SOURCE.find(
-                        (x) => x.category === "Dine In"
-                      )
-                        ? row.details.ORDER_SOURCE.find(
-                            (x) => x.category === "Dine In"
-                          ).totalQty
-                        : 0}
-
-                      <br></br>
-                      <div
-                        style={{ borderBottom: "1px solid lightgray" }}
-                      ></div>
-                      {row.details.ORDER_SOURCE.find(
-                        (x) => x.category === "Dine In"
-                      )
-                        ? row.details.ORDER_SOURCE.find(
-                            (x) => x.category === "Dine In"
-                          ).totalPrice
-                        : 0}
-                    </CusTableCell2>
-
-                    <CusTableCell2 align="center">
-                      {row.details.ORDER_SOURCE.find(
-                        (x) => x.category === "Web Self Collect"
-                      )
-                        ? row.details.ORDER_SOURCE.find(
-                            (x) => x.category === "Web Self Collect"
-                          ).totalQty
-                        : 0}
-
-                      <br></br>
-                      <div
-                        style={{ borderBottom: "1px solid lightgray" }}
-                      ></div>
-                      {row.details.ORDER_SOURCE.find(
-                        (x) => x.category === "Web Self Collect"
-                      )
-                        ? row.details.ORDER_SOURCE.find(
-                            (x) => x.category === "Web Self Collect"
-                          ).totalPrice
-                        : 0}
-                    </CusTableCell2>
+                    {orderSourcesForCashierReport.map((sourceItem) => (
+                      <CusTableCell2 align="center">
+                        {row.details.ORDER_SOURCE.find(
+                          (x) => x.category === sourceItem.configCriteriaDesc
+                        ) ? (
+                          <>
+                            <span>
+                              {
+                                row.details.ORDER_SOURCE.find(
+                                  (x) =>
+                                    x.category === sourceItem.configCriteriaDesc
+                                ).totalQty
+                              }
+                            </span>
+                            <br></br>
+                            <div style={{ borderTop: "1px solid lightgray" }}>
+                              {
+                                row.details.ORDER_SOURCE.find(
+                                  (x) =>
+                                    x.category === sourceItem.configCriteriaDesc
+                                ).totalPrice
+                              }
+                            </div>
+                          </>
+                        ) : (
+                          "N/A"
+                        )}
+                      </CusTableCell2>
+                    ))}
 
                     <CusTableCell2 align="center">
-                      {row.details.ORDER_SOURCE.find(
-                        (x) => x.category === "Store Take Away"
-                      )
-                        ? row.details.ORDER_SOURCE.find(
-                            (x) => x.category === "Store Take Away"
-                          ).totalQty
-                        : 0}
-                      <br></br>
-                      <div
-                        style={{ borderBottom: "1px solid lightgray" }}
-                      ></div>
+                      {renderSourceTotal(row.details.ORDER_SOURCE)}
+                    </CusTableCell2>
 
-                      {row.details.ORDER_SOURCE.find(
-                        (x) => x.category === "Store Take Away"
-                      )
-                        ? row.details.ORDER_SOURCE.find(
-                            (x) => x.category === "Store Take Away"
-                          ).totalPrice
-                        : 0}
-                    </CusTableCell2>
-                    <CusTableCell2 align="center">
-                      {row.details.ORDER_SOURCE.find(
-                        (x) => x.category === "Store Delivery"
-                      )
-                        ? row.details.ORDER_SOURCE.find(
-                            (x) => x.category === "Store Delivery"
-                          ).totalQty
-                        : 0}
-                      <br></br>
-                      <div
-                        style={{ borderBottom: "1px solid lightgray" }}
-                      ></div>
+                    {paymentModesForCashierReport.map((sourceItem) => (
+                      <CusTableCell2 align="center">
+                        {row.details.PAYMENT_MODE.find(
+                          (x) => x.category === sourceItem.configCriteriaDesc
+                        ) ? (
+                          <>
+                            <span>
+                              {
+                                row.details.PAYMENT_MODE.find(
+                                  (x) =>
+                                    x.category === sourceItem.configCriteriaDesc
+                                ).totalQty
+                              }
+                            </span>
+                            <br></br>
+                            <div style={{ borderTop: "1px solid lightgray" }}>
+                              {
+                                row.details.PAYMENT_MODE.find(
+                                  (x) =>
+                                    x.category === sourceItem.configCriteriaDesc
+                                ).totalPrice
+                              }
+                            </div>
+                          </>
+                        ) : (
+                          "N/A"
+                        )}
+                      </CusTableCell2>
+                    ))}
 
-                      {row.details.ORDER_SOURCE.find(
-                        (x) => x.category === "Store Delivery"
-                      )
-                        ? row.details.ORDER_SOURCE.find(
-                            (x) => x.category === "Store Delivery"
-                          ).totalPrice
-                        : 0}
-                    </CusTableCell2>
                     <CusTableCell2 align="center">
-                      {row.details.ORDER_SOURCE.find(
-                        (x) => x.category === "Phone Self Collect"
-                      )
-                        ? row.details.ORDER_SOURCE.find(
-                            (x) => x.category === "Phone Self Collect"
-                          ).totalQty
-                        : 0}
-                      <br></br>
-                      <div
-                        style={{ borderBottom: "1px solid lightgray" }}
-                      ></div>
-                      {row.details.ORDER_SOURCE.find(
-                        (x) => x.category === "Phone Self Collect"
-                      )
-                        ? row.details.ORDER_SOURCE.find(
-                            (x) => x.category === "Phone Self Collect"
-                          ).totalPrice
-                        : 0}
-                    </CusTableCell2>
-                    <CusTableCell2 align="center">
-                      {row.details.ORDER_SOURCE.find(
-                        (x) => x.category === "Phone Delivery"
-                      )
-                        ? row.details.ORDER_SOURCE.find(
-                            (x) => x.category === "Phone Delivery"
-                          ).totalQty
-                        : 0}
-                      <br></br>
-                      <div
-                        style={{ borderBottom: "1px solid lightgray" }}
-                      ></div>
-                      {row.details.ORDER_SOURCE.find(
-                        (x) => x.category === "Phone Delivery"
-                      )
-                        ? row.details.ORDER_SOURCE.find(
-                            (x) => x.category === "Phone Delivery"
-                          ).totalPrice
-                        : 0}
-                    </CusTableCell2>
-                    <CusTableCell2 align="center">
-                      {Number(
-                        (row.details.ORDER_SOURCE.find(
-                          (x) => x.category === "Dine In"
-                        )
-                          ? row.details.ORDER_SOURCE.find(
-                              (x) => x.category === "Dine In"
-                            ).totalQty
-                          : 0) +
-                          (row.details.ORDER_SOURCE.find(
-                            (x) => x.category === "Store Take Away"
-                          )
-                            ? row.details.ORDER_SOURCE.find(
-                                (x) => x.category === "Store Take Away"
-                              ).totalQty
-                            : 0) +
-                          (row.details.ORDER_SOURCE.find(
-                            (x) => x.category === "Store Delivery"
-                          )
-                            ? row.details.ORDER_SOURCE.find(
-                                (x) => x.category === "Store Delivery"
-                              ).totalQty
-                            : 0) +
-                          (row.details.ORDER_SOURCE.find(
-                            (x) => x.category === "Phone Delivery"
-                          )
-                            ? row.details.ORDER_SOURCE.find(
-                                (x) => x.category === "Phone Delivery"
-                              ).totalQty
-                            : 0) +
-                          (row.details.ORDER_SOURCE.find(
-                            (x) => x.category === "Phone Self Collect"
-                          )
-                            ? row.details.ORDER_SOURCE.find(
-                                (x) => x.category === "Phone Self Collect"
-                              ).totalQty
-                            : 0)
-                      )}
-
-                      <br></br>
-                      <div
-                        style={{ borderBottom: "1px solid lightgray" }}
-                      ></div>
-                      {Number(
-                        (row.details.ORDER_SOURCE.find(
-                          (x) => x.category === "Dine In"
-                        )
-                          ? row.details.ORDER_SOURCE.find(
-                              (x) => x.category === "Dine In"
-                            ).totalPrice
-                          : 0) +
-                          (row.details.ORDER_SOURCE.find(
-                            (x) => x.category === "Store Take Away"
-                          )
-                            ? row.details.ORDER_SOURCE.find(
-                                (x) => x.category === "Store Take Away"
-                              ).totalPrice
-                            : 0) +
-                          (row.details.ORDER_SOURCE.find(
-                            (x) => x.category === "Store Delivery"
-                          )
-                            ? row.details.ORDER_SOURCE.find(
-                                (x) => x.category === "Store Delivery"
-                              ).totalPrice
-                            : 0) +
-                          (row.details.ORDER_SOURCE.find(
-                            (x) => x.category === "Phone Delivery"
-                          )
-                            ? row.details.ORDER_SOURCE.find(
-                                (x) => x.category === "Phone Delivery"
-                              ).totalPrice
-                            : 0) +
-                          (row.details.ORDER_SOURCE.find(
-                            (x) => x.category === "Phone Self Collect"
-                          )
-                            ? row.details.ORDER_SOURCE.find(
-                                (x) => x.category === "Phone Self Collect"
-                              ).totalPrice
-                            : 0)
-                      ).toFixed(2)}
-                    </CusTableCell2>
-                    <CusTableCell2 align="center">
-                      {row.details.PAYMENT_MODE.find(
-                        (x) => x.category === "Cash"
-                      )
-                        ? row.details.PAYMENT_MODE.find(
-                            (x) => x.category === "Cash"
-                          ).totalQty
-                        : 0}
-                      <br></br>
-                      <div
-                        style={{ borderBottom: "1px solid lightgray" }}
-                      ></div>
-                      {row.details.PAYMENT_MODE.find(
-                        (x) => x.category === "Cash"
-                      )
-                        ? row.details.PAYMENT_MODE.find(
-                            (x) => x.category === "Cash"
-                          ).totalPrice
-                        : 0}
-                    </CusTableCell2>
-                    <CusTableCell2 align="center">
-                      {row.details.PAYMENT_MODE.find(
-                        (x) => x.category === "PayTM"
-                      )
-                        ? row.details.PAYMENT_MODE.find(
-                            (x) => x.category === "PayTM"
-                          ).totalQty
-                        : 0}
-                      <br></br>
-                      <div
-                        style={{ borderBottom: "1px solid lightgray" }}
-                      ></div>
-                      {row.details.PAYMENT_MODE.find(
-                        (x) => x.category === "PayTM"
-                      )
-                        ? row.details.PAYMENT_MODE.find(
-                            (x) => x.category === "PayTM"
-                          ).totalPrice
-                        : 0}
-                    </CusTableCell2>
-                    <CusTableCell2 align="center">
-                      {row.details.PAYMENT_MODE.find(
-                        (x) => x.category === "Credit/Debit"
-                      )
-                        ? row.details.PAYMENT_MODE.find(
-                            (x) => x.category === "Credit/Debit"
-                          ).totalQty
-                        : 0}
-                      <br></br>
-                      <div
-                        style={{ borderBottom: "1px solid lightgray" }}
-                      ></div>
-                      {row.details.PAYMENT_MODE.find(
-                        (x) => x.category === "Credit/Debit"
-                      )
-                        ? row.details.PAYMENT_MODE.find(
-                            (x) => x.category === "Credit/Debit"
-                          ).totalPrice
-                        : 0}
-                    </CusTableCell2>
-                    <CusTableCell2 align="center">
-                      {row.details.PAYMENT_MODE.find(
-                        (x) => x.category === "Amazon Pay"
-                      )
-                        ? row.details.PAYMENT_MODE.find(
-                            (x) => x.category === "Amazon Pay"
-                          ).totalQty
-                        : 0}
-                      <br></br>
-                      <div
-                        style={{ borderBottom: "1px solid lightgray" }}
-                      ></div>
-                      {row.details.PAYMENT_MODE.find(
-                        (x) => x.category === "Amazon Pay"
-                      )
-                        ? row.details.PAYMENT_MODE.find(
-                            (x) => x.category === "Amazon Pay"
-                          ).totalPrice
-                        : 0}
-                    </CusTableCell2>
-                    <CusTableCell2 align="center">
-                      {row.details.PAYMENT_MODE.find(
-                        (x) => x.category === "PhonePe"
-                      )
-                        ? row.details.PAYMENT_MODE.find(
-                            (x) => x.category === "PhonePe"
-                          ).totalQty
-                        : 0}
-                      <br></br>
-                      <div
-                        style={{ borderBottom: "1px solid lightgray" }}
-                      ></div>
-
-                      {row.details.PAYMENT_MODE.find(
-                        (x) => x.category === "PhonePe"
-                      )
-                        ? row.details.PAYMENT_MODE.find(
-                            (x) => x.category === "PhonePe"
-                          ).totalPrice
-                        : 0}
-                    </CusTableCell2>
-                    <CusTableCell2 align="center">
-                      {Number(
-                        (row.details.PAYMENT_MODE.find(
-                          (x) => x.category === "Cash"
-                        )
-                          ? row.details.PAYMENT_MODE.find(
-                              (x) => x.category === "Cash"
-                            ).totalQty
-                          : 0) +
-                          (row.details.PAYMENT_MODE.find(
-                            (x) => x.category === "PayTM"
-                          )
-                            ? row.details.PAYMENT_MODE.find(
-                                (x) => x.category === "PayTM"
-                              ).totalQty
-                            : 0) +
-                          (row.details.PAYMENT_MODE.find(
-                            (x) => x.category === "Credit/Debit"
-                          )
-                            ? row.details.PAYMENT_MODE.find(
-                                (x) => x.category === "Credit/Debit"
-                              ).totalQty
-                            : 0) +
-                          (row.details.PAYMENT_MODE.find(
-                            (x) => x.category === "Amazon Pay"
-                          )
-                            ? row.details.PAYMENT_MODE.find(
-                                (x) => x.category === "Amazon Pay"
-                              ).totalQty
-                            : 0) +
-                          (row.details.PAYMENT_MODE.find(
-                            (x) => x.category === "PhonePe"
-                          )
-                            ? row.details.PAYMENT_MODE.find(
-                                (x) => x.category === "PhonePe"
-                              ).totalQty
-                            : 0)
-                      )}
-                      <br></br>
-                      <div
-                        style={{ borderBottom: "1px solid lightgray" }}
-                      ></div>
-                      {Number(
-                        (row.details.PAYMENT_MODE.find(
-                          (x) => x.category === "Cash"
-                        )
-                          ? row.details.PAYMENT_MODE.find(
-                              (x) => x.category === "Cash"
-                            ).totalPrice
-                          : 0) +
-                          (row.details.PAYMENT_MODE.find(
-                            (x) => x.category === "PayTM"
-                          )
-                            ? row.details.PAYMENT_MODE.find(
-                                (x) => x.category === "PayTM"
-                              ).totalPrice
-                            : 0) +
-                          (row.details.PAYMENT_MODE.find(
-                            (x) => x.category === "Credit/Debit"
-                          )
-                            ? row.details.PAYMENT_MODE.find(
-                                (x) => x.category === "Credit/Debit"
-                              ).totalPrice
-                            : 0) +
-                          (row.details.PAYMENT_MODE.find(
-                            (x) => x.category === "Amazon Pay"
-                          )
-                            ? row.details.PAYMENT_MODE.find(
-                                (x) => x.category === "Amazon Pay"
-                              ).totalPrice
-                            : 0) +
-                          (row.details.PAYMENT_MODE.find(
-                            (x) => x.category === "PhonePe"
-                          )
-                            ? row.details.PAYMENT_MODE.find(
-                                (x) => x.category === "PhonePe"
-                              ).totalPrice
-                            : 0)
-                      )}
+                      {renderPaymentTotal(row.details.PAYMENT_MODE)}
                     </CusTableCell2>
                   </TableRow>
                 ))}

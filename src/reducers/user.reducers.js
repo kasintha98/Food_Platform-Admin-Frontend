@@ -26,6 +26,8 @@ const initState = {
   deliveryPrice: null,
   paymentModes: [],
   orderSources: [],
+  paymentModesForCashierReport: [],
+  orderSourcesForCashierReport: [],
 };
 
 export default (state = initState, action) => {
@@ -411,6 +413,46 @@ export default (state = initState, action) => {
       state = {
         ...state,
         orderSources: [],
+      };
+      break;
+
+    case userConstants.GET_PAYMENT_MODE_CASHIER_REPORT_CONFIG_REQUEST:
+      state = {
+        ...state,
+      };
+      break;
+
+    case userConstants.GET_PAYMENT_MODE_CASHIER_REPORT_CONFIG_SUCCESS:
+      state = {
+        ...state,
+        paymentModesForCashierReport: action.payload,
+      };
+      break;
+
+    case userConstants.GET_PAYMENT_MODE_CASHIER_REPORT_CONFIG_FAILURE:
+      state = {
+        ...state,
+        paymentModesForCashierReport: [],
+      };
+      break;
+
+    case userConstants.GET_ORDER_SOURCE_CASHIER_REPORT_CONFIG_REQUEST:
+      state = {
+        ...state,
+      };
+      break;
+
+    case userConstants.GET_ORDER_SOURCE_CASHIER_REPORT_CONFIG_SUCCESS:
+      state = {
+        ...state,
+        orderSourcesForCashierReport: action.payload,
+      };
+      break;
+
+    case userConstants.GET_ORDER_SOURCE_CASHIER_REPORT_CONFIG_FAILURE:
+      state = {
+        ...state,
+        orderSourcesForCashierReport: [],
       };
       break;
   }
