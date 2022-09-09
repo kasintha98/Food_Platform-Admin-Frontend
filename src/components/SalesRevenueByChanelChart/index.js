@@ -50,7 +50,7 @@ export const options = {
 export const SalesRevenueByChanelChart = () => {
   const allReports = useSelector((state) => state.report.allReports);
   const orderSources = useSelector((state) => state.user.orderSources);
-  const [webOrders, setWebOrders] = useState([]);
+  /* const [webOrders, setWebOrders] = useState([]);
   const [webDelOrders, setWebDelOrders] = useState([]);
   const [storePickupOrders, setStorePickupOrders] = useState([]);
   const [selfDineQROrders, setSelfDineQROrders] = useState([]);
@@ -63,37 +63,13 @@ export const SalesRevenueByChanelChart = () => {
   const [storeTakeAwayOrders, setStoreTakeAwayOrders] = useState([]);
   const [storeDeliveryOrders, setStoreDeliveryOrders] = useState([]);
   const [phoneSelfCollectOrders, setPhoneSelfCollectOrders] = useState([]);
-  const [phoneDeliveryOrders, setPhoneDeliveryOrders] = useState([]);
+  const [phoneDeliveryOrders, setPhoneDeliveryOrders] = useState([]); */
 
   /* defaults.font.size = "10px"; */
 
   const ref = React.createRef();
 
-  const labels = [
-    /* "WEB", */
-    "MOBILE",
-    "SWIGGY",
-    "ZOMATO",
-    "DINE IN",
-    "WEB DELIVERY",
-    "STORE PICK-UP",
-    "PHONE DELIVERY",
-    "STORE DELIVERY",
-    "SELF DINE IN QR",
-    "STORE TAKE AWAY",
-    "WEB SELF COLLECT",
-    "PHONE SELF COLLECT",
-  ];
-
-  useEffect(() => {
-    /* setWebOrders(
-      allReports.salesSummeryByOrderSource
-        .filter(function (el) {
-          return el.orderSource === "W";
-        })
-        .map((a) => a.orderValue)
-        .reduce((a, b) => a + b, 0)
-    ); */
+  /* useEffect(() => {
 
     setMobileOrders(
       allReports.salesSummeryByOrderSource
@@ -202,20 +178,30 @@ export const SalesRevenueByChanelChart = () => {
         .map((a) => a.orderValue)
         .reduce((a, b) => a + b, 0)
     );
+  }, [allReports]); */
 
-    /* setSelfOrders(
-      allReports.salesSummeryByOrderSource
+  const getFilteredOrders = () => {
+    let allData = [];
+
+    for (let i = 0; i < orderSources.length; i++) {
+      let foundMatch = allReports.salesSummeryByOrderSource
         .filter(function (el) {
-          return el.orderSource === "S";
+          return el.orderSource === orderSources[i].configCriteriaValue;
         })
-        .map((a) => a.orderValue)
-        .reduce((a, b) => a + b, 0)
-    ); */
-  }, [allReports]);
+        .map((a) => a.orderValue);
+      if (foundMatch.length > 0) {
+        allData.push(foundMatch.reduce((a, b) => a + b, 0));
+      } else {
+        allData.push(0);
+      }
+    }
+
+    return allData;
+  };
 
   const data = {
-    //labels: orderSources.map((value) => value.configCriteriaDesc),
-    labels,
+    labels: orderSources.map((value) => value.configCriteriaDesc),
+    //labels,
     datasets: [
       /* {
         label: "Sale",
@@ -224,22 +210,7 @@ export const SalesRevenueByChanelChart = () => {
       }, */
       {
         label: "Order",
-        data: [
-          /* webOrders, */
-          mobileOrders,
-          swizyOrders,
-          zomatoOrders,
-          dineOrders,
-          webDelOrders,
-          storePickupOrders,
-          phoneDeliveryOrders,
-          storeDeliveryOrders,
-          selfDineQROrders,
-          storeTakeAwayOrders,
-          webSelfOrders,
-          phoneSelfCollectOrders,
-          //selfOrders,
-        ],
+        data: getFilteredOrders(),
         backgroundColor: "rgba(53, 162, 235, 0.5)",
       },
     ],
