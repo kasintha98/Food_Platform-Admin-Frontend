@@ -1429,6 +1429,10 @@ export default function NewCheckout(props) {
                         , {props.storeObj.country}
                       </Typography>
                       <Typography sx={{ fontWeight: "600" }}>
+                        GST NO:{" "}
+                        {props.storeObj ? props.storeObj.storeGstNumber : null}
+                      </Typography>
+                      <Typography sx={{ fontWeight: "600" }}>
                         Order ID: {orderResp ? orderResp.orderId : null}
                       </Typography>
                       <Typography sx={{ fontWeight: "600" }}>
@@ -1537,6 +1541,10 @@ export default function NewCheckout(props) {
                         <>, {props.storeObj.zipCode}</>
                       ) : null}
                       , {props.storeObj.country}
+                    </Typography>
+                    <Typography sx={{ fontWeight: "600" }}>
+                      GST NO:{" "}
+                      {props.storeObj ? props.storeObj.storeGstNumber : null}
                     </Typography>
                     <Typography sx={{ fontWeight: "600" }}>
                       Order ID: {orderResp ? orderResp.orderId : null}
