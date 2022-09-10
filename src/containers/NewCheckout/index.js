@@ -1372,6 +1372,21 @@ export default function NewCheckout(props) {
     }
   };
 
+  const handleManualPrint = () => {
+    const div = document.getElementById("billHY").innerHTML;
+    var windows = window.open("", "", "height=600, width=600");
+    windows.document.write("<html><body >");
+    windows.document.write(
+      "<style> body{text-align: center; margin: 0; line-height: 0;} table{width: 100%} tbody{text-align: center;} @media print { body {  }} @page { size: Statement;margin: 0;}</style>"
+    );
+    windows.document.write(div);
+    windows.document.write("</body></html>");
+    windows.document.close();
+    windows.print();
+
+    //window.print();
+  };
+
   const renderInvoiceModal = () => {
     return (
       <Modal
@@ -1388,7 +1403,7 @@ export default function NewCheckout(props) {
           <Modal.Body style={{ maxHeight: "75vh", overflowY: "auto" }}>
             {props.storeObj ? (
               <div ref={ref}>
-                <div ref={refH}>
+                <div ref={refH} id="billHY" className="billHY">
                   <div className="text-center">
                     <Typography sx={{ fontWeight: "600" }}>
                       {orderResp ? orderResp.storeName : "Hangries"}
@@ -1465,8 +1480,12 @@ export default function NewCheckout(props) {
                   <div>
                     <Typography sx={{ color: "black" }}>
                       <Row>
-                        <Col>Time: {renderNowTime()}</Col>
-                        <Col>Date: {renderNowDate()}</Col>
+                        <Col>
+                          <p>Time: {renderNowTime()}</p>
+                        </Col>
+                        <Col>
+                          <p>Date: {renderNowDate()}</p>
+                        </Col>
                       </Row>
                     </Typography>
                   </div>
@@ -1500,7 +1519,8 @@ export default function NewCheckout(props) {
         <Modal.Footer>
           <Row className="w-100">
             <Col className="col-6">
-              <ReactToPrint
+              {/* <ReactToPrint
+                pageStyle="{ size: Statement }"
                 trigger={() => (
                   <Button
                     color="secondary"
@@ -1512,7 +1532,15 @@ export default function NewCheckout(props) {
                   </Button>
                 )}
                 content={() => ref.current}
-              />
+              /> */}
+              <Button
+                color="secondary"
+                onClick={handleManualPrint}
+                className="w-100"
+                variant="contained"
+              >
+                Print
+              </Button>
             </Col>
             <Col className="col-6">
               <Pdf
