@@ -1373,7 +1373,7 @@ export default function NewCheckout(props) {
   };
 
   const handleManualPrint = () => {
-    const div = document.getElementById("billHY").innerHTML;
+    const div = document.getElementById("billNew").innerHTML;
     var windows = window.open("", "", "height=600, width=600");
     windows.document.write("<html><body >");
     windows.document.write(
@@ -1403,6 +1403,117 @@ export default function NewCheckout(props) {
           <Modal.Body style={{ maxHeight: "75vh", overflowY: "auto" }}>
             {props.storeObj ? (
               <div ref={ref}>
+                <div style={{ display: "none" }}>
+                  <div id="billNew">
+                    <div className="text-center">
+                      <Typography sx={{ fontWeight: "600" }}>
+                        {orderResp ? orderResp.storeName : "Hangries"}
+                      </Typography>
+                      <Typography sx={{ color: "black" }}>
+                        <span>{props.storeObj.address1}</span>
+                        {props.storeObj.address2 ? (
+                          <>
+                            , <span>{props.storeObj.address2}</span>
+                          </>
+                        ) : null}
+                        {props.storeObj.address3 ? (
+                          <>
+                            , <br></br>
+                            <span>{props.storeObj.address3}</span>
+                          </>
+                        ) : null}
+                        , {props.storeObj.city}
+                        {props.storeObj.zipCode ? (
+                          <>, {props.storeObj.zipCode}</>
+                        ) : null}
+                        , {props.storeObj.country}
+                      </Typography>
+                      <Typography sx={{ fontWeight: "600" }}>
+                        Order ID: {orderResp ? orderResp.orderId : null}
+                      </Typography>
+                      <Typography sx={{ fontWeight: "600" }}>
+                        Customer Name:{" "}
+                        {firstName ? (
+                          <span>
+                            {firstName} {lastName}
+                          </span>
+                        ) : (
+                          <span>{orderResp?.customerName}</span>
+                        )}
+                      </Typography>
+                      <Typography sx={{ fontWeight: "600" }}>
+                        Table No:{" "}
+                        {orderResp && orderResp.storeTableId
+                          ? orderResp.storeTableId
+                          : "N/A"}
+                      </Typography>
+                      <Typography sx={{ fontWeight: "600" }}>
+                        <span>
+                          {orderResp ? orderResp.orderDeliveryType : null}
+                        </span>
+                        <span>
+                          [{orderResp ? orderResp.paymentStatus : null}]
+                        </span>
+                      </Typography>
+                    </div>
+                    <hr></hr>
+                    <div>
+                      <Typography sx={{ color: "black" }}>
+                        Name:{" "}
+                        {firstName ? (
+                          <span>
+                            {firstName} {lastName}
+                          </span>
+                        ) : (
+                          <span>{orderResp?.customerName}</span>
+                        )}
+                      </Typography>
+                      <Typography sx={{ color: "black" }}>
+                        Mob No:{" "}
+                        {phoneNo ? (
+                          <span>{phoneNo}</span>
+                        ) : (
+                          <span>{orderResp?.mobileNumber}</span>
+                        )}
+                      </Typography>
+                    </div>
+                    <hr></hr>
+                    <div>
+                      <Typography sx={{ color: "black" }}>
+                        <Row>
+                          <Col>
+                            <p>Time: {renderNowTime()}</p>
+                          </Col>
+                          <Col>
+                            <p>Date: {renderNowDate()}</p>
+                          </Col>
+                        </Row>
+                      </Typography>
+                    </div>
+                    <hr></hr>
+                    <div>
+                      <InvoiceTable
+                        allProducts={orderResp.orderDetails}
+                        grandTot={orderResp.totalPrice}
+                        cgst={orderResp.cgstCalculatedValue}
+                        sgst={orderResp.sgstCalculatedValue}
+                        overallPriceWithTax={orderResp.overallPriceWithTax}
+                        delCharge={delCharge}
+                        fullResp={orderResp}
+                        isShowDeliveryCharge={props.isShowDeliveryCharge}
+                        bOGOLowestPizzaKey={
+                          bOGOLowestPizzaKey ? bOGOLowestPizzaKey : []
+                        }
+                        drinkReduceKey={drinkReduceKey}
+                        pastaReduceKey={pasta59OfferReduceTotal}
+                        combo1OfferReduceTotal={combo1OfferReduceTotal}
+                        combo2OfferReduceTotal={combo2OfferReduceTotal}
+                        friesOfferReduceTotal={friesOfferReduceTotal}
+                        isBill={true}
+                      ></InvoiceTable>
+                    </div>
+                  </div>
+                </div>
                 <div ref={refH} id="billHY" className="billHY">
                   <div className="text-center">
                     <Typography sx={{ fontWeight: "600" }}>

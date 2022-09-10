@@ -271,10 +271,14 @@ export const InvoiceTable = (props) => {
         >
           <TableHead>
             <TableRow>
-              <CusTableCell>Dish Name</CusTableCell>
-              <CusTableCell>Qty</CusTableCell>
-              <CusTableCell>Rate</CusTableCell>
-              <CusTableCell>Amount</CusTableCell>
+              <CusTableCell>
+                Dish Name{props.isBill ? <hr></hr> : null}
+              </CusTableCell>
+              <CusTableCell>Qty{props.isBill ? <hr></hr> : null}</CusTableCell>
+              <CusTableCell>Rate{props.isBill ? <hr></hr> : null}</CusTableCell>
+              <CusTableCell>
+                Amount{props.isBill ? <hr></hr> : null}
+              </CusTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -297,18 +301,22 @@ export const InvoiceTable = (props) => {
                   <CusTableCell
                     sx={{ padding: "0px 5px 0px 0px", minWidth: "90px" }}
                   >
-                    Rs. {row.price}
+                    {props.isBill ? null : "Rs. "}
+                    {row.price}
                     .00
                   </CusTableCell>
                   <CusTableCell sx={{ padding: 0 }}>
-                    Rs. {/* {Number(row.quantity) * Number(row.price)} */}
+                    {props.isBill ? null : "Rs. "}
+                    {/* {Number(row.quantity) * Number(row.price)} */}
                     {renderAllTotal(row.productId, row)}.00
                   </CusTableCell>
                 </TableRow>
               </>
             ))}
+
             <TableRow sx={{ borderTop: "2px solid black" }}>
               <CusTableCell component="th" scope="row" colspan="3">
+                {props.isBill ? <hr></hr> : null}
                 Total
               </CusTableCell>
               <CusTableCell
@@ -317,7 +325,9 @@ export const InvoiceTable = (props) => {
                 colspan="1"
                 sx={{ fontStyle: "italic" }}
               >
-                Rs. {renderNewSubTotal()}
+                {props.isBill ? <hr></hr> : null}
+                {props.isBill ? null : "Rs. "}
+                {renderNewSubTotal()}
               </CusTableCell>
             </TableRow>
 
@@ -365,7 +375,8 @@ export const InvoiceTable = (props) => {
                   colspan="1"
                   sx={{ fontStyle: "italic" }}
                 >
-                  Rs. {props.drinkReduceKey.price}.00
+                  {props.isBill ? null : "Rs. "}
+                  {props.drinkReduceKey.price}.00
                 </CusTableCell>
               </TableRow>
             ) : null}
@@ -381,7 +392,8 @@ export const InvoiceTable = (props) => {
                   colspan="1"
                   sx={{ fontStyle: "italic" }}
                 >
-                  Rs. {props.combo1OfferReduceTotal.price}.00
+                  {props.isBill ? null : "Rs. "}
+                  {props.combo1OfferReduceTotal.price}.00
                 </CusTableCell>
               </TableRow>
             ) : null}
@@ -397,7 +409,8 @@ export const InvoiceTable = (props) => {
                   colspan="1"
                   sx={{ fontStyle: "italic" }}
                 >
-                  Rs. {props.combo2OfferReduceTotal.price}.00
+                  {props.isBill ? null : "Rs. "}
+                  {props.combo2OfferReduceTotal.price}.00
                 </CusTableCell>
               </TableRow>
             ) : null}
@@ -413,7 +426,8 @@ export const InvoiceTable = (props) => {
                   colspan="1"
                   sx={{ fontStyle: "italic" }}
                 >
-                  Rs. {props.pastaReduceKey.newPrice}.00
+                  {props.isBill ? null : "Rs. "}
+                  {props.pastaReduceKey.newPrice}.00
                 </CusTableCell>
               </TableRow>
             ) : null}
@@ -429,7 +443,8 @@ export const InvoiceTable = (props) => {
                   colspan="1"
                   sx={{ fontStyle: "italic" }}
                 >
-                  Rs. {props.friesOfferReduceTotal.price}.00
+                  {props.isBill ? null : "Rs. "}
+                  {props.friesOfferReduceTotal.price}.00
                 </CusTableCell>
               </TableRow>
             ) : null}
@@ -445,7 +460,8 @@ export const InvoiceTable = (props) => {
                   colspan="1"
                   sx={{ fontStyle: "italic" }}
                 >
-                  Rs. {props.fullResp.deliveryCharges}
+                  {props.isBill ? null : "Rs. "}
+                  {props.fullResp.deliveryCharges}
                 </CusTableCell>
               </TableRow>
             ) : null}
@@ -460,7 +476,8 @@ export const InvoiceTable = (props) => {
                 colspan="1"
                 sx={{ fontStyle: "italic" }}
               >
-                Rs. {props.cgst}
+                {props.isBill ? null : "Rs. "}
+                {props.cgst}
               </CusTableCell>
             </TableRow>
 
@@ -474,7 +491,8 @@ export const InvoiceTable = (props) => {
                 colspan="1"
                 sx={{ fontStyle: "italic" }}
               >
-                Rs. {props.sgst}
+                {props.isBill ? null : "Rs. "}
+                {props.sgst}
               </CusTableCell>
             </TableRow>
             {/* <TableRow>
@@ -487,9 +505,10 @@ export const InvoiceTable = (props) => {
                 colspan="1"
                 sx={{ fontStyle: "italic" }}
               >
-                Rs. {props.fullResp.deliveryCharges}
+                {props.isBill ? null : "Rs. "}{props.fullResp.deliveryCharges}
               </CusTableCell>
             </TableRow> */}
+
             <TableRow
               sx={{
                 borderTop: "2px solid black",
@@ -497,10 +516,15 @@ export const InvoiceTable = (props) => {
               }}
             >
               <CusTableCell component="th" scope="row" colspan="3">
+                {props.isBill ? <hr></hr> : null}
                 Grand Total
+                {props.isBill ? <hr></hr> : null}
               </CusTableCell>
               <CusTableCell component="th" scope="row" colspan="1">
-                Rs. {props.overallPriceWithTax}
+                {props.isBill ? <hr></hr> : null}
+                {props.isBill ? null : "Rs. "}
+                {props.overallPriceWithTax}
+                {props.isBill ? <hr></hr> : null}
               </CusTableCell>
             </TableRow>
           </TableBody>
