@@ -48,6 +48,12 @@ const CusTableCell2 = styled(TableCell)`
   font-size: 0.75rem;
 `;
 
+const CusTableCell3 = styled(TableCell)`
+  font-size: 0.75rem;
+  max-width: 120px;
+  word-wrap: break-word;
+`;
+
 const CusSelect = styled(Select)`
   & .MuiSelect-select {
     padding-top: 5px;
@@ -467,7 +473,7 @@ export const DeliveryTrackingTable = (props) => {
               <>
                 {filteredData.map((row) => (
                   <TableRow key={row.orderId}>
-                    <CusTableCell2
+                    <CusTableCell3
                       align="center"
                       onClick={() => {
                         setCurrentOrder(row);
@@ -475,12 +481,19 @@ export const DeliveryTrackingTable = (props) => {
                       }}
                       sx={{ cursor: "pointer" }}
                     >
-                      {row.orderId.slice(0, 11)} <br></br>
-                      {row.orderId.slice(11, 19)}
+                      {/* {row.orderId.slice(0, 11)} <br></br> */}
+                      {/* {row.orderId.slice(0, row.orderId.length - 4)}
                       <span style={{ color: "#4472c4" }}>
-                        {row.orderId.slice(19, 23)}
+                        {row.orderId.slice(
+                          row.orderId.length - 4,
+                          row.orderId.length
+                        )}
+                      </span> */}
+                      {row.orderId.substr(0, row.orderId.length - 3)}
+                      <span style={{ color: "#4472c4" }}>
+                        {row.orderId.substr(row.orderId.length - 3)}
                       </span>
-                    </CusTableCell2>
+                    </CusTableCell3>
 
                     <CusTableCell2 align="center">
                       {row.mobileNumber}
