@@ -115,41 +115,41 @@ export const DineIn = () => {
         <Col className="col-sm-7">
           {ShowCheckout ? (
             <Button
+              sx={{ padding: 0, marginRight: "20px" }}
               onClick={() => {
                 setShowCheckout(false);
               }}
             >
               <ArrowBackIcon></ArrowBackIcon> &nbsp; Back
             </Button>
-          ) : (
-            <FormControl sx={{ width: "200px" }}>
-              <InputLabel
-                sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
-                id="demo-simple-select-label"
-              >
-                Order Type
-              </InputLabel>
-              <CusSelect
-                sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={selectedOrderType}
-                label="Please select the store"
-                onChange={handleChangeOrderType}
-              >
-                {orderTypes.map((type) => (
-                  <CusMenuItem
-                    onClick={() => {
-                      handleChangeOrderTypeObj(type);
-                    }}
-                    value={type.name}
-                  >
-                    <span>{type.name}</span>
-                  </CusMenuItem>
-                ))}
-              </CusSelect>
-            </FormControl>
-          )}
+          ) : null}
+          <FormControl sx={{ width: "200px" }}>
+            <InputLabel
+              sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
+              id="demo-simple-select-label"
+            >
+              Order Type
+            </InputLabel>
+            <CusSelect
+              sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={selectedOrderType}
+              label="Please select the store"
+              onChange={handleChangeOrderType}
+            >
+              {orderTypes.map((type) => (
+                <CusMenuItem
+                  onClick={() => {
+                    handleChangeOrderTypeObj(type);
+                  }}
+                  value={type.name}
+                >
+                  <span>{type.name}</span>
+                </CusMenuItem>
+              ))}
+            </CusSelect>
+          </FormControl>
         </Col>
         <div style={{ maxWidth: "125px !important" }}>
           <Typography
