@@ -137,6 +137,8 @@ export default function NewCheckout(props) {
   const [currentCustomer, setCurrentCustomer] = useState(null);
   const [isNewCustomerFunc, setIsNewCustomerFunc] = useState(false);
   const [cardHeight, setCardHeight] = useState(0);
+  const [changeAmount, setChangeAmount] = useState("");
+  const [balanceAmount, setBalanceAmount] = useState(0);
   const [couponLocalObj, setCouponLocalObj] = useState(null);
   const [bOGOLowestPizzaKey, setBOGOLowestPizzaKey] = useState(null);
   const [drinkReduceKey, setdrinkReduceKey] = useState(null);
@@ -369,6 +371,59 @@ export default function NewCheckout(props) {
     grandTotalForPayU = grantTot.toFixed(2);
 
     return <span>₹ {Math.round(grantTot.toFixed(2))}.00</span>;
+  };
+
+  const calcGrandTot = () => {
+    let allSub =
+      subTotal +
+      (extraSubTotal ? extraSubTotal : 0) +
+      (choiceTotal ? choiceTotal : 0);
+
+    if (
+      couponReduxObj &&
+      Number(couponReduxObj.couponDetails.discountPercentage)
+    ) {
+      const afterAddCoupon =
+        (100 - Number(couponReduxObj.couponDetails.discountPercentage)) / 100;
+      allSub = allSub * afterAddCoupon;
+    }
+
+    if (allBogoReduceCost) {
+      allSub = allSub - Number(allBogoReduceCost);
+    }
+
+    if (drinkReduceKey) {
+      allSub = allSub - Number(drinkReduceKey.reducingCost);
+    }
+
+    if (friesOfferReduceTotal) {
+      allSub = allSub - Number(friesOfferReduceTotal.reducingCost);
+    }
+
+    if (combo1OfferReduceTotal) {
+      allSub = allSub - Number(combo1OfferReduceTotal.reducingCost);
+    }
+
+    if (combo2OfferReduceTotal) {
+      allSub = allSub - Number(combo2OfferReduceTotal.reducingCost);
+    }
+
+    if (pasta59OfferReduceTotal) {
+      allSub = allSub - Number(pasta59OfferReduceTotal.reducingCost);
+    }
+
+    let allTax = 0;
+
+    if (taxDetails) {
+      taxDetails.forEach((tax) => {
+        allTax = allTax + allSub * (tax.taxPercentage / 100);
+      });
+    }
+
+    const grantTot = allSub + allTax + Number(delCharge);
+    grandTotalForPayU = grantTot.toFixed(2);
+
+    return Math.round(grantTot.toFixed(2));
   };
 
   const calcDeliveryPrice = () => {
@@ -1193,6 +1248,18 @@ export default function NewCheckout(props) {
 
   const resetPaymentMethod = () => {
     setCurrentPaymentType("");
+  };
+
+  const handleChangeAmount = (amount) => {
+    setChangeAmount(amount);
+    if (!Number(amount)) {
+      toast.error("Only numbers are allowed");
+      setBalanceAmount(0);
+      return;
+    } else {
+      const change = Number(amount) - calcGrandTot();
+      setBalanceAmount(change);
+    }
   };
 
   const handleSubTotal = (total) => {
@@ -2655,6 +2722,52 @@ export default function NewCheckout(props) {
                               </Button>
                             </Col>
                           </Row>
+                          {currentPaymentType === "CASH" ? (
+                            <div
+                              className="text-center"
+                              style={{
+                                marginTop: "100px",
+                                backgroundColor: "rgb(242, 242, 242)",
+                                padding: "15px 0 15px 0",
+                                borderRadius: "15px",
+                              }}
+                            >
+                              <Row>
+                                <Col className="p-0">
+                                  <Typography sx={{ fontSize: "0.9rem" }}>
+                                    Enter Amount:
+                                  </Typography>
+                                </Col>
+                                <Col className="pl-0">
+                                  <CusTextField
+                                    label="Enter Amount"
+                                    value={changeAmount}
+                                    onChange={(event) => {
+                                      handleChangeAmount(event.target.value);
+                                    }}
+                                  />
+                                </Col>
+                              </Row>
+                              <Row className="mt-3">
+                                <Col className="p-0">
+                                  <Typography sx={{ fontSize: "0.9rem" }}>
+                                    Return Amount:
+                                  </Typography>
+                                </Col>
+                                <Col className="pl-0">
+                                  <Typography
+                                    sx={{
+                                      fontSize: "0.9rem",
+                                      fontWeight: "bold",
+                                      color: "red",
+                                    }}
+                                  >
+                                    Rs. {balanceAmount}
+                                  </Typography>
+                                </Col>
+                              </Row>
+                            </div>
+                          ) : null}
                         </Card>
                         <div
                           style={{ position: "relative", bottom: "50px" }}
