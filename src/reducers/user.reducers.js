@@ -26,6 +26,7 @@ const initState = {
   deliveryPrice: null,
   paymentModes: [],
   orderSources: [],
+  configPaymentModes: [],
   paymentModesForCashierReport: [],
   orderSourcesForCashierReport: [],
 };
@@ -453,6 +454,26 @@ export default (state = initState, action) => {
       state = {
         ...state,
         orderSourcesForCashierReport: [],
+      };
+      break;
+
+    case userConstants.GET_PAYMENT_MODE_CONFIG_REQUEST:
+      state = {
+        ...state,
+      };
+      break;
+
+    case userConstants.GET_PAYMENT_MODE_CONFIG_SUCCESS:
+      state = {
+        ...state,
+        configPaymentModes: action.payload,
+      };
+      break;
+
+    case userConstants.GET_PAYMENT_MODE_CONFIG_FAILURE:
+      state = {
+        ...state,
+        configPaymentModes: [],
       };
       break;
   }

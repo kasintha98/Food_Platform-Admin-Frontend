@@ -442,15 +442,16 @@ export const AdminDashboard = () => {
                   allReports.salesSummeryByPaymentMode.length > 0 ? (
                     <RevenueByPaymentMode
                       totalOrders={
-                        allReports.salesSummeryByDateList &&
-                        allReports.salesSummeryByDateList.length
+                        allReports.salesSummeryByPaymentMode &&
+                        allReports.salesSummeryByPaymentMode.length
                           ? Number(
-                              allReports.salesSummeryByDateList
+                              allReports.salesSummeryByPaymentMode
                                 .map((a) => a.noOfOrders)
                                 .reduce((a, b) => a + b, 0)
                             )
                           : 0
                       }
+                      restaurantId={selectedStoreObj.restaurantId}
                     ></RevenueByPaymentMode>
                   ) : (
                     <div className="mb-3 pl-3 pt-3">

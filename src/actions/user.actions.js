@@ -985,6 +985,41 @@ export const getOrderSourceConfigDetails = (restaurantId, storeId) => {
   };
 };
 
+export const getPaymentModeConfigDetails = (restaurantId, storeId) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: userConstants.GET_PAYMENT_MODE_CONFIG_REQUEST });
+
+      const res = await axios.get(`/getConfigDetailsByCriteria`, {
+        params: {
+          restaurantId: "R001",
+          storeId: "ALL",
+          criteria: "PAYMENT_MODE",
+        },
+      });
+
+      if (res.status === 200) {
+        dispatch({
+          type: userConstants.GET_PAYMENT_MODE_CONFIG_SUCCESS,
+          payload: res.data,
+        });
+        return res.data;
+      } else {
+        dispatch({
+          type: userConstants.GET_PAYMENT_MODE_CONFIG_FAILURE,
+          payload: { error: "Error fetching data!" },
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch({
+        type: userConstants.GET_PAYMENT_MODE_CONFIG_FAILURE,
+        payload: { error: "Error fetching data!" },
+      });
+    }
+  };
+};
+
 export const getPaymentConfigDetailsCashierReport = (restaurantId) => {
   return async (dispatch) => {
     try {

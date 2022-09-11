@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { getPaymentModeConfigDetails } from "../../actions";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -15,7 +16,11 @@ const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
 export const RevenueByPaymentMode = (props) => {
   const allReports = useSelector((state) => state.report.allReports);
-  const [cashOrders, setCashOrders] = useState([]);
+  const configPaymentModes = useSelector(
+    (state) => state.user.configPaymentModes
+  );
+
+  /* const [cashOrders, setCashOrders] = useState([]);
   const [ccOrders, setCcOrders] = useState([]);
   const [payTmOrders, setPayTmOrders] = useState([]);
   const [payuOrders, setPayuOrders] = useState([]);
@@ -23,11 +28,12 @@ export const RevenueByPaymentMode = (props) => {
   const [cODOrders, setCODOrders] = useState([]);
   const [phonePeOrders, setPhonePeOrders] = useState([]);
   const [amznOrders, setAmznOrders] = useState([]);
-  const [notPaidOrders, setNotPaidOrders] = useState([]);
+  const [notPaidOrders, setNotPaidOrders] = useState([]); */
 
+  const dispatch = useDispatch();
   const ref = React.createRef();
 
-  useEffect(() => {
+  /* useEffect(() => {
     setCashOrders(
       allReports.salesSummeryByPaymentMode.filter(function (el) {
         return el.paymentMode === "CASH";
@@ -45,12 +51,6 @@ export const RevenueByPaymentMode = (props) => {
         return el.paymentMode === "PAYTM";
       })
     );
-
-    /* setPayuOrders(
-      allReports.salesSummeryByPaymentMode.filter(function (el) {
-        return el.paymentMode === "PayU";
-      })
-    ); */
 
     setGPOrders(
       allReports.salesSummeryByPaymentMode.filter(function (el) {
@@ -81,7 +81,60 @@ export const RevenueByPaymentMode = (props) => {
         return el.paymentMode === "NOTPAID";
       })
     );
-  }, [allReports]);
+  }, [allReports]); */
+
+  useEffect(() => {
+    dispatch(
+      getPaymentModeConfigDetails(
+        props.restaurantId ? props.restaurantId : "ALL"
+      )
+    );
+  }, [props.restaurantId]);
+
+  const renderOrderPerc = (mode) => {
+    const foundMode = allReports.salesSummeryByPaymentMode.find(
+      (x) => x.paymentMode === mode.configCriteriaValue
+    );
+
+    let totalOrderNo =
+      allReports.salesSummeryByPaymentMode &&
+      allReports.salesSummeryByPaymentMode.length
+        ? Number(
+            allReports.salesSummeryByPaymentMode
+              .map((a) => a.noOfOrders)
+              .reduce((a, b) => a + b, 0)
+          )
+        : 0;
+
+    if (foundMode) {
+      let percCalac = Number(
+        Number(foundMode.noOfOrders / totalOrderNo) * 100
+      ).toFixed(2);
+
+      return <span>{percCalac} %</span>;
+    } else {
+      return <span>0 %</span>;
+    }
+  };
+
+  const renderExcelOrderPerc = (mode) => {
+    let totalOrderNo =
+      allReports.salesSummeryByPaymentMode &&
+      allReports.salesSummeryByPaymentMode.length
+        ? Number(
+            allReports.salesSummeryByPaymentMode
+              .map((a) => a.noOfOrders)
+              .reduce((a, b) => a + b, 0)
+          )
+        : 0;
+
+    let percCalac = Number(
+      Number(mode.noOfOrders / totalOrderNo) * 100
+    ).toFixed(2);
+
+    return `${percCalac} %`;
+  };
+
   return (
     <div className="mt-3 p-3">
       <div className="mb-3">
@@ -111,7 +164,46 @@ export const RevenueByPaymentMode = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            <TableRow>
+            {configPaymentModes.map((mode) => (
+              <TableRow>
+                <TableCell align="left">{mode.configCriteriaValue}</TableCell>
+                <TableCell align="left">{mode.configCriteriaDesc}</TableCell>
+                <TableCell align="center">
+                  {allReports.salesSummeryByPaymentMode.find(
+                    (x) => x.paymentMode === mode.configCriteriaValue
+                  ) ? (
+                    <span>
+                      {
+                        allReports.salesSummeryByPaymentMode.find(
+                          (x) => x.paymentMode === mode.configCriteriaValue
+                        ).noOfOrders
+                      }
+                    </span>
+                  ) : (
+                    0
+                  )}
+                </TableCell>
+                <TableCell align="center">{renderOrderPerc(mode)}</TableCell>
+                <TableCell align="center">
+                  {allReports.salesSummeryByPaymentMode.find(
+                    (x) => x.paymentMode === mode.configCriteriaValue
+                  ) ? (
+                    <span>
+                      Rs.
+                      {
+                        allReports.salesSummeryByPaymentMode.find(
+                          (x) => x.paymentMode === mode.configCriteriaValue
+                        ).orderValue
+                      }
+                    </span>
+                  ) : (
+                    <span>Rs. 0</span>
+                  )}
+                </TableCell>
+              </TableRow>
+            ))}
+
+            {/* <TableRow>
               <TableCell align="left">CASH</TableCell>
               <TableCell align="left">Cash</TableCell>
               <TableCell align="center">
@@ -151,7 +243,6 @@ export const RevenueByPaymentMode = (props) => {
                 )}
               </TableCell>
             </TableRow>
-
             <TableRow>
               <TableCell align="left">EDC</TableCell>
               <TableCell align="left">Credit/Debit</TableCell>
@@ -192,7 +283,6 @@ export const RevenueByPaymentMode = (props) => {
                 )}
               </TableCell>
             </TableRow>
-
             <TableRow>
               <TableCell align="left">PAYTM</TableCell>
               <TableCell align="left">PayTM</TableCell>
@@ -233,47 +323,6 @@ export const RevenueByPaymentMode = (props) => {
                 )}
               </TableCell>
             </TableRow>
-
-            {/* <TableRow>
-              <TableCell align="left">Payu</TableCell>
-              <TableCell align="center">
-                {payuOrders.length > 0 ? (
-                  <>
-                    {payuOrders
-                      .map((a) => a.noOfOrders)
-                      .reduce((a, b) => a + b, 0)}
-                  </>
-                ) : (
-                  0
-                )}
-              </TableCell>
-              <TableCell align="center">
-                {Number(
-                  Number(
-                    payuOrders.length > 0
-                      ? payuOrders
-                          .map((a) => a.noOfOrders)
-                          .reduce((a, b) => a + b, 0) * 100
-                      : 0
-                  ) / props.totalOrders
-                ).toFixed(2)}{" "}
-                %
-              </TableCell>
-              <TableCell align="center">
-                {payuOrders.length > 0 ? (
-                  <>
-                    Rs.{" "}
-                    {payuOrders
-                      .map((a) => a.orderValue)
-                      .reduce((a, b) => a + b, 0)
-                      .toFixed(2)}
-                  </>
-                ) : (
-                  "Rs. 0.00"
-                )}
-              </TableCell>
-            </TableRow> */}
-
             <TableRow>
               <TableCell align="left">GPAY</TableCell>
               <TableCell align="left">Google Pay</TableCell>
@@ -314,7 +363,6 @@ export const RevenueByPaymentMode = (props) => {
                 )}
               </TableCell>
             </TableRow>
-
             <TableRow>
               <TableCell align="left">COD</TableCell>
               <TableCell align="left">Cash On Delivery</TableCell>
@@ -355,7 +403,6 @@ export const RevenueByPaymentMode = (props) => {
                 )}
               </TableCell>
             </TableRow>
-
             <TableRow>
               <TableCell align="left">PHONEPE</TableCell>
               <TableCell align="left">PhonePe</TableCell>
@@ -396,7 +443,6 @@ export const RevenueByPaymentMode = (props) => {
                 )}
               </TableCell>
             </TableRow>
-
             <TableRow>
               <TableCell align="left">AMZNPAY</TableCell>
               <TableCell align="left">Amazon Pay</TableCell>
@@ -437,7 +483,6 @@ export const RevenueByPaymentMode = (props) => {
                 )}
               </TableCell>
             </TableRow>
-
             <TableRow>
               <TableCell align="left">NOTPAID</TableCell>
               <TableCell align="left">Not Paid</TableCell>
@@ -477,7 +522,7 @@ export const RevenueByPaymentMode = (props) => {
                   "Rs. 0.00"
                 )}
               </TableCell>
-            </TableRow>
+            </TableRow> */}
           </TableBody>
         </Table>
       </TableContainer>
@@ -503,6 +548,10 @@ export const RevenueByPaymentMode = (props) => {
             <ExcelColumn label="Store ID" value="storeId" />
             <ExcelColumn label="Restaurant Name" value="restaurantName" />
             <ExcelColumn label="Number Of Orders" value="noOfOrders" />
+            <ExcelColumn
+              label="% of Total"
+              value={(col) => renderExcelOrderPerc(col)}
+            />
             <ExcelColumn label="Total Order Value" value="orderValue" />
             <ExcelColumn label="Payment Mode" value="paymentMode" />
             <ExcelColumn
