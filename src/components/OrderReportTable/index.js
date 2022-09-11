@@ -35,6 +35,7 @@ const CusTableCell2 = styled(TableCell)`
 
 export const OrderReportTable = (props) => {
   const orders = useSelector((state) => state.order.orders);
+  const stores = useSelector((state) => state.store.stores);
   const loading = useSelector((state) => state.order.loading);
   const [showInvoice, setShowInvoice] = useState(false);
   const [currentOrder, setCurrentOrder] = useState(false);
@@ -114,6 +115,59 @@ export const OrderReportTable = (props) => {
     return str;
   };
 
+  const handleManualPrint = () => {
+    const div = document.getElementById("billNew").innerHTML;
+    var windows = window.open("", "", "height=600, width=600");
+    windows.document.write("<html><body >");
+    windows.document.write(
+      "<style> body{text-align: center; margin: 0; line-height: 0.7;} table{width: 100%} tbody{text-align: left;} th{text-align: left !important;} @media print { body {  }} @page { size: Statement;margin: 0;}</style>"
+    );
+    windows.document.write(div);
+    windows.document.write("</body></html>");
+    windows.document.close();
+    windows.print();
+
+    //window.print();
+  };
+
+  const renderStoreAddress = (restaurantId, storeId) => {
+    const foundMatch = stores.find(
+      (x) => x.restaurantId === restaurantId && x.storeId === storeId
+    );
+
+    if (foundMatch) {
+      return (
+        <>
+          <span>{foundMatch.address1}</span>
+          {foundMatch.address2 ? (
+            <>
+              , <span>{foundMatch.address2}</span>
+            </>
+          ) : null}
+          {foundMatch.address3 ? (
+            <>
+              , <br></br>
+              <span>{foundMatch.address3}</span>
+            </>
+          ) : null}
+          , {foundMatch.city}
+          {foundMatch.zipCode ? <>, {foundMatch.zipCode}</> : null},{" "}
+          {foundMatch.country}
+        </>
+      );
+    }
+  };
+
+  const renderStoreGST = (restaurantId, storeId) => {
+    const foundMatch = stores.find(
+      (x) => x.restaurantId === restaurantId && x.storeId === storeId
+    );
+
+    if (foundMatch) {
+      return <>GST NO: {foundMatch.storeGstNumber}</>;
+    }
+  };
+
   const renderInvoiceModal = () => {
     return (
       <Modal
@@ -134,12 +188,114 @@ export const OrderReportTable = (props) => {
           <Modal.Body style={{ maxHeight: "75vh", overflowY: "auto" }}>
             {currentOrder ? (
               <div ref={ref}>
+                <div style={{ display: "none" }}>
+                  <div id="billNew">
+                    <div className="text-center">
+                      <Typography sx={{ fontWeight: "600" }}>
+                        {currentOrder
+                          ? currentOrder.restaurantName
+                          : "Hangries"}
+                      </Typography>
+                      <Typography sx={{ color: "black" }}>
+                        {renderStoreAddress(
+                          currentOrder.restaurantId,
+                          currentOrder.storeId
+                        )}
+                      </Typography>
+
+                      <Typography sx={{ fontWeight: "600" }}>
+                        Order ID: {currentOrder ? currentOrder.orderId : null}
+                      </Typography>
+
+                      <Typography sx={{ fontWeight: "600" }}>
+                        {renderStoreGST(
+                          currentOrder.restaurantId,
+                          currentOrder.storeId
+                        )}
+                      </Typography>
+
+                      <Typography sx={{ fontWeight: "600" }}>
+                        Customer Name: <span>{currentOrder?.customerName}</span>
+                      </Typography>
+                      <Typography sx={{ fontWeight: "600" }}>
+                        Table No:{" "}
+                        {currentOrder && currentOrder.storeTableId
+                          ? currentOrder.storeTableId
+                          : "N/A"}
+                      </Typography>
+
+                      <Typography sx={{ fontWeight: "600" }}>
+                        <span>{currentOrder.orderDeliveryType}</span>
+                        <span> [{currentOrder.paymentStatus}]</span>
+                      </Typography>
+                    </div>
+                    <hr></hr>
+                    <div>
+                      <Typography>Name: {currentOrder.customerName}</Typography>
+                      {/* <Typography>Address: {currentOrder.address}</Typography> */}
+                      <Typography>
+                        Mob No: {currentOrder.mobileNumber}
+                      </Typography>
+                    </div>
+                    <hr></hr>
+                    <div>
+                      <Typography>
+                        <Row>
+                          <Col>
+                            Time: {renderNowTime(currentOrder.createdDate)}
+                          </Col>
+                          <Col>
+                            Date: {renderNowDate(currentOrder.createdDate)}
+                          </Col>
+                        </Row>
+                      </Typography>
+                    </div>
+                    <hr></hr>
+                    <div>
+                      <InvoiceTable
+                        allProducts={currentOrder.orderDetails}
+                        grandTot={currentOrder.totalPrice}
+                        cgst={currentOrder.cgstCalculatedValue}
+                        sgst={currentOrder.sgstCalculatedValue}
+                        overallPriceWithTax={currentOrder.overallPriceWithTax}
+                        delCharge={currentOrder.deliveryCharges}
+                        fullResp={currentOrder}
+                        isBill={true}
+                      ></InvoiceTable>
+                    </div>
+                  </div>
+                </div>
                 <div ref={refH}>
                   <div className="text-center">
-                    <Typography sx={{ fontWeight: "600" }}>Hangries</Typography>
+                    <Typography sx={{ fontWeight: "600" }}>
+                      {currentOrder ? currentOrder.restaurantName : "Hangries"}
+                    </Typography>
+                    <Typography sx={{ color: "black" }}>
+                      {renderStoreAddress(
+                        currentOrder.restaurantId,
+                        currentOrder.storeId
+                      )}
+                    </Typography>
 
                     <Typography sx={{ fontWeight: "600" }}>
                       Order ID: {currentOrder ? currentOrder.orderId : null}
+                    </Typography>
+
+                    <Typography sx={{ fontWeight: "600" }}>
+                      {renderStoreGST(
+                        currentOrder.restaurantId,
+                        currentOrder.storeId
+                      )}
+                    </Typography>
+
+                    <Typography sx={{ fontWeight: "600" }}>
+                      Customer Name: <span>{currentOrder?.customerName}</span>
+                    </Typography>
+                    <Typography sx={{ fontWeight: "600" }}>
+                      Table No:{" "}
+                      {currentOrder && currentOrder.storeTableId
+                        ? currentOrder.storeTableId
+                        : "N/A"}
                     </Typography>
 
                     <Typography sx={{ fontWeight: "600" }}>
@@ -150,7 +306,7 @@ export const OrderReportTable = (props) => {
                   <hr></hr>
                   <div>
                     <Typography>Name: {currentOrder.customerName}</Typography>
-                    <Typography>Address: {currentOrder.address}</Typography>
+                    {/* <Typography>Address: {currentOrder.address}</Typography> */}
                     <Typography>Mob No: {currentOrder.mobileNumber}</Typography>
                   </div>
                   <hr></hr>
@@ -189,11 +345,11 @@ export const OrderReportTable = (props) => {
             <Col className="col-6">
               <Button
                 color="secondary"
-                onClick={handleCloseInvoice}
+                onClick={handleManualPrint}
                 className="w-100"
                 variant="contained"
               >
-                Close
+                Print
               </Button>
             </Col>
             <Col className="col-6">

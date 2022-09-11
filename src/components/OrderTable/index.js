@@ -26,6 +26,7 @@ import { Row, Col, Modal } from "react-bootstrap";
 import { OrderDetailsTable } from "../OrderDetailsTable";
 import { toast } from "react-toastify";
 import Pdf from "react-to-pdf";
+import { OrderInvoice } from "../OrderInvoice";
 
 const CusTableCell1 = styled(TableCell)`
   font-size: 0.75rem;
@@ -64,6 +65,7 @@ const statuses = [
 
 export const OrderTable = (props) => {
   const orders = useSelector((state) => state.order.orders);
+  const stores = useSelector((state) => state.store.stores);
   const user = useSelector((state) => state.auth.user);
   const businessDateAll = useSelector((state) => state.user.businessDate);
   const paymentModes = useSelector((state) => state.user.paymentModes);
@@ -187,101 +189,268 @@ export const OrderTable = (props) => {
     return <span>{time}</span>;
   };
 
-  const renderDetailsModal = () => {
-    return (
-      <Modal
-        show={showDetailsModal}
-        onHide={handleCloseDetailsModal}
-        close
-        style={{
-          marginTop: "65px",
-          zIndex: 1100,
-          paddingBottom: "60px",
-        }}
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>OrderDetails</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {currentOrder ? (
+  const renderStoreAddress = (restaurantId, storeId) => {
+    const foundMatch = stores.find(
+      (x) => x.restaurantId === restaurantId && x.storeId === storeId
+    );
+
+    if (foundMatch) {
+      return (
+        <>
+          <span>{foundMatch.address1}</span>
+          {foundMatch.address2 ? (
             <>
-              {" "}
-              <div ref={ref}>
-                <div ref={refH}>
-                  <div className="text-center">
-                    <Typography sx={{ fontWeight: "600" }}>Hangries</Typography>
-
-                    <Typography sx={{ fontWeight: "600" }}>
-                      Order ID: {currentOrder ? currentOrder.orderId : null}
-                    </Typography>
-
-                    <Typography sx={{ fontWeight: "600" }}>
-                      <span>{currentOrder.orderDeliveryType}</span>
-                      <span> [{currentOrder.paymentStatus}]</span>
-                    </Typography>
-                  </div>
-                  <hr></hr>
-                  <div>
-                    <Typography>Name: {currentOrder.customerName}</Typography>
-                    <Typography>Address: {currentOrder.address}</Typography>
-                    <Typography>Mob No: {currentOrder.mobileNumber}</Typography>
-                  </div>
-                  <hr></hr>
-                  <div>
-                    <Typography>
-                      <Row>
-                        <Col>
-                          Time: {renderNowTime(currentOrder.createdDate)}
-                        </Col>
-                        <Col>
-                          Date: {renderNowDate(currentOrder.createdDate)}
-                        </Col>
-                      </Row>
-                    </Typography>
-                  </div>
-                  <hr></hr>
-                  <OrderDetailsTable
-                    fullResp={currentOrder}
-                  ></OrderDetailsTable>
-                </div>
-              </div>
+              , <span>{foundMatch.address2}</span>
             </>
           ) : null}
-        </Modal.Body>
-        <Modal.Footer>
-          <Row className="w-100">
-            <Col className="col-6">
-              <Button
-                color="secondary"
-                onClick={handleCloseDetailsModal}
-                className="w-100"
-                variant="contained"
-              >
-                Close
-              </Button>
-            </Col>
-            <Col className="col-6">
-              <Pdf
-                targetRef={ref}
-                filename="invoice.pdf"
-                options={options}
-                x={0.8}
-              >
-                {({ toPdf }) => (
-                  <Button
-                    color="primary"
-                    onClick={toPdf}
-                    className="w-100"
-                    variant="contained"
-                  >
-                    Download Invoice
-                  </Button>
-                )}
-              </Pdf>
-            </Col>
-          </Row>
-        </Modal.Footer>
-      </Modal>
+          {foundMatch.address3 ? (
+            <>
+              , <br></br>
+              <span>{foundMatch.address3}</span>
+            </>
+          ) : null}
+          , {foundMatch.city}
+          {foundMatch.zipCode ? <>, {foundMatch.zipCode}</> : null},{" "}
+          {foundMatch.country}
+        </>
+      );
+    }
+  };
+
+  const renderStoreGST = (restaurantId, storeId) => {
+    const foundMatch = stores.find(
+      (x) => x.restaurantId === restaurantId && x.storeId === storeId
+    );
+
+    if (foundMatch) {
+      return <>GST NO: {foundMatch.storeGstNumber}</>;
+    }
+  };
+
+  const handleManualPrint = () => {
+    const div = document.getElementById("billNew").innerHTML;
+    var windows = window.open("", "", "height=600, width=600");
+    windows.document.write("<html><body >");
+    windows.document.write(
+      "<style> body{text-align: center; margin: 0; line-height: 0.7;} table{width: 100%} tbody{text-align: left;} th{text-align: left !important;} @media print { body {  }} @page { size: Statement;margin: 0;}</style>"
+    );
+    windows.document.write(div);
+    windows.document.write("</body></html>");
+    windows.document.close();
+    windows.print();
+
+    //window.print();
+  };
+
+  const renderDetailsModal = () => {
+    return (
+      <>
+        {/* <OrderInvoice
+          storeObj={props.storeObj}
+          isShowDeliveryCharge={props.isShowDeliveryCharge}
+          orderResp={currentOrder}
+          firstName={currentOrder.customerName}
+          phoneNo={currentOrder.mobileNumber}
+          delCharge={currentOrder.deliveryCharges}
+          showInvoice={showDetailsModal}
+          title={"OrderDetails"}
+          fullResp={currentOrder}
+        ></OrderInvoice> */}
+        <Modal
+          show={showDetailsModal}
+          onHide={handleCloseDetailsModal}
+          close
+          style={{
+            marginTop: "65px",
+            zIndex: 1100,
+            paddingBottom: "60px",
+          }}
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>OrderDetails</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {currentOrder ? (
+              <>
+                {" "}
+                <div ref={ref}>
+                  <div style={{ display: "none" }}>
+                    <div id="billNew">
+                      <div className="text-center">
+                        <Typography sx={{ fontWeight: "600" }}>
+                          {currentOrder
+                            ? currentOrder.restaurantName
+                            : "Hangries"}
+                        </Typography>
+                        <Typography sx={{ color: "black" }}>
+                          {renderStoreAddress(
+                            currentOrder.restaurantId,
+                            currentOrder.storeId
+                          )}
+                        </Typography>
+
+                        <Typography sx={{ fontWeight: "600" }}>
+                          {renderStoreGST(
+                            currentOrder.restaurantId,
+                            currentOrder.storeId
+                          )}
+                        </Typography>
+
+                        <Typography sx={{ fontWeight: "600" }}>
+                          Order ID: {currentOrder ? currentOrder.orderId : null}
+                        </Typography>
+
+                        <Typography sx={{ fontWeight: "600" }}>
+                          Customer Name:{" "}
+                          <span>{currentOrder?.customerName}</span>
+                        </Typography>
+                        <Typography sx={{ fontWeight: "600" }}>
+                          Table No:{" "}
+                          {currentOrder && currentOrder.storeTableId
+                            ? currentOrder.storeTableId
+                            : "N/A"}
+                        </Typography>
+
+                        <Typography sx={{ fontWeight: "600" }}>
+                          <span>{currentOrder.orderDeliveryType}</span>
+                          <span> [{currentOrder.paymentStatus}]</span>
+                        </Typography>
+                      </div>
+                      <hr></hr>
+                      <div>
+                        <Typography>
+                          Name: {currentOrder.customerName}
+                        </Typography>
+                        {/* <Typography>Address: {currentOrder.address}</Typography> */}
+                        <Typography>
+                          Mob No: {currentOrder.mobileNumber}
+                        </Typography>
+                      </div>
+                      <hr></hr>
+                      <div>
+                        <Typography>
+                          <Row>
+                            <Col>
+                              Time: {renderNowTime(currentOrder.createdDate)}
+                            </Col>
+                            <Col>
+                              Date: {renderNowDate(currentOrder.createdDate)}
+                            </Col>
+                          </Row>
+                        </Typography>
+                      </div>
+                      <hr></hr>
+                      <OrderDetailsTable
+                        fullResp={currentOrder}
+                        isBill={true}
+                      ></OrderDetailsTable>
+                    </div>
+                  </div>
+                  <div ref={refH}>
+                    <div className="text-center">
+                      <Typography sx={{ fontWeight: "600" }}>
+                        {currentOrder
+                          ? currentOrder.restaurantName
+                          : "Hangries"}
+                      </Typography>
+                      <Typography sx={{ color: "black" }}>
+                        {renderStoreAddress(
+                          currentOrder.restaurantId,
+                          currentOrder.storeId
+                        )}
+                      </Typography>
+
+                      <Typography sx={{ fontWeight: "600" }}>
+                        Order ID: {currentOrder ? currentOrder.orderId : null}
+                      </Typography>
+
+                      <Typography sx={{ fontWeight: "600" }}>
+                        {renderStoreGST(
+                          currentOrder.restaurantId,
+                          currentOrder.storeId
+                        )}
+                      </Typography>
+
+                      <Typography sx={{ fontWeight: "600" }}>
+                        Customer Name: <span>{currentOrder?.customerName}</span>
+                      </Typography>
+                      <Typography sx={{ fontWeight: "600" }}>
+                        Table No:{" "}
+                        {currentOrder && currentOrder.storeTableId
+                          ? currentOrder.storeTableId
+                          : "N/A"}
+                      </Typography>
+
+                      <Typography sx={{ fontWeight: "600" }}>
+                        <span>{currentOrder.orderDeliveryType}</span>
+                        <span> [{currentOrder.paymentStatus}]</span>
+                      </Typography>
+                    </div>
+                    <hr></hr>
+                    <div>
+                      <Typography>Name: {currentOrder.customerName}</Typography>
+                      {/* <Typography>Address: {currentOrder.address}</Typography> */}
+                      <Typography>
+                        Mob No: {currentOrder.mobileNumber}
+                      </Typography>
+                    </div>
+                    <hr></hr>
+                    <div>
+                      <Typography>
+                        <Row>
+                          <Col>
+                            Time: {renderNowTime(currentOrder.createdDate)}
+                          </Col>
+                          <Col>
+                            Date: {renderNowDate(currentOrder.createdDate)}
+                          </Col>
+                        </Row>
+                      </Typography>
+                    </div>
+                    <hr></hr>
+                    <OrderDetailsTable
+                      fullResp={currentOrder}
+                    ></OrderDetailsTable>
+                  </div>
+                </div>
+              </>
+            ) : null}
+          </Modal.Body>
+          <Modal.Footer>
+            <Row className="w-100">
+              <Col className="col-6">
+                <Button
+                  color="secondary"
+                  onClick={handleManualPrint}
+                  className="w-100"
+                  variant="contained"
+                >
+                  Print
+                </Button>
+              </Col>
+              <Col className="col-6">
+                <Pdf
+                  targetRef={ref}
+                  filename="invoice.pdf"
+                  options={options}
+                  x={0.8}
+                >
+                  {({ toPdf }) => (
+                    <Button
+                      color="primary"
+                      onClick={toPdf}
+                      className="w-100"
+                      variant="contained"
+                    >
+                      Download Invoice
+                    </Button>
+                  )}
+                </Pdf>
+              </Col>
+            </Row>
+          </Modal.Footer>
+        </Modal>
+      </>
     );
   };
 

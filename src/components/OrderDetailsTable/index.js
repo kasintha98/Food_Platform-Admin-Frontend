@@ -20,10 +20,10 @@ export const OrderDetailsTable = (props) => {
         >
           <TableHead>
             <TableRow>
-              <TableCell>Dish Name</TableCell>
-              <TableCell>Qty</TableCell>
-              <TableCell>Rate</TableCell>
-              <TableCell>Amount</TableCell>
+              <TableCell>Dish Name{props.isBill ? <hr></hr> : null}</TableCell>
+              <TableCell>Qty{props.isBill ? <hr></hr> : null}</TableCell>
+              <TableCell>Rate{props.isBill ? <hr></hr> : null}</TableCell>
+              <TableCell>Amount{props.isBill ? <hr></hr> : null}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -43,15 +43,19 @@ export const OrderDetailsTable = (props) => {
                     )}
                   </CusTableCell>
                   <CusTableCell>{row.quantity}</CusTableCell>
-                  <CusTableCell>Rs. {row.price}.00</CusTableCell>
                   <CusTableCell>
-                    Rs. {Number(row.quantity) * Number(row.price)}.00
+                    {props.isBill ? null : "Rs. "} {row.price}.00
+                  </CusTableCell>
+                  <CusTableCell>
+                    {props.isBill ? null : "Rs. "}{" "}
+                    {Number(row.quantity) * Number(row.price)}.00
                   </CusTableCell>
                 </TableRow>
               </>
             ))}
             <TableRow sx={{ borderTop: "2px solid black" }}>
               <CusTableCell component="th" scope="row" colspan="3">
+                {props.isBill ? <hr></hr> : null}
                 Total
               </CusTableCell>
               <CusTableCell
@@ -60,7 +64,8 @@ export const OrderDetailsTable = (props) => {
                 colspan="1"
                 sx={{ fontStyle: "italic" }}
               >
-                Rs. {props.fullResp.totalPrice}
+                {props.isBill ? <hr></hr> : null}
+                {props.isBill ? null : "Rs. "} {props.fullResp.totalPrice}
               </CusTableCell>
             </TableRow>
             <TableRow>
@@ -73,7 +78,8 @@ export const OrderDetailsTable = (props) => {
                 colspan="1"
                 sx={{ fontStyle: "italic" }}
               >
-                Rs. {props.fullResp.cgstCalculatedValue}
+                {props.isBill ? null : "Rs. "}{" "}
+                {props.fullResp.cgstCalculatedValue}
               </CusTableCell>
             </TableRow>
             <TableRow>
@@ -86,7 +92,8 @@ export const OrderDetailsTable = (props) => {
                 colspan="1"
                 sx={{ fontStyle: "italic" }}
               >
-                Rs. {props.fullResp.sgstCalculatedValue}
+                {props.isBill ? null : "Rs. "}{" "}
+                {props.fullResp.sgstCalculatedValue}
               </CusTableCell>
             </TableRow>
             <TableRow>
@@ -99,7 +106,7 @@ export const OrderDetailsTable = (props) => {
                 colspan="1"
                 sx={{ fontStyle: "italic" }}
               >
-                Rs. {props.fullResp.deliveryCharges}
+                {props.isBill ? null : "Rs. "} {props.fullResp.deliveryCharges}
               </CusTableCell>
             </TableRow>
             <TableRow
@@ -109,10 +116,15 @@ export const OrderDetailsTable = (props) => {
               }}
             >
               <CusTableCell component="th" scope="row" colspan="3">
+                {props.isBill ? <hr></hr> : null}
                 Grand Total
+                {props.isBill ? <hr></hr> : null}
               </CusTableCell>
               <CusTableCell component="th" scope="row" colspan="1">
-                Rs. {props.fullResp.overallPriceWithTax}
+                {props.isBill ? <hr></hr> : null}
+                {props.isBill ? null : "Rs. "}
+                {props.fullResp.overallPriceWithTax}
+                {props.isBill ? <hr></hr> : null}
               </CusTableCell>
             </TableRow>
           </TableBody>
