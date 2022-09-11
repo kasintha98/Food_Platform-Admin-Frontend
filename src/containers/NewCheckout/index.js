@@ -1251,7 +1251,11 @@ export default function NewCheckout(props) {
               lastName,
               emailId,
             };
-            dispatch(updateCustomerDetails(custObj));
+            dispatch(updateCustomerDetails(custObj)).then((res) => {
+              if (res) {
+                setCurrentCustomer(res);
+              }
+            });
 
             let addressObj = {
               mobileNumber: res.mobileNumber,
