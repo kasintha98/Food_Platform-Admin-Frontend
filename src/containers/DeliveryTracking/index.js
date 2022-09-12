@@ -80,17 +80,20 @@ export const DeliveryTracking = () => {
   useEffect(() => {
     dispatch(getUsersByRole("DELIVERY_BOY")).then((res) => {
       if (res) {
-        document
-          .querySelector(".MuiTabs-scroller")
-          .classList.add("Mui-selected");
+        document.querySelector(".MuiTabs-scroller") &&
+          document
+            .querySelector(".MuiTabs-scroller")
+            .classList.add("Mui-selected");
       }
     });
     dispatch(getAllRiderLocations());
   }, []);
 
   const handleChangeTab = (event, newValue) => {
-    document.querySelector(".MuiTabs-scroller") &&
+    if (document.querySelector(".MuiTabs-scroller")) {
       document.querySelector(".MuiTabs-scroller").classList.add("Mui-selected");
+    }
+
     setTabValue(newValue);
   };
 
