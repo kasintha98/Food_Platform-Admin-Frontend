@@ -1491,7 +1491,7 @@ export default function NewCheckout(props) {
           paddingBottom: "60px",
         }}
       >
-        <Modal.Header>
+        <Modal.Header closeButton>
           <Modal.Title> Select Address</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -1538,9 +1538,9 @@ export default function NewCheckout(props) {
           )}
         </Modal.Body>
         <Modal.Footer>
-          {/* <Button variant="secondary" onClick={handleCloseAddress}>
+          <Button variant="secondary" onClick={handleCloseAddress}>
             Close
-          </Button> */}
+          </Button>
           <Button
             color="success"
             variant="contained"
@@ -2626,6 +2626,7 @@ export default function NewCheckout(props) {
                                   }
                                 }}
                                 //disabled={!isNewCustomerFunc}
+                                disabled={phoneNo === "99999" ? true : false}
                               />
                             }
                             label="Default Store address"
@@ -2636,7 +2637,7 @@ export default function NewCheckout(props) {
                             variant="contained"
                             color="warning"
                             onClick={addUpdateCustomerDetails}
-                            //disabled={!isNewCustomerFunc}
+                            disabled={phoneNo === "99999" ? true : false}
                           >
                             SAVE CUSTOMER DETAILS
                           </Button>

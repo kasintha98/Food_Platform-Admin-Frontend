@@ -87,7 +87,8 @@ export const DeliveryTracking = () => {
   }, []);
 
   const handleChangeTab = (event, newValue) => {
-    document.querySelector(".MuiTabs-scroller").classList.add("Mui-selected");
+    document.querySelector(".MuiTabs-scroller") &&
+      document.querySelector(".MuiTabs-scroller").classList.add("Mui-selected");
     setTabValue(newValue);
   };
 

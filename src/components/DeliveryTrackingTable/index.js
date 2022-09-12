@@ -279,14 +279,49 @@ export const DeliveryTrackingTable = (props) => {
 
     if (outTime && deliveredTime) {
       const timeTaken = new Date(deliveredTime) - new Date(outTime);
-      return isStrng ? (
+
+      /* return isStrng ? (
         `${new Date(timeTaken).toISOString().substring(11, 19)}`
       ) : (
         <span>{new Date(timeTaken).toISOString().substring(11, 19)}</span>
+      ); */
+
+      return isStrng ? (
+        `${secondsToHMS(timeTaken / 1000)}`
+      ) : (
+        <span>{secondsToHMS(timeTaken / 1000)}</span>
       );
-    } else {
-      return isStrng ? "N/A" : <span>N/A</span>;
     }
+    if (!deliveredTime) {
+      return isStrng ? (
+        "Order Not Delivered Yet"
+      ) : (
+        <span>Order Not Delivered Yet</span>
+      );
+    }
+    if (!outTime) {
+      return isStrng ? (
+        "Order Accepted Time Missing"
+      ) : (
+        <span>Order Accepted Time Missing</span>
+      );
+    }
+  };
+
+  const secondsToHMS = (secs) => {
+    function z(n) {
+      return (n < 10 ? "0" : "") + n;
+    }
+    var sign = secs < 0 ? "-" : "";
+    secs = Math.abs(secs);
+    return (
+      sign +
+      z((secs / 3600) | 0) +
+      ":" +
+      z(((secs % 3600) / 60) | 0) +
+      ":" +
+      z(secs % 60)
+    );
   };
 
   const renderDetailsModal = () => {
@@ -525,7 +560,7 @@ export const DeliveryTrackingTable = (props) => {
                       )}
                     </CusTableCell2>
                     <CusTableCell2 align="center">
-                      {getTimeByStatus(row.orderId, "ACCEPTED", true)}
+                      {getTimeByStatus(row.orderId, "OUT FOR DELIVERY", true)}
                     </CusTableCell2>
                     <CusTableCell2 align="center">
                       {getTimeByStatus(row.orderId, "DELIVERED", true)}
