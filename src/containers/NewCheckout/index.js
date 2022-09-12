@@ -16,6 +16,7 @@ import CartCard from "../../components/CartCard";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -114,6 +115,7 @@ export default function NewCheckout(props) {
   const [choiceTotal, setChoiceTotal] = useState(0);
   const [orderResp, setOrderResp] = useStateWithCallbackLazy(null);
   const [show, setShow] = useState(false);
+  const [showAddress, setShowAddress] = useState(false);
   const [paymentType, setPaymentType] = useState("");
   const [currentPaymentType, setCurrentPaymentType] = useState("");
   const [showInvoice, setShowInvoice] = useState(false);
@@ -148,6 +150,9 @@ export default function NewCheckout(props) {
   const [combo1OfferReduceTotal, setcombo1OfferReduceTotal] = useState(null);
   const [combo2OfferReduceTotal, setcombo2OfferReduceTotal] = useState(null);
   const [pasta59OfferReduceTotal, setPASTA59OfferReduceTotal] = useState(null);
+  const [allFoundAddressList, setAllFoundAddressList] = useState([]);
+  const [valueAddress, setValueAddress] = useState("");
+  const [changeAddressObj, setChangeAddressObj] = useState(null);
 
   const dispatch = useDispatch();
   const ref = React.createRef();
@@ -485,6 +490,13 @@ export default function NewCheckout(props) {
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  const handleCloseAddress = () => setShowAddress(false);
+  const handleShowAddress = () => setShowAddress(true);
+
+  const handleChangeAddress = (event) => {
+    setValueAddress(event.target.value);
+  };
 
   const handleCloseInvoice = () => {
     setShowInvoice(false);
@@ -1300,7 +1312,7 @@ export default function NewCheckout(props) {
         !firstName ||
         !addressType ||
         !address1 ||
-        !zipCode ||
+        //!zipCode ||
         !city ||
         !state
       ) {
@@ -1312,7 +1324,7 @@ export default function NewCheckout(props) {
     if (!currentCustomer) {
       dispatch(addNewCustomer(phoneNo, firstName, lastName, emailId)).then(
         (res) => {
-          if (res && !defaultAddress) {
+          if (res /* && !defaultAddress */) {
             const custObj = {
               ...res,
               firstName,
@@ -1351,7 +1363,26 @@ export default function NewCheckout(props) {
         emailId,
         mobileNumber: phoneNo,
       };
-      dispatch(updateCustomerDetails(custObj));
+      dispatch(updateCustomerDetails(custObj)).then((res) => {
+        if (res) {
+          setCurrentCustomer(res);
+          let addressObj = {
+            mobileNumber: res.mobileNumber,
+            customerAddressType: addressType,
+            address1: address1,
+            address2: address2,
+            city: city,
+            state: state,
+            landmark: landMark,
+            zipCode: parseInt(zipCode),
+          };
+          dispatch(AddUpdateCustomerAddress(addressObj)).then((res) => {
+            if (res) {
+              setCurrentGetAddress(res);
+            }
+          });
+        }
+      });
     }
   };
 
@@ -1423,9 +1454,14 @@ export default function NewCheckout(props) {
       e.preventDefault();
     }
     if (e.keyCode === 9) {
+      setDefaultAddress(false);
       dispatch(GetCustomerAddress(phoneNo)).then((res) => {
-        if (res) {
+        if (res && res.length === 1) {
           setFoundAddress(res[0]);
+        }
+        if (res && res.length > 1) {
+          setAllFoundAddressList(res);
+          handleShowAddress();
         }
       });
       dispatch(GetCustomerDetails(phoneNo)).then((res) => {
@@ -1442,6 +1478,86 @@ export default function NewCheckout(props) {
         }
       });
     }
+  };
+
+  const renderAddressSelectModal = () => {
+    return (
+      <Modal
+        show={showAddress}
+        //onHide={handleCloseAddress}
+        style={{
+          marginTop: "65px",
+          zIndex: 1100,
+          paddingBottom: "60px",
+        }}
+      >
+        <Modal.Header>
+          <Modal.Title> Select Address</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {allFoundAddressList ? (
+            <>
+              <FormControl>
+                <FormLabel id="demo-controlled-radio-buttons-group">
+                  Address
+                </FormLabel>
+                <RadioGroup
+                  aria-labelledby="demo-controlled-radio-buttons-group"
+                  name="controlled-radio-buttons-group"
+                  value={valueAddress}
+                  onChange={handleChangeAddress}
+                >
+                  {allFoundAddressList.map((address) => (
+                    <FormControlLabel
+                      onClick={() => {
+                        setChangeAddressObj(address);
+                      }}
+                      value={address.id}
+                      control={<Radio />}
+                      label={
+                        <Typography>
+                          <span
+                            style={{
+                              fontWeight: "600",
+                            }}
+                          >
+                            {address.customerAddressType},{" "}
+                          </span>
+                          {address.address1}, {address.address2},{" "}
+                          {address.landmark}, {address.city}, {address.zipCode},{" "}
+                          {address.state}
+                        </Typography>
+                      }
+                    />
+                  ))}
+                </RadioGroup>
+              </FormControl>
+            </>
+          ) : (
+            <>No Addresses Found!</>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          {/* <Button variant="secondary" onClick={handleCloseAddress}>
+            Close
+          </Button> */}
+          <Button
+            color="success"
+            variant="contained"
+            onClick={() => {
+              if (changeAddressObj) {
+                setFoundAddress(changeAddressObj);
+                handleCloseAddress();
+              } else {
+                toast.error("Please select an address!");
+              }
+            }}
+          >
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    );
   };
 
   const handleManualPrint = () => {
@@ -2375,6 +2491,7 @@ export default function NewCheckout(props) {
                                 onChange={(event) => {
                                   setEmailId(event.target.value);
                                 }}
+                                disabled={defaultAddress}
                               />
                             </Col>
                           </Row>
@@ -2398,6 +2515,7 @@ export default function NewCheckout(props) {
                                 onChange={(event) => {
                                   setFirstName(event.target.value);
                                 }}
+                                disabled={defaultAddress}
                               />
                             </Col>
                             <Col className="pl-1">
@@ -2407,6 +2525,7 @@ export default function NewCheckout(props) {
                                 onChange={(event) => {
                                   setLastName(event.target.value);
                                 }}
+                                disabled={defaultAddress}
                               />
                             </Col>
                           </Row>
@@ -2490,9 +2609,23 @@ export default function NewCheckout(props) {
                                 checked={defaultAddress}
                                 onChange={(event) => {
                                   setDefaultAddress(event.target.checked);
-                                  clearAddress();
+                                  //clearAddress();
+                                  if (event.target.checked) {
+                                    setAddressType("STORE");
+                                    setFirstName("GUEST");
+                                    setAddress1(props.storeObj.address1);
+                                    setAddress2(props.storeObj.address2);
+                                    setLandMark(props.storeObj.address3);
+                                    setZipCode(
+                                      props.storeObj.zipCode
+                                        ? props.storeObj.zipCode
+                                        : 0
+                                    );
+                                    setCity(props.storeObj.city);
+                                    setState(props.storeObj.country);
+                                  }
                                 }}
-                                disabled={!isNewCustomerFunc}
+                                //disabled={!isNewCustomerFunc}
                               />
                             }
                             label="Default Store address"
@@ -2503,7 +2636,7 @@ export default function NewCheckout(props) {
                             variant="contained"
                             color="warning"
                             onClick={addUpdateCustomerDetails}
-                            disabled={!isNewCustomerFunc}
+                            //disabled={!isNewCustomerFunc}
                           >
                             SAVE CUSTOMER DETAILS
                           </Button>
@@ -2817,6 +2950,7 @@ export default function NewCheckout(props) {
       </div>
       {renderInvoiceModal()}
       {renderPayUModal()}
+      {renderAddressSelectModal()}
     </div>
   );
 }
