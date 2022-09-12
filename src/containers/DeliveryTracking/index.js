@@ -7,6 +7,7 @@ import { Box, Tabs, Typography, Alert } from "@mui/material";
 import Tab from "@mui/material/Tab";
 import PropTypes from "prop-types";
 import { DeliveryTrackingTable } from "../../components/DeliveryTrackingTable";
+import { Row, Col } from "react-bootstrap";
 import "./style.css";
 
 const CusTab = styled(Tab)`
@@ -17,6 +18,7 @@ const CusTab = styled(Tab)`
     padding: 10px;
     border-radius: 5px;
   } */
+  min-width: 160px;
 `;
 
 const CusTabs = styled(Tabs)`
@@ -130,12 +132,26 @@ export const DeliveryTracking = () => {
                   handleChangeTab(e, user.userSeqNo);
                 }}
                 label={
-                  <Typography>
-                    <span>{user.firstName}</span>
-                    <span className="count-d">
+                  <>
+                    <Row className="w-100">
+                      <Col className="p-0">
+                        <Typography sx={{ width: "100%", textAlign: "left" }}>
+                          <span>{user.firstName}</span>
+                          {/* <span className="count-d">
                       {calcAllOrderCount(user.firstName)}
-                    </span>
-                  </Typography>
+                    </span> */}
+                        </Typography>
+                      </Col>
+                      <Col className="p-0">
+                        <Typography sx={{ width: "100%", textAlign: "right" }}>
+                          {/* <span>{user.firstName}</span> */}
+                          <span className="count-d">
+                            {calcAllOrderCount(user.firstName)}
+                          </span>
+                        </Typography>
+                      </Col>
+                    </Row>
+                  </>
                 }
                 {...a11yProps(user.userSeqNo)}
               />
