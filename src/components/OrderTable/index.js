@@ -85,14 +85,31 @@ export const OrderTable = (props) => {
 
   useEffect(() => {
     const today = new Date(businessDateAll && businessDateAll.businessDate);
-    dispatch(
-      getCustomerOrders(
-        null,
-        null,
-        props.type,
-        `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
-      )
-    );
+    if (props.isForOrderSource) {
+      dispatch(
+        getCustomerOrders(
+          null,
+          null,
+          null,
+          `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,
+          null,
+          null,
+          null,
+          null,
+          null,
+          props.type
+        )
+      );
+    } else {
+      dispatch(
+        getCustomerOrders(
+          null,
+          null,
+          props.type,
+          `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
+        )
+      );
+    }
   }, [props.type, isReset]);
 
   const ref = React.createRef();

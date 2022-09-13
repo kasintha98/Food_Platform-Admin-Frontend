@@ -1629,11 +1629,15 @@ export default function NewCheckout(props) {
                               <span>{props.storeObj.address3}</span>
                             </>
                           ) : null}
-                          , {props.storeObj.city}
+                          {props.storeObj.city ? (
+                            <>, {props.storeObj.city}</>
+                          ) : null}
                           {props.storeObj.zipCode ? (
                             <>, {props.storeObj.zipCode}</>
                           ) : null}
-                          , {props.storeObj.country}
+                          {props.storeObj.country ? (
+                            <>, {props.storeObj.country}</>
+                          ) : null}
                         </Typography>
                         <Typography sx={{ fontWeight: "600" }}>
                           GST NO:{" "}
@@ -1745,11 +1749,15 @@ export default function NewCheckout(props) {
                             <span>{props.storeObj.address3}</span>
                           </>
                         ) : null}
-                        , {props.storeObj.city}
+                        {props.storeObj.city ? (
+                          <>, {props.storeObj.city}</>
+                        ) : null}
                         {props.storeObj.zipCode ? (
                           <>, {props.storeObj.zipCode}</>
                         ) : null}
-                        , {props.storeObj.country}
+                        {props.storeObj.country ? (
+                          <>, {props.storeObj.country}</>
+                        ) : null}
                       </Typography>
                       <Typography sx={{ fontWeight: "600" }}>
                         GST NO:{" "}
@@ -2613,6 +2621,7 @@ export default function NewCheckout(props) {
                                   if (event.target.checked) {
                                     setAddressType("STORE");
                                     setFirstName("GUEST");
+                                    setLastName("");
                                     setAddress1(props.storeObj.address1);
                                     setAddress2(props.storeObj.address2);
                                     setLandMark(props.storeObj.address3);
@@ -2626,7 +2635,7 @@ export default function NewCheckout(props) {
                                   }
                                 }}
                                 //disabled={!isNewCustomerFunc}
-                                disabled={phoneNo === "99999" ? true : false}
+                                disabled={phoneNo === "+9199999" ? true : false}
                               />
                             }
                             label="Default Store address"
@@ -2637,7 +2646,7 @@ export default function NewCheckout(props) {
                             variant="contained"
                             color="warning"
                             onClick={addUpdateCustomerDetails}
-                            disabled={phoneNo === "99999" ? true : false}
+                            disabled={phoneNo === "+9199999" ? true : false}
                           >
                             SAVE CUSTOMER DETAILS
                           </Button>

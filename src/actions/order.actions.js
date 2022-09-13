@@ -12,7 +12,8 @@ export const getCustomerOrders = (
   deliveryUserId,
   orderDeliveryType,
   foodPackagedFlag,
-  orderReceivedFromDate
+  orderReceivedFromDate,
+  orderSource
 ) => {
   return async (dispatch) => {
     dispatch({ type: orderConstants.GET_CUSTOMER_ORDER_REQUEST });
@@ -30,6 +31,7 @@ export const getCustomerOrders = (
           orderReceivedFromDate === orderReceivedDate
             ? null
             : orderReceivedFromDate,
+        orderSource,
       };
 
       console.log(body);

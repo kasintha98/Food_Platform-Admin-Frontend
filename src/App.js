@@ -46,6 +46,7 @@ import { AdminMenu } from "./containers/AdminMenu";
 import { Coupon } from "./containers/Coupon";
 import { EOD } from "./containers/EOD";
 import { ForgotPasswordAdmin } from "./containers/ForgotPasswordAdmin";
+import { OrderSource } from "./containers/OrderSource";
 
 function App() {
   const dispatch = useDispatch();
@@ -162,6 +163,15 @@ function App() {
           <PrivateRoute
             path="/user-entitle"
             component={UserEntitlement}
+          ></PrivateRoute>
+        )}
+
+        {modulesForUser.some(
+          (module) => module.moduleName === "ADMIN FUNCTIONS"
+        ) && (
+          <PrivateRoute
+            path="/order-source"
+            component={OrderSource}
           ></PrivateRoute>
         )}
 

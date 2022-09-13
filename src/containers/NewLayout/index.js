@@ -315,6 +315,17 @@ function NewLayout(props) {
           </ListItem>
         )}
 
+        {modulesForUser.some(
+          (module) => module.moduleName === "ADMIN FUNCTIONS"
+        ) && (
+          <ListItem>
+            <NavLink to={"/order-source"}>
+              <i className="fa fa-dot-circle-o"></i>
+              &nbsp; Order Source
+            </NavLink>
+          </ListItem>
+        )}
+
         {modulesForUser.some((module) => module.moduleName === "EOD") && (
           <ListItem>
             <a onClick={handleOpenEOD} style={{ color: "#fff" }}>
