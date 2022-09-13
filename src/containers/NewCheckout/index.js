@@ -152,6 +152,7 @@ export default function NewCheckout(props) {
   const [pasta59OfferReduceTotal, setPASTA59OfferReduceTotal] = useState(null);
   const [allFoundAddressList, setAllFoundAddressList] = useState([]);
   const [valueAddress, setValueAddress] = useState("");
+  const [addressId, setAddressId] = useState(null);
   const [changeAddressObj, setChangeAddressObj] = useState(null);
 
   const dispatch = useDispatch();
@@ -500,7 +501,8 @@ export default function NewCheckout(props) {
 
   const handleCloseInvoice = () => {
     setShowInvoice(false);
-    history.push("/dine-in");
+    //history.push("/dine-in");
+    props.handleCheckoutClose();
   };
   const handleShowInvoice = () => setShowInvoice(true);
 
@@ -1300,6 +1302,38 @@ export default function NewCheckout(props) {
     setPaymentType(event.target.value);
   };
 
+  const getAddressId = () => {
+    const foundMatchType = allFoundAddressList
+      ? allFoundAddressList.find((x) => x.customerAddressType === addressType)
+      : null;
+
+    if (currentGetAddress) {
+      if (!foundMatchType) {
+        if (currentGetAddress.customerAddressType !== addressType) {
+          return null;
+        } else {
+          return currentGetAddress.id;
+        }
+      } else {
+        if (foundMatchType.id !== currentGetAddress.id && !defaultAddress) {
+          toast.error(
+            "This address type already exists please use another type!"
+          );
+          return null;
+        } else if (
+          foundMatchType.id !== currentGetAddress.id &&
+          defaultAddress
+        ) {
+          return foundMatchType.id;
+        } else {
+          return currentGetAddress.id;
+        }
+      }
+    } else {
+      return null;
+    }
+  };
+
   const addUpdateCustomerDetails = () => {
     if (defaultAddress) {
       if (!phoneNo || !firstName) {
@@ -1367,6 +1401,10 @@ export default function NewCheckout(props) {
         if (res) {
           setCurrentCustomer(res);
           let addressObj = {
+            id: getAddressId(),
+            /* id: currentGetAddress
+              ? currentGetAddress.customerAddressType
+              : null, */
             mobileNumber: res.mobileNumber,
             customerAddressType: addressType,
             address1: address1,
@@ -1410,6 +1448,7 @@ export default function NewCheckout(props) {
   };
 
   const clearAddress = () => {
+    setAddressId(null);
     setAddress1("");
     setAddress2("");
     setLandMark("");
@@ -1430,6 +1469,7 @@ export default function NewCheckout(props) {
 
   const setFoundAddress = (address) => {
     if (address) {
+      setAddressId(address.id);
       setAddress1(address.address1);
       setAddress2(address.address2);
       setLandMark(address.landmark);
@@ -1548,6 +1588,8 @@ export default function NewCheckout(props) {
               if (changeAddressObj) {
                 setFoundAddress(changeAddressObj);
                 handleCloseAddress();
+                //setChangeAddressObj(null);
+                //setValueAddress(null);
               } else {
                 toast.error("Please select an address!");
               }
@@ -2523,7 +2565,7 @@ export default function NewCheckout(props) {
                                 onChange={(event) => {
                                   setFirstName(event.target.value);
                                 }}
-                                disabled={defaultAddress}
+                                //disabled={defaultAddress}
                               />
                             </Col>
                             <Col className="pl-1">
@@ -2533,7 +2575,7 @@ export default function NewCheckout(props) {
                                 onChange={(event) => {
                                   setLastName(event.target.value);
                                 }}
-                                disabled={defaultAddress}
+                                //disabled={defaultAddress}
                               />
                             </Col>
                           </Row>

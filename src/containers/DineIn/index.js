@@ -109,6 +109,10 @@ export const DineIn = () => {
     setSelectedOrderTypeObj(type);
   };
 
+  const handleCheckoutClose = () => {
+    setShowCheckout(false);
+  };
+
   return (
     <Layout sidebar headerTitle="Welcome">
       <Row className="align-items-center" style={{ marginTop: "-10px" }}>
@@ -204,6 +208,7 @@ export const DineIn = () => {
       <div>
         {ShowCheckout ? (
           <NewCheckout
+            handleCheckoutClose={handleCheckoutClose}
             restaurantId={selectedStoreObj.restaurantId}
             storeId={selectedStoreObj.storeId}
             storeObj={selectedStoreObj}

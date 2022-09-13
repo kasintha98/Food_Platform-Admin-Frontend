@@ -73,7 +73,7 @@ export const NewHeader = (props) => {
   const version = useSelector((state) => state.auth.version);
   const modulesForUser = useSelector((state) => state.user.modulesForUser);
   const dispatch = useDispatch();
-  const isMobile = useMediaQuery({ query: `(max-width: 1380px)` });
+  const isMobile = useMediaQuery({ query: `(max-width: 1400px)` });
 
   const [showEOD, setShowEOD] = useState(false);
   const [businessDate, setBusinessDate] = useState(null);
@@ -97,6 +97,16 @@ export const NewHeader = (props) => {
       <Nav>
         {!isMobile ? (
           <>
+            {modulesForUser.some(
+              (module) => module.moduleName === "ADMIN FUNCTIONS"
+            ) && (
+              <li className="nav-item top-module">
+                <NavLink exact to={"/order-source"}>
+                  Order Source
+                </NavLink>
+              </li>
+            )}
+
             {modulesForUser.some(
               (module) => module.moduleName === "DINE-IN"
             ) && (
@@ -218,7 +228,11 @@ export const NewHeader = (props) => {
           <span
             className="nav-link pointer"
             onClick={logout}
-            style={{ fontSize: "13px" }}
+            style={{
+              fontSize: "13px",
+              paddingLeft: "3px",
+              paddingRight: "5px",
+            }}
           >
             <i className="fa fa-sign-out"></i>&nbsp; Sign Out
           </span>

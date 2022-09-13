@@ -498,6 +498,17 @@ export const OrderTable = (props) => {
     }
   };
 
+  const renderTime = (date) => {
+    const dateObj = new Date(date);
+    const time = dateObj.toLocaleString("en-US", {
+      hour: "numeric",
+      hour12: true,
+      minute: "numeric",
+    });
+
+    return <span>{time}</span>;
+  };
+
   return (
     <div>
       <div>
@@ -534,7 +545,7 @@ export const OrderTable = (props) => {
           <TableHead>
             <TableRow>
               <CusTableCell1 align="center">ORDER NO</CusTableCell1>
-              <CusTableCell1 align="center">ORDER DATE</CusTableCell1>
+              <CusTableCell1 align="center">CREATED DATE</CusTableCell1>
               <CusTableCell1 align="center">SOURCE</CusTableCell1>
               <CusTableCell1 align="center">ORDER TYPE</CusTableCell1>
               <CusTableCell1 align="center">PYMT.</CusTableCell1>
@@ -570,6 +581,8 @@ export const OrderTable = (props) => {
                       {new Date(row.createdDate).getFullYear()}-
                       {new Date(row.createdDate).getMonth() + 1}-
                       {new Date(row.createdDate).getDate()}
+                      <br></br>
+                      {renderTime(row.createdDate)}
                     </CusTableCell2>
                     <CusTableCell2 align="center">
                       {row.orderSource}
