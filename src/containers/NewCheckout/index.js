@@ -2565,7 +2565,7 @@ export default function NewCheckout(props) {
                                 onChange={(event) => {
                                   setFirstName(event.target.value);
                                 }}
-                                //disabled={defaultAddress}
+                                disabled={defaultAddress}
                               />
                             </Col>
                             <Col className="pl-1">
@@ -2575,7 +2575,11 @@ export default function NewCheckout(props) {
                                 onChange={(event) => {
                                   setLastName(event.target.value);
                                 }}
-                                //disabled={defaultAddress}
+                                disabled={
+                                  defaultAddress || phoneNo === "+9199999"
+                                    ? true
+                                    : false
+                                }
                               />
                             </Col>
                           </Row>
@@ -2589,7 +2593,11 @@ export default function NewCheckout(props) {
                                 onChange={(event) => {
                                   setAddress1(event.target.value);
                                 }}
-                                disabled={defaultAddress}
+                                disabled={
+                                  defaultAddress || phoneNo === "+9199999"
+                                    ? true
+                                    : false
+                                }
                               />
                             </Col>
                             <Col className="pl-1">
@@ -2599,7 +2607,11 @@ export default function NewCheckout(props) {
                                 onChange={(event) => {
                                   setAddress2(event.target.value);
                                 }}
-                                disabled={defaultAddress}
+                                disabled={
+                                  defaultAddress || phoneNo === "+9199999"
+                                    ? true
+                                    : false
+                                }
                               />
                             </Col>
                           </Row>
@@ -2613,7 +2625,11 @@ export default function NewCheckout(props) {
                                 onChange={(event) => {
                                   setLandMark(event.target.value);
                                 }}
-                                disabled={defaultAddress}
+                                disabled={
+                                  defaultAddress || phoneNo === "+9199999"
+                                    ? true
+                                    : false
+                                }
                               />
                             </Col>
                             <Col className="pl-1">
@@ -2623,7 +2639,11 @@ export default function NewCheckout(props) {
                                 onChange={(event) => {
                                   setZipCode(event.target.value);
                                 }}
-                                disabled={defaultAddress}
+                                disabled={
+                                  defaultAddress || phoneNo === "+9199999"
+                                    ? true
+                                    : false
+                                }
                               />
                             </Col>
                           </Row>
@@ -2637,7 +2657,11 @@ export default function NewCheckout(props) {
                                 onChange={(event) => {
                                   setCity(event.target.value);
                                 }}
-                                disabled={defaultAddress}
+                                disabled={
+                                  defaultAddress || phoneNo === "+9199999"
+                                    ? true
+                                    : false
+                                }
                               />
                             </Col>
                             <Col className="pl-1">
@@ -2647,7 +2671,11 @@ export default function NewCheckout(props) {
                                 onChange={(event) => {
                                   setState(event.target.value);
                                 }}
-                                disabled={defaultAddress}
+                                disabled={
+                                  defaultAddress || phoneNo === "+9199999"
+                                    ? true
+                                    : false
+                                }
                               />
                             </Col>
                           </Row>
