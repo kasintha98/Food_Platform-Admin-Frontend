@@ -33,6 +33,12 @@ const CusTableCell2 = styled(TableCell)`
   padding: 0;
 `;
 
+const CusTableCell3 = styled(TableCell)`
+  font-size: 0.75rem;
+  max-width: 120px;
+  word-wrap: break-word;
+`;
+
 export const OrderReportTable = (props) => {
   const orders = useSelector((state) => state.order.orders);
   const stores = useSelector((state) => state.store.stores);
@@ -479,13 +485,17 @@ export const OrderReportTable = (props) => {
                     <CusTableCell2 align="center">
                       {row.orderStatus}
                     </CusTableCell2>
-                    <CusTableCell2 align="center">
-                      {row.orderId.slice(0, 11)} <br></br>
+                    <CusTableCell3 align="center">
+                      {/* {row.orderId.slice(0, 11)} <br></br>
                       {row.orderId.slice(11, 19)}
                       <span style={{ color: "#4472c4" }}>
                         {row.orderId.slice(19, 23)}
+                      </span> */}
+                      {row.orderId.substr(0, row.orderId.length - 3)}
+                      <span style={{ color: "#4472c4" }}>
+                        {row.orderId.substr(row.orderId.length - 3)}
                       </span>
-                    </CusTableCell2>
+                    </CusTableCell3>
                     <CusTableCell2 align="center">
                       {row.paymentTxnReference
                         ? row.paymentTxnReference

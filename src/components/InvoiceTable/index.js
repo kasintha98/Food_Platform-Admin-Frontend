@@ -211,6 +211,18 @@ export const InvoiceTable = (props) => {
       } else {
         return <>{item.quantity * item.price}</>;
       }
+    } else if (props.bOGOLowestPizzaKey) {
+      if (props.bOGOLowestPizzaKey.some((el) => el.productId === key)) {
+        return (
+          <>
+            {Number(
+              props.bOGOLowestPizzaKey.find((x) => x.productId === key).qty
+            ) * item.price}
+          </>
+        );
+      } else {
+        return <>{item.quantity * item.price}</>;
+      }
     } else {
       return <>{item.quantity * item.price}</>;
     }
@@ -445,6 +457,23 @@ export const InvoiceTable = (props) => {
                 >
                   {props.isBill ? null : "Rs. "}
                   {props.friesOfferReduceTotal.price}.00
+                </CusTableCell>
+              </TableRow>
+            ) : null}
+
+            {props.bOGOLowestPizzaKey ? (
+              <TableRow>
+                <CusTableCell component="th" scope="row" colspan="3">
+                  BOGO Offer
+                </CusTableCell>
+                <CusTableCell
+                  component="th"
+                  scope="row"
+                  colspan="1"
+                  sx={{ fontStyle: "italic" }}
+                >
+                  {props.isBill ? null : "Rs. "}
+                  {props.bOGOLowestPizzaKey[0].allBogoReduceCost}
                 </CusTableCell>
               </TableRow>
             ) : null}

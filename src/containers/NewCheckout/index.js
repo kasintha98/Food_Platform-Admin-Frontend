@@ -802,6 +802,7 @@ export default function NewCheckout(props) {
                   ...pizzaValuesSortedByPrice[j].choiceIng,
                   choiceTotal: 0,
                 },
+                allBogoReduceCost: allReduceCost,
               };
               pizzaValuesWithReduceQty.push(obj1);
               reduceCount = reduceCount - pizzaValuesSortedByPrice[j].qty;
@@ -823,6 +824,7 @@ export default function NewCheckout(props) {
                       (pizzaValuesSortedByPrice[j].qty - reduceCount)
                   ),
                 },
+                allBogoReduceCost: allReduceCost,
               };
               pizzaValuesWithReduceQty.push(obj2);
               reduceCount = 0;
@@ -830,6 +832,7 @@ export default function NewCheckout(props) {
           }
 
           console.log(pizzaValuesWithReduceQty);
+          console.log(allReduceCost);
 
           /* const pizzasToReducePrice = pizzaValuesSortedByPrice.slice(
             0,
@@ -1496,6 +1499,12 @@ export default function NewCheckout(props) {
     if (e.keyCode === 9) {
       setDefaultAddress(false);
       dispatch(GetCustomerAddress(phoneNo)).then((res) => {
+        if (res.length === 0) {
+          setAddressType("HOME");
+          setZipCode(props.storeObj.zipCode ? props.storeObj.zipCode : 0);
+          setCity(props.storeObj.city);
+          setState(props.storeObj.country);
+        }
         if (res && res.length === 1) {
           setFoundAddress(res[0]);
         }
@@ -1769,6 +1778,7 @@ export default function NewCheckout(props) {
                           combo2OfferReduceTotal={combo2OfferReduceTotal}
                           friesOfferReduceTotal={friesOfferReduceTotal}
                           isBill={true}
+                          allBogoReduceCost={allBogoReduceCost}
                         ></InvoiceTable>
                       </div>
                     </div>
