@@ -344,7 +344,7 @@ export const KDSTable = forwardRef((props, ref) => {
                       </CusTableCell>
                       <CusTableCell
                         align="left"
-                        sx={{ border: "1px solid #000" }}
+                        sx={{ border: "1px solid #000", fontWeight: "600" }}
                       >
                         <div key={index}>
                           {item.ingredient === "No Ingredient" ? (
@@ -379,6 +379,7 @@ export const KDSTable = forwardRef((props, ref) => {
                           style={{
                             borderBottom: "1px solid #000",
                             minHeight: "25px",
+                            fontWeight: "600",
                           }}
                         >
                           {item.quantity}

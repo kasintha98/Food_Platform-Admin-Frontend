@@ -1499,7 +1499,7 @@ export default function NewCheckout(props) {
     if (e.keyCode === 9) {
       setDefaultAddress(false);
       dispatch(GetCustomerAddress(phoneNo)).then((res) => {
-        if (res.length === 0) {
+        if (res && res.length === 0) {
           setAddressType("HOME");
           setZipCode(props.storeObj.zipCode ? props.storeObj.zipCode : 0);
           setCity(props.storeObj.city);
