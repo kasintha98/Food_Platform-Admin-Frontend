@@ -461,7 +461,7 @@ export const InvoiceTable = (props) => {
               </TableRow>
             ) : null}
 
-            {props.bOGOLowestPizzaKey ? (
+            {props.bOGOLowestPizzaKey && props.bOGOLowestPizzaKey.length > 1 ? (
               <TableRow>
                 <CusTableCell component="th" scope="row" colspan="3">
                   BOGO Offer
