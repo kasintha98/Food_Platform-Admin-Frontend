@@ -50,7 +50,10 @@ export const KDSTable = forwardRef((props, ref) => {
         null,
         null,
         null,
-        "N"
+        "N",
+        null,
+        null,
+        true
       )
     ).then((res) => {
       if (res) {
