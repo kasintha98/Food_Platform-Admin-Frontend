@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import Pdf from "react-to-pdf";
 import {
   getCustomerOrders,
   updateOrder,
@@ -78,6 +79,7 @@ export const DeliveryTrackingTable = (props) => {
   const [status, setStatus] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const [allStatus, setAllStatus] = useState({});
+  const [height, setHeight] = useState(0);
   const [selectedStore, setSelectedStore] = useState(
     user.roleCategory === "SUPER_ADMIN" ? "ALL" : user.restaurantId
   );
@@ -88,6 +90,20 @@ export const DeliveryTrackingTable = (props) => {
   });
 
   const dispatch = useDispatch();
+
+  const ref = React.createRef();
+  const refH = React.useRef(null);
+
+  useEffect(() => {
+    if (refH.current) {
+      setHeight(refH.current.clientHeight * 0.58);
+    }
+  });
+
+  const options = {
+    unit: "px",
+    format: [265, height],
+  };
 
   useEffect(() => {
     const today = new Date(businessDateAll && businessDateAll.businessDate);
@@ -324,6 +340,81 @@ export const DeliveryTrackingTable = (props) => {
     );
   };
 
+  const renderNowDate = (date) => {
+    const dateObj = new Date(date);
+    const month = dateObj.toLocaleString("default", { month: "short" });
+    const day = dateObj.getDate();
+    const year = dateObj.getFullYear();
+    return (
+      <span>
+        {day}/{month.toUpperCase()}/{year}
+      </span>
+    );
+  };
+
+  const renderNowTime = (date) => {
+    const dateObj = new Date(date);
+    const time = dateObj.toLocaleString("en-US", {
+      hour: "numeric",
+      hour12: true,
+      minute: "numeric",
+    });
+
+    return <span>{time}</span>;
+  };
+
+  const renderStoreAddress = (restaurantId, storeId) => {
+    const foundMatch = stores.find(
+      (x) => x.restaurantId === restaurantId && x.storeId === storeId
+    );
+
+    if (foundMatch) {
+      return (
+        <>
+          <Typography>{foundMatch.address1},</Typography>
+          {foundMatch.address2 ? (
+            <>
+              <Typography>{foundMatch.address2},</Typography>
+            </>
+          ) : null}
+          {foundMatch.address3 ? (
+            <Typography>{foundMatch.address3},</Typography>
+          ) : null}
+          <Typography>{foundMatch.city},</Typography>
+          {foundMatch.zipCode ? (
+            <Typography>{foundMatch.zipCode},</Typography>
+          ) : null}
+          <Typography>{foundMatch.country}</Typography>
+        </>
+      );
+    }
+  };
+
+  const renderStoreGST = (restaurantId, storeId) => {
+    const foundMatch = stores.find(
+      (x) => x.restaurantId === restaurantId && x.storeId === storeId
+    );
+
+    if (foundMatch) {
+      return <>GST NO: {foundMatch.storeGstNumber}</>;
+    }
+  };
+
+  const handleManualPrint = () => {
+    const div = document.getElementById("billNew").innerHTML;
+    var windows = window.open("", "", "height=600, width=600");
+    windows.document.write("<html><body >");
+    windows.document.write(
+      "<style> body{text-align: center; margin: 0; line-height: 0; font-size: 10px;} th{font-size: 10px;} td{font-size: 10px;} table{width: 100%} tbody{text-align: left;} th{text-align: left !important;} @media print { body {  }} @page { size: Statement;margin: 0;}</style>"
+    );
+    windows.document.write(div);
+    windows.document.write("</body></html>");
+    windows.document.close();
+    windows.print();
+
+    //window.print();
+  };
+
   const renderDetailsModal = () => {
     return (
       <Modal
@@ -337,11 +428,196 @@ export const DeliveryTrackingTable = (props) => {
         }}
       >
         <Modal.Header closeButton>
-          <Modal.Title>OrderDetails</Modal.Title>
+          <Modal.Title>Order Details</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <OrderDetailsTable fullResp={currentOrder}></OrderDetailsTable>
+          {currentOrder ? (
+            <>
+              <div ref={ref}>
+                <div style={{ display: "none" }}>
+                  <div id="billNew">
+                    <div className="text-center">
+                      <Typography sx={{ fontWeight: "600" }}>
+                        {currentOrder
+                          ? currentOrder.restaurantName
+                          : "Hangries"}
+                      </Typography>
+                      <Typography sx={{ color: "black" }}>
+                        {renderStoreAddress(
+                          currentOrder.restaurantId,
+                          currentOrder.storeId
+                        )}
+                      </Typography>
+
+                      <Typography sx={{ fontWeight: "600" }}>
+                        {renderStoreGST(
+                          currentOrder.restaurantId,
+                          currentOrder.storeId
+                        )}
+                      </Typography>
+
+                      <Typography sx={{ fontWeight: "600" }}>
+                        Order ID: {currentOrder ? currentOrder.orderId : null}
+                      </Typography>
+
+                      <Typography sx={{ fontWeight: "600" }}>
+                        Customer Name:{" "}
+                        <span>{currentOrder?.customerName.toUpperCase()}</span>
+                      </Typography>
+                      <Typography sx={{ fontWeight: "600" }}>
+                        Table No:{" "}
+                        {currentOrder && currentOrder.storeTableId
+                          ? currentOrder.storeTableId
+                          : "N/A"}
+                      </Typography>
+                      <Typography sx={{ fontWeight: "600" }}>
+                        Cashier: {user.loginId.toUpperCase()}
+                      </Typography>
+                      <Typography sx={{ fontWeight: "600" }}>
+                        <span>{currentOrder.orderDeliveryType}</span>
+                        <span> [{currentOrder.paymentStatus}]</span>
+                      </Typography>
+                    </div>
+                    <hr></hr>
+                    <div>
+                      <Typography>
+                        Name: {currentOrder.customerName.toUpperCase()}
+                      </Typography>
+                      {/* <Typography>Address: {currentOrder.address}</Typography> */}
+                      <Typography>
+                        Mob No: {currentOrder.mobileNumber}
+                      </Typography>
+                      <Typography>Address: {currentOrder.address}</Typography>
+                    </div>
+                    <hr></hr>
+                    <div>
+                      <Typography>
+                        <Row>
+                          <Col>
+                            <Typography>
+                              Time: {renderNowTime(currentOrder.createdDate)}
+                            </Typography>
+                          </Col>
+                          <Col>
+                            <Typography>
+                              Date: {renderNowDate(currentOrder.createdDate)}
+                            </Typography>
+                          </Col>
+                        </Row>
+                      </Typography>
+                    </div>
+                    <hr></hr>
+                    <OrderDetailsTable
+                      fullResp={currentOrder}
+                      isBill={true}
+                    ></OrderDetailsTable>
+                  </div>
+                </div>
+                <div ref={refH}>
+                  <div className="text-center">
+                    <Typography sx={{ fontWeight: "600" }}>
+                      {currentOrder ? currentOrder.restaurantName : "Hangries"}
+                    </Typography>
+                    <Typography sx={{ color: "black" }}>
+                      {renderStoreAddress(
+                        currentOrder.restaurantId,
+                        currentOrder.storeId
+                      )}
+                    </Typography>
+
+                    <Typography sx={{ fontWeight: "600" }}>
+                      {renderStoreGST(
+                        currentOrder.restaurantId,
+                        currentOrder.storeId
+                      )}
+                    </Typography>
+
+                    <Typography sx={{ fontWeight: "600" }}>
+                      Order ID: {currentOrder ? currentOrder.orderId : null}
+                    </Typography>
+
+                    <Typography sx={{ fontWeight: "600" }}>
+                      Customer Name:{" "}
+                      <span>{currentOrder?.customerName.toUpperCase()}</span>
+                    </Typography>
+                    <Typography sx={{ fontWeight: "600" }}>
+                      Table No:{" "}
+                      {currentOrder && currentOrder.storeTableId
+                        ? currentOrder.storeTableId
+                        : "N/A"}
+                    </Typography>
+                    <Typography sx={{ fontWeight: "600" }}>
+                      Cashier: {user.loginId.toUpperCase()}
+                    </Typography>
+                    <Typography sx={{ fontWeight: "600" }}>
+                      <span>{currentOrder.orderDeliveryType}</span>
+                      <span> [{currentOrder.paymentStatus}]</span>
+                    </Typography>
+                  </div>
+                  <hr></hr>
+                  <div>
+                    <Typography>
+                      Name: {currentOrder.customerName.toUpperCase()}
+                    </Typography>
+                    {/* <Typography>Address: {currentOrder.address}</Typography> */}
+                    <Typography>Mob No: {currentOrder.mobileNumber}</Typography>
+                    <Typography>Address: {currentOrder.address}</Typography>
+                  </div>
+                  <hr></hr>
+                  <div>
+                    <Typography>
+                      <Row>
+                        <Col>
+                          Time: {renderNowTime(currentOrder.createdDate)}
+                        </Col>
+                        <Col>
+                          Date: {renderNowDate(currentOrder.createdDate)}
+                        </Col>
+                      </Row>
+                    </Typography>
+                  </div>
+                  <hr></hr>
+                  <OrderDetailsTable
+                    fullResp={currentOrder}
+                  ></OrderDetailsTable>
+                </div>
+              </div>
+            </>
+          ) : null}
         </Modal.Body>
+        <Modal.Footer>
+          <Row className="w-100">
+            <Col className="col-6">
+              <Button
+                color="secondary"
+                onClick={handleManualPrint}
+                className="w-100"
+                variant="contained"
+              >
+                Print
+              </Button>
+            </Col>
+            <Col className="col-6">
+              <Pdf
+                targetRef={ref}
+                filename="invoice.pdf"
+                options={options}
+                x={0.8}
+              >
+                {({ toPdf }) => (
+                  <Button
+                    color="primary"
+                    onClick={toPdf}
+                    className="w-100"
+                    variant="contained"
+                  >
+                    Download Invoice
+                  </Button>
+                )}
+              </Pdf>
+            </Col>
+          </Row>
+        </Modal.Footer>
       </Modal>
     );
   };

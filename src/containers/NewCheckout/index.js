@@ -1727,10 +1727,10 @@ export default function NewCheckout(props) {
                           Customer Name:{" "}
                           {firstName ? (
                             <span>
-                              {firstName} {lastName}
+                              {firstName.toUpperCase()} {lastName.toUpperCase()}
                             </span>
                           ) : (
-                            <span>{orderResp?.customerName}</span>
+                            <span>{orderResp?.customerName.toUpperCase()}</span>
                           )}
                         </Typography>
                         <Typography sx={{ fontWeight: "600" }}>
@@ -1738,6 +1738,9 @@ export default function NewCheckout(props) {
                           {orderResp && orderResp.storeTableId
                             ? orderResp.storeTableId
                             : "N/A"}
+                        </Typography>
+                        <Typography sx={{ fontWeight: "600" }}>
+                          Cashier: {user.loginId.toUpperCase()}
                         </Typography>
                         <Typography sx={{ fontWeight: "600" }}>
                           <span>
@@ -1754,10 +1757,10 @@ export default function NewCheckout(props) {
                           Name:{" "}
                           {firstName ? (
                             <span>
-                              {firstName} {lastName}
+                              {firstName.toUpperCase()} {lastName.toUpperCase()}
                             </span>
                           ) : (
-                            <span>{orderResp?.customerName}</span>
+                            <span>{orderResp?.customerName.toUpperCase()}</span>
                           )}
                         </Typography>
                         <Typography sx={{ color: "black" }}>
@@ -1767,6 +1770,12 @@ export default function NewCheckout(props) {
                           ) : (
                             <span>{orderResp?.mobileNumber}</span>
                           )}
+                        </Typography>
+                        <Typography sx={{ color: "black" }}>
+                          Address:{" "}
+                          {orderResp?.address ? (
+                            <span>{orderResp?.address}</span>
+                          ) : null}
                         </Typography>
                       </div>
                       <hr></hr>
@@ -1846,10 +1855,10 @@ export default function NewCheckout(props) {
                         Customer Name:{" "}
                         {firstName ? (
                           <span>
-                            {firstName} {lastName}
+                            {firstName.toUpperCase()} {lastName.toUpperCase()}
                           </span>
                         ) : (
-                          <span>{orderResp?.customerName}</span>
+                          <span>{orderResp?.customerName.toUpperCase()}</span>
                         )}
                       </Typography>
                       <Typography sx={{ fontWeight: "600" }}>
@@ -1857,6 +1866,9 @@ export default function NewCheckout(props) {
                         {orderResp && orderResp.storeTableId
                           ? orderResp.storeTableId
                           : "N/A"}
+                      </Typography>
+                      <Typography sx={{ fontWeight: "600" }}>
+                        Cashier: {user.loginId.toUpperCase()}
                       </Typography>
                       <Typography sx={{ fontWeight: "600" }}>
                         <span>
@@ -1873,10 +1885,10 @@ export default function NewCheckout(props) {
                         Name:{" "}
                         {firstName ? (
                           <span>
-                            {firstName} {lastName}
+                            {firstName.toUpperCase()} {lastName.toUpperCase()}
                           </span>
                         ) : (
-                          <span>{orderResp?.customerName}</span>
+                          <span>{orderResp?.customerName.toUpperCase()}</span>
                         )}
                       </Typography>
                       <Typography sx={{ color: "black" }}>
@@ -1886,6 +1898,12 @@ export default function NewCheckout(props) {
                         ) : (
                           <span>{orderResp?.mobileNumber}</span>
                         )}
+                      </Typography>
+                      <Typography sx={{ color: "black" }}>
+                        Address:{" "}
+                        {orderResp?.address ? (
+                          <span>{orderResp?.address}</span>
+                        ) : null}
                       </Typography>
                     </div>
                     <hr></hr>

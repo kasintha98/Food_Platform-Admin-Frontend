@@ -42,6 +42,7 @@ const CusTableCell3 = styled(TableCell)`
 export const OrderReportTable = (props) => {
   const orders = useSelector((state) => state.order.orders);
   const stores = useSelector((state) => state.store.stores);
+  const user = useSelector((state) => state.auth.user);
   const loading = useSelector((state) => state.order.loading);
   const [showInvoice, setShowInvoice] = useState(false);
   const [currentOrder, setCurrentOrder] = useState(false);
@@ -80,7 +81,7 @@ export const OrderReportTable = (props) => {
 
   const options = {
     unit: "px",
-    format: [255, height],
+    format: [265, height],
   };
 
   const handleCloseInvoice = () => {
@@ -126,7 +127,7 @@ export const OrderReportTable = (props) => {
     var windows = window.open("", "", "height=600, width=600");
     windows.document.write("<html><body >");
     windows.document.write(
-      "<style> body{text-align: center; margin: 0; line-height: 0.7;} table{width: 100%} tbody{text-align: left;} th{text-align: left !important;} @media print { body {  }} @page { size: Statement;margin: 0;}</style>"
+      "<style> body{text-align: center; margin: 0; line-height: 0; font-size: 10px;} th{font-size: 10px;} td{font-size: 10px;} table{width: 100%} tbody{text-align: left;} th{text-align: left !important;} @media print { body {  }} @page { size: Statement;margin: 0;}</style>"
     );
     windows.document.write(div);
     windows.document.write("</body></html>");
@@ -144,21 +145,20 @@ export const OrderReportTable = (props) => {
     if (foundMatch) {
       return (
         <>
-          <span>{foundMatch.address1}</span>
+          <Typography>{foundMatch.address1},</Typography>
           {foundMatch.address2 ? (
             <>
-              , <span>{foundMatch.address2}</span>
+              <Typography>{foundMatch.address2},</Typography>
             </>
           ) : null}
           {foundMatch.address3 ? (
-            <>
-              , <br></br>
-              <span>{foundMatch.address3}</span>
-            </>
+            <Typography>{foundMatch.address3},</Typography>
           ) : null}
-          , {foundMatch.city}
-          {foundMatch.zipCode ? <>, {foundMatch.zipCode}</> : null},{" "}
-          {foundMatch.country}
+          <Typography>{foundMatch.city},</Typography>
+          {foundMatch.zipCode ? (
+            <Typography>{foundMatch.zipCode},</Typography>
+          ) : null}
+          <Typography>{foundMatch.country}</Typography>
         </>
       );
     }
@@ -191,87 +191,10 @@ export const OrderReportTable = (props) => {
           </Modal.Title>
         </Modal.Header>
         {currentOrder ? (
-          <Modal.Body style={{ maxHeight: "75vh", overflowY: "auto" }}>
-            {currentOrder ? (
-              <div ref={ref}>
-                <div style={{ display: "none" }}>
-                  <div id="billNew">
-                    <div className="text-center">
-                      <Typography sx={{ fontWeight: "600" }}>
-                        {currentOrder
-                          ? currentOrder.restaurantName
-                          : "Hangries"}
-                      </Typography>
-                      <Typography sx={{ color: "black" }}>
-                        {renderStoreAddress(
-                          currentOrder.restaurantId,
-                          currentOrder.storeId
-                        )}
-                      </Typography>
-
-                      <Typography sx={{ fontWeight: "600" }}>
-                        Order ID: {currentOrder ? currentOrder.orderId : null}
-                      </Typography>
-
-                      <Typography sx={{ fontWeight: "600" }}>
-                        {renderStoreGST(
-                          currentOrder.restaurantId,
-                          currentOrder.storeId
-                        )}
-                      </Typography>
-
-                      <Typography sx={{ fontWeight: "600" }}>
-                        Customer Name: <span>{currentOrder?.customerName}</span>
-                      </Typography>
-                      <Typography sx={{ fontWeight: "600" }}>
-                        Table No:{" "}
-                        {currentOrder && currentOrder.storeTableId
-                          ? currentOrder.storeTableId
-                          : "N/A"}
-                      </Typography>
-
-                      <Typography sx={{ fontWeight: "600" }}>
-                        <span>{currentOrder.orderDeliveryType}</span>
-                        <span> [{currentOrder.paymentStatus}]</span>
-                      </Typography>
-                    </div>
-                    <hr></hr>
-                    <div>
-                      <Typography>Name: {currentOrder.customerName}</Typography>
-                      {/* <Typography>Address: {currentOrder.address}</Typography> */}
-                      <Typography>
-                        Mob No: {currentOrder.mobileNumber}
-                      </Typography>
-                    </div>
-                    <hr></hr>
-                    <div>
-                      <Typography>
-                        <Row>
-                          <Col>
-                            Time: {renderNowTime(currentOrder.createdDate)}
-                          </Col>
-                          <Col>
-                            Date: {renderNowDate(currentOrder.createdDate)}
-                          </Col>
-                        </Row>
-                      </Typography>
-                    </div>
-                    <hr></hr>
-                    <div>
-                      <InvoiceTable
-                        allProducts={currentOrder.orderDetails}
-                        grandTot={currentOrder.totalPrice}
-                        cgst={currentOrder.cgstCalculatedValue}
-                        sgst={currentOrder.sgstCalculatedValue}
-                        overallPriceWithTax={currentOrder.overallPriceWithTax}
-                        delCharge={currentOrder.deliveryCharges}
-                        fullResp={currentOrder}
-                        isBill={true}
-                      ></InvoiceTable>
-                    </div>
-                  </div>
-                </div>
-                <div ref={refH}>
+          <>
+            <div ref={ref}>
+              <div style={{ display: "none" }}>
+                <div id="billNew">
                   <div className="text-center">
                     <Typography sx={{ fontWeight: "600" }}>
                       {currentOrder ? currentOrder.restaurantName : "Hangries"}
@@ -284,10 +207,6 @@ export const OrderReportTable = (props) => {
                     </Typography>
 
                     <Typography sx={{ fontWeight: "600" }}>
-                      Order ID: {currentOrder ? currentOrder.orderId : null}
-                    </Typography>
-
-                    <Typography sx={{ fontWeight: "600" }}>
                       {renderStoreGST(
                         currentOrder.restaurantId,
                         currentOrder.storeId
@@ -295,7 +214,12 @@ export const OrderReportTable = (props) => {
                     </Typography>
 
                     <Typography sx={{ fontWeight: "600" }}>
-                      Customer Name: <span>{currentOrder?.customerName}</span>
+                      Order ID: {currentOrder ? currentOrder.orderId : null}
+                    </Typography>
+
+                    <Typography sx={{ fontWeight: "600" }}>
+                      Customer Name:{" "}
+                      <span>{currentOrder?.customerName.toUpperCase()}</span>
                     </Typography>
                     <Typography sx={{ fontWeight: "600" }}>
                       Table No:{" "}
@@ -303,7 +227,9 @@ export const OrderReportTable = (props) => {
                         ? currentOrder.storeTableId
                         : "N/A"}
                     </Typography>
-
+                    <Typography sx={{ fontWeight: "600" }}>
+                      Cashier: {user.loginId.toUpperCase()}
+                    </Typography>
                     <Typography sx={{ fontWeight: "600" }}>
                       <span>{currentOrder.orderDeliveryType}</span>
                       <span> [{currentOrder.paymentStatus}]</span>
@@ -311,39 +237,115 @@ export const OrderReportTable = (props) => {
                   </div>
                   <hr></hr>
                   <div>
-                    <Typography>Name: {currentOrder.customerName}</Typography>
+                    <Typography>
+                      Name: {currentOrder.customerName.toUpperCase()}
+                    </Typography>
                     {/* <Typography>Address: {currentOrder.address}</Typography> */}
                     <Typography>Mob No: {currentOrder.mobileNumber}</Typography>
+                    <Typography>Address: {currentOrder.address}</Typography>
                   </div>
                   <hr></hr>
                   <div>
                     <Typography>
                       <Row>
                         <Col>
-                          Time: {renderNowTime(currentOrder.createdDate)}
+                          <Typography>
+                            Time: {renderNowTime(currentOrder.createdDate)}
+                          </Typography>
                         </Col>
                         <Col>
-                          Date: {renderNowDate(currentOrder.createdDate)}
+                          <Typography>
+                            Date: {renderNowDate(currentOrder.createdDate)}
+                          </Typography>
                         </Col>
                       </Row>
                     </Typography>
                   </div>
                   <hr></hr>
-                  <div>
-                    <InvoiceTable
-                      allProducts={currentOrder.orderDetails}
-                      grandTot={currentOrder.totalPrice}
-                      cgst={currentOrder.cgstCalculatedValue}
-                      sgst={currentOrder.sgstCalculatedValue}
-                      overallPriceWithTax={currentOrder.overallPriceWithTax}
-                      delCharge={currentOrder.deliveryCharges}
-                      fullResp={currentOrder}
-                    ></InvoiceTable>
-                  </div>
+                  <InvoiceTable
+                    allProducts={currentOrder.orderDetails}
+                    grandTot={currentOrder.totalPrice}
+                    cgst={currentOrder.cgstCalculatedValue}
+                    sgst={currentOrder.sgstCalculatedValue}
+                    overallPriceWithTax={currentOrder.overallPriceWithTax}
+                    delCharge={currentOrder.deliveryCharges}
+                    fullResp={currentOrder}
+                    isBill={true}
+                  ></InvoiceTable>
                 </div>
               </div>
-            ) : null}
-          </Modal.Body>
+              <div ref={refH}>
+                <div className="text-center">
+                  <Typography sx={{ fontWeight: "600" }}>
+                    {currentOrder ? currentOrder.restaurantName : "Hangries"}
+                  </Typography>
+                  <Typography sx={{ color: "black" }}>
+                    {renderStoreAddress(
+                      currentOrder.restaurantId,
+                      currentOrder.storeId
+                    )}
+                  </Typography>
+
+                  <Typography sx={{ fontWeight: "600" }}>
+                    {renderStoreGST(
+                      currentOrder.restaurantId,
+                      currentOrder.storeId
+                    )}
+                  </Typography>
+
+                  <Typography sx={{ fontWeight: "600" }}>
+                    Order ID: {currentOrder ? currentOrder.orderId : null}
+                  </Typography>
+
+                  <Typography sx={{ fontWeight: "600" }}>
+                    Customer Name:{" "}
+                    <span>{currentOrder?.customerName.toUpperCase()}</span>
+                  </Typography>
+                  <Typography sx={{ fontWeight: "600" }}>
+                    Table No:{" "}
+                    {currentOrder && currentOrder.storeTableId
+                      ? currentOrder.storeTableId
+                      : "N/A"}
+                  </Typography>
+                  <Typography sx={{ fontWeight: "600" }}>
+                    Cashier: {user.loginId.toUpperCase()}
+                  </Typography>
+                  <Typography sx={{ fontWeight: "600" }}>
+                    <span>{currentOrder.orderDeliveryType}</span>
+                    <span> [{currentOrder.paymentStatus}]</span>
+                  </Typography>
+                </div>
+                <hr></hr>
+                <div>
+                  <Typography>
+                    Name: {currentOrder.customerName.toUpperCase()}
+                  </Typography>
+                  {/* <Typography>Address: {currentOrder.address}</Typography> */}
+                  <Typography>Mob No: {currentOrder.mobileNumber}</Typography>
+                  <Typography>Address: {currentOrder.address}</Typography>
+                </div>
+                <hr></hr>
+                <div>
+                  <Typography>
+                    <Row>
+                      <Col>Time: {renderNowTime(currentOrder.createdDate)}</Col>
+                      <Col>Date: {renderNowDate(currentOrder.createdDate)}</Col>
+                    </Row>
+                  </Typography>
+                </div>
+                <hr></hr>
+                <InvoiceTable
+                  allProducts={currentOrder.orderDetails}
+                  grandTot={currentOrder.totalPrice}
+                  cgst={currentOrder.cgstCalculatedValue}
+                  sgst={currentOrder.sgstCalculatedValue}
+                  overallPriceWithTax={currentOrder.overallPriceWithTax}
+                  delCharge={currentOrder.deliveryCharges}
+                  fullResp={currentOrder}
+                ></InvoiceTable>
+              </div>
+            </div>
+          </>
         ) : null}
 
         <Modal.Footer>
