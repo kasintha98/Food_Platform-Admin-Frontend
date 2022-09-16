@@ -471,7 +471,7 @@ export const DeliveryTrackingTable = (props) => {
                           : "N/A"}
                       </Typography>
                       <Typography sx={{ fontWeight: "600" }}>
-                        Cashier: {user.loginId.toUpperCase()}
+                        Cashier: {currentOrder.createdBy.toUpperCase()}
                       </Typography>
                       <Typography sx={{ fontWeight: "600" }}>
                         <span>{currentOrder.orderDeliveryType}</span>
@@ -547,7 +547,7 @@ export const DeliveryTrackingTable = (props) => {
                         : "N/A"}
                     </Typography>
                     <Typography sx={{ fontWeight: "600" }}>
-                      Cashier: {user.loginId.toUpperCase()}
+                      Cashier: {currentOrder.createdBy.toUpperCase()}
                     </Typography>
                     <Typography sx={{ fontWeight: "600" }}>
                       <span>{currentOrder.orderDeliveryType}</span>

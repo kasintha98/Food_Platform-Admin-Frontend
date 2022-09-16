@@ -1740,7 +1740,8 @@ export default function NewCheckout(props) {
                             : "N/A"}
                         </Typography>
                         <Typography sx={{ fontWeight: "600" }}>
-                          Cashier: {user.loginId.toUpperCase()}
+                          Cashier:{" "}
+                          {orderResp ? orderResp.createdBy.toUpperCase() : null}
                         </Typography>
                         <Typography sx={{ fontWeight: "600" }}>
                           <span>
@@ -1868,7 +1869,8 @@ export default function NewCheckout(props) {
                           : "N/A"}
                       </Typography>
                       <Typography sx={{ fontWeight: "600" }}>
-                        Cashier: {user.loginId.toUpperCase()}
+                        Cashier:{" "}
+                        {orderResp ? orderResp.createdBy.toUpperCase() : null}
                       </Typography>
                       <Typography sx={{ fontWeight: "600" }}>
                         <span>
