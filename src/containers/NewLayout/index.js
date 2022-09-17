@@ -316,7 +316,7 @@ function NewLayout(props) {
         )}
 
         {modulesForUser.some(
-          (module) => module.moduleName === "ADMIN FUNCTIONS"
+          (module) => module.moduleName === "ORDER BY SOURCE"
         ) && (
           <ListItem>
             <NavLink to={"/order-source"}>

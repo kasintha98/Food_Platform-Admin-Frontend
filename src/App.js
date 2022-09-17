@@ -167,7 +167,7 @@ function App() {
         )}
 
         {modulesForUser.some(
-          (module) => module.moduleName === "ADMIN FUNCTIONS"
+          (module) => module.moduleName === "ORDER BY SOURCE"
         ) && (
           <PrivateRoute
             path="/order-source"

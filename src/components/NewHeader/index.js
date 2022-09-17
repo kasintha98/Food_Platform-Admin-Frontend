@@ -98,7 +98,7 @@ export const NewHeader = (props) => {
         {!isMobile ? (
           <>
             {modulesForUser.some(
-              (module) => module.moduleName === "ADMIN FUNCTIONS"
+              (module) => module.moduleName === "ORDER BY SOURCE"
             ) && (
               <li className="nav-item top-module">
                 <NavLink exact to={"/order-source"}>
