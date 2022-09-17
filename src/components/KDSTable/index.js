@@ -321,12 +321,12 @@ export const KDSTable = forwardRef((props, ref) => {
                           <Timecode />
                         </Timer>
                       </CusTableCell>
-                      <CusTableCell
+                      {/* <CusTableCell
                         align="center"
                         sx={{ border: "1px solid #000" }}
                       >
                         {order.orderSource}
-                      </CusTableCell>
+                      </CusTableCell> */}
                       <CusTableCell
                         align="center"
                         sx={{ border: "1px solid #000" }}
@@ -335,7 +335,7 @@ export const KDSTable = forwardRef((props, ref) => {
                       </CusTableCell>
                       <CusTableCell
                         align="center"
-                        sx={{ border: "1px solid #000" }}
+                        sx={{ border: "1px solid #000", fontWeight: "600" }}
                       >
                         {order.storeTableId ? order.storeTableId : "N/A"}
                       </CusTableCell>
@@ -347,7 +347,11 @@ export const KDSTable = forwardRef((props, ref) => {
                       </CusTableCell>
                       <CusTableCell
                         align="left"
-                        sx={{ border: "1px solid #000", fontWeight: "600" }}
+                        sx={{
+                          border: "1px solid #000",
+                          fontWeight: "600",
+                          fontSize: "16px !important",
+                        }}
                       >
                         <div key={index}>
                           {item.ingredient === "No Ingredient" ? (
@@ -462,19 +466,29 @@ export const KDSTable = forwardRef((props, ref) => {
                   <Timecode />
                 </Timer>
               </CusTableCell>
-              <CusTableCell align="center" sx={{ border: "1px solid #000" }}>
+              {/* <CusTableCell align="center" sx={{ border: "1px solid #000" }}>
                 {order.orderSource}
-              </CusTableCell>
+              </CusTableCell> */}
               <CusTableCell align="center" sx={{ border: "1px solid #000" }}>
                 {order.orderDeliveryType}
               </CusTableCell>
-              <CusTableCell align="center" sx={{ border: "1px solid #000" }}>
+              <CusTableCell
+                align="center"
+                sx={{ border: "1px solid #000", fontWeight: "600" }}
+              >
                 {order.storeTableId ? order.storeTableId : "N/A"}
               </CusTableCell>
               <CusTableCell align="center" sx={{ border: "1px solid #000" }}>
                 {order.customerName}
               </CusTableCell>
-              <CusTableCell align="left" sx={{ border: "1px solid #000" }}>
+              <CusTableCell
+                align="left"
+                sx={{
+                  border: "1px solid #000",
+                  fontWeight: "600",
+                  fontSize: "16px !important",
+                }}
+              >
                 {order.orderDetails.map((item, index) => (
                   <div key={index}>
                     {item.ingredient === "No Ingredient" ? (
@@ -508,6 +522,7 @@ export const KDSTable = forwardRef((props, ref) => {
                     style={{
                       borderBottom: "1px solid #000",
                       minHeight: "25px",
+                      fontWeight: "600",
                     }}
                   >
                     {item.quantity}
@@ -594,12 +609,12 @@ export const KDSTable = forwardRef((props, ref) => {
                 >
                   Time (H:M:S)
                 </CusTableCell>
-                <CusTableCell
+                {/* <CusTableCell
                   sx={{ color: "#fff", border: "1px solid #fff" }}
                   align="center"
                 >
                   Order Type
-                </CusTableCell>
+                </CusTableCell> */}
                 <CusTableCell
                   sx={{ color: "#fff", border: "1px solid #fff" }}
                   align="center"
@@ -619,7 +634,11 @@ export const KDSTable = forwardRef((props, ref) => {
                   Customer Name
                 </CusTableCell>
                 <CusTableCell
-                  sx={{ color: "#fff", border: "1px solid #fff" }}
+                  sx={{
+                    color: "#fff",
+                    border: "1px solid #fff",
+                    minWidth: "350px",
+                  }}
                   align="center"
                 >
                   Item Name
