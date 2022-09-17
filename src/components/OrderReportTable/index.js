@@ -127,7 +127,7 @@ export const OrderReportTable = (props) => {
     var windows = window.open("", "", "height=600, width=600");
     windows.document.write("<html><body >");
     windows.document.write(
-      "<style> body{text-align: center; margin: 0; line-height: 0; font-size: 10px;} th{font-size: 10px;} td{font-size: 10px;} table{width: 100%} tbody{text-align: left;} th{text-align: left !important;} @media print { body {  }} @page { size: Statement;margin: 0;}</style>"
+      "<style> body{text-align: center; margin: 0; line-height: 0; font-size: 10px;} th{font-size: 11px;} td{font-size: 11px;} table{width: 100%} tbody{text-align: left;} th{text-align: left !important;} section{ line-height: 0.9 !important;}  @media print { body {  }} @page { size: Statement;margin: 0;}</style>"
     );
     windows.document.write(div);
     windows.document.write("</body></html>");
@@ -144,22 +144,17 @@ export const OrderReportTable = (props) => {
 
     if (foundMatch) {
       return (
-        <>
-          <Typography>{foundMatch.address1},</Typography>
-          {foundMatch.address2 ? (
-            <>
-              <Typography>{foundMatch.address2},</Typography>
-            </>
-          ) : null}
-          {foundMatch.address3 ? (
-            <Typography>{foundMatch.address3},</Typography>
-          ) : null}
-          <Typography>{foundMatch.city},</Typography>
-          {foundMatch.zipCode ? (
-            <Typography>{foundMatch.zipCode},</Typography>
-          ) : null}
-          <Typography>{foundMatch.country}</Typography>
-        </>
+        <section>
+          <Typography>
+            <span>{foundMatch.address1},</span> <br></br>
+            {foundMatch.address2 ? <span>{foundMatch.address2},</span> : null}
+            {foundMatch.address3 ? <span>{foundMatch.address3},</span> : null}
+            <span>{foundMatch.city},</span>
+            {foundMatch.zipCode ? <span>{foundMatch.zipCode},</span> : null}
+          </Typography>
+
+          {/* <Typography>{foundMatch.country}</Typography> */}
+        </section>
       );
     }
   };
@@ -205,7 +200,7 @@ export const OrderReportTable = (props) => {
                         currentOrder.storeId
                       )}
                     </Typography>
-
+                    <hr></hr>
                     <Typography sx={{ fontWeight: "600" }}>
                       {renderStoreGST(
                         currentOrder.restaurantId,
@@ -216,23 +211,30 @@ export const OrderReportTable = (props) => {
                     <Typography sx={{ fontWeight: "600" }}>
                       Order ID: {currentOrder ? currentOrder.orderId : null}
                     </Typography>
+                    <hr></hr>
 
-                    <Typography sx={{ fontWeight: "600" }}>
-                      Customer Name:{" "}
-                      <span>{currentOrder?.customerName.toUpperCase()}</span>
+                    <div style={{ display: "inline-flex", columnGap: "10px" }}>
+                      <Typography sx={{ fontWeight: "600" }}>
+                        Cashier: {currentOrder.createdBy.toUpperCase()}
+                      </Typography>
+                      <Typography sx={{ fontWeight: "600" }}>
+                        Table No:{" "}
+                        {currentOrder && currentOrder.storeTableId
+                          ? currentOrder.storeTableId
+                          : "N/A"}
+                      </Typography>
+                      <Typography sx={{ fontWeight: "600" }}>
+                        <span>{currentOrder.orderDeliveryType}</span>
+                        <span> [{currentOrder.paymentStatus}]</span>
+                      </Typography>
+                    </div>
+                  </div>
+                  <div style={{ display: "inline-flex", columnGap: "10px" }}>
+                    <Typography>
+                      Date: {renderNowDate(currentOrder.createdDate)}
                     </Typography>
-                    <Typography sx={{ fontWeight: "600" }}>
-                      Table No:{" "}
-                      {currentOrder && currentOrder.storeTableId
-                        ? currentOrder.storeTableId
-                        : "N/A"}
-                    </Typography>
-                    <Typography sx={{ fontWeight: "600" }}>
-                      Cashier: {currentOrder.createdBy.toUpperCase()}
-                    </Typography>
-                    <Typography sx={{ fontWeight: "600" }}>
-                      <span>{currentOrder.orderDeliveryType}</span>
-                      <span> [{currentOrder.paymentStatus}]</span>
+                    <Typography>
+                      Time: {renderNowTime(currentOrder.createdDate)}
                     </Typography>
                   </div>
                   <hr></hr>
@@ -245,23 +247,7 @@ export const OrderReportTable = (props) => {
                     <Typography>Address: {currentOrder.address}</Typography>
                   </div>
                   <hr></hr>
-                  <div>
-                    <Typography>
-                      <Row>
-                        <Col>
-                          <Typography>
-                            Time: {renderNowTime(currentOrder.createdDate)}
-                          </Typography>
-                        </Col>
-                        <Col>
-                          <Typography>
-                            Date: {renderNowDate(currentOrder.createdDate)}
-                          </Typography>
-                        </Col>
-                      </Row>
-                    </Typography>
-                  </div>
-                  <hr></hr>
+
                   <InvoiceTable
                     allProducts={currentOrder.orderDetails}
                     grandTot={currentOrder.totalPrice}
@@ -297,10 +283,6 @@ export const OrderReportTable = (props) => {
                     Order ID: {currentOrder ? currentOrder.orderId : null}
                   </Typography>
 
-                  <Typography sx={{ fontWeight: "600" }}>
-                    Customer Name:{" "}
-                    <span>{currentOrder?.customerName.toUpperCase()}</span>
-                  </Typography>
                   <Typography sx={{ fontWeight: "600" }}>
                     Table No:{" "}
                     {currentOrder && currentOrder.storeTableId

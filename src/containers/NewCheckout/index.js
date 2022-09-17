@@ -1616,7 +1616,7 @@ export default function NewCheckout(props) {
     var windows = window.open("", "", "height=600, width=600");
     windows.document.write("<html><body >");
     windows.document.write(
-      "<style> body{text-align: center; margin: 0; line-height: 0; font-size: 10px;} th{font-size: 10px;} td{font-size: 10px;} table{width: 100%} tbody{text-align: left;} th{text-align: left !important;} @media print { body {  }} @page { size: Statement;margin: 0;}</style>"
+      "<style> body{text-align: center; margin: 0; line-height: 0; font-size: 10px;} th{font-size: 11px;} td{font-size: 11px;} table{width: 100%} tbody{text-align: left;} th{text-align: left !important;} section{ line-height: 0.9 !important;}  @media print { body {  }} @page { size: Statement;margin: 0;}</style>"
     );
     windows.document.write(div);
     windows.document.write("</body></html>");
@@ -1667,53 +1667,25 @@ export default function NewCheckout(props) {
                         <Typography sx={{ fontWeight: "600" }}>
                           {orderResp ? orderResp.storeName : "Hangries"}
                         </Typography>
-                        {/* <Typography sx={{ color: "black" }}>
-                          <span>{props.storeObj.address1}</span>
-                          <br></br>
-                          {props.storeObj.address2 ? (
-                            <>
-                              , <span>{props.storeObj.address2}</span>
-                            </>
-                          ) : null}
-                          {props.storeObj.address3 ? (
-                            <>
-                              , <br></br>
-                              <span>{props.storeObj.address3}</span>
-                            </>
-                          ) : null}
-                          {props.storeObj.city ? (
-                            <>, {props.storeObj.city}</>
-                          ) : null}
-                          {props.storeObj.zipCode ? (
-                            <>, {props.storeObj.zipCode}</>
-                          ) : null}
-                          {props.storeObj.country ? (
-                            <>, {props.storeObj.country}</>
-                          ) : null}
-                        </Typography> */}
 
-                        <Typography>{props.storeObj.address1},</Typography>
-
-                        {props.storeObj.address2 ? (
-                          <>
-                            <Typography>{props.storeObj.address2},</Typography>
-                          </>
-                        ) : null}
-                        {props.storeObj.address3 ? (
-                          <>
-                            <Typography>{props.storeObj.address3},</Typography>
-                          </>
-                        ) : null}
-                        {props.storeObj.city ? (
-                          <Typography>{props.storeObj.city},</Typography>
-                        ) : null}
-                        {props.storeObj.zipCode ? (
-                          <Typography>{props.storeObj.zipCode},</Typography>
-                        ) : null}
-                        {props.storeObj.country ? (
-                          <Typography>{props.storeObj.country},</Typography>
-                        ) : null}
-
+                        <section>
+                          {props.storeObj ? (
+                            <Typography>
+                              <span>{props.storeObj.address1},</span> <br></br>
+                              {props.storeObj.address2 ? (
+                                <span>{props.storeObj.address2},</span>
+                              ) : null}
+                              {props.storeObj.address3 ? (
+                                <span>{props.storeObj.address3},</span>
+                              ) : null}
+                              <span>{props.storeObj.city},</span>
+                              {props.storeObj.zipCode ? (
+                                <span>{props.storeObj.zipCode},</span>
+                              ) : null}
+                            </Typography>
+                          ) : null}
+                        </section>
+                        <hr></hr>
                         <Typography sx={{ fontWeight: "600" }}>
                           GST NO:{" "}
                           {props.storeObj
@@ -1723,34 +1695,39 @@ export default function NewCheckout(props) {
                         <Typography sx={{ fontWeight: "600" }}>
                           Order ID: {orderResp ? orderResp.orderId : null}
                         </Typography>
-                        <Typography sx={{ fontWeight: "600" }}>
-                          Customer Name:{" "}
-                          {firstName ? (
+                        <hr></hr>
+
+                        <div
+                          style={{ display: "inline-flex", columnGap: "10px" }}
+                        >
+                          <Typography sx={{ fontWeight: "600" }}>
+                            Cashier:{" "}
+                            {orderResp
+                              ? orderResp.createdBy.toUpperCase()
+                              : null}
+                          </Typography>
+                          <Typography sx={{ fontWeight: "600" }}>
+                            Table No:{" "}
+                            {orderResp && orderResp.storeTableId
+                              ? orderResp.storeTableId
+                              : "N/A"}
+                          </Typography>
+                          <Typography sx={{ fontWeight: "600" }}>
                             <span>
-                              {firstName.toUpperCase()} {lastName.toUpperCase()}
+                              {orderResp ? orderResp.orderDeliveryType : null}
                             </span>
-                          ) : (
-                            <span>{orderResp?.customerName.toUpperCase()}</span>
-                          )}
-                        </Typography>
-                        <Typography sx={{ fontWeight: "600" }}>
-                          Table No:{" "}
-                          {orderResp && orderResp.storeTableId
-                            ? orderResp.storeTableId
-                            : "N/A"}
-                        </Typography>
-                        <Typography sx={{ fontWeight: "600" }}>
-                          Cashier:{" "}
-                          {orderResp ? orderResp.createdBy.toUpperCase() : null}
-                        </Typography>
-                        <Typography sx={{ fontWeight: "600" }}>
-                          <span>
-                            {orderResp ? orderResp.orderDeliveryType : null}
-                          </span>
-                          <span>
-                            [{orderResp ? orderResp.paymentStatus : null}]
-                          </span>
-                        </Typography>
+                            <span>
+                              [{orderResp ? orderResp.paymentStatus : null}]
+                            </span>
+                          </Typography>
+                        </div>
+                        <br></br>
+                        <div
+                          style={{ display: "inline-flex", columnGap: "10px" }}
+                        >
+                          <Typography>Date: {renderNowDate()}</Typography>
+                          <Typography>Time: {renderNowTime()}</Typography>
+                        </div>
                       </div>
                       <hr></hr>
                       <div>
@@ -1780,19 +1757,7 @@ export default function NewCheckout(props) {
                         </Typography>
                       </div>
                       <hr></hr>
-                      <div>
-                        <Typography sx={{ color: "black" }}>
-                          <Row>
-                            <Col>
-                              <p>Time: {renderNowTime()}</p>
-                            </Col>
-                            <Col>
-                              <p>Date: {renderNowDate()}</p>
-                            </Col>
-                          </Row>
-                        </Typography>
-                      </div>
-                      <hr></hr>
+
                       <div>
                         <InvoiceTable
                           allProducts={orderResp.orderDetails}
@@ -1852,16 +1817,7 @@ export default function NewCheckout(props) {
                       <Typography sx={{ fontWeight: "600" }}>
                         Order ID: {orderResp ? orderResp.orderId : null}
                       </Typography>
-                      <Typography sx={{ fontWeight: "600" }}>
-                        Customer Name:{" "}
-                        {firstName ? (
-                          <span>
-                            {firstName.toUpperCase()} {lastName.toUpperCase()}
-                          </span>
-                        ) : (
-                          <span>{orderResp?.customerName.toUpperCase()}</span>
-                        )}
-                      </Typography>
+
                       <Typography sx={{ fontWeight: "600" }}>
                         Table No:{" "}
                         {orderResp && orderResp.storeTableId
