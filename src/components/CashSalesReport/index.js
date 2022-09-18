@@ -47,6 +47,12 @@ const CusTableCell2 = styled(TableCell)`
   padding: 0;
 `;
 
+const CusTableCell5 = styled(TableCell)`
+  font-size: 0.75rem;
+  background-color: #00008b;
+  color: #fff;
+`;
+
 export const CashSalesReport = (props) => {
   const allReports = useSelector((state) => state.report.allReports);
   const loading = useSelector((state) => state.report.loading);
@@ -139,6 +145,50 @@ export const CashSalesReport = (props) => {
     }
 
     return strOrderSource + strPaymentType;
+  };
+
+  const getTotalByOrderSource = (type) => {
+    let found = allReports.salesSummeryByOrderSource.find(
+      (x) => x.orderSource === type
+    );
+
+    if (found) {
+      return found.orderValue;
+    } else {
+      return 0;
+    }
+  };
+
+  const getTotalByPaymentMode = (type) => {
+    let found = allReports.salesSummeryByPaymentMode.find(
+      (x) => x.paymentMode === type
+    );
+
+    if (found) {
+      return found.orderValue;
+    } else {
+      return 0;
+    }
+  };
+
+  const orderSourceTotal = () => {
+    let total = 0;
+
+    for (let i = 0; i < allReports.salesSummeryByOrderSource.length; i++) {
+      total = total + allReports.salesSummeryByOrderSource[i].orderValue;
+    }
+
+    return total;
+  };
+
+  const paymentModeTotal = () => {
+    let total = 0;
+
+    for (let i = 0; i < allReports.salesSummeryByPaymentMode.length; i++) {
+      total = total + allReports.salesSummeryByPaymentMode[i].orderValue;
+    }
+
+    return total;
   };
 
   return (
@@ -300,6 +350,28 @@ export const CashSalesReport = (props) => {
                     </CusTableCell2>
                   </TableRow>
                 ))}
+
+                <TableRow>
+                  <CusTableCell5 align="center" colSpan={3}>
+                    Total
+                  </CusTableCell5>
+                  {orderSourcesForCashierReport.map((sourceItem) => (
+                    <CusTableCell5 align="center">
+                      {getTotalByOrderSource(sourceItem.configCriteriaValue)}
+                    </CusTableCell5>
+                  ))}
+                  <CusTableCell5 align="center">
+                    {orderSourceTotal()}
+                  </CusTableCell5>
+                  {paymentModesForCashierReport.map((sourceItem) => (
+                    <CusTableCell5 align="center">
+                      {getTotalByPaymentMode(sourceItem.configCriteriaValue)}
+                    </CusTableCell5>
+                  ))}
+                  <CusTableCell5 align="center">
+                    {paymentModeTotal()}
+                  </CusTableCell5>
+                </TableRow>
               </TableBody>
             </Table>
           </TableContainer>

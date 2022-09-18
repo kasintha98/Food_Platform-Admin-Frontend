@@ -25,28 +25,6 @@ ChartJS.register(
   Legend
 );
 
-export const options = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: "top",
-    },
-    /* title: {
-      display: true,
-      text: "Chart.js Bar Chart",
-    }, */
-  },
-  scales: {
-    x: {
-      ticks: {
-        font: {
-          size: 10,
-        },
-      },
-    },
-  },
-};
-
 export const SalesRevenueByChanelChart = () => {
   const allReports = useSelector((state) => state.report.allReports);
   const orderSources = useSelector((state) => state.user.orderSources);
@@ -68,6 +46,43 @@ export const SalesRevenueByChanelChart = () => {
   /* defaults.font.size = "10px"; */
 
   const ref = React.createRef();
+
+  let options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top",
+      },
+
+      tooltip: {
+        callbacks: {
+          label: function (context) {
+            let label = context.dataset.label + " : " || "";
+
+            if (label) {
+              label +=
+                context.formattedValue + " | " + getOrderNum(context.label);
+            }
+
+            return label;
+          },
+        },
+      },
+      /* title: {
+        display: true,
+        text: "Chart.js Bar Chart",
+      }, */
+    },
+    scales: {
+      x: {
+        ticks: {
+          font: {
+            size: 10,
+          },
+        },
+      },
+    },
+  };
 
   /* useEffect(() => {
 
@@ -214,6 +229,22 @@ export const SalesRevenueByChanelChart = () => {
         backgroundColor: "rgba(53, 162, 235, 0.5)",
       },
     ],
+  };
+
+  const getOrderNum = (lable) => {
+    if (lable) {
+      let found = allReports.salesSummeryByOrderSource.find(
+        (x) => x.orderSourceDescription === lable
+      );
+
+      if (found) {
+        return found.noOfOrders;
+      } else {
+        return "";
+      }
+    } else {
+      return "";
+    }
   };
 
   return (
