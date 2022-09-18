@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import ChartDataLabels from "chartjs-plugin-datalabels";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -47,11 +48,41 @@ export const SalesRevenueByChanelChart = () => {
 
   const ref = React.createRef();
 
+  ChartJS.register(ChartDataLabels);
+
   let options = {
     responsive: true,
     plugins: {
       legend: {
         position: "top",
+      },
+
+      datalabels: {
+        formatter: function (value, context) {
+          let label = context.dataset.label + ": " || "";
+
+          if (getOrderNum(context.chart.data.labels[context.dataIndex]) > 0) {
+            if (label) {
+              label +=
+                value +
+                " | " +
+                getOrderNum(context.chart.data.labels[context.dataIndex]);
+            }
+
+            return label;
+          } else {
+            return "";
+          }
+        },
+        anchor: "end",
+        color: "black",
+        font: {
+          size: "11px",
+          weight: "bold",
+        },
+        padding: {
+          bottom: 6,
+        },
       },
 
       tooltip: {
@@ -67,6 +98,17 @@ export const SalesRevenueByChanelChart = () => {
             return label;
           },
         },
+        xAlign: "center",
+        yAlign: "top",
+        bodyFont: {
+          size: 10,
+        },
+        titleFont: {
+          size: 10,
+        },
+        titleSpacing: 1,
+        titleMarginBottom: 2,
+        padding: 2,
       },
       /* title: {
         display: true,

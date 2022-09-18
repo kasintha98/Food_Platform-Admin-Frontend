@@ -49,7 +49,7 @@ const CusTableCell2 = styled(TableCell)`
 
 const CusTableCell5 = styled(TableCell)`
   font-size: 0.75rem;
-  background-color: #00008b;
+  background-color: #6c757d;
   color: #fff;
 `;
 
