@@ -240,9 +240,7 @@ function NewLayout(props) {
           </ListItem>
         )}
 
-        {modulesForUser.some(
-          (module) => module.moduleName === "KITCHEN DISPLAY SYSTEM"
-        ) && (
+        {modulesForUser.some((module) => module.moduleName === "KDS") && (
           <ListItem>
             <NavLink to={"/kds"}>
               <i className="fa fa-clone"></i>

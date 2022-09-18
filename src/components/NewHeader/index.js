@@ -137,9 +137,7 @@ export const NewHeader = (props) => {
               </li>
             )}
 
-            {modulesForUser.some(
-              (module) => module.moduleName === "KITCHEN DISPLAY SYSTEM"
-            ) && (
+            {modulesForUser.some((module) => module.moduleName === "KDS") && (
               <li className="nav-item top-module">
                 <NavLink exact to={"/kds"}>
                   KDS

@@ -40,7 +40,9 @@ export const KDSTable = forwardRef((props, ref) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const today = new Date(businessDateAll && businessDateAll.businessDate);
+    const today = businessDateAll
+      ? new Date(businessDateAll.businessDate)
+      : new Date();
     dispatch(
       getCustomerOrders(
         props.restaurantId,

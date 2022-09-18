@@ -97,7 +97,9 @@ export const DeliveryManagement = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const today = new Date(businessDateAll && businessDateAll.businessDate);
+    const today = businessDateAll
+      ? new Date(businessDateAll.businessDate)
+      : new Date();
     dispatch(
       getCustomerOrders(
         selectedStoreObj.restaurantId,
@@ -166,7 +168,9 @@ export const DeliveryManagement = () => {
   };
 
   const searchOrder = () => {
-    const today = new Date(businessDateAll && businessDateAll.businessDate);
+    const today = businessDateAll
+      ? new Date(businessDateAll.businessDate)
+      : new Date();
     dispatch(
       getCustomerOrders(
         user.restaurantId,

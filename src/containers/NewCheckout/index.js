@@ -646,7 +646,9 @@ export default function NewCheckout(props) {
         orderSource: props.selectedOrderTypeObj.code,
         //customerId: 106,
         customerId: currentCustomer ? currentCustomer.id : 99999,
-        orderReceivedDateTime: new Date(),
+        orderReceivedDateTime: businessDateAll
+          ? new Date(businessDateAll.businessDate)
+          : new Date(),
         //orderDeliveryType: "SELF-COLLECT",
         orderDeliveryType: props.selectedOrderTypeObj.name,
         storeTableId: tableNo,
@@ -1428,7 +1430,9 @@ export default function NewCheckout(props) {
   };
 
   const renderNowDate = () => {
-    const dateObj = new Date();
+    const dateObj = businessDateAll
+      ? new Date(businessDateAll.businessDate)
+      : new Date();
     const month = dateObj.toLocaleString("default", { month: "short" });
     const day = dateObj.getDate();
     const year = dateObj.getFullYear();
@@ -1440,7 +1444,9 @@ export default function NewCheckout(props) {
   };
 
   const renderNowTime = () => {
-    const dateObj = new Date();
+    const dateObj = businessDateAll
+      ? new Date(businessDateAll.businessDate)
+      : new Date();
     const time = dateObj.toLocaleString("en-US", {
       hour: "numeric",
       hour12: true,

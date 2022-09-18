@@ -95,7 +95,9 @@ export const DeliveryBoy = () => {
   });
 
   useEffect(() => {
-    const today = new Date(businessDateAll && businessDateAll.businessDate);
+    const today = businessDateAll
+      ? new Date(businessDateAll.businessDate)
+      : new Date();
 
     if (user.roleCategory === "DELIVERY_BOY") {
       setSelectedDeliBoy(user.firstName);
@@ -179,7 +181,9 @@ export const DeliveryBoy = () => {
   };
 
   const searchOrder = () => {
-    const today = new Date(businessDateAll && businessDateAll.businessDate);
+    const today = businessDateAll
+      ? new Date(businessDateAll.businessDate)
+      : new Date();
     dispatch(
       getCustomerOrders(
         user.restaurantId,
@@ -315,7 +319,9 @@ export const DeliveryBoy = () => {
     setSelectedDeliBoy(event.target.value);
 
     if (event.target.value) {
-      const today = new Date(businessDateAll && businessDateAll.businessDate);
+      const today = businessDateAll
+        ? new Date(businessDateAll.businessDate)
+        : new Date();
       dispatch(
         getCustomerOrders(
           null,

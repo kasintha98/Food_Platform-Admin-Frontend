@@ -126,9 +126,9 @@ function App() {
           <PrivateRoute path="/orders" component={NewOrders}></PrivateRoute>
         )}
 
-        {modulesForUser.some(
-          (module) => module.moduleName === "KITCHEN DISPLAY SYSTEM"
-        ) && <PrivateRoute path="/kds" component={KDS}></PrivateRoute>}
+        {modulesForUser.some((module) => module.moduleName === "KDS") && (
+          <PrivateRoute path="/kds" component={KDS}></PrivateRoute>
+        )}
 
         {modulesForUser.some(
           (module) => module.moduleName === "ADMIN FUNCTIONS"

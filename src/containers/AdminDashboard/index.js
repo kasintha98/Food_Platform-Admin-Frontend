@@ -79,10 +79,11 @@ export const AdminDashboard = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [dateState, setDateState] = useState([
     {
-      startDate:
-        new Date(/* businessDateAll && businessDateAll.businessDate */),
+      startDate: businessDateAll
+        ? new Date(businessDateAll.businessDate)
+        : new Date(),
       endDate: addDays(
-        new Date(/* businessDateAll && businessDateAll.businessDate */),
+        businessDateAll ? new Date(businessDateAll.businessDate) : new Date(),
         0
       ),
       key: "selection",

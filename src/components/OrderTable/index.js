@@ -84,7 +84,9 @@ export const OrderTable = (props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const today = new Date(businessDateAll && businessDateAll.businessDate);
+    const today = businessDateAll
+      ? new Date(businessDateAll.businessDate)
+      : new Date();
     if (props.isForOrderSource) {
       dispatch(
         getCustomerOrders(
@@ -470,7 +472,9 @@ export const OrderTable = (props) => {
   };
 
   const searchOrder = () => {
-    const today = new Date(businessDateAll && businessDateAll.businessDate);
+    const today = businessDateAll
+      ? new Date(businessDateAll.businessDate)
+      : new Date();
     dispatch(
       getCustomerOrders(
         null,
