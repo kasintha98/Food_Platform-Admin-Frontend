@@ -102,7 +102,7 @@ export const NewHeader = (props) => {
             ) && (
               <li className="nav-item top-module">
                 <NavLink exact to={"/order-source"}>
-                  Order Source
+                  ORDER BY SOURCE
                 </NavLink>
               </li>
             )}
@@ -112,7 +112,7 @@ export const NewHeader = (props) => {
             ) && (
               <li className="nav-item top-module">
                 <NavLink exact to={"/dine-in"}>
-                  Dine-In
+                  DINE-IN
                 </NavLink>
               </li>
             )}
@@ -122,7 +122,7 @@ export const NewHeader = (props) => {
             ) && (
               <li className="nav-item top-module">
                 <NavLink exact to={"/dashboard"}>
-                  Dashboard
+                  DASHBOARD
                 </NavLink>
               </li>
             )}
@@ -132,7 +132,7 @@ export const NewHeader = (props) => {
             ) && (
               <li className="nav-item top-module">
                 <NavLink exact to={"/orders"}>
-                  Orders
+                  ORDERS
                 </NavLink>
               </li>
             )}
@@ -149,7 +149,7 @@ export const NewHeader = (props) => {
               (module) => module.moduleName === "DELIVERY MGMT"
             ) && (
               <li className="nav-item top-module">
-                <NavLink to={"/delivery-management"}>Delivery Mgmt</NavLink>
+                <NavLink to={"/delivery-management"}>DELIVERY MGMT</NavLink>
               </li>
             )}
 
@@ -158,7 +158,7 @@ export const NewHeader = (props) => {
             ) && (
               <li className="nav-item top-module">
                 <NavLink exact to={"/delivery-boy"}>
-                  Delivery Boy
+                  DELIVERY BOY
                 </NavLink>
               </li>
             )}
@@ -168,7 +168,7 @@ export const NewHeader = (props) => {
             ) && (
               <li className="nav-item top-module">
                 <NavLink exact to={"/delivery-tracking"}>
-                  Delivery Tracking
+                  DELIVERY TRACKING
                 </NavLink>
               </li>
             )}
@@ -178,7 +178,7 @@ export const NewHeader = (props) => {
             ) && (
               <li className="nav-item top-module">
                 <NavLink exact to={"/reports"}>
-                  Reports
+                  REPORTS
                 </NavLink>
               </li>
             )}
@@ -187,7 +187,7 @@ export const NewHeader = (props) => {
               (module) => module.moduleName === "ADMIN FUNCTIONS"
             ) && (
               <li className="nav-item top-module">
-                <CusDropdownButton title="Admin Functions">
+                <CusDropdownButton title="ADMIN FUNCTIONS">
                   <NavLink exact to={"/employee"}>
                     Employee
                   </NavLink>
