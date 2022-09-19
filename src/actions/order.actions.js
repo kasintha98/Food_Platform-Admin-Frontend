@@ -104,10 +104,12 @@ export const updateOrder = (
     dispatch({ type: orderConstants.UPDATE_CUSTOMER_ORDER_REQUEST });
 
     try {
-      const res = await axios.post("/updateStatusByOrderId", {
-        orderId,
-        orderStatus,
-        updatedBy,
+      const res = await axios.post("/updateStatusByOrderId", null, {
+        params: {
+          orderId,
+          orderStatus,
+          updatedBy,
+        },
       });
 
       const today =
