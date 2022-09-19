@@ -64,6 +64,12 @@ const CusSelect = styled(Select)`
 
 const CusMenuItem = styled(MenuItem)``;
 
+const CusTableCell5 = styled(TableCell)`
+  font-size: 0.75rem;
+  background-color: #6c757d;
+  color: #fff;
+`;
+
 export const DeliveryTrackingTable = (props) => {
   const user = useSelector((state) => state.auth.user);
   const orders = useSelector((state) => state.order.orders);
@@ -396,6 +402,18 @@ export const DeliveryTrackingTable = (props) => {
 
     if (foundMatch) {
       return <>GST NO: {foundMatch.storeGstNumber}</>;
+    }
+  };
+
+  const getTotal = () => {
+    if (filteredData && filteredData.length > 0) {
+      let total = 0;
+      for (let i = 0; i < filteredData.length; i++) {
+        total = total + filteredData[i].overallPriceWithTax;
+      }
+      return total;
+    } else {
+      return 0;
     }
   };
 
@@ -834,6 +852,13 @@ export const DeliveryTrackingTable = (props) => {
                     </CusTableCell2>
                   </TableRow>
                 ))}
+                <TableRow>
+                  <CusTableCell5 colSpan={6} align="center">
+                    TOTAL
+                  </CusTableCell5>
+                  <CusTableCell5 align="center">Rs. {getTotal()}</CusTableCell5>
+                  <CusTableCell5 colSpan={4} align="center"></CusTableCell5>
+                </TableRow>
               </>
             ) : (
               <TableRow>

@@ -53,6 +53,12 @@ const CusTableCell3 = styled(TableCell)`
   word-wrap: break-word;
 `;
 
+const CusTableCell5 = styled(TableCell)`
+  font-size: 0.75rem;
+  background-color: #6c757d;
+  color: #fff;
+`;
+
 const CusMenuItem = styled(MenuItem)``;
 
 export const DeliveryManagement = () => {
@@ -296,6 +302,30 @@ export const DeliveryManagement = () => {
     if (foundMatch) {
       return <>GST NO: {foundMatch.storeGstNumber}</>;
     }
+  };
+
+  const getTotal = () => {
+    let total = 0;
+
+    if (deliveryOrders && deliveryOrders.length > 0) {
+      for (let i = 0; i < deliveryOrders.length; i++) {
+        total = total + deliveryOrders[i].overallPriceWithTax;
+      }
+    }
+
+    if (storeOrders && storeOrders.length > 0) {
+      for (let i = 0; i < storeOrders.length; i++) {
+        total = total + storeOrders[i].overallPriceWithTax;
+      }
+    }
+
+    if (phoneOrders && phoneOrders.length > 0) {
+      for (let i = 0; i < phoneOrders.length; i++) {
+        total = total + phoneOrders[i].overallPriceWithTax;
+      }
+    }
+
+    return total;
   };
 
   const handleManualPrint = () => {
@@ -992,6 +1022,13 @@ export const DeliveryManagement = () => {
                 </CusTableCell2>
               </TableRow>
             )}
+            <TableRow>
+              <CusTableCell5 colSpan={8} align="center">
+                TOTAL
+              </CusTableCell5>
+              <CusTableCell5 align="center">Rs. {getTotal()}</CusTableCell5>
+              <CusTableCell5 colSpan={2} align="center"></CusTableCell5>
+            </TableRow>
           </TableBody>
         </Table>
       </TableContainer>

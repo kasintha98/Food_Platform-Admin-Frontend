@@ -39,6 +39,12 @@ const CusTableCell3 = styled(TableCell)`
   word-wrap: break-word;
 `;
 
+const CusTableCell5 = styled(TableCell)`
+  font-size: 0.75rem;
+  background-color: #6c757d;
+  color: #fff;
+`;
+
 export const OrderReportTable = (props) => {
   const orders = useSelector((state) => state.order.orders);
   const stores = useSelector((state) => state.store.stores);
@@ -367,6 +373,54 @@ export const OrderReportTable = (props) => {
     );
   };
 
+  const getTotalAmount = () => {
+    if (orders && orders.length > 0) {
+      let total = 0;
+      for (let i = 0; i < orders.length; i++) {
+        total = total + orders[i].overallPriceWithTax;
+      }
+      return total;
+    } else {
+      return 0;
+    }
+  };
+
+  const getCGST = () => {
+    if (orders && orders.length > 0) {
+      let total = 0;
+      for (let i = 0; i < orders.length; i++) {
+        total = total + orders[i].cgstCalculatedValue;
+      }
+      return total.toFixed(2);
+    } else {
+      return 0;
+    }
+  };
+
+  const getSGST = () => {
+    if (orders && orders.length > 0) {
+      let total = 0;
+      for (let i = 0; i < orders.length; i++) {
+        total = total + orders[i].sgstCalculatedValue;
+      }
+      return total.toFixed(2);
+    } else {
+      return 0;
+    }
+  };
+
+  const getDelCharges = () => {
+    if (orders && orders.length > 0) {
+      let total = 0;
+      for (let i = 0; i < orders.length; i++) {
+        total = total + orders[i].deliveryCharges;
+      }
+      return total;
+    } else {
+      return 0;
+    }
+  };
+
   return (
     <div>
       <ExcelFile element={<Button variant="text">Download Full Report</Button>}>
@@ -605,6 +659,20 @@ export const OrderReportTable = (props) => {
                 </CusTableCell2>
               </TableRow>
             )}
+            <TableRow>
+              <CusTableCell5 colSpan={15} align="center">
+                TOTAL
+              </CusTableCell5>
+              <CusTableCell5 align="center">
+                Rs. {getTotalAmount()}
+              </CusTableCell5>
+              <CusTableCell5 align="center">Rs. {getCGST()}</CusTableCell5>
+              <CusTableCell5 align="center">Rs. {getSGST()}</CusTableCell5>
+              <CusTableCell5 align="center">
+                Rs. {getDelCharges()}
+              </CusTableCell5>
+              <CusTableCell5 colSpan={7} align="center"></CusTableCell5>
+            </TableRow>
           </TableBody>
         </Table>
       </TableContainer>

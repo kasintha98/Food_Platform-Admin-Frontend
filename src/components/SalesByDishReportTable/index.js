@@ -29,6 +29,12 @@ const CusTableCell2 = styled(TableCell)`
   padding: 0;
 `;
 
+const CusTableCell5 = styled(TableCell)`
+  font-size: 0.75rem;
+  background-color: #6c757d;
+  color: #fff;
+`;
+
 export const SalesByDishReportTable = (props) => {
   const allReports = useSelector((state) => state.report.allReports);
   const loading = useSelector((state) => state.report.loading);
@@ -49,6 +55,38 @@ export const SalesByDishReportTable = (props) => {
       )
     );
   }, [props.restaurantId, props.storeId, props.startDate, props.endDate]);
+
+  const getItemsSoldTotal = () => {
+    if (
+      allReports &&
+      allReports.reportDishConsumptionSummary &&
+      allReports.reportDishConsumptionSummary.length > 0
+    ) {
+      let total = 0;
+      for (let i = 0; i < allReports.reportDishConsumptionSummary.length; i++) {
+        total = total + allReports.reportDishConsumptionSummary[i].totalQty;
+      }
+      return total;
+    } else {
+      return 0;
+    }
+  };
+
+  const getItemsSoldTotalValue = () => {
+    if (
+      allReports &&
+      allReports.reportDishConsumptionSummary &&
+      allReports.reportDishConsumptionSummary.length > 0
+    ) {
+      let total = 0;
+      for (let i = 0; i < allReports.reportDishConsumptionSummary.length; i++) {
+        total = total + allReports.reportDishConsumptionSummary[i].totalPrice;
+      }
+      return total;
+    } else {
+      return 0;
+    }
+  };
 
   return (
     <div>
@@ -116,6 +154,17 @@ export const SalesByDishReportTable = (props) => {
                     </CusTableCell2>
                   </TableRow>
                 ))}
+                <TableRow>
+                  <CusTableCell5 colSpan={5} align="center">
+                    TOTAL
+                  </CusTableCell5>
+                  <CusTableCell5 align="center">
+                    {getItemsSoldTotal()}
+                  </CusTableCell5>
+                  <CusTableCell5 align="center">
+                    Rs. {getItemsSoldTotalValue()}
+                  </CusTableCell5>
+                </TableRow>
               </TableBody>
             </Table>
           </TableContainer>
