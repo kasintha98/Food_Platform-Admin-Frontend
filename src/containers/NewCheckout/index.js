@@ -570,6 +570,8 @@ export default function NewCheckout(props) {
           price: allItems[i].price,
           remarks: allItems[i].specialText,
           foodPackagedFlag: "N",
+          createdBy: user.loginId,
+          updatedBy: user.loginId,
         };
 
         if (
@@ -590,6 +592,8 @@ export default function NewCheckout(props) {
               ? allItems[i].choiceIng.specialText
               : "",
             foodPackagedFlag: "N",
+            createdBy: user.loginId,
+            updatedBy: user.loginId,
           };
           orderDetails.push(objCh);
         }
@@ -609,6 +613,8 @@ export default function NewCheckout(props) {
               price: allExtra[k].price,
               remarks: allExtra[k].specialText ? allExtra[k].specialText : "",
               foodPackagedFlag: "N",
+              createdBy: user.loginId,
+              updatedBy: user.loginId,
             };
             orderDetails.push(objextra);
           }
@@ -1444,9 +1450,7 @@ export default function NewCheckout(props) {
   };
 
   const renderNowTime = () => {
-    const dateObj = businessDateAll
-      ? new Date(businessDateAll.businessDate)
-      : new Date();
+    const dateObj = new Date();
     const time = dateObj.toLocaleString("en-US", {
       hour: "numeric",
       hour12: true,

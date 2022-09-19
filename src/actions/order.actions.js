@@ -104,12 +104,10 @@ export const updateOrder = (
     dispatch({ type: orderConstants.UPDATE_CUSTOMER_ORDER_REQUEST });
 
     try {
-      const res = await axios.post("/updateStatusByOrderId", null, {
-        params: {
-          orderId,
-          orderStatus,
-          updatedBy,
-        },
+      const res = await axios.post("/updateStatusByOrderId", {
+        orderId,
+        orderStatus,
+        updatedBy,
       });
 
       const today =
@@ -165,19 +163,13 @@ export const updateOrderSubProdStatus = (
     dispatch({ type: orderConstants.UPDATE_ORDER_SUBPROD_STATUS_REQUEST });
 
     try {
-      const res = await axios.post(
-        "/updateOrderDetailsStatusBySubProductId",
-        null,
-        {
-          params: {
-            orderId,
-            productId,
-            subProductId,
-            status: orderStatus,
-            updatedBy,
-          },
-        }
-      );
+      const res = await axios.post("/updateOrderDetailsStatusBySubProductId", {
+        orderId,
+        productId,
+        subProductId,
+        status: orderStatus,
+        updatedBy,
+      });
 
       if (res.status === 200) {
         dispatch({
@@ -358,19 +350,13 @@ export const updateFoodPackagedFlagByItem = (
       type: orderConstants.UPDATE_FOOD_PACKAGED_FLAG_BY_ITEM_REQUEST,
     });
     try {
-      const res = await axios.post(
-        "/updateFoodPackagedFlagForOrderItem",
-        null,
-        {
-          params: {
-            orderId,
-            productId,
-            subProductId,
-            foodPackagedFlag,
-            updatedBy,
-          },
-        }
-      );
+      const res = await axios.post("/updateFoodPackagedFlagForOrderItem", {
+        orderId,
+        productId,
+        subProductId,
+        foodPackagedFlag,
+        updatedBy,
+      });
 
       if (res.status === 200) {
         dispatch({

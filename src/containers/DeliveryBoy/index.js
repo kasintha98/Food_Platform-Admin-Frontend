@@ -408,7 +408,8 @@ export const DeliveryBoy = () => {
                     </div>
                     <div style={{ display: "inline-flex", columnGap: "10px" }}>
                       <Typography>
-                        Date: {renderNowDate(currentOrder.createdDate)}
+                        Date:{" "}
+                        {renderNowDate(currentOrder.orderReceivedDateTime)}
                       </Typography>
                       <Typography>
                         Time: {renderNowTime(currentOrder.createdDate)}
@@ -487,7 +488,8 @@ export const DeliveryBoy = () => {
                           Time: {renderNowTime(currentOrder.createdDate)}
                         </Col>
                         <Col>
-                          Date: {renderNowDate(currentOrder.createdDate)}
+                          Date:{" "}
+                          {renderNowDate(currentOrder.orderReceivedDateTime)}
                         </Col>
                       </Row>
                     </Typography>
@@ -655,9 +657,9 @@ export const DeliveryBoy = () => {
                       </span>
                     </CusTableCell2>
                     <CusTableCell2 align="center">
-                      {new Date(row.createdDate).getFullYear()}-
-                      {new Date(row.createdDate).getMonth() + 1}-
-                      {new Date(row.createdDate).getDate()}
+                      {new Date(row.orderReceivedDateTime).getFullYear()}-
+                      {new Date(row.orderReceivedDateTime).getMonth() + 1}-
+                      {new Date(row.orderReceivedDateTime).getDate()}
                     </CusTableCell2>
                     <CusTableCell2 align="center">
                       {row.orderSource}

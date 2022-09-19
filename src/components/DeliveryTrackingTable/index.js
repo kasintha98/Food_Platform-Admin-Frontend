@@ -498,7 +498,8 @@ export const DeliveryTrackingTable = (props) => {
                     </div>
                     <div style={{ display: "inline-flex", columnGap: "10px" }}>
                       <Typography>
-                        Date: {renderNowDate(currentOrder.createdDate)}
+                        Date:{" "}
+                        {renderNowDate(currentOrder.orderReceivedDateTime)}
                       </Typography>
                       <Typography>
                         Time: {renderNowTime(currentOrder.createdDate)}
@@ -577,7 +578,8 @@ export const DeliveryTrackingTable = (props) => {
                           Time: {renderNowTime(currentOrder.createdDate)}
                         </Col>
                         <Col>
-                          Date: {renderNowDate(currentOrder.createdDate)}
+                          Date:{" "}
+                          {renderNowDate(currentOrder.orderReceivedDateTime)}
                         </Col>
                       </Row>
                     </Typography>

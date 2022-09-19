@@ -192,7 +192,7 @@ export const KDSTable = forwardRef((props, ref) => {
           null,
           user.loginId
         )
-      ).then((res) => {
+      ); /* .then((res) => {
         //If all order items are food ready then whole order is food ready
         if (
           res[0].orderDetails.filter(
@@ -209,7 +209,7 @@ export const KDSTable = forwardRef((props, ref) => {
         } else {
           newSubStatus ? setNewSubStatus(false) : setNewSubStatus(true);
         }
-      });
+      }); */
     }
   };
 

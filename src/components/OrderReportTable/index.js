@@ -237,7 +237,7 @@ export const OrderReportTable = (props) => {
                   </div>
                   <div style={{ display: "inline-flex", columnGap: "10px" }}>
                     <Typography>
-                      Date: {renderNowDate(currentOrder.createdDate)}
+                      Date: {renderNowDate(currentOrder.orderReceivedDateTime)}
                     </Typography>
                     <Typography>
                       Time: {renderNowTime(currentOrder.createdDate)}
@@ -317,7 +317,10 @@ export const OrderReportTable = (props) => {
                   <Typography>
                     <Row>
                       <Col>Time: {renderNowTime(currentOrder.createdDate)}</Col>
-                      <Col>Date: {renderNowDate(currentOrder.createdDate)}</Col>
+                      <Col>
+                        Date:{" "}
+                        {renderNowDate(currentOrder.orderReceivedDateTime)}
+                      </Col>
                     </Row>
                   </Typography>
                 </div>
@@ -433,6 +436,10 @@ export const OrderReportTable = (props) => {
             value="paymentTxnReference"
           />
           <ExcelColumn label="createdDate" value="createdDate" />
+          <ExcelColumn
+            label="orderReceivedDateTime"
+            value="orderReceivedDateTime"
+          />
           <ExcelColumn label="orderSource" value="orderSource" />
           <ExcelColumn label="orderDeliveryType" value="orderDeliveryType" />
           <ExcelColumn label="paymentStatus" value="paymentStatus" />
@@ -540,9 +547,9 @@ export const OrderReportTable = (props) => {
                         : "N/A"}
                     </CusTableCell2>
                     <CusTableCell2 align="center">
-                      {new Date(row.createdDate).getFullYear()}-
-                      {new Date(row.createdDate).getMonth() + 1}-
-                      {new Date(row.createdDate).getDate()}
+                      {new Date(row.orderReceivedDateTime).getFullYear()}-
+                      {new Date(row.orderReceivedDateTime).getMonth() + 1}-
+                      {new Date(row.orderReceivedDateTime).getDate()}
                     </CusTableCell2>
                     <CusTableCell2 align="center">
                       {row.orderSource === "W" ? "Web" : row.orderSource}
