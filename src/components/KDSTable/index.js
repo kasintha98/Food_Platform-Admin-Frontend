@@ -192,7 +192,10 @@ export const KDSTable = forwardRef((props, ref) => {
           null,
           user.loginId
         )
-      ); /* .then((res) => {
+      ).then((res) => {
+        newSubStatus ? setNewSubStatus(false) : setNewSubStatus(true);
+      });
+      /* .then((res) => {
         //If all order items are food ready then whole order is food ready
         if (
           res[0].orderDetails.filter(
