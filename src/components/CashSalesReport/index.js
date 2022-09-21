@@ -96,9 +96,12 @@ export const CashSalesReport = (props) => {
     if (data) {
       let totalQtyN = 0;
       let totalPriceN = 0;
-      for (let i = 0; i < data.length; i++) {
-        totalQtyN = totalQtyN + data[i].totalQty;
-        totalPriceN = totalPriceN + data[i].totalPrice;
+
+      if (data) {
+        for (let i = 0; i < data.length; i++) {
+          totalQtyN = totalQtyN + data[i].totalQty;
+          totalPriceN = totalPriceN + data[i].totalPrice;
+        }
       }
 
       return (
@@ -114,9 +117,12 @@ export const CashSalesReport = (props) => {
   const renderPaymentTotal = (data) => {
     let totalQtyN = 0;
     let totalPriceN = 0;
-    for (let i = 0; i < data.length; i++) {
-      totalQtyN = totalQtyN + data[i].totalQty;
-      totalPriceN = totalPriceN + data[i].totalPrice;
+
+    if (data) {
+      for (let i = 0; i < data.length; i++) {
+        totalQtyN = totalQtyN + data[i].totalQty;
+        totalPriceN = totalPriceN + data[i].totalPrice;
+      }
     }
 
     return (
@@ -148,7 +154,7 @@ export const CashSalesReport = (props) => {
   };
 
   const getTotalByOrderSource = (type) => {
-    let found = allReports.salesSummeryByOrderSource.find(
+    /* let found = allReports.salesSummeryByOrderSource.find(
       (x) => x.orderSource === type
     );
 
@@ -156,38 +162,142 @@ export const CashSalesReport = (props) => {
       return found.orderValue;
     } else {
       return 0;
+    } */
+
+    let total = 0;
+
+    if (allReports.reportCashierSummery) {
+      for (let i = 0; i < allReports.reportCashierSummery.length; i++) {
+        if (
+          allReports.reportCashierSummery[i].details.ORDER_SOURCE &&
+          allReports.reportCashierSummery[i].details.ORDER_SOURCE.length > 0
+        ) {
+          for (
+            let j = 0;
+            j < allReports.reportCashierSummery[i].details.ORDER_SOURCE.length;
+            j++
+          ) {
+            if (
+              allReports.reportCashierSummery[i].details.ORDER_SOURCE[j]
+                .category === type
+            ) {
+              total =
+                total +
+                allReports.reportCashierSummery[i].details.ORDER_SOURCE[j]
+                  .totalPrice;
+            }
+          }
+        }
+      }
     }
+    return total;
   };
 
   const getTotalByPaymentMode = (type) => {
-    let found = allReports.salesSummeryByPaymentMode.find(
+    /*  let found = allReports.salesSummeryByPaymentMode.find(
       (x) => x.paymentMode === type
     );
+
+
 
     if (found) {
       return found.orderValue;
     } else {
       return 0;
+    } */
+
+    let total = 0;
+
+    if (allReports.reportCashierSummery) {
+      for (let i = 0; i < allReports.reportCashierSummery.length; i++) {
+        if (
+          allReports.reportCashierSummery[i].details.PAYMENT_MODE &&
+          allReports.reportCashierSummery[i].details.PAYMENT_MODE.length > 0
+        ) {
+          for (
+            let j = 0;
+            j < allReports.reportCashierSummery[i].details.PAYMENT_MODE.length;
+            j++
+          ) {
+            if (
+              allReports.reportCashierSummery[i].details.PAYMENT_MODE[j]
+                .category === type
+            ) {
+              total =
+                total +
+                allReports.reportCashierSummery[i].details.PAYMENT_MODE[j]
+                  .totalPrice;
+            }
+          }
+        }
+      }
     }
+    return total;
   };
 
   const orderSourceTotal = () => {
-    let total = 0;
+    /* let total = 0;
 
     for (let i = 0; i < allReports.salesSummeryByOrderSource.length; i++) {
       total = total + allReports.salesSummeryByOrderSource[i].orderValue;
     }
 
+    return total; */
+
+    let total = 0;
+
+    if (allReports.reportCashierSummery) {
+      for (let i = 0; i < allReports.reportCashierSummery.length; i++) {
+        if (
+          allReports.reportCashierSummery[i].details.ORDER_SOURCE &&
+          allReports.reportCashierSummery[i].details.ORDER_SOURCE.length > 0
+        ) {
+          for (
+            let j = 0;
+            j < allReports.reportCashierSummery[i].details.ORDER_SOURCE.length;
+            j++
+          ) {
+            total =
+              total +
+              allReports.reportCashierSummery[i].details.ORDER_SOURCE[j]
+                .totalPrice;
+          }
+        }
+      }
+    }
     return total;
   };
 
   const paymentModeTotal = () => {
-    let total = 0;
+    /* let total = 0;
 
     for (let i = 0; i < allReports.salesSummeryByPaymentMode.length; i++) {
       total = total + allReports.salesSummeryByPaymentMode[i].orderValue;
     }
 
+    return total; */
+
+    let total = 0;
+
+    if (allReports.reportCashierSummery) {
+      for (let i = 0; i < allReports.reportCashierSummery.length; i++) {
+        if (
+          allReports.reportCashierSummery[i].details.PAYMENT_MODE &&
+          allReports.reportCashierSummery[i].details.PAYMENT_MODE.length > 0
+        ) {
+          for (
+            let j = 0;
+            j < allReports.reportCashierSummery[i].details.PAYMENT_MODE.length;
+            j++
+          ) {
+            total =
+              total +
+              allReports.reportCashierSummery[i].details.PAYMENT_MODE[j]
+                .totalPrice;
+          }
+        }
+      }
+    }
     return total;
   };
 
@@ -359,15 +469,18 @@ export const CashSalesReport = (props) => {
                   </CusTableCell5>
                   {orderSourcesForCashierReport.map((sourceItem) => (
                     <CusTableCell5 align="center">
-                      {getTotalByOrderSource(sourceItem.configCriteriaValue)}
+                      {getTotalByOrderSource(sourceItem.configCriteriaDesc)}
                     </CusTableCell5>
                   ))}
                   <CusTableCell5 align="center">
                     {orderSourceTotal()}
                   </CusTableCell5>
                   {paymentModesForCashierReport.map((sourceItem) => (
-                    <CusTableCell5 align="center">
-                      {getTotalByPaymentMode(sourceItem.configCriteriaValue)}
+                    <CusTableCell5
+                      key={sourceItem.configCriteriaValue}
+                      align="center"
+                    >
+                      {getTotalByPaymentMode(sourceItem.configCriteriaDesc)}
                     </CusTableCell5>
                   ))}
                   <CusTableCell5 align="center">
