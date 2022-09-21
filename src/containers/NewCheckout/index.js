@@ -1626,7 +1626,7 @@ export default function NewCheckout(props) {
     var windows = window.open("", "", "height=600, width=600");
     windows.document.write("<html><body >");
     windows.document.write(
-      "<style> body{text-align: center; margin: 0; line-height: 0; font-size: 10px;} th{font-size: 11px;} td{font-size: 11px;} table{width: 100%} tbody{text-align: left;} th{text-align: left !important;} section{ line-height: 0.9 !important;}  @media print { body {  }} @page { size: Statement;margin: 0;}</style>"
+      "<style> body{text-align: center; margin: 0; line-height: 0; font-size: 10px;} th{font-size: 11px;} h5{font-size: 10px; line-height: 0.9 !important; font-weight: 400 !important;} td{font-size: 11px;} table{width: 100%} tbody{text-align: left;} th{text-align: left !important;} section{ line-height: 0.9 !important;}  @media print { body {  }} @page { size: Statement;margin: 0;}</style>"
     );
     windows.document.write(div);
     windows.document.write("</body></html>");
@@ -1708,28 +1708,28 @@ export default function NewCheckout(props) {
                         <hr></hr>
 
                         <div
-                          style={{ display: "inline-flex", columnGap: "10px" }}
+                          style={{ display: "inline-flex", columnGap: "5px" }}
                         >
-                          <Typography sx={{ fontWeight: "600" }}>
+                          <h5 sx={{ fontWeight: "600" }}>
                             Cashier:{" "}
                             {orderResp
                               ? orderResp.createdBy.toUpperCase()
                               : null}
-                          </Typography>
-                          <Typography sx={{ fontWeight: "600" }}>
+                          </h5>
+                          <h5 sx={{ fontWeight: "600" }}>
                             Table No:{" "}
                             {orderResp && orderResp.storeTableId
                               ? orderResp.storeTableId
                               : "N/A"}
-                          </Typography>
-                          <Typography sx={{ fontWeight: "600" }}>
+                          </h5>
+                          <h5 sx={{ fontWeight: "600" }}>
                             <span>
                               {orderResp ? orderResp.orderDeliveryType : null}
                             </span>
                             <span>
                               [{orderResp ? orderResp.paymentStatus : null}]
                             </span>
-                          </Typography>
+                          </h5>
                         </div>
                         <br></br>
                         <div
@@ -1759,12 +1759,12 @@ export default function NewCheckout(props) {
                             <span>{orderResp?.mobileNumber}</span>
                           )}
                         </Typography>
-                        <Typography sx={{ color: "black" }}>
+                        <h5 sx={{ color: "black" }}>
                           Address:{" "}
                           {orderResp?.address ? (
                             <span>{orderResp?.address}</span>
                           ) : null}
-                        </Typography>
+                        </h5>
                       </div>
                       <hr></hr>
 

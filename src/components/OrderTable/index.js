@@ -245,7 +245,7 @@ export const OrderTable = (props) => {
     var windows = window.open("", "", "height=600, width=600");
     windows.document.write("<html><body >");
     windows.document.write(
-      "<style> body{text-align: center; margin: 0; line-height: 0; font-size: 10px;} th{font-size: 11px;} td{font-size: 11px;} table{width: 100%} tbody{text-align: left;} th{text-align: left !important;} section{ line-height: 0.9 !important;}  @media print { body {  }} @page { size: Statement;margin: 0;}</style>"
+      "<style> body{text-align: center; margin: 0; line-height: 0; font-size: 10px;} th{font-size: 11px;} h5{font-size: 10px; line-height: 0.9 !important; font-weight: 400 !important;} td{font-size: 11px;} table{width: 100%} tbody{text-align: left;} th{text-align: left !important;} section{ line-height: 0.9 !important;}  @media print { body {  }} @page { size: Statement;margin: 0;}</style>"
     );
     windows.document.write(div);
     windows.document.write("</body></html>");
@@ -315,21 +315,21 @@ export const OrderTable = (props) => {
                         <hr></hr>
 
                         <div
-                          style={{ display: "inline-flex", columnGap: "10px" }}
+                          style={{ display: "inline-flex", columnGap: "5px" }}
                         >
-                          <Typography sx={{ fontWeight: "600" }}>
+                          <h5 sx={{ fontWeight: "600" }}>
                             Cashier: {currentOrder.createdBy.toUpperCase()}
-                          </Typography>
-                          <Typography sx={{ fontWeight: "600" }}>
+                          </h5>
+                          <h5 sx={{ fontWeight: "600" }}>
                             Table No:{" "}
                             {currentOrder && currentOrder.storeTableId
                               ? currentOrder.storeTableId
                               : "N/A"}
-                          </Typography>
-                          <Typography sx={{ fontWeight: "600" }}>
+                          </h5>
+                          <h5 sx={{ fontWeight: "600" }}>
                             <span>{currentOrder.orderDeliveryType}</span>
                             <span> [{currentOrder.paymentStatus}]</span>
-                          </Typography>
+                          </h5>
                         </div>
                       </div>
                       <div
@@ -352,7 +352,7 @@ export const OrderTable = (props) => {
                         <Typography>
                           Mob No: {currentOrder.mobileNumber}
                         </Typography>
-                        <Typography>Address: {currentOrder.address}</Typography>
+                        <h5>Address: {currentOrder.address}</h5>
                       </div>
                       <hr></hr>
 
