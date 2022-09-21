@@ -271,7 +271,8 @@ export const CashSalesReport = (props) => {
                     </CusTableCell2>
                     {orderSourcesForCashierReport.map((sourceItem) => (
                       <CusTableCell2 align="center">
-                        {row.details.ORDER_SOURCE.find(
+                        {row.details.ORDER_SOURCE &&
+                        row.details.ORDER_SOURCE.find(
                           (x) => x.category === sourceItem.configCriteriaDesc
                         ) ? (
                           <>
@@ -311,7 +312,8 @@ export const CashSalesReport = (props) => {
 
                     {paymentModesForCashierReport.map((sourceItem) => (
                       <CusTableCell2 align="center">
-                        {row.details.PAYMENT_MODE.find(
+                        {row.details.PAYMENT_MODE &&
+                        row.details.PAYMENT_MODE.find(
                           (x) => x.category === sourceItem.configCriteriaDesc
                         ) ? (
                           <>
