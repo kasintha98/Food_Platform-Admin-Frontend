@@ -2,7 +2,7 @@ import axios from "../helpers/axios";
 import { authConstants } from "./constants";
 import { userConstants } from "./constants";
 import { toast } from "react-toastify";
-import { getModulesForUser } from "./user.actions";
+import { getModulesForUser, getBusinessDate } from "./user.actions";
 
 //action for login
 export const login = (user) => {
@@ -123,6 +123,8 @@ export const newLogin = (user) => {
             );
 
             dispatch(getVersion());
+
+            dispatch(getBusinessDate(userObj.restaurantId, userObj.storeId));
             //show success notification
             toast.success("Login Success!");
             return res.data;
