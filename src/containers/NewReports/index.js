@@ -104,7 +104,7 @@ export const NewReports = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedStore, setSelectedStore] = useState("ALL");
   const [selectedReport, setSelectedReport] = useState(
-    reportTypes[0] ? reportTypes[0].configCriteriaValue : null
+    /* reportTypes[0] ? reportTypes[0].configCriteriaValue : null */ ""
   );
   const [selectedReportObj, setSelectedReportObj] = useState(
     reportTypes[0] ? reportTypes[0] : null
@@ -114,7 +114,7 @@ export const NewReports = () => {
     storeId: null,
   });
 
-  const dispatch = useDispatch();
+  //const dispatch = useDispatch();
 
   /* useEffect(() => {
     dispatch(
@@ -253,7 +253,11 @@ export const NewReports = () => {
                 <Col className="col-8" style={{ display: "flex" }}>
                   <FormControl fullWidth>
                     <InputLabel
-                      sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
+                      sx={{
+                        fontSize: "0.75rem",
+                        lineHeight: "1rem",
+                        top: "-4px",
+                      }}
                       id="demo-simple-select-label"
                     >
                       Please select the report
@@ -372,6 +376,14 @@ export const NewReports = () => {
               restaurantId={selectedStoreObj.restaurantId}
               selectedReport={selectedReport}
             ></SalesSummeryByPaymentMode>
+          )}
+
+          {!selectedReport && (
+            <div>
+              <Alert sx={{ marginTop: "50px" }} severity="warning">
+                Please select a report!
+              </Alert>
+            </div>
           )}
         </div>
       </div>
