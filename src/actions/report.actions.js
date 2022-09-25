@@ -29,6 +29,8 @@ export const getAllReports = (
           type: reportConstants.GET_ALL_REPORTS_SUCCESS,
           payload: res.data,
         });
+
+        return res.data;
       } else {
         dispatch({
           type: reportConstants.GET_ALL_REPORTS_FAILURE,
@@ -117,6 +119,147 @@ export const getReportByType = (
       console.log(error);
       dispatch({
         type: reportConstants.GET_REPORT_BY_TYPE_FAILURE,
+        payload: { error: "Error fetching data!" },
+      });
+    }
+  };
+};
+
+export const getSalesSummeryByDateListReports = (
+  restaurantId,
+  storeId,
+  fromDate,
+  toDate
+) => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: reportConstants.GET_REPORT_SALES_SUMMARY_BY_DATE_LIST_REQUEST,
+      });
+
+      const reqBody = {
+        restaurantId,
+        storeId,
+        fromDate,
+        toDate,
+        reportName: "SALES_SUMMARY_BY_DATE_LIST",
+      };
+
+      console.log(reqBody);
+
+      const res = await axios.post(`/getReports`, reqBody);
+
+      if (res.status === 200) {
+        dispatch({
+          type: reportConstants.GET_REPORT_SALES_SUMMARY_BY_DATE_LIST_SUCCESS,
+          payload: res.data.salesSummeryByDateList,
+        });
+
+        return res.data.salesSummeryByDateList;
+      } else {
+        dispatch({
+          type: reportConstants.GET_REPORT_SALES_SUMMARY_BY_DATE_LIST_FAILURE,
+          payload: { error: "Error fetching data!" },
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch({
+        type: reportConstants.GET_REPORT_SALES_SUMMARY_BY_DATE_LIST_FAILURE,
+        payload: { error: "Error fetching data!" },
+      });
+    }
+  };
+};
+
+export const getSalesSummeryByOrderSourceReports = (
+  restaurantId,
+  storeId,
+  fromDate,
+  toDate
+) => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: reportConstants.GET_REPORT_SALES_SUMMARY_BY_ORDER_SOURCE_REQUEST,
+      });
+
+      const reqBody = {
+        restaurantId,
+        storeId,
+        fromDate,
+        toDate,
+        reportName: "SALES_SUMMARY_BY_ORDER_SOURCE",
+      };
+
+      console.log(reqBody);
+
+      const res = await axios.post(`/getReports`, reqBody);
+
+      if (res.status === 200) {
+        dispatch({
+          type: reportConstants.GET_REPORT_SALES_SUMMARY_BY_ORDER_SOURCE_SUCCESS,
+          payload: res.data.salesSummeryByOrderSource,
+        });
+
+        return res.data.salesSummeryByOrderSource;
+      } else {
+        dispatch({
+          type: reportConstants.GET_REPORT_SALES_SUMMARY_BY_ORDER_SOURCE_FAILURE,
+          payload: { error: "Error fetching data!" },
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch({
+        type: reportConstants.GET_REPORT_SALES_SUMMARY_BY_ORDER_SOURCE_FAILURE,
+        payload: { error: "Error fetching data!" },
+      });
+    }
+  };
+};
+
+export const getSalesSummeryByPaymentModeReports = (
+  restaurantId,
+  storeId,
+  fromDate,
+  toDate
+) => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: reportConstants.GET_REPORT_SALES_SUMMARY_BY_PAYMENT_REQUEST,
+      });
+
+      const reqBody = {
+        restaurantId,
+        storeId,
+        fromDate,
+        toDate,
+        reportName: "SALES_SUMMARY_BY_PAYMENT_MODE",
+      };
+
+      console.log(reqBody);
+
+      const res = await axios.post(`/getReports`, reqBody);
+
+      if (res.status === 200) {
+        dispatch({
+          type: reportConstants.GET_REPORT_SALES_SUMMARY_BY_PAYMENT_SUCCESS,
+          payload: res.data.salesSummeryByPaymentMode,
+        });
+
+        return res.data.salesSummeryByPaymentMode;
+      } else {
+        dispatch({
+          type: reportConstants.GET_REPORT_SALES_SUMMARY_BY_PAYMENT_FAILURE,
+          payload: { error: "Error fetching data!" },
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch({
+        type: reportConstants.GET_REPORT_SALES_SUMMARY_BY_PAYMENT_FAILURE,
         payload: { error: "Error fetching data!" },
       });
     }

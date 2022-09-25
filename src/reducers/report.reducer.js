@@ -6,6 +6,9 @@ const initState = {
   error: null,
   reportTypes: [],
   reportByType: null,
+  salesSummeryByDateList: [],
+  salesSummeryByOrderSource: [],
+  salesSummeryByPaymentMode: [],
 };
 
 export default (state = initState, action) => {
@@ -64,6 +67,60 @@ export default (state = initState, action) => {
       state = {
         ...state,
         reportByType: action.payload.error,
+      };
+      break;
+
+    case reportConstants.GET_REPORT_SALES_SUMMARY_BY_DATE_LIST_REQUEST:
+      state = {
+        ...state,
+      };
+      break;
+    case reportConstants.GET_REPORT_SALES_SUMMARY_BY_DATE_LIST_SUCCESS:
+      state = {
+        ...state,
+        salesSummeryByDateList: action.payload,
+      };
+      break;
+    case reportConstants.GET_REPORT_SALES_SUMMARY_BY_DATE_LIST_FAILURE:
+      state = {
+        ...state,
+        salesSummeryByDateList: action.payload.error,
+      };
+      break;
+
+    case reportConstants.GET_REPORT_SALES_SUMMARY_BY_ORDER_SOURCE_REQUEST:
+      state = {
+        ...state,
+      };
+      break;
+    case reportConstants.GET_REPORT_SALES_SUMMARY_BY_ORDER_SOURCE_SUCCESS:
+      state = {
+        ...state,
+        salesSummeryByOrderSource: action.payload,
+      };
+      break;
+    case reportConstants.GET_REPORT_SALES_SUMMARY_BY_ORDER_SOURCE_FAILURE:
+      state = {
+        ...state,
+        salesSummeryByOrderSource: action.payload.error,
+      };
+      break;
+
+    case reportConstants.GET_REPORT_SALES_SUMMARY_BY_PAYMENT_MODE_REQUEST:
+      state = {
+        ...state,
+      };
+      break;
+    case reportConstants.GET_REPORT_SALES_SUMMARY_BY_PAYMENT_MODE_SUCCESS:
+      state = {
+        ...state,
+        salesSummeryByPaymentMode: action.payload,
+      };
+      break;
+    case reportConstants.GET_REPORT_SALES_SUMMARY_BY_PAYMENT_MODE_FAILURE:
+      state = {
+        ...state,
+        salesSummeryByPaymentMode: action.payload.error,
       };
       break;
   }

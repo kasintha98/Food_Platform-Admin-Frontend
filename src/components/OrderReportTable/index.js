@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getCustomerOrders } from "../../actions";
+import { getCustomerOrders, getAllReports } from "../../actions";
 import styled from "@emotion/styled";
 import {
   TableContainer,
@@ -77,7 +77,28 @@ export const OrderReportTable = (props) => {
         }-${props.startDate.getDate()}`
       )
     );
-  }, [props.restaurantId, props.storeId, props.endDate, props.startDate]);
+
+    //replace getCustomerOrders data with getAllReports data
+    dispatch(
+      getAllReports(
+        props.restaurantId ? props.restaurantId : "ALL",
+        props.storeId ? props.storeId : "ALL",
+        `${props.startDate.getFullYear()}-${
+          props.startDate.getMonth() + 1
+        }-${props.startDate.getDate()}`,
+        `${props.endDate.getFullYear()}-${
+          props.endDate.getMonth() + 1
+        }-${props.endDate.getDate()}`,
+        props.selectedReport
+      )
+    );
+  }, [
+    props.restaurantId,
+    props.storeId,
+    props.endDate,
+    props.startDate,
+    props.selectedReport,
+  ]);
 
   useEffect(() => {
     if (refH.current) {
