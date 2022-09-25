@@ -84,7 +84,7 @@ export default (state = initState, action) => {
     case reportConstants.GET_REPORT_SALES_SUMMARY_BY_DATE_LIST_FAILURE:
       state = {
         ...state,
-        salesSummeryByDateList: action.payload.error,
+        salesSummeryByDateList: [],
       };
       break;
 
@@ -102,7 +102,7 @@ export default (state = initState, action) => {
     case reportConstants.GET_REPORT_SALES_SUMMARY_BY_ORDER_SOURCE_FAILURE:
       state = {
         ...state,
-        salesSummeryByOrderSource: action.payload.error,
+        salesSummeryByOrderSource: [],
       };
       break;
 
@@ -120,7 +120,7 @@ export default (state = initState, action) => {
     case reportConstants.GET_REPORT_SALES_SUMMARY_BY_PAYMENT_MODE_FAILURE:
       state = {
         ...state,
-        salesSummeryByPaymentMode: action.payload.error,
+        salesSummeryByPaymentMode: [],
       };
       break;
   }
