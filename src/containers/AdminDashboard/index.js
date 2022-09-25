@@ -104,7 +104,8 @@ export const AdminDashboard = () => {
           }-${dateState[0].startDate.getDate()}`,
           `${dateState[0].endDate.getFullYear()}-${
             dateState[0].endDate.getMonth() + 1
-          }-${dateState[0].endDate.getDate()}`
+          }-${dateState[0].endDate.getDate()}`,
+          "ALL"
         )
       );
     }
@@ -148,8 +149,13 @@ export const AdminDashboard = () => {
       getAllReports(
         store.restaurantId,
         store.storeId,
-        dateState[0].startDate.toISOString().slice(0, 10),
-        dateState[0].endDate.toISOString().slice(0, 10)
+        `${dateState[0].startDate.getFullYear()}-${
+          dateState[0].startDate.getMonth() + 1
+        }-${dateState[0].startDate.getDate()}`,
+        `${dateState[0].endDate.getFullYear()}-${
+          dateState[0].endDate.getMonth() + 1
+        }-${dateState[0].endDate.getDate()}`,
+        "ALL"
       )
     );
   };

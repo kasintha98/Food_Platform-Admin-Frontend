@@ -75,7 +75,8 @@ export const CashSalesReport = (props) => {
         }-${props.startDate.getDate()}`,
         `${props.endDate.getFullYear()}-${
           props.endDate.getMonth() + 1
-        }-${props.endDate.getDate()}`
+        }-${props.endDate.getDate()}`,
+        props.selectedReport
       )
     );
 
@@ -90,7 +91,13 @@ export const CashSalesReport = (props) => {
         props.storeId ? props.storeId : "ALL"
       )
     );
-  }, [props.restaurantId, props.storeId, props.startDate, props.endDate]);
+  }, [
+    props.restaurantId,
+    props.storeId,
+    props.startDate,
+    props.endDate,
+    props.selectedReport,
+  ]);
 
   const renderSourceTotal = (data) => {
     if (data) {

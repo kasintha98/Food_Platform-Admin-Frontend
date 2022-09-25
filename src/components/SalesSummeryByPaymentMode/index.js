@@ -51,10 +51,17 @@ export const SalesSummeryByPaymentMode = (props) => {
         }-${props.startDate.getDate()}`,
         `${props.endDate.getFullYear()}-${
           props.endDate.getMonth() + 1
-        }-${props.endDate.getDate()}`
+        }-${props.endDate.getDate()}`,
+        props.selectedReport
       )
     );
-  }, [props.restaurantId, props.storeId, props.startDate, props.endDate]);
+  }, [
+    props.restaurantId,
+    props.storeId,
+    props.startDate,
+    props.endDate,
+    props.selectedReport,
+  ]);
 
   const getItemsSoldTotal = () => {
     if (

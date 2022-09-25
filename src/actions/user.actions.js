@@ -771,7 +771,9 @@ export const performEOD = (restaurantId, storeId) => {
           type: userConstants.PERFORM_EOD_SUCCESS,
           payload: res.data,
         });
-        toast.success("End Of Day Performed!");
+        toast.success(
+          "End Of Day Performed! " + res.data ? res.data.result : ""
+        );
         return res.data;
       } else {
         dispatch({

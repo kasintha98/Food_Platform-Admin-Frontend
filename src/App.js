@@ -9,6 +9,7 @@ import {
   getBusinessDate,
   getPaymentModes,
   getOrderSourceConfigDetails,
+  getReportTypes,
 } from "./actions";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -75,6 +76,7 @@ function App() {
       dispatch(getVersion());
       dispatch(getPaymentModes());
       dispatch(getOrderSourceConfigDetails(user.restaurantId, user.storeId));
+      dispatch(getReportTypes(user.restaurantId));
     }
   }, []);
 

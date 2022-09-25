@@ -4,6 +4,8 @@ const initState = {
   allReports: [],
   loading: false,
   error: null,
+  reportTypes: [],
+  reportByType: null,
 };
 
 export default (state = initState, action) => {
@@ -26,6 +28,42 @@ export default (state = initState, action) => {
         ...state,
         allReports: action.payload.error,
         loading: false,
+      };
+      break;
+
+    case reportConstants.GET_REPORT_TYPES_REQUEST:
+      state = {
+        ...state,
+      };
+      break;
+    case reportConstants.GET_REPORT_TYPES_SUCCESS:
+      state = {
+        ...state,
+        reportTypes: action.payload,
+      };
+      break;
+    case reportConstants.GET_REPORT_TYPES_FAILURE:
+      state = {
+        ...state,
+        reportTypes: action.payload.error,
+      };
+      break;
+
+    case reportConstants.GET_REPORT_BY_TYPE_REQUEST:
+      state = {
+        ...state,
+      };
+      break;
+    case reportConstants.GET_REPORT_BY_TYPE_SUCCESS:
+      state = {
+        ...state,
+        reportByType: action.payload,
+      };
+      break;
+    case reportConstants.GET_REPORT_BY_TYPE_FAILURE:
+      state = {
+        ...state,
+        reportByType: action.payload.error,
       };
       break;
   }

@@ -72,20 +72,18 @@ const NumberDiv = styled.div`
   padding: 10px;
 `;
 
-const reportTypes = [
+/* const reportTypes = [
   "Order Report",
   "Sales By Dish Item",
   "Menu Report",
   "Cash Sales Report",
-  /* "Cashier Summary", */
   "Sales Summery By Date List",
-  /* "Sales Summery By Dish Type", */
   "Sales Summery By Order Source",
   "Sales Summery By Payment Mode",
-];
+]; */
 
 export const NewReports = () => {
-  const allReports = useSelector((state) => state.report.allReports);
+  const reportTypes = useSelector((state) => state.report.reportTypes);
   const businessDateAll = useSelector((state) => state.user.businessDate);
   const stores = useSelector((state) => state.store.stores);
   const [dateState, setDateState] = useState([
@@ -105,7 +103,12 @@ export const NewReports = () => {
   ]);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedStore, setSelectedStore] = useState("ALL");
-  const [selectedReport, setSelectedReport] = useState("Order Report");
+  const [selectedReport, setSelectedReport] = useState(
+    reportTypes[0] ? reportTypes[0].configCriteriaValue : null
+  );
+  const [selectedReportObj, setSelectedReportObj] = useState(
+    reportTypes[0] ? reportTypes[0] : null
+  );
   const [selectedStoreObj, setSelectedStoreObj] = useState({
     restaurantId: null,
     storeId: null,
@@ -139,7 +142,10 @@ export const NewReports = () => {
 
   const handleChangeReport = (event) => {
     setSelectedReport(event.target.value);
-    console.log(event.target.value);
+  };
+
+  const handleReportTyeObj = (type) => {
+    setSelectedReportObj(type);
   };
 
   return (
@@ -261,8 +267,13 @@ export const NewReports = () => {
                       onChange={handleChangeReport}
                     >
                       {reportTypes.map((type) => (
-                        <CusMenuItem value={type}>
-                          <span>{type}</span>
+                        <CusMenuItem
+                          value={type.configCriteriaValue}
+                          onClick={() => {
+                            handleReportTyeObj(type);
+                          }}
+                        >
+                          <span>{type.configCriteriaDesc}</span>
                         </CusMenuItem>
                       ))}
                     </CusSelect>
@@ -274,83 +285,92 @@ export const NewReports = () => {
         </div>
 
         <div className="mt-3">
-          {selectedReport === "Order Report" && (
+          {selectedReport === "ORDER_REPORT" && (
             <OrderReportTable
               startDate={dateState[0].startDate}
               endDate={dateState[0].endDate}
               storeId={selectedStoreObj.storeId}
               restaurantId={selectedStoreObj.restaurantId}
+              selectedReport={selectedReport}
             ></OrderReportTable>
           )}
-          {selectedReport === "Sales By Dish Item" && (
+          {selectedReport === "SALES_BY_DISH_ITEM" && (
             <SalesByDishReportTable
               startDate={dateState[0].startDate}
               endDate={dateState[0].endDate}
               storeId={selectedStoreObj.storeId}
               restaurantId={selectedStoreObj.restaurantId}
+              selectedReport={selectedReport}
             ></SalesByDishReportTable>
           )}
 
-          {selectedReport === "Menu Report" && (
+          {selectedReport === "MENU_REPORT" && (
             <MenuReport
               startDate={dateState[0].startDate}
               endDate={dateState[0].endDate}
               storeId={selectedStoreObj.storeId}
               restaurantId={selectedStoreObj.restaurantId}
+              selectedReport={selectedReport}
             ></MenuReport>
           )}
 
-          {selectedReport === "Cash Sales Report" && (
+          {selectedReport === "CASH_SALES_REPORT" && (
             <CashSalesReport
               startDate={dateState[0].startDate}
               endDate={dateState[0].endDate}
               storeId={selectedStoreObj.storeId}
               restaurantId={selectedStoreObj.restaurantId}
+              selectedReport={selectedReport}
             ></CashSalesReport>
           )}
 
-          {selectedReport === "Cashier Summary" && (
+          {selectedReport === "CASHIER_SUMMARY" && (
             <CashierSummaryReport
               startDate={dateState[0].startDate}
               endDate={dateState[0].endDate}
               storeId={selectedStoreObj.storeId}
               restaurantId={selectedStoreObj.restaurantId}
+              selectedReport={selectedReport}
             ></CashierSummaryReport>
           )}
 
-          {selectedReport === "Sales Summery By Date List" && (
+          {selectedReport === "SALES_SUMMARY_BY_DATE_LIST" && (
             <SalesSummeryByDateListReport
               startDate={dateState[0].startDate}
               endDate={dateState[0].endDate}
               storeId={selectedStoreObj.storeId}
               restaurantId={selectedStoreObj.restaurantId}
+              selectedReport={selectedReport}
             ></SalesSummeryByDateListReport>
           )}
 
-          {selectedReport === "Sales Summery By Dish Type" && (
+          {selectedReport === "SALES_BY_DISH_ITEM" && (
             <SalesSummeryByDishType
               startDate={dateState[0].startDate}
               endDate={dateState[0].endDate}
               storeId={selectedStoreObj.storeId}
               restaurantId={selectedStoreObj.restaurantId}
+              selectedReport={selectedReport}
             ></SalesSummeryByDishType>
           )}
 
-          {selectedReport === "Sales Summery By Order Source" && (
+          {selectedReport === "SALES_SUMMARY_BY_ORDER_SOURCE" && (
             <SalesSummeryByOrderSourceReport
               startDate={dateState[0].startDate}
               endDate={dateState[0].endDate}
               storeId={selectedStoreObj.storeId}
               restaurantId={selectedStoreObj.restaurantId}
+              selectedReport={selectedReport}
             ></SalesSummeryByOrderSourceReport>
           )}
 
-          {selectedReport === "Sales Summery By Payment Mode" && (
+          {selectedReport === "SALES_SUMMARY_BY_PAYMENT_MODE" && (
             <SalesSummeryByPaymentMode
               startDate={dateState[0].startDate}
               endDate={dateState[0].endDate}
               storeId={selectedStoreObj.storeId}
               restaurantId={selectedStoreObj.restaurantId}
+              selectedReport={selectedReport}
             ></SalesSummeryByPaymentMode>
           )}
         </div>
