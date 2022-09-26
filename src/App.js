@@ -61,6 +61,7 @@ function App() {
     }
     dispatch(updateCart());
     dispatch(getAllStores());
+    dispatch(getPaymentModes());
 
     if (localStorage.getItem("user")) {
       const user = JSON.parse(localStorage.getItem("user"));
@@ -74,7 +75,6 @@ function App() {
     if (localStorage.getItem("user")) {
       const user = JSON.parse(localStorage.getItem("user"));
       dispatch(getVersion());
-      dispatch(getPaymentModes());
       dispatch(getOrderSourceConfigDetails(user.restaurantId, user.storeId));
       dispatch(getReportTypes(user.restaurantId));
     }

@@ -15,6 +15,7 @@ const initState = {
     username: "",
     role: "",
     picture: "",
+    loginId: "",
   },
   authenticate: false,
   authenticating: false,
