@@ -46,7 +46,8 @@ const CusTableCell5 = styled(TableCell)`
 `;
 
 export const OrderReportTable = (props) => {
-  const orders = useSelector((state) => state.order.orders);
+  //const orders = useSelector((state) => state.order.orders);
+  const allReports = useSelector((state) => state.report.allReports);
   const stores = useSelector((state) => state.store.stores);
   const user = useSelector((state) => state.auth.user);
   const loading = useSelector((state) => state.order.loading);
@@ -59,25 +60,6 @@ export const OrderReportTable = (props) => {
   const refH = useRef(null);
 
   useEffect(() => {
-    //const today = new Date(businessDateAll && businessDateAll.businessDate);
-    dispatch(
-      getCustomerOrders(
-        props.restaurantId,
-        props.storeId,
-        null,
-        `${props.endDate.getFullYear()}-${
-          props.endDate.getMonth() + 1
-        }-${props.endDate.getDate()}`,
-        null,
-        null,
-        null,
-        null,
-        `${props.startDate.getFullYear()}-${
-          props.startDate.getMonth() + 1
-        }-${props.startDate.getDate()}`
-      )
-    );
-
     //replace getCustomerOrders data with getAllReports data
     dispatch(
       getAllReports(
@@ -397,10 +379,10 @@ export const OrderReportTable = (props) => {
   };
 
   const getTotalAmount = () => {
-    if (orders && orders.length > 0) {
+    if (allReports.reportOrderData && allReports.reportOrderData.length > 0) {
       let total = 0;
-      for (let i = 0; i < orders.length; i++) {
-        total = total + orders[i].overallPriceWithTax;
+      for (let i = 0; i < allReports.reportOrderData.length; i++) {
+        total = total + allReports.reportOrderData[i].overallPriceWithTax;
       }
       return total;
     } else {
@@ -409,10 +391,10 @@ export const OrderReportTable = (props) => {
   };
 
   const getCGST = () => {
-    if (orders && orders.length > 0) {
+    if (allReports.reportOrderData && allReports.reportOrderData.length > 0) {
       let total = 0;
-      for (let i = 0; i < orders.length; i++) {
-        total = total + orders[i].cgstCalculatedValue;
+      for (let i = 0; i < allReports.reportOrderData.length; i++) {
+        total = total + allReports.reportOrderData[i].cgstCalculatedValue;
       }
       return total.toFixed(2);
     } else {
@@ -421,10 +403,10 @@ export const OrderReportTable = (props) => {
   };
 
   const getSGST = () => {
-    if (orders && orders.length > 0) {
+    if (allReports.reportOrderData && allReports.reportOrderData.length > 0) {
       let total = 0;
-      for (let i = 0; i < orders.length; i++) {
-        total = total + orders[i].sgstCalculatedValue;
+      for (let i = 0; i < allReports.reportOrderData.length; i++) {
+        total = total + allReports.reportOrderData[i].sgstCalculatedValue;
       }
       return total.toFixed(2);
     } else {
@@ -433,10 +415,10 @@ export const OrderReportTable = (props) => {
   };
 
   const getDelCharges = () => {
-    if (orders && orders.length > 0) {
+    if (allReports.reportOrderData && allReports.reportOrderData.length > 0) {
       let total = 0;
-      for (let i = 0; i < orders.length; i++) {
-        total = total + orders[i].deliveryCharges;
+      for (let i = 0; i < allReports.reportOrderData.length; i++) {
+        total = total + allReports.reportOrderData[i].deliveryCharges;
       }
       return total;
     } else {
@@ -447,7 +429,7 @@ export const OrderReportTable = (props) => {
   return (
     <div>
       <ExcelFile element={<Button variant="text">Download Full Report</Button>}>
-        <ExcelSheet data={orders} name="Orders">
+        <ExcelSheet data={allReports.reportOrderData} name="Orders">
           <ExcelColumn label="restaurantId" value="restaurantId" />
           <ExcelColumn label="orderStatus" value="orderStatus" />
           <ExcelColumn label="orderId" value="orderId" />
@@ -536,9 +518,10 @@ export const OrderReportTable = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {orders && orders.length > 0 ? (
+            {allReports.reportOrderData &&
+            allReports.reportOrderData.length > 0 ? (
               <>
-                {orders.map((row, index) => (
+                {allReports.reportOrderData.map((row, index) => (
                   <TableRow key={row.orderId}>
                     <CusTableCell2 align="center">{index + 1}</CusTableCell2>
                     <CusTableCell2 align="center">
