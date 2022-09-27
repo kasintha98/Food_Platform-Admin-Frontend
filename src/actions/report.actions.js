@@ -149,13 +149,13 @@ export const getSalesSummeryByDateListReports = (
 
       const res = await axios.post(`/getReports`, reqBody);
 
-      if (res.status === 200) {
+      if (res.status === 200 && res.data) {
         dispatch({
           type: reportConstants.GET_REPORT_SALES_SUMMARY_BY_DATE_LIST_SUCCESS,
-          payload: res.data.salesSummeryByDateList,
+          payload: res.data,
         });
 
-        return res.data.salesSummeryByDateList;
+        return res.data;
       } else {
         dispatch({
           type: reportConstants.GET_REPORT_SALES_SUMMARY_BY_DATE_LIST_FAILURE,
@@ -199,10 +199,10 @@ export const getSalesSummeryByOrderSourceReports = (
       if (res.status === 200) {
         dispatch({
           type: reportConstants.GET_REPORT_SALES_SUMMARY_BY_ORDER_SOURCE_SUCCESS,
-          payload: res.data.salesSummeryByOrderSource,
+          payload: res.data,
         });
 
-        return res.data.salesSummeryByOrderSource;
+        return res.data;
       } else {
         dispatch({
           type: reportConstants.GET_REPORT_SALES_SUMMARY_BY_ORDER_SOURCE_FAILURE,
@@ -228,7 +228,7 @@ export const getSalesSummeryByPaymentModeReports = (
   return async (dispatch) => {
     try {
       dispatch({
-        type: reportConstants.GET_REPORT_SALES_SUMMARY_BY_PAYMENT_REQUEST,
+        type: reportConstants.GET_REPORT_SALES_SUMMARY_BY_PAYMENT_MODE_REQUEST,
       });
 
       const reqBody = {
@@ -245,21 +245,21 @@ export const getSalesSummeryByPaymentModeReports = (
 
       if (res.status === 200) {
         dispatch({
-          type: reportConstants.GET_REPORT_SALES_SUMMARY_BY_PAYMENT_SUCCESS,
+          type: reportConstants.GET_REPORT_SALES_SUMMARY_BY_PAYMENT_MODE_SUCCESS,
           payload: res.data.salesSummeryByPaymentMode,
         });
 
         return res.data.salesSummeryByPaymentMode;
       } else {
         dispatch({
-          type: reportConstants.GET_REPORT_SALES_SUMMARY_BY_PAYMENT_FAILURE,
+          type: reportConstants.GET_REPORT_SALES_SUMMARY_BY_PAYMENT_MODE_FAILURE,
           payload: { error: "Error fetching data!" },
         });
       }
     } catch (error) {
       console.log(error);
       dispatch({
-        type: reportConstants.GET_REPORT_SALES_SUMMARY_BY_PAYMENT_FAILURE,
+        type: reportConstants.GET_REPORT_SALES_SUMMARY_BY_PAYMENT_MODE_FAILURE,
         payload: { error: "Error fetching data!" },
       });
     }

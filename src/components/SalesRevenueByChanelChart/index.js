@@ -27,7 +27,10 @@ ChartJS.register(
 );
 
 export const SalesRevenueByChanelChart = () => {
-  const allReports = useSelector((state) => state.report.allReports);
+  //const allReports = useSelector((state) => state.report.allReports);
+  const salesSummeryByOrderSource = useSelector(
+    (state) => state.report.salesSummeryByOrderSource
+  );
   const orderSources = useSelector((state) => state.user.orderSources);
   /* const [webOrders, setWebOrders] = useState([]);
   const [webDelOrders, setWebDelOrders] = useState([]);
@@ -241,7 +244,7 @@ export const SalesRevenueByChanelChart = () => {
     let allData = [];
 
     for (let i = 0; i < orderSources.length; i++) {
-      let foundMatch = allReports.salesSummeryByOrderSource
+      let foundMatch = salesSummeryByOrderSource.salesSummeryByOrderSource
         .filter(function (el) {
           return el.orderSource === orderSources[i].configCriteriaValue;
         })
@@ -275,7 +278,7 @@ export const SalesRevenueByChanelChart = () => {
 
   const getOrderNum = (lable) => {
     if (lable) {
-      let found = allReports.salesSummeryByOrderSource.find(
+      let found = salesSummeryByOrderSource.salesSummeryByOrderSource.find(
         (x) => x.orderSourceDescription === lable
       );
 
@@ -311,7 +314,7 @@ export const SalesRevenueByChanelChart = () => {
           element={<Button variant="text">Download Full Report</Button>}
         >
           <ExcelSheet
-            data={allReports.salesSummeryByOrderSource}
+            data={salesSummeryByOrderSource.salesSummeryByOrderSource}
             name="Sales Revenue by Channels"
           >
             <ExcelColumn label="Restaurant ID" value="restaurantId" />

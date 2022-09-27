@@ -16,6 +16,9 @@ const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
 export const RevenueByPaymentMode = (props) => {
   const allReports = useSelector((state) => state.report.allReports);
+  const salesSummeryByPaymentMode = useSelector(
+    (state) => state.report.salesSummeryByPaymentMode
+  );
   const configPaymentModes = useSelector(
     (state) => state.user.configPaymentModes
   );
@@ -92,15 +95,14 @@ export const RevenueByPaymentMode = (props) => {
   }, [props.restaurantId]);
 
   const renderOrderPerc = (mode) => {
-    const foundMode = allReports.salesSummeryByPaymentMode.find(
+    const foundMode = salesSummeryByPaymentMode.find(
       (x) => x.paymentMode === mode.configCriteriaValue
     );
 
     let totalOrderNo =
-      allReports.salesSummeryByPaymentMode &&
-      allReports.salesSummeryByPaymentMode.length
+      salesSummeryByPaymentMode && salesSummeryByPaymentMode.length
         ? Number(
-            allReports.salesSummeryByPaymentMode
+            salesSummeryByPaymentMode
               .map((a) => a.noOfOrders)
               .reduce((a, b) => a + b, 0)
           )
@@ -119,10 +121,9 @@ export const RevenueByPaymentMode = (props) => {
 
   const renderExcelOrderPerc = (mode) => {
     let totalOrderNo =
-      allReports.salesSummeryByPaymentMode &&
-      allReports.salesSummeryByPaymentMode.length
+      salesSummeryByPaymentMode && salesSummeryByPaymentMode.length
         ? Number(
-            allReports.salesSummeryByPaymentMode
+            salesSummeryByPaymentMode
               .map((a) => a.noOfOrders)
               .reduce((a, b) => a + b, 0)
           )
@@ -169,12 +170,12 @@ export const RevenueByPaymentMode = (props) => {
                 <TableCell align="left">{mode.configCriteriaValue}</TableCell>
                 <TableCell align="left">{mode.configCriteriaDesc}</TableCell>
                 <TableCell align="center">
-                  {allReports.salesSummeryByPaymentMode.find(
+                  {salesSummeryByPaymentMode.find(
                     (x) => x.paymentMode === mode.configCriteriaValue
                   ) ? (
                     <span>
                       {
-                        allReports.salesSummeryByPaymentMode.find(
+                        salesSummeryByPaymentMode.find(
                           (x) => x.paymentMode === mode.configCriteriaValue
                         ).noOfOrders
                       }
@@ -185,13 +186,13 @@ export const RevenueByPaymentMode = (props) => {
                 </TableCell>
                 <TableCell align="center">{renderOrderPerc(mode)}</TableCell>
                 <TableCell align="center">
-                  {allReports.salesSummeryByPaymentMode.find(
+                  {salesSummeryByPaymentMode.find(
                     (x) => x.paymentMode === mode.configCriteriaValue
                   ) ? (
                     <span>
                       Rs.
                       {
-                        allReports.salesSummeryByPaymentMode.find(
+                        salesSummeryByPaymentMode.find(
                           (x) => x.paymentMode === mode.configCriteriaValue
                         ).orderValue
                       }
@@ -538,7 +539,7 @@ export const RevenueByPaymentMode = (props) => {
           element={<Button variant="text">Download Full Report</Button>}
         >
           <ExcelSheet
-            data={allReports.salesSummeryByPaymentMode}
+            data={salesSummeryByPaymentMode}
             name="Revenue By Payment Mode"
           >
             {/* <ExcelColumn label="Year" value="year" />

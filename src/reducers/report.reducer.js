@@ -6,8 +6,8 @@ const initState = {
   error: null,
   reportTypes: [],
   reportByType: null,
-  salesSummeryByDateList: [],
-  salesSummeryByOrderSource: [],
+  salesSummeryByDateList: {},
+  salesSummeryByOrderSource: {},
   salesSummeryByPaymentMode: [],
 };
 
@@ -84,7 +84,7 @@ export default (state = initState, action) => {
     case reportConstants.GET_REPORT_SALES_SUMMARY_BY_DATE_LIST_FAILURE:
       state = {
         ...state,
-        salesSummeryByDateList: [],
+        salesSummeryByDateList: {},
       };
       break;
 

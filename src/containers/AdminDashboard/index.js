@@ -21,7 +21,12 @@ import { SalesOverTimeChart } from "../../components/SalesOverTimeChart";
 import { SalesRevenueByChanelChart } from "../../components/SalesRevenueByChanelChart";
 import { RevenueByPaymentMode } from "../../components/RevenueByPaymentMode";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import { getAllReports } from "../../actions";
+import {
+  getAllReports,
+  getSalesSummeryByDateListReports,
+  getSalesSummeryByOrderSourceReports,
+  getSalesSummeryByPaymentModeReports,
+} from "../../actions";
 import DropdownMenu from "@atlaskit/dropdown-menu";
 import "./style.css";
 
@@ -70,6 +75,15 @@ export const AdminDashboard = () => {
   const stores = useSelector((state) => state.store.stores);
   const businessDateAll = useSelector((state) => state.user.businessDate);
   const allReports = useSelector((state) => state.report.allReports);
+  const salesSummeryByDateList = useSelector(
+    (state) => state.report.salesSummeryByDateList
+  );
+  const salesSummeryByOrderSource = useSelector(
+    (state) => state.report.salesSummeryByOrderSource
+  );
+  const salesSummeryByPaymentMode = useSelector(
+    (state) => state.report.salesSummeryByPaymentMode
+  );
   const [selectedStore, setSelectedStore] = useState("ALL");
   const [selectedStoreObj, setSelectedStoreObj] = useState({
     restaurantId: "ALL",
@@ -96,7 +110,7 @@ export const AdminDashboard = () => {
   useEffect(() => {
     if (selectedStoreObj) {
       dispatch(
-        getAllReports(
+        getSalesSummeryByPaymentModeReports(
           selectedStoreObj.restaurantId,
           selectedStoreObj.storeId,
           `${dateState[0].startDate.getFullYear()}-${
@@ -104,8 +118,33 @@ export const AdminDashboard = () => {
           }-${dateState[0].startDate.getDate()}`,
           `${dateState[0].endDate.getFullYear()}-${
             dateState[0].endDate.getMonth() + 1
-          }-${dateState[0].endDate.getDate()}`,
-          "ALL"
+          }-${dateState[0].endDate.getDate()}`
+        )
+      );
+
+      dispatch(
+        getSalesSummeryByOrderSourceReports(
+          selectedStoreObj.restaurantId,
+          selectedStoreObj.storeId,
+          `${dateState[0].startDate.getFullYear()}-${
+            dateState[0].startDate.getMonth() + 1
+          }-${dateState[0].startDate.getDate()}`,
+          `${dateState[0].endDate.getFullYear()}-${
+            dateState[0].endDate.getMonth() + 1
+          }-${dateState[0].endDate.getDate()}`
+        )
+      );
+
+      dispatch(
+        getSalesSummeryByDateListReports(
+          selectedStoreObj.restaurantId,
+          selectedStoreObj.storeId,
+          `${dateState[0].startDate.getFullYear()}-${
+            dateState[0].startDate.getMonth() + 1
+          }-${dateState[0].startDate.getDate()}`,
+          `${dateState[0].endDate.getFullYear()}-${
+            dateState[0].endDate.getMonth() + 1
+          }-${dateState[0].endDate.getDate()}`
         )
       );
     }
@@ -145,8 +184,9 @@ export const AdminDashboard = () => {
       setChecked(true);
       console.log(true);
     }
+
     dispatch(
-      getAllReports(
+      getSalesSummeryByDateListReports(
         store.restaurantId,
         store.storeId,
         `${dateState[0].startDate.getFullYear()}-${
@@ -154,8 +194,33 @@ export const AdminDashboard = () => {
         }-${dateState[0].startDate.getDate()}`,
         `${dateState[0].endDate.getFullYear()}-${
           dateState[0].endDate.getMonth() + 1
-        }-${dateState[0].endDate.getDate()}`,
-        "ALL"
+        }-${dateState[0].endDate.getDate()}`
+      )
+    );
+
+    dispatch(
+      getSalesSummeryByOrderSourceReports(
+        selectedStoreObj.restaurantId,
+        selectedStoreObj.storeId,
+        `${dateState[0].startDate.getFullYear()}-${
+          dateState[0].startDate.getMonth() + 1
+        }-${dateState[0].startDate.getDate()}`,
+        `${dateState[0].endDate.getFullYear()}-${
+          dateState[0].endDate.getMonth() + 1
+        }-${dateState[0].endDate.getDate()}`
+      )
+    );
+
+    dispatch(
+      getSalesSummeryByPaymentModeReports(
+        selectedStoreObj.restaurantId,
+        selectedStoreObj.storeId,
+        `${dateState[0].startDate.getFullYear()}-${
+          dateState[0].startDate.getMonth() + 1
+        }-${dateState[0].startDate.getDate()}`,
+        `${dateState[0].endDate.getFullYear()}-${
+          dateState[0].endDate.getMonth() + 1
+        }-${dateState[0].endDate.getDate()}`
       )
     );
   };
@@ -302,7 +367,7 @@ export const AdminDashboard = () => {
           </Row>
         </div>
 
-        {allReports && selectedStoreObj ? (
+        {salesSummeryByDateList && selectedStoreObj ? (
           <>
             <div className="mt-2">
               <Row>
@@ -311,11 +376,11 @@ export const AdminDashboard = () => {
                     <Typography sx={{ color: "#595959" }}>
                       Total Sales
                     </Typography>
-                    {allReports.salesSummeryByDateList &&
-                    allReports.salesSummeryByDateList.length ? (
+                    {salesSummeryByDateList.salesSummeryByDateList &&
+                    salesSummeryByDateList.salesSummeryByDateList.length > 0 ? (
                       <Typography sx={{ fontWeight: "bold" }}>
                         Rs{" "}
-                        {allReports.salesSummeryByDateList
+                        {salesSummeryByDateList.salesSummeryByDateList
                           .map((a) => a.orderValue)
                           .reduce((a, b) => a + b, 0)
                           .toFixed(2)}
@@ -332,18 +397,18 @@ export const AdminDashboard = () => {
                     <Typography sx={{ color: "#595959" }}>
                       Avg. Order Value
                     </Typography>
-                    {allReports.salesSummeryByDateList &&
-                    allReports.salesSummeryByDateList.length ? (
+                    {salesSummeryByDateList.salesSummeryByDateList &&
+                    salesSummeryByDateList.salesSummeryByDateList.length > 0 ? (
                       <Typography sx={{ fontWeight: "bold" }}>
                         Rs{" "}
                         {Number(
                           Number(
-                            allReports.salesSummeryByDateList
+                            salesSummeryByDateList.salesSummeryByDateList
                               .map((a) => a.orderValue)
                               .reduce((a, b) => a + b, 0)
                           ) /
                             Number(
-                              allReports.salesSummeryByDateList
+                              salesSummeryByDateList.salesSummeryByDateList
                                 .map((a) => a.noOfOrders)
                                 .reduce((a, b) => a + b, 0)
                             )
@@ -361,10 +426,10 @@ export const AdminDashboard = () => {
                     <Typography sx={{ color: "#595959" }}>
                       Total Orders
                     </Typography>
-                    {allReports.salesSummeryByDateList &&
-                    allReports.salesSummeryByDateList.length ? (
+                    {salesSummeryByDateList.salesSummeryByDateList &&
+                    salesSummeryByDateList.salesSummeryByDateList.length > 0 ? (
                       <Typography sx={{ fontWeight: "bold" }}>
-                        {allReports.salesSummeryByDateList
+                        {salesSummeryByDateList.salesSummeryByDateList
                           .map((a) => a.noOfOrders)
                           .reduce((a, b) => a + b, 0)}
                       </Typography>
@@ -378,9 +443,11 @@ export const AdminDashboard = () => {
             <div>
               <Row>
                 <Col sm={12} className="pl-0">
-                  {allReports.salesSummeryByDateList &&
-                  allReports.salesSummeryByDateList.length > 0 ? (
-                    <SalesOverTimeChart></SalesOverTimeChart>
+                  {salesSummeryByDateList.salesSummeryByDateList &&
+                  salesSummeryByDateList.salesSummeryByDateList.length > 0 ? (
+                    <>
+                      <SalesOverTimeChart></SalesOverTimeChart>
+                    </>
                   ) : (
                     <div className="mb-3 pl-3 pt-3">
                       <Typography sx={{ fontWeight: "bold", color: "#7F7F7F" }}>
@@ -427,9 +494,13 @@ export const AdminDashboard = () => {
               </Row> */}
               <Row>
                 <Col sm={12} className="pl-0">
-                  {allReports.salesSummeryByOrderSource &&
-                  allReports.salesSummeryByOrderSource.length > 0 ? (
-                    <SalesRevenueByChanelChart></SalesRevenueByChanelChart>
+                  {salesSummeryByOrderSource.salesSummeryByOrderSource &&
+                  salesSummeryByOrderSource.salesSummeryByOrderSource.length >
+                    0 ? (
+                    <>
+                      <SalesRevenueByChanelChart></SalesRevenueByChanelChart>
+                      {/* <p></p> */}
+                    </>
                   ) : (
                     <div className="mb-3 pl-3 pt-3">
                       <Typography sx={{ fontWeight: "bold", color: "#7F7F7F" }}>
@@ -445,14 +516,14 @@ export const AdminDashboard = () => {
 
               <Row>
                 <Col sm={12} className="pl-0">
-                  {allReports.salesSummeryByPaymentMode &&
-                  allReports.salesSummeryByPaymentMode.length > 0 ? (
+                  {salesSummeryByPaymentMode &&
+                  salesSummeryByPaymentMode.length > 0 ? (
                     <RevenueByPaymentMode
                       totalOrders={
-                        allReports.salesSummeryByPaymentMode &&
-                        allReports.salesSummeryByPaymentMode.length
+                        salesSummeryByPaymentMode &&
+                        salesSummeryByPaymentMode.length
                           ? Number(
-                              allReports.salesSummeryByPaymentMode
+                              salesSummeryByPaymentMode
                                 .map((a) => a.noOfOrders)
                                 .reduce((a, b) => a + b, 0)
                             )

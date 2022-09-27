@@ -47,10 +47,12 @@ export const options = {
 };
 
 export const SalesOverTimeChart = () => {
-  const allReports = useSelector((state) => state.report.allReports);
+  const salesSummeryByDateList = useSelector(
+    (state) => state.report.salesSummeryByDateList
+  );
   const ref = React.createRef();
 
-  const labels = allReports?.salesSummeryByDateList?.map(
+  const labels = salesSummeryByDateList?.salesSummeryByDateList?.map(
     (a) =>
       `${Number(new Date(a.orderDate).getMonth()) + 1}/ ${new Date(
         a.orderDate
@@ -62,13 +64,16 @@ export const SalesOverTimeChart = () => {
     datasets: [
       {
         label: "Sales",
-        data: allReports.salesSummeryByDateList.map((a) => a.orderValue),
-        backgroundColor: allReports.salesSummeryByDateList.map((a) =>
-          randomColor({
-            luminosity: "dark",
-            format: "rgba",
-            alpha: 0.5,
-          })
+        data: salesSummeryByDateList.salesSummeryByDateList.map(
+          (a) => a.orderValue
+        ),
+        backgroundColor: salesSummeryByDateList.salesSummeryByDateList.map(
+          (a) =>
+            randomColor({
+              luminosity: "dark",
+              format: "rgba",
+              alpha: 0.5,
+            })
         ),
       },
     ],
@@ -96,7 +101,7 @@ export const SalesOverTimeChart = () => {
           element={<Button variant="text">Download Full Report</Button>}
         >
           <ExcelSheet
-            data={allReports.salesSummeryByDateList}
+            data={salesSummeryByDateList.salesSummeryByDateList}
             name="Sales Over Time"
           >
             <ExcelColumn label="Year" value="year" />
