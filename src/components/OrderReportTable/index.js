@@ -505,9 +505,15 @@ export const OrderReportTable = (props) => {
               <CusTableCell1 align="center">
                 TOTAL AMOUNT INC. TAX
               </CusTableCell1>
-              <CusTableCell1 align="center">CGST</CusTableCell1>
-              <CusTableCell1 align="center">SGST</CusTableCell1>
-              <CusTableCell1 align="center">DELIVERY CHARGES</CusTableCell1>
+              <CusTableCell1 align="center" sx={{ minWidth: "100px" }}>
+                CGST
+              </CusTableCell1>
+              <CusTableCell1 align="center" sx={{ minWidth: "100px" }}>
+                SGST
+              </CusTableCell1>
+              <CusTableCell1 align="center" sx={{ minWidth: "100px" }}>
+                DELIVERY CHARGES
+              </CusTableCell1>
               <CusTableCell1 align="center">DISCOUNT CODE</CusTableCell1>
               <CusTableCell1 align="center">DISCOUNT PERCENTAGE</CusTableCell1>
               <CusTableCell1 align="center">ITEM ORDERED</CusTableCell1>

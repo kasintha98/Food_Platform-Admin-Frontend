@@ -348,7 +348,7 @@ export const NewReports = () => {
             ></SalesSummeryByDateListReport>
           )}
 
-          {selectedReport === "SALES_BY_DISH_ITEM" && (
+          {/* {selectedReport === "SALES_BY_DISH_ITEM" && (
             <SalesSummeryByDishType
               startDate={dateState[0].startDate}
               endDate={dateState[0].endDate}
@@ -356,7 +356,7 @@ export const NewReports = () => {
               restaurantId={selectedStoreObj.restaurantId}
               selectedReport={selectedReport}
             ></SalesSummeryByDishType>
-          )}
+          )} */}
 
           {selectedReport === "SALES_SUMMARY_BY_ORDER_SOURCE" && (
             <SalesSummeryByOrderSourceReport
