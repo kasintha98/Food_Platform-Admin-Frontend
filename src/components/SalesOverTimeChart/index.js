@@ -32,10 +32,6 @@ export const options = {
     legend: {
       position: "top",
     },
-    /* title: {
-      display: true,
-      text: "Chart.js Bar Chart",
-    }, */
   },
   scales: {
     x: {
@@ -52,31 +48,35 @@ export const SalesOverTimeChart = () => {
   );
   const ref = React.createRef();
 
-  const labels = salesSummeryByDateList?.salesSummeryByDateList?.map(
-    (a) =>
-      `${Number(new Date(a.orderDate).getMonth()) + 1}/ ${new Date(
-        a.orderDate
-      ).getDate()} - ${a.restaurantName}`
-  );
+  const labels = salesSummeryByDateList?.salesSummeryByDateList
+    ? salesSummeryByDateList?.salesSummeryByDateList?.map(
+        (a) =>
+          `${Number(new Date(a.orderDate).getMonth()) + 1}/ ${new Date(
+            a.orderDate
+          ).getDate()} - ${a.restaurantName}`
+      )
+    : [];
 
   const data = {
     labels,
-    datasets: [
-      {
-        label: "Sales",
-        data: salesSummeryByDateList.salesSummeryByDateList.map(
-          (a) => a.orderValue
-        ),
-        backgroundColor: salesSummeryByDateList.salesSummeryByDateList.map(
-          (a) =>
-            randomColor({
-              luminosity: "dark",
-              format: "rgba",
-              alpha: 0.5,
-            })
-        ),
-      },
-    ],
+    datasets: salesSummeryByDateList.salesSummeryByDateList
+      ? [
+          {
+            label: "Sales",
+            data: salesSummeryByDateList.salesSummeryByDateList.map(
+              (a) => a.orderValue
+            ),
+            backgroundColor: salesSummeryByDateList.salesSummeryByDateList.map(
+              (a) =>
+                randomColor({
+                  luminosity: "dark",
+                  format: "rgba",
+                  alpha: 0.5,
+                })
+            ),
+          },
+        ]
+      : [],
   };
 
   return (

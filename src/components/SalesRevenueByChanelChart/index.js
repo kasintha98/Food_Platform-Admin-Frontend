@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import {
@@ -27,27 +27,10 @@ ChartJS.register(
 );
 
 export const SalesRevenueByChanelChart = () => {
-  //const allReports = useSelector((state) => state.report.allReports);
   const salesSummeryByOrderSource = useSelector(
     (state) => state.report.salesSummeryByOrderSource
   );
   const orderSources = useSelector((state) => state.user.orderSources);
-  /* const [webOrders, setWebOrders] = useState([]);
-  const [webDelOrders, setWebDelOrders] = useState([]);
-  const [storePickupOrders, setStorePickupOrders] = useState([]);
-  const [selfDineQROrders, setSelfDineQROrders] = useState([]);
-  const [webSelfOrders, setWebSelfOrders] = useState([]);
-  const [mobileOrders, setMobileOrders] = useState([]);
-  const [selfOrders, setSelfOrders] = useState([]);
-  const [dineOrders, setDineOrders] = useState([]);
-  const [zomatoOrders, setZomatoOrders] = useState([]);
-  const [swizyOrders, setSwizyOrders] = useState([]);
-  const [storeTakeAwayOrders, setStoreTakeAwayOrders] = useState([]);
-  const [storeDeliveryOrders, setStoreDeliveryOrders] = useState([]);
-  const [phoneSelfCollectOrders, setPhoneSelfCollectOrders] = useState([]);
-  const [phoneDeliveryOrders, setPhoneDeliveryOrders] = useState([]); */
-
-  /* defaults.font.size = "10px"; */
 
   const ref = React.createRef();
 
@@ -113,10 +96,6 @@ export const SalesRevenueByChanelChart = () => {
         titleMarginBottom: 2,
         padding: 2,
       },
-      /* title: {
-        display: true,
-        text: "Chart.js Bar Chart",
-      }, */
     },
     scales: {
       x: {
@@ -128,117 +107,6 @@ export const SalesRevenueByChanelChart = () => {
       },
     },
   };
-
-  /* useEffect(() => {
-
-    setMobileOrders(
-      allReports.salesSummeryByOrderSource
-        .filter(function (el) {
-          return el.orderSource === "M";
-        })
-        .map((a) => a.orderValue)
-        .reduce((a, b) => a + b, 0)
-    );
-
-    setSwizyOrders(
-      allReports.salesSummeryByOrderSource
-        .filter(function (el) {
-          return el.orderSource === "S";
-        })
-        .map((a) => a.orderValue)
-        .reduce((a, b) => a + b, 0)
-    );
-
-    setZomatoOrders(
-      allReports.salesSummeryByOrderSource
-        .filter(function (el) {
-          return el.orderSource === "Z";
-        })
-        .map((a) => a.orderValue)
-        .reduce((a, b) => a + b, 0)
-    );
-
-    setDineOrders(
-      allReports.salesSummeryByOrderSource
-        .filter(function (el) {
-          return el.orderSource === "D";
-        })
-        .map((a) => a.orderValue)
-        .reduce((a, b) => a + b, 0)
-    );
-
-    setWebDelOrders(
-      allReports.salesSummeryByOrderSource
-        .filter(function (el) {
-          return el.orderSource === "WD";
-        })
-        .map((a) => a.orderValue)
-        .reduce((a, b) => a + b, 0)
-    );
-
-    setStorePickupOrders(
-      allReports.salesSummeryByOrderSource
-        .filter(function (el) {
-          return el.orderSource === "SP";
-        })
-        .map((a) => a.orderValue)
-        .reduce((a, b) => a + b, 0)
-    );
-
-    setPhoneDeliveryOrders(
-      allReports.salesSummeryByOrderSource
-        .filter(function (el) {
-          return el.orderSource === "PD";
-        })
-        .map((a) => a.orderValue)
-        .reduce((a, b) => a + b, 0)
-    );
-
-    setStoreDeliveryOrders(
-      allReports.salesSummeryByOrderSource
-        .filter(function (el) {
-          return el.orderSource === "SD";
-        })
-        .map((a) => a.orderValue)
-        .reduce((a, b) => a + b, 0)
-    );
-
-    setSelfDineQROrders(
-      allReports.salesSummeryByOrderSource
-        .filter(function (el) {
-          return el.orderSource === "Q";
-        })
-        .map((a) => a.orderValue)
-        .reduce((a, b) => a + b, 0)
-    );
-
-    setStoreTakeAwayOrders(
-      allReports.salesSummeryByOrderSource
-        .filter(function (el) {
-          return el.orderSource === "ST";
-        })
-        .map((a) => a.orderValue)
-        .reduce((a, b) => a + b, 0)
-    );
-
-    setWebSelfOrders(
-      allReports.salesSummeryByOrderSource
-        .filter(function (el) {
-          return el.orderSource === "WS";
-        })
-        .map((a) => a.orderValue)
-        .reduce((a, b) => a + b, 0)
-    );
-
-    setPhoneSelfCollectOrders(
-      allReports.salesSummeryByOrderSource
-        .filter(function (el) {
-          return el.orderSource === "PT";
-        })
-        .map((a) => a.orderValue)
-        .reduce((a, b) => a + b, 0)
-    );
-  }, [allReports]); */
 
   const getFilteredOrders = () => {
     let allData = [];

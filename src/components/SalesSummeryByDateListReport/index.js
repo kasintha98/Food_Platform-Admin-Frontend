@@ -71,7 +71,7 @@ export const SalesSummeryByDateListReport = (props) => {
     ) {
       let total = 0;
       for (let i = 0; i < allReports.salesSummeryByDateList.length; i++) {
-        total = total + allReports.salesSummeryByDateList[i].totalQty;
+        total = total + Number(allReports.salesSummeryByDateList[i].noOfOrders);
       }
       return total;
     } else {
@@ -87,12 +87,24 @@ export const SalesSummeryByDateListReport = (props) => {
     ) {
       let total = 0;
       for (let i = 0; i < allReports.salesSummeryByDateList.length; i++) {
-        total = total + allReports.salesSummeryByDateList[i].totalPrice;
+        total = total + Number(allReports.salesSummeryByDateList[i].orderValue);
       }
       return total;
     } else {
       return 0;
     }
+  };
+
+  const renderDate = (date) => {
+    const dateObj = new Date(date);
+    const month = dateObj.toLocaleString("default", { month: "short" });
+    const day = dateObj.getDate();
+    const year = dateObj.getFullYear();
+    return (
+      <span>
+        {day}/{month.toUpperCase()}/{year}
+      </span>
+    );
   };
 
   return (
@@ -139,7 +151,7 @@ export const SalesSummeryByDateListReport = (props) => {
                       {row.restaurantName}
                     </CusTableCell2>
                     <CusTableCell2 align="center">
-                      {row.orderDate}
+                      {renderDate(row.orderDate)}
                     </CusTableCell2>
                     <CusTableCell2 align="center">
                       {row.noOfOrders}

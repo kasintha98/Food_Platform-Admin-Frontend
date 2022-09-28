@@ -73,6 +73,7 @@ const NumberDiv = styled.div`
 
 export const AdminDashboard = () => {
   const stores = useSelector((state) => state.store.stores);
+  const orderSources = useSelector((state) => state.user.orderSources);
   const businessDateAll = useSelector((state) => state.user.businessDate);
   const allReports = useSelector((state) => state.report.allReports);
   const salesSummeryByDateList = useSelector(
@@ -443,7 +444,8 @@ export const AdminDashboard = () => {
             <div>
               <Row>
                 <Col sm={12} className="pl-0">
-                  {salesSummeryByDateList.salesSummeryByDateList &&
+                  {salesSummeryByDateList &&
+                  salesSummeryByDateList.salesSummeryByDateList &&
                   salesSummeryByDateList.salesSummeryByDateList.length > 0 ? (
                     <>
                       <SalesOverTimeChart></SalesOverTimeChart>
@@ -495,11 +497,11 @@ export const AdminDashboard = () => {
               <Row>
                 <Col sm={12} className="pl-0">
                   {salesSummeryByOrderSource.salesSummeryByOrderSource &&
+                  orderSources &&
                   salesSummeryByOrderSource.salesSummeryByOrderSource.length >
                     0 ? (
                     <>
                       <SalesRevenueByChanelChart></SalesRevenueByChanelChart>
-                      {/* <p></p> */}
                     </>
                   ) : (
                     <div className="mb-3 pl-3 pt-3">
