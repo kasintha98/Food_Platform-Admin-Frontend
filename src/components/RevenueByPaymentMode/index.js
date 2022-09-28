@@ -86,18 +86,20 @@ export const RevenueByPaymentMode = (props) => {
     );
   }, [allReports]); */
 
-  useEffect(() => {
+  /* useEffect(() => {
     dispatch(
       getPaymentModeConfigDetails(
         props.restaurantId ? props.restaurantId : "ALL"
       )
     );
-  }, [props.restaurantId]);
+  }, [props.restaurantId]); */
 
   const renderOrderPerc = (mode) => {
-    const foundMode = salesSummeryByPaymentMode.find(
-      (x) => x.paymentMode === mode.configCriteriaValue
-    );
+    const foundMode = salesSummeryByPaymentMode
+      ? salesSummeryByPaymentMode.find(
+          (x) => x.paymentMode === mode.configCriteriaValue
+        )
+      : null;
 
     let totalOrderNo =
       salesSummeryByPaymentMode && salesSummeryByPaymentMode.length

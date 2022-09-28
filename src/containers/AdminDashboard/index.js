@@ -26,6 +26,7 @@ import {
   getSalesSummeryByDateListReports,
   getSalesSummeryByOrderSourceReports,
   getSalesSummeryByPaymentModeReports,
+  getPaymentModeConfigDetails,
 } from "../../actions";
 import DropdownMenu from "@atlaskit/dropdown-menu";
 import "./style.css";
@@ -76,6 +77,9 @@ export const AdminDashboard = () => {
   const orderSources = useSelector((state) => state.user.orderSources);
   const businessDateAll = useSelector((state) => state.user.businessDate);
   const allReports = useSelector((state) => state.report.allReports);
+  const configPaymentModes = useSelector(
+    (state) => state.user.configPaymentModes
+  );
   const salesSummeryByDateList = useSelector(
     (state) => state.report.salesSummeryByDateList
   );
@@ -149,6 +153,12 @@ export const AdminDashboard = () => {
         )
       );
     }
+
+    dispatch(
+      getPaymentModeConfigDetails(
+        selectedStoreObj ? selectedStoreObj.restaurantId : "ALL"
+      )
+    );
   }, [dateState]);
 
   const open = Boolean(anchorEl);
@@ -222,6 +232,12 @@ export const AdminDashboard = () => {
         `${dateState[0].endDate.getFullYear()}-${
           dateState[0].endDate.getMonth() + 1
         }-${dateState[0].endDate.getDate()}`
+      )
+    );
+
+    dispatch(
+      getPaymentModeConfigDetails(
+        selectedStoreObj ? selectedStoreObj.restaurantId : "ALL"
       )
     );
   };
@@ -519,6 +535,7 @@ export const AdminDashboard = () => {
               <Row>
                 <Col sm={12} className="pl-0">
                   {salesSummeryByPaymentMode &&
+                  configPaymentModes &&
                   salesSummeryByPaymentMode.length > 0 ? (
                     <RevenueByPaymentMode
                       totalOrders={
