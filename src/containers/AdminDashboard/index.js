@@ -512,8 +512,9 @@ export const AdminDashboard = () => {
               </Row> */}
               <Row>
                 <Col sm={12} className="pl-0">
-                  {salesSummeryByOrderSource.salesSummeryByOrderSource &&
-                  orderSources &&
+                  {orderSources &&
+                  Object.keys(salesSummeryByOrderSource).length > 0 &&
+                  salesSummeryByOrderSource.salesSummeryByOrderSource &&
                   salesSummeryByOrderSource.salesSummeryByOrderSource.length >
                     0 ? (
                     <>
