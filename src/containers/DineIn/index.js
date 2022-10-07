@@ -141,6 +141,7 @@ export const DineIn = () => {
               value={selectedOrderType}
               label="Please select the store"
               onChange={handleChangeOrderType}
+              disabled={ShowCheckout ? true : false}
             >
               {orderTypes.map((type) => (
                 <CusMenuItem
