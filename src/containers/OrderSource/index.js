@@ -1,11 +1,12 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import NewLayout from "../NewLayout";
 import { Row } from "react-bootstrap";
 import { Typography, Box, Tab } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import styled from "@emotion/styled";
 import { OrderTable } from "../../components/OrderTable";
+import { getOrderSourceConfigDetails } from "../../actions";
 
 const CusTab = styled(Tab)`
   /* font-size: 0.75rem;
@@ -34,7 +35,14 @@ const CusTabList = styled(TabList)`
 export const OrderSource = () => {
   const allOrders = useSelector((state) => state.order.allOrders);
   const orderSources = useSelector((state) => state.user.orderSources);
+  const user = useSelector((state) => state.auth.user);
   const [tabValue, setTabValue] = useState("ALL");
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getOrderSourceConfigDetails(user.restaurantId, user.storeId));
+  }, []);
 
   const handleChangeTab = (event, newValue) => {
     setTabValue(newValue);
