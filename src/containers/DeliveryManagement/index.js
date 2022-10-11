@@ -154,7 +154,13 @@ export const DeliveryManagement = () => {
       }
     });
 
-    dispatch(getUsersByRole("DELIVERY_BOY"));
+    dispatch(
+      getUsersByRole(
+        "DELIVERY_BOY",
+        selectedStoreObj.restaurantId,
+        selectedStoreObj.storeId
+      )
+    );
   }, [isReset, selectedStoreObj]);
 
   const handleCloseDetailsModal = () => setShowDetailsModal(false);
@@ -581,6 +587,7 @@ export const DeliveryManagement = () => {
                   value={selectedStore}
                   label="Please select the store"
                   onChange={handleChangeStore}
+                  disabled={user.roleCategory !== "SUPER_ADMIN"}
                 >
                   <CusMenuItem
                     onClick={() => {

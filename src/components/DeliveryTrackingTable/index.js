@@ -86,14 +86,14 @@ export const DeliveryTrackingTable = (props) => {
   const [filteredData, setFilteredData] = useState([]);
   const [allStatus, setAllStatus] = useState({});
   const [height, setHeight] = useState(0);
-  const [selectedStore, setSelectedStore] = useState(
+  /* const [selectedStore, setSelectedStore] = useState(
     user.roleCategory === "SUPER_ADMIN" ? "ALL" : user.restaurantId
   );
   const [selectedStoreObj, setSelectedStoreObj] = useState({
     restaurantId:
       user.roleCategory === "SUPER_ADMIN" ? null : user.restaurantId,
     storeId: user.roleCategory === "SUPER_ADMIN" ? null : user.storeId,
-  });
+  }); */
 
   const dispatch = useDispatch();
 
@@ -117,8 +117,8 @@ export const DeliveryTrackingTable = (props) => {
       : new Date();
     dispatch(
       getCustomerOrders(
-        selectedStoreObj.restaurantId,
-        selectedStoreObj.storeId,
+        props.selectedStoreObj.restaurantId,
+        props.selectedStoreObj.storeId,
         null,
         `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,
         null,
@@ -146,7 +146,7 @@ export const DeliveryTrackingTable = (props) => {
         }
       }
     });
-  }, [isReset, selectedStoreObj]);
+  }, [isReset, props.selectedStoreObj]);
 
   const filterByStatus = (orders) => {
     orders = orders.filter(function (el) {
@@ -164,14 +164,14 @@ export const DeliveryTrackingTable = (props) => {
   const handleCloseDetailsModal = () => setShowDetailsModal(false);
   const handleShowDetailsModal = () => setShowDetailsModal(true);
 
-  const handleChangeStore = (event) => {
+  /* const handleChangeStore = (event) => {
     setSelectedStore(event.target.value);
     console.log(event.target.value);
-  };
+  }; */
 
-  const handleSelectedStore = (store) => {
+  /* const handleSelectedStore = (store) => {
     setSelectedStoreObj(store);
-  };
+  }; */
 
   const handleChangeKeywords = (event) => {
     setKeywords(event.target.value);
@@ -658,7 +658,7 @@ export const DeliveryTrackingTable = (props) => {
           </div>
         </Col>
         <Col sm={6}>
-          {user.roleCategory === "SUPER_ADMIN" ? (
+          {/* {user.roleCategory === "SUPER_ADMIN" ? (
             <>
               <FormControl fullWidth>
                 <InputLabel
@@ -708,7 +708,7 @@ export const DeliveryTrackingTable = (props) => {
                 Store Name: {user.resturantName}
               </Typography>
             </>
-          )}
+          )} */}
         </Col>
       </Row>
       <Row

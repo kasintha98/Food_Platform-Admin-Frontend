@@ -74,6 +74,7 @@ const NumberDiv = styled.div`
 
 export const AdminDashboard = () => {
   const stores = useSelector((state) => state.store.stores);
+  const user = useSelector((state) => state.auth.user);
   const orderSources = useSelector((state) => state.user.orderSources);
   const businessDateAll = useSelector((state) => state.user.businessDate);
   const allReports = useSelector((state) => state.report.allReports);
@@ -89,10 +90,18 @@ export const AdminDashboard = () => {
   const salesSummeryByPaymentMode = useSelector(
     (state) => state.report.salesSummeryByPaymentMode
   );
-  const [selectedStore, setSelectedStore] = useState("ALL");
+  const [selectedStore, setSelectedStore] = useState(
+    user.roleCategory === "SUPER_ADMIN"
+      ? "ALL"
+      : stores?.find(
+          (el) =>
+            el.restaurantId === user.restaurantId && el.storeId === user.storeId
+        )?.resturantName
+  );
   const [selectedStoreObj, setSelectedStoreObj] = useState({
-    restaurantId: "ALL",
-    storeId: "ALL",
+    restaurantId:
+      user.roleCategory === "SUPER_ADMIN" ? null : user.restaurantId,
+    storeId: user.roleCategory === "SUPER_ADMIN" ? null : user.storeId,
   });
   const [checked, setChecked] = useState(true);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -211,8 +220,8 @@ export const AdminDashboard = () => {
 
     dispatch(
       getSalesSummeryByOrderSourceReports(
-        selectedStoreObj.restaurantId,
-        selectedStoreObj.storeId,
+        store.restaurantId,
+        store.storeId,
         `${dateState[0].startDate.getFullYear()}-${
           dateState[0].startDate.getMonth() + 1
         }-${dateState[0].startDate.getDate()}`,
@@ -224,8 +233,8 @@ export const AdminDashboard = () => {
 
     dispatch(
       getSalesSummeryByPaymentModeReports(
-        selectedStoreObj.restaurantId,
-        selectedStoreObj.storeId,
+        store.restaurantId,
+        store.storeId,
         `${dateState[0].startDate.getFullYear()}-${
           dateState[0].startDate.getMonth() + 1
         }-${dateState[0].startDate.getDate()}`,
@@ -235,11 +244,7 @@ export const AdminDashboard = () => {
       )
     );
 
-    dispatch(
-      getPaymentModeConfigDetails(
-        selectedStoreObj ? selectedStoreObj.restaurantId : "ALL"
-      )
-    );
+    dispatch(getPaymentModeConfigDetails(store ? store.restaurantId : "ALL"));
   };
 
   return (
@@ -310,6 +315,7 @@ export const AdminDashboard = () => {
                   value={selectedStore}
                   label="Please select the store"
                   onChange={handleChangeStore}
+                  disabled={user.roleCategory !== "SUPER_ADMIN"}
                 >
                   <CusMenuItem
                     onClick={() => {

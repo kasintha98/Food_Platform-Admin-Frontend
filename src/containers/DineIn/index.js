@@ -38,17 +38,11 @@ export const DineIn = () => {
 
   const dispatch = useDispatch();
 
-  const [selectedStore, setSelectedStore] = useState(
-    stores[0] ? stores[0].resturantName : user.resturantName
-  );
-  const [selectedStoreObj, setSelectedStoreObj] = useState(
-    stores[0]
-      ? stores[0]
-      : {
-          restaurantId: user.restaurantId,
-          storeId: user.storeId,
-        }
-  );
+  const [selectedStore, setSelectedStore] = useState(user.resturantName);
+  const [selectedStoreObj, setSelectedStoreObj] = useState({
+    restaurantId: user.restaurantId,
+    storeId: user.storeId,
+  });
   const [ShowCheckout, setShowCheckout] = useState(false);
   //const [orderTypesT, setOrderTypesT] = useState([]);
   const [selectedOrderType, setSelectedOrderType] = useState("DINE IN");
@@ -186,6 +180,7 @@ export const DineIn = () => {
                 value={selectedStore}
                 label="Please select the store"
                 onChange={handleChangeStore}
+                disabled={user.roleCategory !== "SUPER_ADMIN"}
               >
                 {stores.map((store) => (
                   <CusMenuItem

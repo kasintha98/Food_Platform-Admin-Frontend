@@ -21,6 +21,8 @@ import {
   TextField,
   NativeSelect,
   Typography,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import { Row, Col, Modal } from "react-bootstrap";
 import { OrderDetailsTable } from "../OrderDetailsTable";
@@ -32,6 +34,15 @@ const CusTableCell1 = styled(TableCell)`
   font-size: 0.75rem;
   font-weight: bold;
 `;
+
+const CusSelect = styled(Select)`
+  & .MuiSelect-select {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+`;
+
+const CusMenuItem = styled(MenuItem)``;
 
 const CusTableCell2 = styled(TableCell)`
   font-size: 0.75rem;
@@ -77,6 +88,19 @@ export const OrderTable = (props) => {
   const [keywords, setKeywords] = useState("");
   const [isReset, setIsReset] = useState(false);
   const [height, setHeight] = useState(0);
+  const [selectedStore, setSelectedStore] = useState(
+    user.roleCategory === "SUPER_ADMIN"
+      ? "ALL"
+      : stores?.find(
+          (el) =>
+            el.restaurantId === user.restaurantId && el.storeId === user.storeId
+        )?.resturantName
+  );
+  const [selectedStoreObj, setSelectedStoreObj] = useState({
+    restaurantId:
+      user.roleCategory === "SUPER_ADMIN" ? null : user.restaurantId,
+    storeId: user.roleCategory === "SUPER_ADMIN" ? null : user.storeId,
+  });
 
   const handleCloseDetailsModal = () => setShowDetailsModal(false);
   const handleShowDetailsModal = () => setShowDetailsModal(true);
@@ -90,8 +114,8 @@ export const OrderTable = (props) => {
     if (props.isForOrderSource) {
       dispatch(
         getCustomerOrders(
-          null,
-          null,
+          selectedStoreObj.restaurantId,
+          selectedStoreObj.storeId,
           null,
           `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,
           null,
@@ -105,14 +129,14 @@ export const OrderTable = (props) => {
     } else {
       dispatch(
         getCustomerOrders(
-          null,
-          null,
+          selectedStoreObj.restaurantId,
+          selectedStoreObj.storeId,
           props.type,
           `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
         )
       );
     }
-  }, [props.type, isReset]);
+  }, [props.type, isReset, selectedStoreObj]);
 
   const ref = React.createRef();
   const refH = useRef(null);
@@ -479,8 +503,8 @@ export const OrderTable = (props) => {
       : new Date();
     dispatch(
       getCustomerOrders(
-        null,
-        null,
+        selectedStoreObj.restaurantId,
+        selectedStoreObj.storeId,
         props.type,
         `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,
         keywords
@@ -513,34 +537,89 @@ export const OrderTable = (props) => {
     return <span>{time}</span>;
   };
 
+  const handleChangeStore = (event) => {
+    setSelectedStore(event.target.value);
+    console.log(event.target.value);
+  };
+
+  const handleSelectedStore = (store) => {
+    setSelectedStoreObj(store);
+  };
+
   return (
     <div>
       <div>
         {!props.type ? (
           <div className="mb-3">
-            <TextField
-              label="Search Order By ID"
-              variant="standard"
-              value={keywords}
-              onChange={handleChangeKeywords}
-              className="mr-3"
-            />
-            <Button
-              variant="contained"
-              color="success"
-              disabled={!keywords}
-              onClick={searchOrder}
-            >
-              Search
-            </Button>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={resetSearch}
-              className="ml-3"
-            >
-              Reset
-            </Button>
+            <Row className="align-items-center">
+              <Col sm={6}>
+                <TextField
+                  label="Search Order By ID"
+                  variant="standard"
+                  value={keywords}
+                  onChange={handleChangeKeywords}
+                  className="mr-3"
+                />
+                <Button
+                  variant="contained"
+                  color="success"
+                  disabled={!keywords}
+                  onClick={searchOrder}
+                >
+                  Search
+                </Button>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={resetSearch}
+                  className="ml-3"
+                >
+                  Reset
+                </Button>
+              </Col>
+              <Col sm={6}>
+                <FormControl fullWidth>
+                  <InputLabel
+                    sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
+                    id="demo-simple-select-label"
+                  >
+                    Please select the store
+                  </InputLabel>
+
+                  <CusSelect
+                    sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={selectedStore}
+                    label="Please select the store"
+                    onChange={handleChangeStore}
+                    disabled={user.roleCategory !== "SUPER_ADMIN"}
+                  >
+                    <CusMenuItem
+                      onClick={() => {
+                        handleSelectedStore({
+                          restaurantId: null,
+                          storeId: null,
+                        });
+                      }}
+                      value={"ALL"}
+                    >
+                      All Stores
+                    </CusMenuItem>
+                    {stores.map((store) => (
+                      <CusMenuItem
+                        onClick={() => {
+                          handleSelectedStore(store);
+                        }}
+                        value={store.resturantName}
+                      >
+                        <span>{store.resturantName}</span>
+                      </CusMenuItem>
+                    ))}
+                  </CusSelect>
+                </FormControl>
+              </Col>
+            </Row>
           </div>
         ) : null}
       </div>
@@ -606,7 +685,7 @@ export const OrderTable = (props) => {
                           Payment Mode
                         </InputLabel>
                         <NativeSelect
-                          defaultValue={row.paymentMode}
+                          defaultValue={row.paymentMode.toUpperCase()}
                           inputProps={{
                             name: "status",
                             id: "uncontrolled-native",
@@ -617,7 +696,7 @@ export const OrderTable = (props) => {
                           {paymentModes.map((mode) => (
                             <option
                               key={mode.value}
-                              value={mode.value}
+                              value={mode.value.toUpperCase()}
                               style={{ fontSize: "0.75rem" }}
                             >
                               {mode.description}

@@ -125,7 +125,7 @@ export const saveRoleWithModules = (payload) => {
   };
 };
 
-export const getUsersByRole = (roleCategory) => {
+export const getUsersByRole = (roleCategory, restaurantId, storeId) => {
   return async (dispatch) => {
     try {
       dispatch({ type: userConstants.GET_USERS_BY_ROLE_REQUEST });
@@ -135,9 +135,22 @@ export const getUsersByRole = (roleCategory) => {
       });
 
       if (res.status === 200) {
+        let filteredData = res.data;
+        if (res.data && restaurantId) {
+          filteredData = res.data.filter(function (el) {
+            return el.restaurantId === restaurantId;
+          });
+        }
+
+        if (res.data && storeId) {
+          filteredData = res.data.filter(function (el) {
+            return el.storeId === storeId;
+          });
+        }
+
         dispatch({
           type: userConstants.GET_USERS_BY_ROLE_SUCCESS,
-          payload: res.data,
+          payload: filteredData,
         });
         return true;
       } else {

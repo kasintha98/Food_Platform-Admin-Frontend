@@ -1,9 +1,18 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getUsersByRole, getAllRiderLocations } from "../../actions";
 import Layout from "../NewLayout";
 import styled from "@emotion/styled";
-import { Box, Tabs, Typography, Alert } from "@mui/material";
+import {
+  Box,
+  Tabs,
+  Typography,
+  Alert,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
 import Tab from "@mui/material/Tab";
 import PropTypes from "prop-types";
 import { DeliveryTrackingTable } from "../../components/DeliveryTrackingTable";
@@ -33,6 +42,15 @@ const CusTabs = styled(Tabs)`
   & button:focus .count-d {
     color: #fff !important;
     background-color: #ffc000 !important;
+  }
+`;
+
+const CusMenuItem = styled(MenuItem)``;
+
+const CusSelect = styled(Select)`
+  & .MuiSelect-select {
+    padding-top: 5px;
+    padding-bottom: 5px;
   }
 `;
 
@@ -71,14 +89,35 @@ function a11yProps(index) {
 
 export const DeliveryTracking = () => {
   const allOrders = useSelector((state) => state.order.allOrders);
+  const stores = useSelector((state) => state.store.stores);
+  const user = useSelector((state) => state.auth.user);
   const usersByRole = useSelector((state) => state.user.usersByRole);
   const userRoleLoading = useSelector((state) => state.user.userRoleLoading);
-  const [tabValue, setTabValue] = React.useState(5);
+  const [tabValue, setTabValue] = useState(5);
+  const [selectedStore, setSelectedStore] = useState(
+    user.roleCategory === "SUPER_ADMIN"
+      ? "ALL"
+      : stores?.find(
+          (el) =>
+            el.restaurantId === user.restaurantId && el.storeId === user.storeId
+        )?.resturantName
+  );
+  const [selectedStoreObj, setSelectedStoreObj] = useState({
+    restaurantId:
+      user.roleCategory === "SUPER_ADMIN" ? null : user.restaurantId,
+    storeId: user.roleCategory === "SUPER_ADMIN" ? null : user.storeId,
+  });
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getUsersByRole("DELIVERY_BOY")).then((res) => {
+    dispatch(
+      getUsersByRole(
+        "DELIVERY_BOY",
+        selectedStoreObj.restaurantId,
+        selectedStoreObj.storeId
+      )
+    ).then((res) => {
       if (res) {
         document.querySelector(".MuiTabs-scroller") &&
           document
@@ -87,7 +126,7 @@ export const DeliveryTracking = () => {
       }
     });
     dispatch(getAllRiderLocations());
-  }, []);
+  }, [selectedStoreObj]);
 
   const handleChangeTab = (event, newValue) => {
     if (document.querySelector(".MuiTabs-scroller")) {
@@ -112,8 +151,64 @@ export const DeliveryTracking = () => {
     return <span>{count}</span>;
   };
 
+  const handleChangeStore = (event) => {
+    setSelectedStore(event.target.value);
+    console.log(event.target.value);
+  };
+
+  const handleSelectedStore = (store) => {
+    setSelectedStoreObj(store);
+  };
+
   return (
     <Layout sidebar headerTitle="Delivery Boy">
+      <Row>
+        <Col sm={6}></Col>
+        <Col sm={6}>
+          <>
+            <FormControl fullWidth>
+              <InputLabel
+                sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
+                id="demo-simple-select-label"
+              >
+                Please select the store
+              </InputLabel>
+
+              <CusSelect
+                sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={selectedStore}
+                label="Please select the store"
+                onChange={handleChangeStore}
+                disabled={user.roleCategory !== "SUPER_ADMIN"}
+              >
+                <CusMenuItem
+                  onClick={() => {
+                    handleSelectedStore({
+                      restaurantId: null,
+                      storeId: null,
+                    });
+                  }}
+                  value={"ALL"}
+                >
+                  All Stores
+                </CusMenuItem>
+                {stores.map((store) => (
+                  <CusMenuItem
+                    onClick={() => {
+                      handleSelectedStore(store);
+                    }}
+                    value={store.resturantName}
+                  >
+                    <span>{store.resturantName}</span>
+                  </CusMenuItem>
+                ))}
+              </CusSelect>
+            </FormControl>
+          </>
+        </Col>
+      </Row>
       {!userRoleLoading && usersByRole.length > 0 ? (
         <Box
           sx={{
@@ -167,6 +262,7 @@ export const DeliveryTracking = () => {
               style={{ width: "100%" }}
             >
               <DeliveryTrackingTable
+                selectedStoreObj={selectedStoreObj}
                 boyName={user.firstName}
               ></DeliveryTrackingTable>
             </TabPanel>
@@ -175,7 +271,7 @@ export const DeliveryTracking = () => {
       ) : (
         <>
           {!userRoleLoading && usersByRole.length < 1 ? (
-            <Alert severity="warning">
+            <Alert severity="warning" className="mt-4">
               No delivery boy user data recieved!
             </Alert>
           ) : (
