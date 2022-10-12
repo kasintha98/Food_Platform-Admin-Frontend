@@ -45,7 +45,7 @@ export const getCustomerOrders = (
           type: orderConstants.GET_CUSTOMER_ORDER_SUCCESS,
           payload: res.data,
         });
-        dispatch(getAllOrders(orderReceivedDate));
+        dispatch(getAllOrders(orderReceivedDate, restaurantId, storeId));
         return res.data;
       } else {
         dispatch({
@@ -61,12 +61,14 @@ export const getCustomerOrders = (
 };
 
 //action to get all orders from the database
-export const getAllOrders = (orderReceivedDate) => {
+export const getAllOrders = (orderReceivedDate, restaurantId, storeId) => {
   return async (dispatch) => {
     dispatch({ type: orderConstants.GET_ALL_ORDER_REQUEST });
     try {
       const body = {
         orderReceivedDate,
+        restaurantId,
+        storeId,
       };
 
       const res = await axios.post("/queryOrderViewByParams", body);
