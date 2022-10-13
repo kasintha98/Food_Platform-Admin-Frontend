@@ -405,7 +405,7 @@ export const ToppingMaster = () => {
             </CusSelect>
           </FormControl>
           &nbsp;
-          <Button
+          {/* <Button
             sx={{
               fontSize: "0.75rem",
               lineHeight: "1rem",
@@ -423,7 +423,7 @@ export const ToppingMaster = () => {
             color="success"
           >
             ADD NEW TOPPING
-          </Button>
+          </Button> */}
         </Col>
       </Row>
       <div>

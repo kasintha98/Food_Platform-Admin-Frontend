@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import axios from "axios";
 import {
   getProductsNew,
   getAllSections,
@@ -14,6 +13,9 @@ import {
   saveSection,
   saveDish,
   uploadImage,
+  saveSubProduct,
+  getAllMenuIngredientsByRestoAndStoreId,
+  saveMenuIngredient,
 } from "../../actions";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
@@ -119,6 +121,14 @@ const CusTableCell = styled(TableCell)`
   border: 1px solid #000;
 `;
 
+const CusTableCell1 = styled(TableCell)`
+  padding: 0;
+  font-size: 14px;
+  border: 1px solid #000;
+  background-color: #ffc000;
+  color: #fff;
+`;
+
 const CusTableCell2 = styled(TableCell)`
   padding: 0;
   font-size: 14px;
@@ -139,9 +149,10 @@ const itemsPerPage = 33;
 
 const kdsRouters = ["PIZZA", "CHINESE", "DRINKS", "FAST FOOD"];
 
-export const MenuMaster = () => {
+export const ProductMappingMaster = () => {
   const stores = useSelector((state) => state.store.stores);
   const productList = useSelector((state) => state.product.products);
+  const user = useSelector((state) => state.auth.user);
   const allSectionsFromMaster = useSelector(
     (state) => state.product.allSectionsFromMaster
   );
@@ -192,6 +203,7 @@ export const MenuMaster = () => {
   const [firstProductList, setFirstProductList] = useState([]);
   const [isSearched, setIsSearched] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
+  const [showAddTopping, setShowAddTopping] = useState(false);
   const [newSection, setNewSection] = useState("");
   const [newDish, setNewDish] = useState("");
   const [newVeg, setNewVeg] = useState("");
@@ -199,9 +211,11 @@ export const MenuMaster = () => {
   const [newDishType, setNewDishType] = useState("");
   const [newDishDesc, setNewDishDesc] = useState("");
   const [newPrice, setNewPrice] = useState("");
+  const [newPriceTopping, setNewPriceTopping] = useState("");
   const [newMenuFlag, setNewMenuFlag] = useState("");
   const [newIngredientFlag, setNewIngredientFlag] = useState("");
   const [newSize, setNewSize] = useState("");
+  const [newSizeTopping, setNewSizeTopping] = useState("");
   const [newProductImage, setNewProductImage] = useState("");
   const [newCommonImage, setNewCommonImage] = useState("");
   const [newKdsRoutingName, setNewKdsRoutingName] = useState("");
@@ -211,8 +225,23 @@ export const MenuMaster = () => {
   const [isAddNewCategory, setIsAddNewCategory] = useState(false);
   const [addNewDishText, setAddNewDishText] = useState("");
   const [addNewSectionText, setAddNewSectionText] = useState("");
+  const [newCategory, setNewCategory] = useState("");
+  const [newCategoryTopping, setNewCategoryTopping] = useState("");
+  const [newIngredientTypeTopping, setNewIngredientTypeTopping] = useState("");
+  const [isRefresh, setIsRefresh] = useState(false);
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (selectedStoreObj) {
+      dispatch(
+        getAllMenuIngredientsByRestoAndStoreId(
+          selectedStoreObj.restaurantId,
+          selectedStoreObj.storeId
+        )
+      );
+    }
+  }, [selectedStoreObj, isRefresh]);
 
   useEffect(() => {
     if (selectedStoreObj) {
@@ -310,6 +339,9 @@ export const MenuMaster = () => {
   const handleCloseAdd = () => setShowAdd(false);
   const handleShowAdd = () => setShowAdd(true);
 
+  const handleCloseAddTopping = () => setShowAddTopping(false);
+  const handleShowAddTopping = () => setShowAddTopping(true);
+
   const handleChangeStore = (event) => {
     setSelectedStore(event.target.value);
   };
@@ -324,6 +356,22 @@ export const MenuMaster = () => {
 
   const handleSelectedStoreNew = (store) => {
     setNewSelectedStoreObj(store);
+  };
+
+  const handleToppingTypeNew = (event) => {
+    setNewCategoryTopping(event.target.value);
+  };
+
+  const handleRefresh = () => {
+    if (isRefresh) {
+      setIsRefresh(false);
+    } else {
+      setIsRefresh(true);
+    }
+  };
+
+  const handleSizeNewTopping = (event) => {
+    setNewSizeTopping(event.target.value);
   };
 
   const handleRestaurentUpdate = (event) => {
@@ -500,6 +548,10 @@ export const MenuMaster = () => {
       commonImage: newCommonImage,
       ingredientExistsFalg: newIngredientFlag,
       kdsRoutingName: newKdsRoutingName,
+      createdBy: user.loginId,
+      createdDate: new Date(),
+      updatedBy: user.loginId,
+      updatedDate: new Date(),
     };
 
     const formDataImage = new FormData();
@@ -513,30 +565,64 @@ export const MenuMaster = () => {
     });
   };
 
-  /* const uploadImageJpg = async () => {
-    try {
-      const res = await axios.post(
-        "https://storage.googleapis.com/upload/storage/v1/b/hangries/o",
-        { newProductImage },
-        {
-          params: { uploadType: "media", name: "images/a.jpg" },
-          headers: {
-            "Content-Type": "image/jpeg",
-            Authorization: "Bearer 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",
-          },
-        }
-      );
-      console.log(res);
-    } catch (error) {
-      console.log(error);
+  const saveNewTopping = () => {
+    console.log(newCategoryTopping);
+    if (
+      !newIngredientTypeTopping ||
+      !newCategoryTopping ||
+      !newSizeTopping ||
+      !newPriceTopping
+    ) {
+      toast.error("Please fill all the fields!");
+      return;
     }
-  }; */
 
-  const renderAddModal = () => {
+    if (!Number(newPriceTopping)) {
+      toast.error("Price should be a number!");
+      return;
+    }
+
+    const newSubProduct = {
+      ingredientType: newIngredientTypeTopping,
+      category: newCategoryTopping,
+      size: newSizeTopping,
+    };
+
+    dispatch(saveSubProduct(newSubProduct)).then((subProduct) => {
+      if (subProduct) {
+        const newTopping = {
+          storeId: selectedStoreObj.storeId,
+          restaurantId: selectedStoreObj.restaurantId,
+          subProductId: subProduct.subProductId,
+          ingredientType: subProduct.ingredientType,
+          price: newPriceTopping,
+          category: subProduct.category,
+          imagePath: "IMAGE1",
+          createdBy: user.loginId,
+          size: subProduct.size,
+          createdDate: new Date(),
+          updatedBy: user.loginId,
+          updatedDate: new Date(),
+        };
+        dispatch(saveMenuIngredient(newTopping)).then((res) => {
+          if (res) {
+            handleCloseAddTopping();
+            setNewIngredientTypeTopping("");
+            setNewCategoryTopping("");
+            setNewSizeTopping("");
+            setNewPriceTopping(0);
+            handleRefresh();
+          }
+        });
+      }
+    });
+  };
+
+  const renderAddModalTopping = () => {
     return (
       <Modal
-        show={showAdd}
-        onHide={handleCloseAdd}
+        show={showAddTopping}
+        onHide={handleCloseAddTopping}
         style={{
           marginTop: "65px",
           zIndex: 1100,
@@ -544,304 +630,96 @@ export const MenuMaster = () => {
         }}
       >
         <Modal.Header closeButton>
-          <Modal.Title>ADD NEW DISH</Modal.Title>
+          <Modal.Title>ADD NEW TOPPING</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <FormControl fullWidth>
             <CusInputLabel
               sx={{ fontSize: "0.75rem", lineHeight: "1rem", top: "-11px" }}
-              id="demo-simple-select-label"
             >
-              Please select the store
+              Topping Type
             </CusInputLabel>
             <CusSelect
-              sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={newSelectedStore}
-              label="Please select the store"
-              onChange={handleChangeStoreNew}
-            >
-              {stores.map((store) => (
-                <CusMenuItem
-                  onClick={() => {
-                    handleSelectedStoreNew(store);
-                  }}
-                  value={store.resturantName}
-                >
-                  <span>{store.resturantName}</span>
-                </CusMenuItem>
-              ))}
-            </CusSelect>
-          </FormControl>
-
-          <FormControl fullWidth className="mt-3">
-            <CusInputLabel
-              sx={{ fontSize: "0.75rem", lineHeight: "1rem", top: "-11px" }}
-            >
-              Please select the section
-            </CusInputLabel>
-            <CusSelect
-              label="Please select the section"
-              onChange={(event) => {
-                setNewSection(event.target.value);
-              }}
+              label="Topping Type"
+              onChange={handleToppingTypeNew}
               sx={{ fontSize: "0.75rem" }}
-              disabled={!newSelectedStoreObj}
+              fullWidth
             >
-              {sections.map((section, index) => (
-                <CusMenuItem
-                  key={index}
-                  value={section}
-                  style={{ fontSize: "0.75rem" }}
-                >
-                  {section}
-                </CusMenuItem>
-              ))}
-            </CusSelect>
-          </FormControl>
-
-          <FormControl fullWidth className="mt-3">
-            <CusInputLabel
-              sx={{ fontSize: "0.75rem", lineHeight: "1rem", top: "-11px" }}
-            >
-              Please select the dish category
-            </CusInputLabel>
-            <CusSelect
-              label="Please select the dish category"
-              onChange={(event) => {
-                setNewDish(event.target.value);
-              }}
-              sx={{ fontSize: "0.75rem" }}
-              disabled={!allDishesBySection[newSection]}
-            >
-              {allDishesBySection[newSection] &&
-                allDishesBySection[newSection].map((dish, index) => (
-                  <CusMenuItem
-                    key={index}
-                    value={dish}
-                    style={{ fontSize: "0.75rem" }}
-                  >
-                    {dish}
-                  </CusMenuItem>
-                ))}
-            </CusSelect>
-          </FormControl>
-
-          <CusTextField
-            className="mt-3"
-            label="Dish Name"
-            value={newDishType}
-            onChange={(event) => {
-              setNewDishType(event.target.value);
-            }}
-            fullWidth
-          />
-
-          <FormControl fullWidth className="mt-3">
-            <CusInputLabel
-              sx={{ fontSize: "0.75rem", lineHeight: "1rem", top: "-11px" }}
-            >
-              Veg (Y/N)
-            </CusInputLabel>
-            <CusSelect
-              label="Veg (Y/N)"
-              onChange={(event) => {
-                setNewVeg(event.target.value);
-              }}
-              sx={{ fontSize: "0.75rem" }}
-            >
-              <CusMenuItem value={"Veg"} style={{ fontSize: "0.75rem" }}>
-                Y
-              </CusMenuItem>
-              <CusMenuItem value={"Non-Veg"} style={{ fontSize: "0.75rem" }}>
-                N
-              </CusMenuItem>
-            </CusSelect>
-          </FormControl>
-
-          <FormControl fullWidth className="mt-3">
-            <CusInputLabel
-              sx={{ fontSize: "0.75rem", lineHeight: "1rem", top: "-11px" }}
-            >
-              Spicy Indicator
-            </CusInputLabel>
-            <CusSelect
-              label="Spicy Indicator"
-              onChange={(event) => {
-                setNewSpice(event.target.value);
-              }}
-              sx={{ fontSize: "0.75rem" }}
-            >
-              <CusMenuItem value={""} style={{ fontSize: "0.75rem" }}>
-                None
-              </CusMenuItem>
-              <CusMenuItem value={"Less Spicy"} style={{ fontSize: "0.75rem" }}>
-                Less Spicy
-              </CusMenuItem>
-              <CusMenuItem
-                value={"Medium Spicy"}
+              <MenuItem value={"Topping"} style={{ fontSize: "0.75rem" }}>
+                Topping
+              </MenuItem>
+              <MenuItem
+                value={"Choise of Base"}
                 style={{ fontSize: "0.75rem" }}
               >
-                Medium Spicy
-              </CusMenuItem>
-              <CusMenuItem value={"Extra Hot"} style={{ fontSize: "0.75rem" }}>
-                Extra Hot
-              </CusMenuItem>
+                Choice of Base
+              </MenuItem>
             </CusSelect>
           </FormControl>
-
-          <CusTextField
-            className="mt-3"
-            label="Dish description"
-            value={newDishDesc}
-            onChange={(event) => {
-              setNewDishDesc(event.target.value);
-            }}
-            fullWidth
-          />
-
-          <FormControl fullWidth className="mt-3">
+          <div className="mt-3">
+            <CusTextField
+              label="Topping Name"
+              value={newIngredientTypeTopping}
+              onChange={(event) => {
+                setNewIngredientTypeTopping(event.target.value);
+              }}
+              fullWidth
+            />
+          </div>
+          <FormControl className="mt-3" fullWidth>
             <CusInputLabel
               sx={{ fontSize: "0.75rem", lineHeight: "1rem", top: "-11px" }}
             >
               Size
             </CusInputLabel>
             <CusSelect
-              label="Size"
-              onChange={(event) => {
-                setNewSize(event.target.value);
-              }}
+              onChange={handleSizeNewTopping}
               sx={{ fontSize: "0.75rem" }}
+              label="Size"
+              fullWidth
             >
-              <CusMenuItem value={"Regular"} style={{ fontSize: "0.75rem" }}>
+              <MenuItem value={"Regular"} style={{ fontSize: "0.75rem" }}>
                 Regular
-              </CusMenuItem>
-              <CusMenuItem value={"Small"} style={{ fontSize: "0.75rem" }}>
+              </MenuItem>
+              <MenuItem value={"Small"} style={{ fontSize: "0.75rem" }}>
                 Small
-              </CusMenuItem>
-              <CusMenuItem value={"Medium"} style={{ fontSize: "0.75rem" }}>
+              </MenuItem>
+              <MenuItem value={"Medium"} style={{ fontSize: "0.75rem" }}>
                 Medium
-              </CusMenuItem>
-              <CusMenuItem value={"Large"} style={{ fontSize: "0.75rem" }}>
+              </MenuItem>
+              <MenuItem value={"Large"} style={{ fontSize: "0.75rem" }}>
                 Large
-              </CusMenuItem>
+              </MenuItem>
             </CusSelect>
           </FormControl>
-
-          <div style={{ display: "flex" }} className="mt-3">
-            <span
-              style={{
-                fontSize: "0.75rem",
-                marginTop: "0.25rem",
-              }}
-            >
-              Rs.{" "}
-            </span>
+          <div className="mt-3">
             <CusTextField
-              label="Price"
-              value={newPrice}
+              value={newPriceTopping}
               onChange={(event) => {
-                setNewPrice(event.target.value);
+                setNewPriceTopping(event.target.value);
               }}
               fullWidth
+              label="Price"
             />
           </div>
-
-          <FormControl fullWidth className="mt-3">
-            <CusInputLabel
-              sx={{ fontSize: "0.75rem", lineHeight: "1rem", top: "-11px" }}
-            >
-              Dish visible
-            </CusInputLabel>
-            <CusSelect
-              label="Dish visible"
-              onChange={(event) => {
-                setNewMenuFlag(event.target.value);
-              }}
-              sx={{ fontSize: "0.75rem" }}
-            >
-              <CusMenuItem value={"Y"} style={{ fontSize: "0.75rem" }}>
-                Y
-              </CusMenuItem>
-              <CusMenuItem value={"N"} style={{ fontSize: "0.75rem" }}>
-                N
-              </CusMenuItem>
-            </CusSelect>
-          </FormControl>
-
-          <FormControl fullWidth className="mt-3">
-            <CusInputLabel
-              sx={{ fontSize: "0.75rem", lineHeight: "1rem", top: "-11px" }}
-            >
-              Topping (Y/N)
-            </CusInputLabel>
-            <CusSelect
-              label="Topping (Y/N)"
-              onChange={(event) => {
-                setNewIngredientFlag(event.target.value);
-              }}
-              sx={{ fontSize: "0.75rem" }}
-            >
-              <CusMenuItem value={"Y"} style={{ fontSize: "0.75rem" }}>
-                Y
-              </CusMenuItem>
-              <CusMenuItem value={"N"} style={{ fontSize: "0.75rem" }}>
-                N
-              </CusMenuItem>
-            </CusSelect>
-          </FormControl>
-
-          <FormControl fullWidth className="mt-3">
-            <CusInputLabel
-              sx={{ fontSize: "0.75rem", lineHeight: "1rem", top: "-11px" }}
-            >
-              Common image
-            </CusInputLabel>
-            <CusSelect
-              label="Common image"
-              onChange={(event) => {
-                setNewCommonImage(event.target.value);
-              }}
-              sx={{ fontSize: "0.75rem" }}
-            >
-              <CusMenuItem value={"Y"} style={{ fontSize: "0.75rem" }}>
-                Y
-              </CusMenuItem>
-              <CusMenuItem value={"N"} style={{ fontSize: "0.75rem" }}>
-                N
-              </CusMenuItem>
-            </CusSelect>
-          </FormControl>
-
-          <Form.Group
-            controlId="formFileSm"
-            className="mt-3"
-            style={{ width: "100%" }}
-          >
-            <CusInputLabel
-              sx={{ fontSize: "0.75rem", lineHeight: "1rem", top: "-11px" }}
-            >
-              Product image
-            </CusInputLabel>
-            <Form.Control
-              type="file"
-              size="sm"
-              accept=".jpg"
-              maxFileSize={400000}
-              onChange={(e) => {
-                handleProductImageNew(e);
-              }}
-            />
-          </Form.Group>
         </Modal.Body>
         <Modal.Footer>
-          <Button color="error" onClick={handleCloseAdd} variant="contained">
+          <Button
+            variant="contained"
+            color="error"
+            onClick={handleCloseAddTopping}
+          >
             Close
           </Button>
           &nbsp;
-          <Button color="success" onClick={saveNewProduct} variant="contained">
-            Save Changes
+          <Button
+            variant="contained"
+            color="success"
+            onClick={() => {
+              saveNewTopping();
+            }}
+          >
+            Save
           </Button>
         </Modal.Footer>
       </Modal>
@@ -1314,7 +1192,8 @@ export const MenuMaster = () => {
 
   return (
     <div>
-      <Row className="align-items-center">
+      <Row className="align-items-center text-center">
+        <Col sm={3}></Col>
         <div style={{ minWidth: "180px" }}>
           <Typography sx={{ color: "#7F7F7F", fontWeight: "bold" }}>
             Select Store
@@ -1349,8 +1228,12 @@ export const MenuMaster = () => {
             </CusSelect>
           </FormControl>
         </Col>
-        <Col sm={4}>
-          {/* <Button
+        <Col sm={4}></Col>
+      </Row>
+      <Row className="mt-3">
+        <Col sm={3}></Col>
+        <Col sm={3}>
+          <Button
             sx={{
               fontSize: "0.75rem",
               lineHeight: "1rem",
@@ -1361,24 +1244,7 @@ export const MenuMaster = () => {
             onClick={handleShowAdd}
           >
             ADD NEW DISH
-          </Button> */}
-        </Col>
-      </Row>
-      {/* <Row className="align-items-center mt-2">
-        <div style={{ minWidth: "180px" }}>
-          <Typography sx={{ color: "#7F7F7F", fontWeight: "bold" }}>
-            Add new Dish Section
-          </Typography>
-        </div>
-        <Col sm={2}>
-          <CusTextField
-            label="New Dish Section"
-            value={newDishSection}
-            onChange={(event) => {
-              setNewDishSection(event.target.value);
-            }}
-            fullWidth
-          />
+          </Button>
         </Col>
         <Col sm={3}>
           <Button
@@ -1388,71 +1254,29 @@ export const MenuMaster = () => {
               padding: "5px 16px",
             }}
             variant="contained"
-            color="warning"
+            color="success"
+            onClick={() => {
+              if (selectedStoreObj) {
+                handleShowAddTopping();
+              } else {
+                toast.error("Please select a store first!");
+              }
+            }}
           >
-            SAVE
+            ADD NEW TOPPINGS
           </Button>
         </Col>
+        <Col sm={3}></Col>
       </Row>
-      <Row className="align-items-center mt-2">
-        <div style={{ minWidth: "180px" }}>
-          <Typography sx={{ color: "#7F7F7F", fontWeight: "bold" }}>
-            Add new Dish Category
-          </Typography>
-        </div>
-        <Col sm={2}>
-          <CusTextField
-            label="New Dish Category"
-            value={newDishCategory}
-            onChange={(event) => {
-              setNewDishCategory(event.target.value);
-            }}
-            fullWidth
-          />
-        </Col>
-        <Col sm={3}>
-          <Button
-            sx={{
-              fontSize: "0.75rem",
-              lineHeight: "1rem",
-              padding: "5px 16px",
-            }}
-            variant="contained"
-            color="warning"
-          >
-            SAVE
-          </Button>
-        </Col>
-      </Row> */}
       <div>
         <TableContainer className="mt-2" sx={{ maxHeight: 430, width: "101%" }}>
-          <Table sx={{ minWidth: 1700 }} aria-label="simple table" stickyHeader>
+          <Table sx={{ minWidth: 800 }} aria-label="simple table" stickyHeader>
             <TableHead>
               <TableRow>
-                <CusTableCell align="center">No</CusTableCell>
-                <CusTableCell align="center">Store Name</CusTableCell>
-                <CusTableCell2 align="center">
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    Dish Section &nbsp;
-                    <CusTextField2
-                      value={sectionKeyword}
-                      onChange={(event) => {
-                        setIsSearched(true);
-                        setSectionKeyword(event.target.value);
-                      }}
-                      sx={{ width: "150px" }}
-                      label="Search"
-                    />
-                  </div>
-                </CusTableCell2>
-                <CusTableCell align="center">
-                  <div
+                <CusTableCell1 align="center">NO</CusTableCell1>
+                <CusTableCell1 align="center">PRODUCT ID</CusTableCell1>
+                <CusTableCell1 align="center">
+                  {/* <div
                     style={{
                       display: "flex",
                       alignItems: "center",
@@ -1469,10 +1293,11 @@ export const MenuMaster = () => {
                       sx={{ width: "150px" }}
                       label="Search"
                     />
-                  </div>
-                </CusTableCell>
-                <CusTableCell align="center">
-                  <div
+                  </div> */}
+                  CATEGORY
+                </CusTableCell1>
+                <CusTableCell1 align="center">
+                  {/* <div
                     style={{
                       display: "flex",
                       alignItems: "center",
@@ -1489,19 +1314,10 @@ export const MenuMaster = () => {
                       sx={{ width: "150px" }}
                       label="Search"
                     />
-                  </div>
-                </CusTableCell>
-                <CusTableCell align="center">Veg (Y/N)</CusTableCell>
-                <CusTableCell align="center">Spicy Indicator</CusTableCell>
-                <CusTableCell align="center">Dish Description</CusTableCell>
-                <CusTableCell align="center">Size</CusTableCell>
-                <CusTableCell align="center">Price</CusTableCell>
-                <CusTableCell align="center">Image Name</CusTableCell>
-                <CusTableCell align="center">Dish Visible (Y/N)</CusTableCell>
-                <CusTableCell align="center">KDS Counter Name</CusTableCell>
-                <CusTableCell align="center">Topping (Y/N)</CusTableCell>
-                <CusTableCell align="center">Add Toppings</CusTableCell>
-                <CusTableCell align="center">Action</CusTableCell>
+                  </div> */}
+                  DISH NAME
+                </CusTableCell1>
+                <CusTableCell1 align="center">Price</CusTableCell1>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -1532,73 +1348,7 @@ export const MenuMaster = () => {
                             align="center"
                             style={{ minWidth: "175px" }}
                           >
-                            <FormControl fullWidth>
-                              <CusNativeSelect
-                                defaultValue={`${
-                                  product.restaurantId - product.storeId
-                                }`}
-                                inputProps={{
-                                  name: "status",
-                                  id: "uncontrolled-native",
-                                }}
-                                onChange={handleRestaurentUpdate}
-                                sx={{
-                                  fontSize: "0.75rem",
-                                  "& .MuiInputBase-input.Mui-disabled": {
-                                    WebkitTextFillColor: isSave[product.id]
-                                      ? "black"
-                                      : "#404040",
-                                  },
-                                }}
-                                disabled={true}
-                              >
-                                {stores.map((store, index) => (
-                                  <option
-                                    key={index}
-                                    value={`${
-                                      store.restaurantId - store.storeId
-                                    }`}
-                                    style={{ fontSize: "0.75rem" }}
-                                  >
-                                    {store.resturantName}
-                                  </option>
-                                ))}
-                              </CusNativeSelect>
-                            </FormControl>
-                          </CusTableCell>
-                          <CusTableCell
-                            align="center"
-                            style={{ minWidth: "100px" }}
-                          >
-                            <FormControl fullWidth>
-                              <NativeSelect
-                                defaultValue={product.section}
-                                inputProps={{
-                                  name: "status",
-                                  id: "uncontrolled-native",
-                                }}
-                                onChange={handleSectionUpdate}
-                                sx={{
-                                  fontSize: "0.75rem",
-                                  "& .MuiInputBase-input.Mui-disabled": {
-                                    WebkitTextFillColor: isSave[product.id]
-                                      ? "black"
-                                      : "#404040",
-                                  },
-                                }}
-                                disabled={!isSave[product.id]}
-                              >
-                                {sections.map((section, index) => (
-                                  <option
-                                    key={index}
-                                    value={section}
-                                    style={{ fontSize: "0.75rem" }}
-                                  >
-                                    {section}
-                                  </option>
-                                ))}
-                              </NativeSelect>
-                            </FormControl>
+                            {product.productId}
                           </CusTableCell>
                           <CusTableCell
                             align="center"
@@ -1718,167 +1468,7 @@ export const MenuMaster = () => {
                               variant="standard"
                             />
                           </CusTableCell>
-                          <CusTableCell
-                            align="center"
-                            style={{ minWidth: "50px" }}
-                          >
-                            <FormControl fullWidth>
-                              <NativeSelect
-                                defaultValue={product.dishCategory}
-                                inputProps={{
-                                  name: "status",
-                                  id: "uncontrolled-native",
-                                }}
-                                onChange={handleVegUpdate}
-                                sx={{
-                                  fontSize: "0.75rem",
-                                  "& .MuiInputBase-input.Mui-disabled": {
-                                    WebkitTextFillColor: isSave[product.id]
-                                      ? "black"
-                                      : "#404040",
-                                  },
-                                }}
-                                disabled={!isSave[product.id]}
-                              >
-                                <option
-                                  value={"Veg"}
-                                  style={{ fontSize: "0.75rem" }}
-                                >
-                                  Y
-                                </option>
-                                <option
-                                  value={"Non-Veg"}
-                                  style={{ fontSize: "0.75rem" }}
-                                >
-                                  N
-                                </option>
-                              </NativeSelect>
-                            </FormControl>
-                          </CusTableCell>
-                          <CusTableCell
-                            align="center"
-                            style={{ minWidth: "130px" }}
-                          >
-                            <FormControl fullWidth>
-                              <NativeSelect
-                                disabled={!isSave[product.id]}
-                                defaultValue={product.dishSpiceIndicatory}
-                                inputProps={{
-                                  name: "status",
-                                  id: "uncontrolled-native",
-                                }}
-                                onChange={handleSpiceUpdate}
-                                sx={{
-                                  fontSize: "0.75rem",
-                                  "& .MuiInputBase-input.Mui-disabled": {
-                                    WebkitTextFillColor: isSave[product.id]
-                                      ? "black"
-                                      : "#404040",
-                                  },
-                                }}
-                              >
-                                <option
-                                  value={""}
-                                  style={{ fontSize: "0.75rem" }}
-                                >
-                                  None
-                                </option>
-                                <option
-                                  value={"Less Spicy"}
-                                  style={{ fontSize: "0.75rem" }}
-                                >
-                                  Less Spicy
-                                </option>
-                                <option
-                                  value={"Medium Spicy"}
-                                  style={{ fontSize: "0.75rem" }}
-                                >
-                                  Medium Spicy
-                                </option>
-                                <option
-                                  value={"Extra Hot"}
-                                  style={{ fontSize: "0.75rem" }}
-                                >
-                                  Extra Hot
-                                </option>
-                              </NativeSelect>
-                            </FormControl>
-                          </CusTableCell>
-                          <CusTableCell
-                            align="center"
-                            style={{ minWidth: "250px" }}
-                          >
-                            <CusTextField
-                              disabled={!isSave[product.id]}
-                              key={product.id}
-                              defaultValue={product.dishDescriptionId}
-                              value={currentDishDesc[product.id]}
-                              onChange={(event) => {
-                                const dishDescriptionIds = {
-                                  ...currentDishDesc,
-                                  [product.id]: event.target.value,
-                                };
-                                setCurrentDishDesc(dishDescriptionIds);
-                              }}
-                              fullWidth
-                              sx={{
-                                fontSize: "0.75rem",
-                                "& .MuiInputBase-input.Mui-disabled": {
-                                  WebkitTextFillColor: isSave[product.id]
-                                    ? "black"
-                                    : "#404040",
-                                },
-                              }}
-                              variant="standard"
-                            />
-                          </CusTableCell>
-                          <CusTableCell
-                            align="center"
-                            style={{ minWidth: "80px" }}
-                          >
-                            <NativeSelect
-                              disabled={!isSave[product.id]}
-                              defaultValue={product.productSize}
-                              inputProps={{
-                                name: "status",
-                                id: "uncontrolled-native",
-                              }}
-                              onChange={handleSizeUpdate}
-                              sx={{
-                                fontSize: "0.75rem",
-                                "& .MuiInputBase-input.Mui-disabled": {
-                                  WebkitTextFillColor: isSave[product.id]
-                                    ? "black"
-                                    : "#404040",
-                                },
-                              }}
-                            >
-                              <option
-                                value={"Regular"}
-                                style={{ fontSize: "0.75rem" }}
-                              >
-                                Regular
-                              </option>
-                              <option
-                                value={"Small"}
-                                style={{ fontSize: "0.75rem" }}
-                              >
-                                Small
-                              </option>
-                              <option
-                                value={"Medium"}
-                                style={{ fontSize: "0.75rem" }}
-                              >
-                                Medium
-                              </option>
-                              <option
-                                value={"Large"}
-                                style={{ fontSize: "0.75rem" }}
-                              >
-                                Large
-                              </option>
-                            </NativeSelect>
-                          </CusTableCell>
+
                           <CusTableCell
                             align="center"
                             style={{ minWidth: "70px" }}
@@ -1921,215 +1511,6 @@ export const MenuMaster = () => {
                               />
                             </div>
                           </CusTableCell>
-                          <CusTableCell
-                            align="center"
-                            style={{ display: "flex", minWidth: "450px" }}
-                          >
-                            <Form.Group
-                              controlId="formFileSm"
-                              className="mb-1"
-                              style={{ width: "175px" }}
-                            >
-                              <Form.Control
-                                disabled={!isSave[product.id]}
-                                type="file"
-                                size="sm"
-                                accept=".jpg"
-                                maxFileSize={400000}
-                                onChange={(e) => {
-                                  handleProductImage(e, product.id);
-                                }}
-                              />
-                            </Form.Group>
-                            {/* <div className="input-group mb-1">
-                              <input
-                                type="file"
-                                name="productImage"
-                                className="form-control"
-                                id="inputGroupFile01"
-                                accept=".jpg"
-                                max={400000}
-                              
-                                onChange={(e) => {
-                                  handleProductImage(e, product.id);
-                                }}
-                                style={{ fontSize: "12px" }}
-                              />
-                            </div> */}
-                            <Typography
-                              sx={{
-                                fontSize: "12px",
-                                color: isSave[product.id] ? "black" : "#404040",
-                              }}
-                            >
-                              Current Image : {product.imagePath}
-                            </Typography>
-
-                            {/* <CusTextField
-                              defaultValue={product.imagePath}
-                              value={currentImageName[product.id]}
-                              onChange={(event) => {
-                                const imagePaths = {
-                                  ...currentImageName,
-                                  [product.id]: event.target.value,
-                                };
-                                setCurrentImageName(imagePaths);
-                              }}
-                              fullWidth
-                              variant="standard"
-                            /> */}
-                          </CusTableCell>
-                          <CusTableCell
-                            align="center"
-                            style={{ minWidth: "50px" }}
-                          >
-                            <NativeSelect
-                              disabled={!isSave[product.id]}
-                              defaultValue={product.menuAvailableFlag}
-                              inputProps={{
-                                name: "status",
-                                id: "uncontrolled-native",
-                              }}
-                              onChange={handleMenuFlagUpdate}
-                              sx={{
-                                fontSize: "0.75rem",
-                                "& .MuiInputBase-input.Mui-disabled": {
-                                  WebkitTextFillColor: isSave[product.id]
-                                    ? "black"
-                                    : "#404040",
-                                },
-                              }}
-                            >
-                              <option
-                                value={"Y"}
-                                style={{ fontSize: "0.75rem" }}
-                              >
-                                Y
-                              </option>
-                              <option
-                                value={"N"}
-                                style={{ fontSize: "0.75rem" }}
-                              >
-                                N
-                              </option>
-                            </NativeSelect>
-                          </CusTableCell>
-                          <CusTableCell align="center">
-                            <NativeSelect
-                              disabled={!isSave[product.id]}
-                              defaultValue={product.kdsRoutingName}
-                              inputProps={{
-                                name: "status",
-                                id: "uncontrolled-native",
-                              }}
-                              onChange={handleKdsRoutingNameUpdate}
-                              sx={{
-                                fontSize: "0.75rem",
-                                "& .MuiInputBase-input.Mui-disabled": {
-                                  WebkitTextFillColor: isSave[product.id]
-                                    ? "black"
-                                    : "#404040",
-                                },
-                              }}
-                            >
-                              {kdsRouters.map((item) => (
-                                <option
-                                  value={item}
-                                  style={{ fontSize: "0.75rem" }}
-                                >
-                                  {item}
-                                </option>
-                              ))}
-                            </NativeSelect>
-                          </CusTableCell>
-                          <CusTableCell
-                            align="center"
-                            style={{ minWidth: "50px" }}
-                          >
-                            <NativeSelect
-                              disabled={!isSave[product.id]}
-                              defaultValue={product.ingredientExistsFalg}
-                              inputProps={{
-                                name: "status",
-                                id: "uncontrolled-native",
-                              }}
-                              onChange={handleIngredientFlagUpdate}
-                              sx={{
-                                fontSize: "0.75rem",
-                                "& .MuiInputBase-input.Mui-disabled": {
-                                  WebkitTextFillColor: isSave[product.id]
-                                    ? "black"
-                                    : "#404040",
-                                },
-                              }}
-                            >
-                              <option
-                                value={"Y"}
-                                style={{ fontSize: "0.75rem" }}
-                              >
-                                Y
-                              </option>
-                              <option
-                                value={"N"}
-                                style={{ fontSize: "0.75rem" }}
-                              >
-                                N
-                              </option>
-                            </NativeSelect>
-                          </CusTableCell>
-                          <CusTableCell
-                            align="center"
-                            style={{ minWidth: "130px" }}
-                          >
-                            {product.ingredientExistsFalg === "Y" ? (
-                              <Button
-                                sx={{
-                                  fontSize: "0.75rem",
-                                  lineHeight: "1rem",
-                                  padding: "5px 16px",
-                                }}
-                                disabled={!isSave[product.id]}
-                              >
-                                Add Toppings
-                              </Button>
-                            ) : null}
-                          </CusTableCell>
-                          <CusTableCell align="center">
-                            {isSave[product.id] ? (
-                              <Button
-                                key={product.id}
-                                variant="contained"
-                                color="success"
-                                sx={{
-                                  fontSize: "0.75rem",
-                                  lineHeight: "1rem",
-                                  padding: "5px 16px",
-                                }}
-                                onClick={() => {
-                                  onSaveClickHandle(product.id);
-                                  saveUpdateProduct(product);
-                                }}
-                              >
-                                Save
-                              </Button>
-                            ) : (
-                              <Button
-                                key={product.id}
-                                variant="contained"
-                                color="warning"
-                                sx={{
-                                  fontSize: "0.75rem",
-                                  lineHeight: "1rem",
-                                  padding: "5px 16px",
-                                }}
-                                onClick={() => {
-                                  onEditClickHandle(product.id);
-                                }}
-                              >
-                                EDIT
-                              </Button>
-                            )}
-                          </CusTableCell>
                         </TableRow>
                       ))}
                     </>
@@ -2163,6 +1544,7 @@ export const MenuMaster = () => {
         </div>
       ) : null}
       {renderAddModalNew()}
+      {renderAddModalTopping()}
     </div>
   );
 };
