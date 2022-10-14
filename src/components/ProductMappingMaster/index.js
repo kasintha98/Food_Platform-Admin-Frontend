@@ -7,7 +7,7 @@ import {
   getAllSectionsWithDishes,
   getProductsNewWithPaging,
   updateMenuItem,
-  saveMenuItem,
+  saveProduct,
   getAllDishesFromMaster,
   getAllSectionsFromMaster,
   saveSection,
@@ -16,6 +16,7 @@ import {
   saveSubProduct,
   getAllMenuIngredientsByRestoAndStoreId,
   saveMenuIngredient,
+  saveSubProductNew,
 } from "../../actions";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
@@ -513,7 +514,7 @@ export const ProductMappingMaster = () => {
 
   const saveNewProduct = () => {
     if (
-      !newSelectedStoreObj ||
+      /* !newSelectedStoreObj || */
       !newSection ||
       !newDish ||
       !newVeg ||
@@ -533,8 +534,8 @@ export const ProductMappingMaster = () => {
     }
 
     const newProduct = {
-      restaruantId: newSelectedStoreObj.restaurantId,
-      storeId: newSelectedStoreObj.storeId,
+      /* restaruantId: newSelectedStoreObj.restaurantId,
+      storeId: newSelectedStoreObj.storeId, */
       section: newSection,
       dish: newDish,
       dishCategory: newVeg,
@@ -557,7 +558,7 @@ export const ProductMappingMaster = () => {
     const formDataImage = new FormData();
     formDataImage.append("files", newProductImage);
 
-    dispatch(saveMenuItem(newProduct)).then((res) => {
+    dispatch(saveProduct(newProduct)).then((res) => {
       if (res) {
         handleCloseAdd();
         dispatch(uploadImage(formDataImage));
@@ -582,38 +583,35 @@ export const ProductMappingMaster = () => {
       return;
     }
 
-    const newSubProduct = {
+    /* const newSubProduct = {
       ingredientType: newIngredientTypeTopping,
       category: newCategoryTopping,
       size: newSizeTopping,
+    }; */
+
+    const newTopping = {
+      /* storeId: selectedStoreObj.storeId,
+      restaurantId: selectedStoreObj.restaurantId, */
+      ingredientType: newIngredientTypeTopping,
+      price: newPriceTopping,
+      category: newCategoryTopping,
+      imagePath: "IMAGE1",
+      createdBy: user.loginId,
+      subProductStatus: "Y",
+      size: newSizeTopping,
+      createdDate: new Date(),
+      updatedBy: user.loginId,
+      updatedDate: new Date(),
     };
 
-    dispatch(saveSubProduct(newSubProduct)).then((subProduct) => {
-      if (subProduct) {
-        const newTopping = {
-          storeId: selectedStoreObj.storeId,
-          restaurantId: selectedStoreObj.restaurantId,
-          subProductId: subProduct.subProductId,
-          ingredientType: subProduct.ingredientType,
-          price: newPriceTopping,
-          category: subProduct.category,
-          imagePath: "IMAGE1",
-          createdBy: user.loginId,
-          size: subProduct.size,
-          createdDate: new Date(),
-          updatedBy: user.loginId,
-          updatedDate: new Date(),
-        };
-        dispatch(saveMenuIngredient(newTopping)).then((res) => {
-          if (res) {
-            handleCloseAddTopping();
-            setNewIngredientTypeTopping("");
-            setNewCategoryTopping("");
-            setNewSizeTopping("");
-            setNewPriceTopping(0);
-            handleRefresh();
-          }
-        });
+    dispatch(saveSubProductNew(newTopping)).then((res) => {
+      if (res) {
+        handleCloseAddTopping();
+        setNewIngredientTypeTopping("");
+        setNewCategoryTopping("");
+        setNewSizeTopping("");
+        setNewPriceTopping(0);
+        handleRefresh();
       }
     });
   };

@@ -857,3 +857,69 @@ export const uploadImage = (image) => {
     }
   };
 };
+
+export const saveProduct = (product) => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: productConstants.SAVE_NEW_PRODUCT_REQUEST,
+      });
+
+      const res = await axios.post(`/saveProduct`, product);
+
+      if (res.status === 200) {
+        dispatch({
+          type: productConstants.SAVE_NEW_PRODUCT_SUCCESS,
+          payload: res.data,
+        });
+        toast.success("Product added successfully!");
+        return res.data;
+      } else {
+        dispatch({
+          type: productConstants.SAVE_NEW_PRODUCT_FAILURE,
+        });
+        console.log("error");
+        toast.error("Error when adding product, please try again!");
+      }
+    } catch (error) {
+      dispatch({
+        type: productConstants.SAVE_NEW_PRODUCT_FAILURE,
+      });
+      toast.error("Error when adding product, please try again!");
+      console.log(error);
+    }
+  };
+};
+
+export const saveSubProductNew = (topping) => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: productConstants.SAVE_NEW_SUB_PRODUCT_NEW_REQUEST,
+      });
+
+      const res = await axios.post(`/saveSubProduct`, topping);
+
+      if (res.status === 200) {
+        dispatch({
+          type: productConstants.SAVE_NEW_SUB_PRODUCT_NEW_SUCCESS,
+          payload: res.data,
+        });
+        toast.success("Sub product saved successfully!");
+        return res.data;
+      } else {
+        dispatch({
+          type: productConstants.SAVE_NEW_SUB_PRODUCT_NEW_FAILURE,
+        });
+        console.log("error");
+        toast.error("Error when saving sub product, please try again!");
+      }
+    } catch (error) {
+      dispatch({
+        type: productConstants.SAVE_NEW_SUB_PRODUCT_NEW_FAILURE,
+      });
+      toast.error("Error when saving sub product, please try again!");
+      console.log(error);
+    }
+  };
+};
