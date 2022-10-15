@@ -86,6 +86,7 @@ export const NewReports = () => {
   const reportTypes = useSelector((state) => state.report.reportTypes);
   const businessDateAll = useSelector((state) => state.user.businessDate);
   const stores = useSelector((state) => state.store.stores);
+  const user = useSelector((state) => state.auth.user);
   const [dateState, setDateState] = useState([
     {
       startDate:
@@ -102,7 +103,14 @@ export const NewReports = () => {
     },
   ]);
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedStore, setSelectedStore] = useState("ALL");
+  const [selectedStore, setSelectedStore] = useState(
+    user.roleCategory === "SUPER_ADMIN"
+      ? "ALL"
+      : stores?.find(
+          (el) =>
+            el.restaurantId === user.restaurantId && el.storeId === user.storeId
+        )?.resturantName
+  );
   const [selectedReport, setSelectedReport] = useState(
     /* reportTypes[0] ? reportTypes[0].configCriteriaValue : null */ ""
   );
@@ -110,8 +118,9 @@ export const NewReports = () => {
     reportTypes[0] ? reportTypes[0] : null
   );
   const [selectedStoreObj, setSelectedStoreObj] = useState({
-    restaurantId: null,
-    storeId: null,
+    restaurantId:
+      user.roleCategory === "SUPER_ADMIN" ? null : user.restaurantId,
+    storeId: user.roleCategory === "SUPER_ADMIN" ? null : user.storeId,
   });
 
   //const dispatch = useDispatch();
@@ -216,6 +225,9 @@ export const NewReports = () => {
                       value={selectedStore}
                       label="Please select the store"
                       onChange={handleChangeStore}
+                      disabled={
+                        user.roleCategory === "SUPER_ADMIN" ? false : true
+                      }
                     >
                       <CusMenuItem
                         onClick={() => {

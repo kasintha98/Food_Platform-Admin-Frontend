@@ -103,7 +103,9 @@ export const AdminDashboard = () => {
       user.roleCategory === "SUPER_ADMIN" ? null : user.restaurantId,
     storeId: user.roleCategory === "SUPER_ADMIN" ? null : user.storeId,
   });
-  const [checked, setChecked] = useState(true);
+  const [checked, setChecked] = useState(
+    user.roleCategory === "SUPER_ADMIN" ? true : false
+  );
   const [anchorEl, setAnchorEl] = useState(null);
   const [dateState, setDateState] = useState([
     {
@@ -374,18 +376,20 @@ export const AdminDashboard = () => {
               </FormControl>
             </Col>
             <Col sm={3}>
-              <FormGroup>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={checked}
-                      onChange={handleChange}
-                      inputProps={{ "aria-label": "controlled" }}
-                    />
-                  }
-                  label="Select All stores"
-                />
-              </FormGroup>
+              {user.roleCategory === "SUPER_ADMIN" ? (
+                <FormGroup>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={checked}
+                        onChange={handleChange}
+                        inputProps={{ "aria-label": "controlled" }}
+                      />
+                    }
+                    label="Select All stores"
+                  />
+                </FormGroup>
+              ) : null}
             </Col>
           </Row>
         </div>

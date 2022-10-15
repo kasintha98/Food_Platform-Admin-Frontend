@@ -116,7 +116,7 @@ export const DeliveryBoy = () => {
         }
       });
     } else {
-      dispatch(getUsersByRole("DELIVERY_BOY"));
+      dispatch(getUsersByRole("DELIVERY_BOY", user.restaurantId, user.storeId));
       if (selectedDeliBoyObj) {
         dispatch(
           getCustomerOrders(
@@ -677,7 +677,7 @@ export const DeliveryBoy = () => {
                           Payment Mode
                         </InputLabel>
                         <NativeSelect
-                          defaultValue={row.paymentMode}
+                          defaultValue={row.paymentMode.toUpperCase()}
                           inputProps={{
                             name: "status",
                             id: "uncontrolled-native",
@@ -694,7 +694,7 @@ export const DeliveryBoy = () => {
                           {paymentModes.map((mode) => (
                             <option
                               key={mode.value}
-                              value={mode.value}
+                              value={mode.value.toUpperCase()}
                               style={{ fontSize: "0.75rem" }}
                             >
                               {mode.description}
