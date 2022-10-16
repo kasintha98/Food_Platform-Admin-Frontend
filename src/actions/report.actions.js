@@ -13,7 +13,7 @@ export const getAllReports = (
       dispatch({ type: reportConstants.GET_ALL_REPORTS_REQUEST });
 
       const reqBody = {
-        restaurantId,
+        restaurantId: "R001",
         storeId,
         fromDate,
         toDate,
@@ -54,7 +54,7 @@ export const getReportTypes = (restaurantId) => {
 
       const res = await axios.get("/getConfigDetailsByCriteria", {
         params: {
-          restaurantId: restaurantId,
+          restaurantId: "R001",
           storeId: "ALL",
           criteria: "REPORTS",
         },
@@ -93,7 +93,7 @@ export const getReportByType = (
       dispatch({ type: reportConstants.GET_REPORT_BY_TYPE_REQUEST });
 
       const reqBody = {
-        restaurantId,
+        restaurantId: "R001",
         storeId,
         fromDate,
         toDate,
@@ -138,7 +138,7 @@ export const getSalesSummeryByDateListReports = (
       });
 
       const reqBody = {
-        restaurantId,
+        restaurantId: "R001",
         storeId,
         fromDate,
         toDate,
@@ -185,7 +185,7 @@ export const getSalesSummeryByOrderSourceReports = (
       });
 
       const reqBody = {
-        restaurantId,
+        restaurantId: "R001",
         storeId,
         fromDate,
         toDate,
@@ -232,7 +232,7 @@ export const getSalesSummeryByPaymentModeReports = (
       });
 
       const reqBody = {
-        restaurantId,
+        restaurantId: "R001",
         storeId,
         fromDate,
         toDate,
