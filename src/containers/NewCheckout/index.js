@@ -1626,7 +1626,7 @@ export default function NewCheckout(props) {
     var windows = window.open("", "", "height=600, width=600");
     windows.document.write("<html><body >");
     windows.document.write(
-      "<style> body{text-align: center; margin: 0; line-height: 0; font-size: 10px;} th{font-size: 11px;} h5{font-size: 10px; line-height: 0.9 !important; font-weight: 400 !important;} td{font-size: 11px;} table{width: 100%} tbody{text-align: left;} th{text-align: left !important;} section{ line-height: 0.9 !important;}  @media print { body {  }} @page { size: Statement;margin: 0;}</style>"
+      "<style> .id{font-size: 12px;} body{text-align: center; margin: 0; line-height: 0; font-size: 10px;} th{font-size: 11px;} h5{font-size: 10px; line-height: 0.9 !important; font-weight: 400 !important;} td{font-size: 11px; font-weight: bold;} table{width: 100%} tbody{text-align: left;} th{text-align: left !important;} section{ line-height: 0.9 !important;}  @media print { body {  }} @page { size: Statement;margin: 0;}</style>"
     );
     windows.document.write(div);
     windows.document.write("</body></html>");
@@ -1702,36 +1702,37 @@ export default function NewCheckout(props) {
                             ? props.storeObj.storeGstNumber
                             : null}
                         </Typography>
-                        <Typography sx={{ fontWeight: "600" }}>
+                        <p className="id">
                           Order ID: {orderResp ? orderResp.orderId : null}
-                        </Typography>
+                        </p>
                         <hr></hr>
 
                         <div
                           style={{ display: "inline-flex", columnGap: "5px" }}
                         >
-                          <h5 sx={{ fontWeight: "600" }}>
+                          <p>
                             Cashier:{" "}
                             {orderResp
                               ? orderResp.createdBy.toUpperCase()
                               : null}
-                          </h5>
-                          <h5 sx={{ fontWeight: "600" }}>
+                          </p>
+                          <p>
                             Table No:{" "}
                             {orderResp && orderResp.storeTableId
                               ? orderResp.storeTableId
                               : "N/A"}
-                          </h5>
-                          <h5 sx={{ fontWeight: "600" }}>
+                          </p>
+                        </div>
+                        <div>
+                          <p>
                             <span>
                               {orderResp ? orderResp.orderDeliveryType : null}
                             </span>
                             <span>
                               [{orderResp ? orderResp.paymentStatus : null}]
                             </span>
-                          </h5>
+                          </p>
                         </div>
-                        <br></br>
                         <div
                           style={{ display: "inline-flex", columnGap: "10px" }}
                         >
