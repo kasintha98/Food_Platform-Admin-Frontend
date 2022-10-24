@@ -399,7 +399,7 @@ export const OrderTable = (props) => {
                           currentOrder.storeId
                         )}
                       </Typography>
-
+                      <hr></hr>
                       <Typography sx={{ fontWeight: "600" }}>
                         {renderStoreGST(
                           currentOrder.restaurantId,
@@ -407,26 +407,49 @@ export const OrderTable = (props) => {
                         )}
                       </Typography>
 
-                      <Typography sx={{ fontWeight: "600" }}>
+                      <Typography
+                        sx={{ fontWeight: "600", fontSize: "1.2rem" }}
+                      >
                         Order ID: {currentOrder ? currentOrder.orderId : null}
                       </Typography>
-
-                      <Typography sx={{ fontWeight: "600" }}>
-                        Table No:{" "}
-                        {currentOrder && currentOrder.storeTableId
-                          ? currentOrder.storeTableId
-                          : "N/A"}
-                      </Typography>
-                      <Typography sx={{ fontWeight: "600" }}>
-                        Cashier: {currentOrder.createdBy.toUpperCase()}
-                      </Typography>
+                      <hr></hr>
+                      <Row>
+                        <Col>
+                          <Typography>
+                            Cashier: {currentOrder.createdBy.toUpperCase()}
+                          </Typography>
+                        </Col>
+                        <Col>
+                          <Typography>
+                            Table No:{" "}
+                            {currentOrder && currentOrder.storeTableId
+                              ? currentOrder.storeTableId
+                              : "N/A"}
+                          </Typography>
+                        </Col>
+                      </Row>
                       <Typography sx={{ fontWeight: "600" }}>
                         <span>{currentOrder.orderDeliveryType}</span>
                         <span> [{currentOrder.paymentStatus}]</span>
                       </Typography>
+                      <div>
+                        <Typography>
+                          <Row>
+                            <Col>
+                              Date:{" "}
+                              {renderNowDate(
+                                currentOrder.orderReceivedDateTime
+                              )}
+                            </Col>
+                            <Col>
+                              Time: {renderNowTime(currentOrder.createdDate)}
+                            </Col>
+                          </Row>
+                        </Typography>
+                      </div>
                     </div>
                     <hr></hr>
-                    <div>
+                    <div className="text-center">
                       <Typography>
                         Name: {currentOrder.customerName.toUpperCase()}
                       </Typography>
@@ -436,20 +459,7 @@ export const OrderTable = (props) => {
                       </Typography>
                       <Typography>Address: {currentOrder.address}</Typography>
                     </div>
-                    <hr></hr>
-                    <div>
-                      <Typography>
-                        <Row>
-                          <Col>
-                            Time: {renderNowTime(currentOrder.createdDate)}
-                          </Col>
-                          <Col>
-                            Date:{" "}
-                            {renderNowDate(currentOrder.orderReceivedDateTime)}
-                          </Col>
-                        </Row>
-                      </Typography>
-                    </div>
+
                     <hr></hr>
                     <OrderDetailsTable
                       fullResp={currentOrder}

@@ -1767,8 +1767,6 @@ export default function NewCheckout(props) {
                           ) : null}
                         </h5>
                       </div>
-                      <hr></hr>
-
                       <div>
                         <InvoiceTable
                           allProducts={orderResp.orderDetails}
@@ -1821,25 +1819,42 @@ export default function NewCheckout(props) {
                           <>, {props.storeObj.country}</>
                         ) : null}
                       </Typography>
+                      <hr></hr>
                       <Typography sx={{ fontWeight: "600" }}>
                         GST NO:{" "}
                         {props.storeObj ? props.storeObj.storeGstNumber : null}
                       </Typography>
-                      <Typography sx={{ fontWeight: "600" }}>
+                      <Typography
+                        sx={{ fontWeight: "600", fontSize: "1.2rem" }}
+                      >
                         Order ID: {orderResp ? orderResp.orderId : null}
                       </Typography>
+                      <hr></hr>
 
-                      <Typography sx={{ fontWeight: "600" }}>
-                        Table No:{" "}
-                        {orderResp && orderResp.storeTableId
-                          ? orderResp.storeTableId
-                          : "N/A"}
-                      </Typography>
-                      <Typography sx={{ fontWeight: "600" }}>
-                        Cashier:{" "}
-                        {orderResp ? orderResp.createdBy.toUpperCase() : null}
-                      </Typography>
-                      <Typography sx={{ fontWeight: "600" }}>
+                      <div>
+                        <Typography sx={{ color: "black" }}>
+                          <Row>
+                            <Col>
+                              <Typography /* sx={{ fontWeight: "600" }} */>
+                                Cashier:{" "}
+                                {orderResp
+                                  ? orderResp.createdBy.toUpperCase()
+                                  : null}
+                              </Typography>
+                            </Col>
+                            <Col>
+                              <Typography /* sx={{ fontWeight: "600" }} */>
+                                Table No:{" "}
+                                {orderResp && orderResp.storeTableId
+                                  ? orderResp.storeTableId
+                                  : "N/A"}
+                              </Typography>
+                            </Col>
+                          </Row>
+                        </Typography>
+                      </div>
+
+                      <Typography /* sx={{ fontWeight: "600" }} */>
                         <span>
                           {orderResp ? orderResp.orderDeliveryType : null}
                         </span>
@@ -1847,9 +1862,22 @@ export default function NewCheckout(props) {
                           [{orderResp ? orderResp.paymentStatus : null}]
                         </span>
                       </Typography>
+
+                      <div>
+                        <Typography sx={{ color: "black" }}>
+                          <Row>
+                            <Col>
+                              <p>Date: {renderNowDate()}</p>
+                            </Col>
+                            <Col>
+                              <p>Time: {renderNowTime()}</p>
+                            </Col>
+                          </Row>
+                        </Typography>
+                      </div>
                     </div>
                     <hr></hr>
-                    <div>
+                    <div className="text-center">
                       <Typography sx={{ color: "black" }}>
                         Name:{" "}
                         {firstName ? (
@@ -1875,20 +1903,6 @@ export default function NewCheckout(props) {
                         ) : null}
                       </Typography>
                     </div>
-                    <hr></hr>
-                    <div>
-                      <Typography sx={{ color: "black" }}>
-                        <Row>
-                          <Col>
-                            <p>Time: {renderNowTime()}</p>
-                          </Col>
-                          <Col>
-                            <p>Date: {renderNowDate()}</p>
-                          </Col>
-                        </Row>
-                      </Typography>
-                    </div>
-                    <hr></hr>
                     <div>
                       <InvoiceTable
                         allProducts={orderResp.orderDetails}

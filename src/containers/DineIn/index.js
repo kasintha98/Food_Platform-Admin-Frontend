@@ -39,10 +39,23 @@ export const DineIn = () => {
   const dispatch = useDispatch();
 
   const [selectedStore, setSelectedStore] = useState(user.resturantName);
-  const [selectedStoreObj, setSelectedStoreObj] = useState({
-    restaurantId: user.restaurantId,
-    storeId: user.storeId,
-  });
+  const [selectedStoreObj, setSelectedStoreObj] = useState(
+    stores.find((obj) => {
+      return (
+        obj.restaurantId === user.restaurantId && obj.storeId === user.storeId
+      );
+    })
+      ? stores.find((obj) => {
+          return (
+            obj.restaurantId === user.restaurantId &&
+            obj.storeId === user.storeId
+          );
+        })
+      : {
+          restaurantId: user.restaurantId,
+          storeId: user.storeId,
+        }
+  );
   const [ShowCheckout, setShowCheckout] = useState(false);
   //const [orderTypesT, setOrderTypesT] = useState([]);
   const [selectedOrderType, setSelectedOrderType] = useState("DINE IN");

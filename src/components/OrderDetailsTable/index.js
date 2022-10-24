@@ -8,6 +8,7 @@ import styled from "@emotion/styled";
 
 const CusTableCell = styled(TableCell)`
   color: black;
+  font-weight: 600 !important;
 `;
 
 export const OrderDetailsTable = (props) => {
@@ -20,10 +21,14 @@ export const OrderDetailsTable = (props) => {
         >
           <TableHead>
             <TableRow>
-              <TableCell>Dish Name{props.isBill ? <hr></hr> : null}</TableCell>
-              <TableCell>Qty{props.isBill ? <hr></hr> : null}</TableCell>
-              <TableCell>Rate{props.isBill ? <hr></hr> : null}</TableCell>
-              <TableCell>Amount{props.isBill ? <hr></hr> : null}</TableCell>
+              <CusTableCell>
+                Dish Name{props.isBill ? <hr></hr> : null}
+              </CusTableCell>
+              <CusTableCell>Qty{props.isBill ? <hr></hr> : null}</CusTableCell>
+              <CusTableCell>Rate{props.isBill ? <hr></hr> : null}</CusTableCell>
+              <CusTableCell>
+                Amount{props.isBill ? <hr></hr> : null}
+              </CusTableCell>
             </TableRow>
           </TableHead>
           <TableBody>

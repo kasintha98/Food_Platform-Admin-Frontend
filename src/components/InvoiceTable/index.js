@@ -8,6 +8,7 @@ import styled from "@emotion/styled";
 
 const CusTableCell = styled(TableCell)`
   color: black;
+  font-weight: 600 !important;
 `;
 
 export const InvoiceTable = (props) => {
