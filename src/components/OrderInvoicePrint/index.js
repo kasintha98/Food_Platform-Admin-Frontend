@@ -1,11 +1,9 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { Row, Col } from "react-bootstrap";
 import Typography from "@mui/material/Typography";
-import "./style.css";
 import { OrderDetailsTable } from "../OrderDetailsTable";
 
-export const OrderInvoice = (props) => {
+export const OrderInvoicePrint = (props) => {
   const stores = useSelector((state) => state.store.stores);
 
   const renderNowDate = () => {
@@ -49,7 +47,7 @@ export const OrderInvoice = (props) => {
     if (foundMatch) {
       return (
         <section>
-          <Typography style={{ fontWeight: "600" }}>
+          <Typography>
             <span>{foundMatch.address1},</span> <br></br>
             {foundMatch.address2 ? <span>{foundMatch.address2},</span> : null}
             {foundMatch.address3 ? <span>{foundMatch.address3},</span> : null}
@@ -64,8 +62,8 @@ export const OrderInvoice = (props) => {
   };
 
   return (
-    <div>
-      <div className="text-center">
+    <div id="billNew">
+      <div className="text-center" style={{ marginTop: "25px" }}>
         <Typography sx={{ fontWeight: "600" }}>
           {props.currentOrder ? props.currentOrder.restaurantName : "Hangries"}
         </Typography>
@@ -83,56 +81,50 @@ export const OrderInvoice = (props) => {
           )}
         </Typography>
 
-        <Typography sx={{ fontWeight: "600", fontSize: "1.2rem" }}>
+        <p className="id">
           Order ID: {props.currentOrder ? props.currentOrder.orderId : null}
-        </Typography>
+        </p>
         <hr></hr>
-        <Row>
-          <Col>
-            <Typography sx={{ fontWeight: "600" }}>
-              Cashier: {props.currentOrder.createdBy.toUpperCase()}
-            </Typography>
-          </Col>
-          <Col>
-            <Typography sx={{ fontWeight: "600" }}>
-              Table No:{" "}
-              {props.currentOrder && props.currentOrder.storeTableId
-                ? props.currentOrder.storeTableId
-                : "N/A"}
-            </Typography>
-          </Col>
-        </Row>
-        <Typography sx={{ fontWeight: "600" }}>
-          <span>{props.currentOrder.orderDeliveryType}</span>
-          <span> [{props.currentOrder.paymentStatus}]</span>
-        </Typography>
+
+        <div style={{ display: "inline-flex", columnGap: "5px" }}>
+          <p>Cashier: {props.currentOrder.createdBy.toUpperCase()}</p>
+          <p>
+            Table No:{" "}
+            {props.currentOrder && props.currentOrder.storeTableId
+              ? props.currentOrder.storeTableId
+              : "N/A"}
+          </p>
+        </div>
         <div>
-          <Typography sx={{ fontWeight: "600" }}>
-            <Row>
-              <Col>Time: {renderNowTime(props.currentOrder.createdDate)}</Col>
-              <Col>
-                Date: {renderNowDate(props.currentOrder.orderReceivedDateTime)}
-              </Col>
-            </Row>
-          </Typography>
+          <p>
+            <span>{props.currentOrder.orderDeliveryType}</span>
+            <span> [{props.currentOrder.paymentStatus}]</span>
+          </p>
         </div>
       </div>
+      <div style={{ display: "inline-flex", columnGap: "10px" }}>
+        <Typography>
+          Date: {renderNowDate(props.currentOrder.orderReceivedDateTime)}
+        </Typography>
+        <Typography>
+          Time: {renderNowTime(props.currentOrder.createdDate)}
+        </Typography>
+      </div>
       <hr></hr>
-      <div className="text-center">
-        <Typography sx={{ fontWeight: "600" }}>
+      <div>
+        <Typography>
           Name: {props.currentOrder.customerName.toUpperCase()}
         </Typography>
         {/* <Typography>Address: {props.currentOrder.address}</Typography> */}
-        <Typography sx={{ fontWeight: "600" }}>
-          Mob No: {props.currentOrder.mobileNumber}
-        </Typography>
-        <Typography sx={{ color: "black", fontWeight: "600" }}>
-          Address: {props.currentOrder.address}
-        </Typography>
+        <Typography>Mob No: {props.currentOrder.mobileNumber}</Typography>
+        <h5 sx={{ color: "black" }}>Address: {props.currentOrder.address}</h5>
       </div>
-
       <hr></hr>
-      <OrderDetailsTable fullResp={props.currentOrder}></OrderDetailsTable>
+
+      <OrderDetailsTable
+        fullResp={props.currentOrder}
+        isBill={true}
+      ></OrderDetailsTable>
     </div>
   );
 };

@@ -28,6 +28,8 @@ import {
 import { toast } from "react-toastify";
 import { OrderDetailsTable } from "../../components/OrderDetailsTable";
 import Pdf from "react-to-pdf";
+import { OrderInvoice } from "../../components/OrderInvoice";
+import { OrderInvoicePrint } from "../../components/OrderInvoicePrint";
 
 const CusTableCell1 = styled(TableCell)`
   font-size: 0.75rem;
@@ -305,7 +307,7 @@ export const DeliveryBoy = () => {
     var windows = window.open("", "", "height=600, width=600");
     windows.document.write("<html><body >");
     windows.document.write(
-      "<style> .id{font-size: 12px;} body{text-align: center; margin: 0; line-height: 0; font-size: 10px;} th{font-size: 11px;} h5{font-size: 10px; line-height: 0.9 !important; font-weight: 400 !important;} td{font-size: 11px; font-weight: bold;} table{width: 100%} tbody{text-align: left;} th{text-align: left !important;} section{ line-height: 0.9 !important;}  @media print { body {  }} @page { size: Statement;margin: 0;}</style>"
+      "<style> .id{font-size: 12px;} body{text-align: center; margin: 0; line-height: 0; font-size: 10px; font-weight: bold;} th{font-size: 11px;} h5{font-size: 10px; line-height: 0.9 !important; font-weight: bold !important;} td{font-size: 11px; font-weight: bold;} table{width: 100%} tbody{text-align: left;} th{text-align: left !important;} section{ line-height: 0.9 !important;}  @media print { body {  }} @page { size: Statement;margin: 0;}</style>"
     );
     windows.document.write(div);
     windows.document.write("</body></html>");
@@ -362,146 +364,12 @@ export const DeliveryBoy = () => {
               {" "}
               <div ref={ref}>
                 <div style={{ display: "none" }}>
-                  <div id="billNew">
-                    <div className="text-center">
-                      <Typography sx={{ fontWeight: "600" }}>
-                        {currentOrder
-                          ? currentOrder.restaurantName
-                          : "Hangries"}
-                      </Typography>
-                      <Typography sx={{ color: "black" }}>
-                        {renderStoreAddress(
-                          currentOrder.restaurantId,
-                          currentOrder.storeId
-                        )}
-                      </Typography>
-                      <hr></hr>
-                      <Typography sx={{ fontWeight: "600" }}>
-                        {renderStoreGST(
-                          currentOrder.restaurantId,
-                          currentOrder.storeId
-                        )}
-                      </Typography>
-
-                      <p className="id">
-                        Order ID: {currentOrder ? currentOrder.orderId : null}
-                      </p>
-                      <hr></hr>
-
-                      <div style={{ display: "inline-flex", columnGap: "5px" }}>
-                        <p>Cashier: {currentOrder.createdBy.toUpperCase()}</p>
-                        <p>
-                          Table No:{" "}
-                          {currentOrder && currentOrder.storeTableId
-                            ? currentOrder.storeTableId
-                            : "N/A"}
-                        </p>
-                      </div>
-                      <div>
-                        <p>
-                          <span>{currentOrder.orderDeliveryType}</span>
-                          <span> [{currentOrder.paymentStatus}]</span>
-                        </p>
-                      </div>
-                    </div>
-                    <div style={{ display: "inline-flex", columnGap: "10px" }}>
-                      <Typography>
-                        Date:{" "}
-                        {renderNowDate(currentOrder.orderReceivedDateTime)}
-                      </Typography>
-                      <Typography>
-                        Time: {renderNowTime(currentOrder.createdDate)}
-                      </Typography>
-                    </div>
-                    <hr></hr>
-                    <div>
-                      <Typography>
-                        Name: {currentOrder.customerName.toUpperCase()}
-                      </Typography>
-                      {/* <Typography>Address: {currentOrder.address}</Typography> */}
-                      <Typography>
-                        Mob No: {currentOrder.mobileNumber}
-                      </Typography>
-                      <h5>Address: {currentOrder.address}</h5>
-                    </div>
-                    <hr></hr>
-
-                    <OrderDetailsTable
-                      fullResp={currentOrder}
-                      isBill={true}
-                    ></OrderDetailsTable>
-                  </div>
+                  <OrderInvoicePrint
+                    currentOrder={currentOrder}
+                  ></OrderInvoicePrint>
                 </div>
                 <div ref={refH}>
-                  <div className="text-center">
-                    <Typography sx={{ fontWeight: "600" }}>
-                      {currentOrder ? currentOrder.restaurantName : "Hangries"}
-                    </Typography>
-                    <Typography sx={{ color: "black" }}>
-                      {renderStoreAddress(
-                        currentOrder.restaurantId,
-                        currentOrder.storeId
-                      )}
-                    </Typography>
-                    <hr></hr>
-                    <Typography sx={{ fontWeight: "600" }}>
-                      {renderStoreGST(
-                        currentOrder.restaurantId,
-                        currentOrder.storeId
-                      )}
-                    </Typography>
-
-                    <Typography sx={{ fontWeight: "600", fontSize: "1.2rem" }}>
-                      Order ID: {currentOrder ? currentOrder.orderId : null}
-                    </Typography>
-                    <hr></hr>
-                    <Row>
-                      <Col>
-                        <Typography>
-                          Cashier: {currentOrder.createdBy.toUpperCase()}
-                        </Typography>
-                      </Col>
-                      <Col>
-                        <Typography>
-                          Table No:{" "}
-                          {currentOrder && currentOrder.storeTableId
-                            ? currentOrder.storeTableId
-                            : "N/A"}
-                        </Typography>
-                      </Col>
-                    </Row>
-                    <Typography sx={{ fontWeight: "600" }}>
-                      <span>{currentOrder.orderDeliveryType}</span>
-                      <span> [{currentOrder.paymentStatus}]</span>
-                    </Typography>
-                    <div>
-                      <Typography>
-                        <Row>
-                          <Col>
-                            Time: {renderNowTime(currentOrder.createdDate)}
-                          </Col>
-                          <Col>
-                            Date:{" "}
-                            {renderNowDate(currentOrder.orderReceivedDateTime)}
-                          </Col>
-                        </Row>
-                      </Typography>
-                    </div>
-                  </div>
-                  <hr></hr>
-                  <div className="text-center">
-                    <Typography>
-                      Name: {currentOrder.customerName.toUpperCase()}
-                    </Typography>
-                    {/* <Typography>Address: {currentOrder.address}</Typography> */}
-                    <Typography>Mob No: {currentOrder.mobileNumber}</Typography>
-                    <Typography>Address: {currentOrder.address}</Typography>
-                  </div>
-
-                  <hr></hr>
-                  <OrderDetailsTable
-                    fullResp={currentOrder}
-                  ></OrderDetailsTable>
+                  <OrderInvoice currentOrder={currentOrder}></OrderInvoice>
                 </div>
               </div>
             </>

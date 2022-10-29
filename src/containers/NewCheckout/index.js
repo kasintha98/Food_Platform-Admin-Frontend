@@ -1626,7 +1626,7 @@ export default function NewCheckout(props) {
     var windows = window.open("", "", "height=600, width=600");
     windows.document.write("<html><body >");
     windows.document.write(
-      "<style> .id{font-size: 12px;} body{text-align: center; margin: 0; line-height: 0; font-size: 10px;} th{font-size: 11px;} h5{font-size: 10px; line-height: 0.9 !important; font-weight: 400 !important;} td{font-size: 11px; font-weight: bold;} table{width: 100%} tbody{text-align: left;} th{text-align: left !important;} section{ line-height: 0.9 !important;}  @media print { body {  }} @page { size: Statement;margin: 0;}</style>"
+      "<style> .id{font-size: 12px;} body{text-align: center; margin: 0; line-height: 0; font-size: 10px; font-weight: bold;} th{font-size: 11px;} h5{font-size: 10px; line-height: 0.9 !important; font-weight: bold !important;} td{font-size: 11px; font-weight: bold;} table{width: 100%} tbody{text-align: left;} th{text-align: left !important;} section{ line-height: 0.9 !important;}  @media print { body {  }} @page { size: Statement;margin: 0;}</style>"
     );
     windows.document.write(div);
     windows.document.write("</body></html>");
@@ -1639,24 +1639,6 @@ export default function NewCheckout(props) {
   const renderInvoiceModal = () => {
     return (
       <>
-        {/* <OrderInvoice
-          storeObj={props.storeObj}
-          isShowDeliveryCharge={props.isShowDeliveryCharge}
-          orderResp={orderResp}
-          firstName={firstName}
-          lastName={lastName}
-          phoneNo={phoneNo}
-          delCharge={delCharge}
-          bOGOLowestPizzaKey={bOGOLowestPizzaKey}
-          drinkReduceKey={drinkReduceKey}
-          pasta59OfferReduceTotal={pasta59OfferReduceTotal}
-          combo1OfferReduceTotal={combo1OfferReduceTotal}
-          combo2OfferReduceTotal={combo2OfferReduceTotal}
-          friesOfferReduceTotal={friesOfferReduceTotal}
-          showInvoice={showInvoice}
-          title={"Invoice"}
-        ></OrderInvoice> */}
-
         <Modal
           show={showInvoice}
           onHide={handleCloseInvoice}
@@ -1673,7 +1655,10 @@ export default function NewCheckout(props) {
                 <div ref={ref}>
                   <div style={{ display: "none" }}>
                     <div id="billNew">
-                      <div className="text-center">
+                      <div
+                        className="text-center"
+                        style={{ marginTop: "25px" }}
+                      >
                         <Typography sx={{ fontWeight: "600" }}>
                           {orderResp ? orderResp.storeName : "Hangries"}
                         </Typography>
@@ -1796,7 +1781,7 @@ export default function NewCheckout(props) {
                       <Typography sx={{ fontWeight: "600" }}>
                         {orderResp ? orderResp.storeName : "Hangries"}
                       </Typography>
-                      <Typography sx={{ color: "black" }}>
+                      <Typography sx={{ color: "black", fontWeight: "600" }}>
                         <span>{props.storeObj.address1}</span>
                         {props.storeObj.address2 ? (
                           <>
@@ -1835,7 +1820,7 @@ export default function NewCheckout(props) {
                         <Typography sx={{ color: "black" }}>
                           <Row>
                             <Col>
-                              <Typography /* sx={{ fontWeight: "600" }} */>
+                              <Typography sx={{ fontWeight: "600" }}>
                                 Cashier:{" "}
                                 {orderResp
                                   ? orderResp.createdBy.toUpperCase()
@@ -1843,7 +1828,7 @@ export default function NewCheckout(props) {
                               </Typography>
                             </Col>
                             <Col>
-                              <Typography /* sx={{ fontWeight: "600" }} */>
+                              <Typography sx={{ fontWeight: "600" }}>
                                 Table No:{" "}
                                 {orderResp && orderResp.storeTableId
                                   ? orderResp.storeTableId
@@ -1854,7 +1839,7 @@ export default function NewCheckout(props) {
                         </Typography>
                       </div>
 
-                      <Typography /* sx={{ fontWeight: "600" }} */>
+                      <Typography sx={{ fontWeight: "600" }}>
                         <span>
                           {orderResp ? orderResp.orderDeliveryType : null}
                         </span>
@@ -1864,7 +1849,7 @@ export default function NewCheckout(props) {
                       </Typography>
 
                       <div>
-                        <Typography sx={{ color: "black" }}>
+                        <Typography sx={{ color: "black", fontWeight: "600" }}>
                           <Row>
                             <Col>
                               <p>Date: {renderNowDate()}</p>
@@ -1878,7 +1863,7 @@ export default function NewCheckout(props) {
                     </div>
                     <hr></hr>
                     <div className="text-center">
-                      <Typography sx={{ color: "black" }}>
+                      <Typography sx={{ color: "black", fontWeight: "600" }}>
                         Name:{" "}
                         {firstName ? (
                           <span>
@@ -1888,7 +1873,7 @@ export default function NewCheckout(props) {
                           <span>{orderResp?.customerName.toUpperCase()}</span>
                         )}
                       </Typography>
-                      <Typography sx={{ color: "black" }}>
+                      <Typography sx={{ color: "black", fontWeight: "600" }}>
                         Mob No:{" "}
                         {phoneNo ? (
                           <span>{phoneNo}</span>
@@ -1896,7 +1881,7 @@ export default function NewCheckout(props) {
                           <span>{orderResp?.mobileNumber}</span>
                         )}
                       </Typography>
-                      <Typography sx={{ color: "black" }}>
+                      <Typography sx={{ color: "black", fontWeight: "600" }}>
                         Address:{" "}
                         {orderResp?.address ? (
                           <span>{orderResp?.address}</span>
