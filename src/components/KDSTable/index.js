@@ -3,8 +3,10 @@ import React, {
   useState,
   forwardRef,
   useImperativeHandle,
+  useRef,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { OrderDetailsTable } from "../OrderDetailsTable";
 import Timer from "react-timer-wrapper";
 import Timecode from "react-timecode";
 import Table from "@mui/material/Table";
@@ -23,6 +25,7 @@ import {
   updateFoodPackagedFlag,
   updateFoodPackagedFlagByItem,
 } from "../../actions";
+import { useReactToPrint } from "react-to-print";
 import { Button } from "@mui/material";
 
 const CusTableCell = styled(TableCell)`
@@ -36,8 +39,11 @@ export const KDSTable = forwardRef((props, ref) => {
   const businessDateAll = useSelector((state) => state.user.businessDate);
   const [filteredData, setFilteredData] = useState([]);
   const [newSubStatus, setNewSubStatus] = useState(false);
+  const [currentOrder, setCurrentOrder] = useState({});
+  const [currentItem, setCurrentItem] = useState({});
 
   const dispatch = useDispatch();
+  const componentRef = useRef();
 
   useEffect(() => {
     const today = businessDateAll
@@ -67,6 +73,29 @@ export const KDSTable = forwardRef((props, ref) => {
   useImperativeHandle(ref, () => ({
     handleRefresh,
   }));
+
+  const renderNowDate = (date) => {
+    const dateObj = new Date(date);
+    const month = dateObj.toLocaleString("default", { month: "short" });
+    const day = dateObj.getDate();
+    const year = dateObj.getFullYear();
+    return (
+      <span>
+        {day}/{month.toUpperCase()}/{year}
+      </span>
+    );
+  };
+
+  const renderNowTime = (date) => {
+    const dateObj = new Date(date);
+    const time = dateObj.toLocaleString("en-US", {
+      hour: "numeric",
+      hour12: true,
+      minute: "numeric",
+    });
+
+    return <span>{time}</span>;
+  };
 
   const filterByCounter = (orders, counter) => {
     if (counter) {
@@ -107,6 +136,10 @@ export const KDSTable = forwardRef((props, ref) => {
     return orders;
   };
 
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
+
   const handleRefresh = () => {
     if (newSubStatus) {
       setNewSubStatus(false);
@@ -120,8 +153,11 @@ export const KDSTable = forwardRef((props, ref) => {
     productId,
     subProductId,
     currentOrderDetailStatus,
-    order
+    order,
+    item
   ) => {
+    setCurrentOrder(order);
+    setCurrentItem(item);
     if (currentOrderDetailStatus === "SUBMITTED") {
       handleSubProductFromTopProduct(
         productId,
@@ -172,6 +208,7 @@ export const KDSTable = forwardRef((props, ref) => {
 
       if (order.orderStatus === "ACCEPTED") {
         dispatch(updateOrder(orderId, "PROCESSING", null, true, user.loginId));
+        handlePrint();
       }
     }
     if (currentOrderDetailStatus === "PROCESSING") {
@@ -432,7 +469,8 @@ export const KDSTable = forwardRef((props, ref) => {
                               item.productId,
                               item.subProductId,
                               item.orderDetailStatus,
-                              order
+                              order,
+                              item
                             );
                           }}
                         >
@@ -692,6 +730,7 @@ export const KDSTable = forwardRef((props, ref) => {
             </TableBody>
           </Table>
         </Col>
+
         {/* <Col
           md={6}
           className="pr-0 me-0"
@@ -893,6 +932,54 @@ export const KDSTable = forwardRef((props, ref) => {
           </Table>
         </Col> */}
       </Row>
+
+      <div style={{ display: "none" }}>
+        <div
+          style={{ marginTop: "25px" }}
+          className="text-center"
+          ref={componentRef}
+        >
+          <p style={{ fontSize: "2rem" }}>KOT {currentOrder.orderId}</p>
+          <p style={{ fontWeight: "bold", fontSize: "2rem" }}>
+            {currentOrder.orderDeliveryType}
+          </p>
+          <div style={{ display: "inline-flex", columnGap: "10px" }}>
+            <p style={{ fontSize: "2rem" }}>
+              {renderNowDate(currentOrder.orderReceivedDateTime)}
+            </p>
+            <p style={{ fontSize: "2rem" }}>
+              {renderNowTime(currentOrder.orderReceivedDateTime)}
+            </p>
+          </div>
+          <hr></hr>
+          <Table sx={{ width: "100%" }}>
+            <TableHead>
+              <TableRow>
+                <TableCell sx={{ fontSize: "2rem" }} align="center">
+                  Qty
+                  <hr></hr>
+                </TableCell>
+                <TableCell sx={{ fontSize: "2rem" }} align="center">
+                  Dish Name
+                  <hr></hr>
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableRow key={currentOrder.orderId}>
+                <TableCell sx={{ fontSize: "2rem" }} align="center">
+                  {currentItem.quantity}
+                  <hr></hr>
+                </TableCell>
+                <TableCell sx={{ fontSize: "2rem" }} align="center">
+                  {currentItem.productName}
+                  <hr></hr>
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </div>
+      </div>
     </div>
   );
 });
