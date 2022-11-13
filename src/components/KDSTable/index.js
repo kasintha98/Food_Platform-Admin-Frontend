@@ -946,7 +946,7 @@ export const KDSTable = forwardRef((props, ref) => {
 
       <div style={{ display: "none" }}>
         <div
-          style={{ marginTop: "25px", fontFamily: "Times New Roman" }}
+          style={{ marginTop: "25px", fontFamily: "Billfont" }}
           className="text-center"
           ref={componentRef}
         >
@@ -969,7 +969,7 @@ export const KDSTable = forwardRef((props, ref) => {
                 <TableCell
                   sx={{
                     fontSize: "2rem",
-                    fontFamily: "Times New Roman !important",
+                    fontFamily: "Billfont !important",
                   }}
                   align="center"
                 >
@@ -979,7 +979,7 @@ export const KDSTable = forwardRef((props, ref) => {
                 <TableCell
                   sx={{
                     fontSize: "2rem",
-                    fontFamily: "Times New Roman !important",
+                    fontFamily: "Billfont !important",
                   }}
                   align="center"
                 >
@@ -993,7 +993,7 @@ export const KDSTable = forwardRef((props, ref) => {
                 <TableCell
                   sx={{
                     fontSize: "2rem",
-                    fontFamily: "Times New Roman !important",
+                    fontFamily: "Billfont !important",
                   }}
                   align="center"
                 >
@@ -1003,7 +1003,7 @@ export const KDSTable = forwardRef((props, ref) => {
                 <TableCell
                   sx={{
                     fontSize: "2rem",
-                    fontFamily: "Times New Roman !important",
+                    fontFamily: "Billfont !important",
                   }}
                   align="center"
                 >
