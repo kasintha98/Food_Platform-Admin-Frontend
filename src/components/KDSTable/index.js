@@ -951,7 +951,10 @@ export const KDSTable = forwardRef((props, ref) => {
           ref={componentRef}
         >
           <p style={{ fontSize: "4rem", fontWeight: "bold" }}>
-            KOT {currentOrder.orderId}
+            KOT{" "}
+            {currentOrder.orderId
+              ? currentOrder.orderId.substr(currentOrder.orderId.length - 3)
+              : currentOrder.orderId}
           </p>
           <p style={{ fontWeight: "bold", fontSize: "4rem" }}>
             {currentOrder.orderDeliveryType}
@@ -976,8 +979,11 @@ export const KDSTable = forwardRef((props, ref) => {
                   }}
                   align="center"
                 >
+                  ********
+                  <hr></hr>
                   Qty
                   <hr></hr>
+                  ********
                 </TableCell>
                 <TableCell
                   sx={{
@@ -987,9 +993,23 @@ export const KDSTable = forwardRef((props, ref) => {
                   }}
                   align="center"
                 >
+                  ************
+                  <hr></hr>
                   Dish Name
                   <hr></hr>
+                  ************
                 </TableCell>
+                {/* <TableCell
+                  sx={{
+                    fontSize: "4rem",
+                    fontWeight: "bold",
+                    fontFamily: "Billfont !important",
+                  }}
+                  align="center"
+                >
+                  Unit
+                  <hr></hr>
+                </TableCell> */}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -1016,6 +1036,17 @@ export const KDSTable = forwardRef((props, ref) => {
                   {currentItem.productName}
                   <hr></hr>
                 </TableCell>
+                {/* <TableCell
+                  sx={{
+                    fontSize: "4rem",
+                    fontWeight: "bold",
+                    fontFamily: "Billfont !important",
+                  }}
+                  align="center"
+                >
+                  {currentItem.size}
+                  <hr></hr>
+                </TableCell> */}
               </TableRow>
             </TableBody>
           </Table>
