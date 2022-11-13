@@ -48,6 +48,7 @@ import { Coupon } from "./containers/Coupon";
 import { EOD } from "./containers/EOD";
 import { ForgotPasswordAdmin } from "./containers/ForgotPasswordAdmin";
 import { OrderSource } from "./containers/OrderSource";
+import "./fonts/billfont.ttf";
 
 function App() {
   const dispatch = useDispatch();

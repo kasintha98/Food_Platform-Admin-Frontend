@@ -44,3 +44,8 @@
 #datePicker1 input {
   padding: 0 !important;
 }
+
+@font-face {
+  font-family: "Billfont"; /*Can be any text*/
+  src: local("billfont"), url("./fonts/billfont.ttf") format("truetype");
+}

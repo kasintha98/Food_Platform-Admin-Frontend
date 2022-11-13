@@ -35,6 +35,7 @@ const CusTableCell = styled(TableCell)`
 
 export const KDSTable = forwardRef((props, ref) => {
   const loading = useSelector((state) => state.order.loading);
+  const stores = useSelector((state) => state.store.stores);
   const user = useSelector((state) => state.auth.user);
   const businessDateAll = useSelector((state) => state.user.businessDate);
   const [filteredData, setFilteredData] = useState([]);
@@ -158,6 +159,12 @@ export const KDSTable = forwardRef((props, ref) => {
   ) => {
     setCurrentOrder(order);
     setCurrentItem(item);
+    const foundMatch = stores.find((obj) => {
+      return (
+        obj.restaurantId === order.restaurantId && obj.storeId === order.storeId
+      );
+    });
+
     if (currentOrderDetailStatus === "SUBMITTED") {
       handleSubProductFromTopProduct(
         productId,
@@ -208,7 +215,11 @@ export const KDSTable = forwardRef((props, ref) => {
 
       if (order.orderStatus === "ACCEPTED") {
         dispatch(updateOrder(orderId, "PROCESSING", null, true, user.loginId));
-        handlePrint();
+        setTimeout(function () {
+          if (foundMatch && foundMatch.storeKOTPrintFlag === "Y") {
+            handlePrint();
+          }
+        }, 1000);
       }
     }
     if (currentOrderDetailStatus === "PROCESSING") {
@@ -935,7 +946,7 @@ export const KDSTable = forwardRef((props, ref) => {
 
       <div style={{ display: "none" }}>
         <div
-          style={{ marginTop: "25px" }}
+          style={{ marginTop: "25px", fontFamily: "Billfont" }}
           className="text-center"
           ref={componentRef}
         >
@@ -955,11 +966,17 @@ export const KDSTable = forwardRef((props, ref) => {
           <Table sx={{ width: "100%" }}>
             <TableHead>
               <TableRow>
-                <TableCell sx={{ fontSize: "2rem" }} align="center">
+                <TableCell
+                  sx={{ fontSize: "2rem", fontFamily: "Billfont !important" }}
+                  align="center"
+                >
                   Qty
                   <hr></hr>
                 </TableCell>
-                <TableCell sx={{ fontSize: "2rem" }} align="center">
+                <TableCell
+                  sx={{ fontSize: "2rem", fontFamily: "Billfont !important" }}
+                  align="center"
+                >
                   Dish Name
                   <hr></hr>
                 </TableCell>
@@ -967,11 +984,17 @@ export const KDSTable = forwardRef((props, ref) => {
             </TableHead>
             <TableBody>
               <TableRow key={currentOrder.orderId}>
-                <TableCell sx={{ fontSize: "2rem" }} align="center">
+                <TableCell
+                  sx={{ fontSize: "2rem", fontFamily: "Billfont !important" }}
+                  align="center"
+                >
                   {currentItem.quantity}
                   <hr></hr>
                 </TableCell>
-                <TableCell sx={{ fontSize: "2rem" }} align="center">
+                <TableCell
+                  sx={{ fontSize: "2rem", fontFamily: "Billfont !important" }}
+                  align="center"
+                >
                   {currentItem.productName}
                   <hr></hr>
                 </TableCell>
