@@ -30,7 +30,7 @@ import { Button } from "@mui/material";
 
 const CusTableCell = styled(TableCell)`
   padding: 0;
-  font-size: 3rem;
+  font-size: 14px;
 `;
 
 export const KDSTable = forwardRef((props, ref) => {
@@ -403,7 +403,7 @@ export const KDSTable = forwardRef((props, ref) => {
                         sx={{
                           border: "1px solid #000",
                           fontWeight: "600",
-                          fontSize: "3rem !important",
+                          fontSize: "16px !important",
                         }}
                       >
                         <div key={index}>
@@ -540,7 +540,7 @@ export const KDSTable = forwardRef((props, ref) => {
                 sx={{
                   border: "1px solid #000",
                   fontWeight: "600",
-                  fontSize: "3rem !important",
+                  fontSize: "16px !important",
                 }}
               >
                 {order.orderDetails.map((item, index) => (
@@ -967,20 +967,14 @@ export const KDSTable = forwardRef((props, ref) => {
             <TableHead>
               <TableRow>
                 <TableCell
-                  sx={{
-                    fontSize: "3rem",
-                    fontFamily: "Billfont !important",
-                  }}
+                  sx={{ fontSize: "3rem", fontFamily: "Billfont !important" }}
                   align="center"
                 >
                   Qty
                   <hr></hr>
                 </TableCell>
                 <TableCell
-                  sx={{
-                    fontSize: "3rem",
-                    fontFamily: "Billfont !important",
-                  }}
+                  sx={{ fontSize: "3rem", fontFamily: "Billfont !important" }}
                   align="center"
                 >
                   Dish Name
@@ -991,20 +985,14 @@ export const KDSTable = forwardRef((props, ref) => {
             <TableBody>
               <TableRow key={currentOrder.orderId}>
                 <TableCell
-                  sx={{
-                    fontSize: "3rem",
-                    fontFamily: "Billfont !important",
-                  }}
+                  sx={{ fontSize: "3rem", fontFamily: "Billfont !important" }}
                   align="center"
                 >
                   {currentItem.quantity}
                   <hr></hr>
                 </TableCell>
                 <TableCell
-                  sx={{
-                    fontSize: "3rem",
-                    fontFamily: "Billfont !important",
-                  }}
+                  sx={{ fontSize: "3rem", fontFamily: "Billfont !important" }}
                   align="center"
                 >
                   {currentItem.productName}
