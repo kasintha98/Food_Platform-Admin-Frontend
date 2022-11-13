@@ -9,7 +9,9 @@ export const OrderInvoice = (props) => {
   const stores = useSelector((state) => state.store.stores);
 
   const renderNowDate = () => {
-    const dateObj = new Date();
+    const dateObj = new Date(
+      props.currentOrder && props.currentOrder.orderReceivedDateTime
+    );
     const month = dateObj.toLocaleString("default", { month: "short" });
     const day = dateObj.getDate();
     const year = dateObj.getFullYear();
@@ -21,7 +23,9 @@ export const OrderInvoice = (props) => {
   };
 
   const renderNowTime = () => {
-    const dateObj = new Date();
+    const dateObj = new Date(
+      props.currentOrder && props.currentOrder.createdDate
+    );
     const time = dateObj.toLocaleString("en-US", {
       hour: "numeric",
       hour12: true,
