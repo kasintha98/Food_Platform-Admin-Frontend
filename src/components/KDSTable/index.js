@@ -950,15 +950,15 @@ export const KDSTable = forwardRef((props, ref) => {
           className="text-center"
           ref={componentRef}
         >
-          <p style={{ fontSize: "2rem" }}>KOT {currentOrder.orderId}</p>
-          <p style={{ fontWeight: "bold", fontSize: "2rem" }}>
+          <p style={{ fontSize: "2.2rem" }}>KOT {currentOrder.orderId}</p>
+          <p style={{ fontWeight: "bold", fontSize: "2.2rem" }}>
             {currentOrder.orderDeliveryType}
           </p>
           <div style={{ display: "inline-flex", columnGap: "10px" }}>
-            <p style={{ fontSize: "2rem" }}>
+            <p style={{ fontSize: "2.2rem" }}>
               {renderNowDate(currentOrder.orderReceivedDateTime)}
             </p>
-            <p style={{ fontSize: "2rem" }}>
+            <p style={{ fontSize: "2.2rem" }}>
               {renderNowTime(currentOrder.orderReceivedDateTime)}
             </p>
           </div>
@@ -968,7 +968,7 @@ export const KDSTable = forwardRef((props, ref) => {
               <TableRow>
                 <TableCell
                   sx={{
-                    fontSize: "2rem",
+                    fontSize: "2.2rem",
                     fontFamily: "Billfont !important",
                   }}
                   align="center"
@@ -978,7 +978,7 @@ export const KDSTable = forwardRef((props, ref) => {
                 </TableCell>
                 <TableCell
                   sx={{
-                    fontSize: "2rem",
+                    fontSize: "2.2rem",
                     fontFamily: "Billfont !important",
                   }}
                   align="center"
@@ -992,7 +992,7 @@ export const KDSTable = forwardRef((props, ref) => {
               <TableRow key={currentOrder.orderId}>
                 <TableCell
                   sx={{
-                    fontSize: "2rem",
+                    fontSize: "2.2rem",
                     fontFamily: "Billfont !important",
                   }}
                   align="center"
@@ -1002,7 +1002,7 @@ export const KDSTable = forwardRef((props, ref) => {
                 </TableCell>
                 <TableCell
                   sx={{
-                    fontSize: "2rem",
+                    fontSize: "2.2rem",
                     fontFamily: "Billfont !important",
                   }}
                   align="center"
