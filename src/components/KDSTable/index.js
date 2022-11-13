@@ -946,7 +946,7 @@ export const KDSTable = forwardRef((props, ref) => {
 
       <div style={{ display: "none" }}>
         <div
-          style={{ marginTop: "25px", fontFamily: "Billfont" }}
+          style={{ marginTop: "25px", fontFamily: "Times New Roman" }}
           className="text-center"
           ref={componentRef}
         >
@@ -967,14 +967,20 @@ export const KDSTable = forwardRef((props, ref) => {
             <TableHead>
               <TableRow>
                 <TableCell
-                  sx={{ fontSize: "2rem", fontFamily: "Billfont !important" }}
+                  sx={{
+                    fontSize: "2rem",
+                    fontFamily: "Times New Roman !important",
+                  }}
                   align="center"
                 >
                   Qty
                   <hr></hr>
                 </TableCell>
                 <TableCell
-                  sx={{ fontSize: "2rem", fontFamily: "Billfont !important" }}
+                  sx={{
+                    fontSize: "2rem",
+                    fontFamily: "Times New Roman !important",
+                  }}
                   align="center"
                 >
                   Dish Name
@@ -985,14 +991,20 @@ export const KDSTable = forwardRef((props, ref) => {
             <TableBody>
               <TableRow key={currentOrder.orderId}>
                 <TableCell
-                  sx={{ fontSize: "2rem", fontFamily: "Billfont !important" }}
+                  sx={{
+                    fontSize: "2rem",
+                    fontFamily: "Times New Roman !important",
+                  }}
                   align="center"
                 >
                   {currentItem.quantity}
                   <hr></hr>
                 </TableCell>
                 <TableCell
-                  sx={{ fontSize: "2rem", fontFamily: "Billfont !important" }}
+                  sx={{
+                    fontSize: "2rem",
+                    fontFamily: "Times New Roman !important",
+                  }}
                   align="center"
                 >
                   {currentItem.productName}
