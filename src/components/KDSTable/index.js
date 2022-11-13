@@ -30,7 +30,7 @@ import { Button } from "@mui/material";
 
 const CusTableCell = styled(TableCell)`
   padding: 0;
-  font-size: 14px;
+  font-size: 16px;
 `;
 
 export const KDSTable = forwardRef((props, ref) => {
@@ -950,15 +950,15 @@ export const KDSTable = forwardRef((props, ref) => {
           className="text-center"
           ref={componentRef}
         >
-          <p style={{ fontSize: "14px" }}>KOT {currentOrder.orderId}</p>
-          <p style={{ fontWeight: "bold", fontSize: "14px" }}>
+          <p style={{ fontSize: "16px" }}>KOT {currentOrder.orderId}</p>
+          <p style={{ fontWeight: "bold", fontSize: "16px" }}>
             {currentOrder.orderDeliveryType}
           </p>
           <div style={{ display: "inline-flex", columnGap: "10px" }}>
-            <p style={{ fontSize: "14px" }}>
+            <p style={{ fontSize: "16px" }}>
               {renderNowDate(currentOrder.orderReceivedDateTime)}
             </p>
-            <p style={{ fontSize: "14px" }}>
+            <p style={{ fontSize: "16px" }}>
               {renderNowTime(currentOrder.orderReceivedDateTime)}
             </p>
           </div>
@@ -968,7 +968,7 @@ export const KDSTable = forwardRef((props, ref) => {
               <TableRow>
                 <TableCell
                   sx={{
-                    fontSize: "14px",
+                    fontSize: "16px",
                     fontFamily: "Billfont !important",
                   }}
                   align="center"
@@ -978,7 +978,7 @@ export const KDSTable = forwardRef((props, ref) => {
                 </TableCell>
                 <TableCell
                   sx={{
-                    fontSize: "14px",
+                    fontSize: "16px",
                     fontFamily: "Billfont !important",
                   }}
                   align="center"
@@ -992,7 +992,7 @@ export const KDSTable = forwardRef((props, ref) => {
               <TableRow key={currentOrder.orderId}>
                 <TableCell
                   sx={{
-                    fontSize: "14px",
+                    fontSize: "16px",
                     fontFamily: "Billfont !important",
                   }}
                   align="center"
@@ -1002,7 +1002,7 @@ export const KDSTable = forwardRef((props, ref) => {
                 </TableCell>
                 <TableCell
                   sx={{
-                    fontSize: "14px",
+                    fontSize: "16px",
                     fontFamily: "Billfont !important",
                   }}
                   align="center"
