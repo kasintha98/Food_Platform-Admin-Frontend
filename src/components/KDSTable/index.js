@@ -960,6 +960,12 @@ export const KDSTable = forwardRef((props, ref) => {
           <p style={{ fontWeight: "bold", fontSize: "3.5rem" }}>
             {currentOrder.orderDeliveryType}
           </p>
+          <p style={{ fontWeight: "bold", fontSize: "3.5rem" }}>
+            Table No: {currentOrder.storeTableId}
+          </p>
+          <p style={{ fontWeight: "bold", fontSize: "3.5rem" }}>
+            Name: {currentOrder.customerName}
+          </p>
           <div style={{ display: "inline-flex", columnGap: "10px" }}>
             <p style={{ fontSize: "3.5rem", fontWeight: "bold" }}>
               {renderNowDate(currentOrder.orderReceivedDateTime)}
