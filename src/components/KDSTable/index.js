@@ -615,7 +615,8 @@ export const KDSTable = forwardRef((props, ref) => {
                         item.productId,
                         item.subProductId,
                         item.orderDetailStatus,
-                        order
+                        order,
+                        item
                       );
                     }}
                   >
@@ -950,20 +951,20 @@ export const KDSTable = forwardRef((props, ref) => {
           className="text-center"
           ref={componentRef}
         >
-          <p style={{ fontSize: "4rem", fontWeight: "bold" }}>
+          <p style={{ fontSize: "3.5rem", fontWeight: "bold" }}>
             KOT{" "}
             {currentOrder.orderId
               ? currentOrder.orderId.substr(currentOrder.orderId.length - 3)
               : currentOrder.orderId}
           </p>
-          <p style={{ fontWeight: "bold", fontSize: "4rem" }}>
+          <p style={{ fontWeight: "bold", fontSize: "3.5rem" }}>
             {currentOrder.orderDeliveryType}
           </p>
           <div style={{ display: "inline-flex", columnGap: "10px" }}>
-            <p style={{ fontSize: "4rem", fontWeight: "bold" }}>
+            <p style={{ fontSize: "3.5rem", fontWeight: "bold" }}>
               {renderNowDate(currentOrder.orderReceivedDateTime)}
             </p>
-            <p style={{ fontSize: "4rem", fontWeight: "bold" }}>
+            <p style={{ fontSize: "3.5rem", fontWeight: "bold" }}>
               {renderNowTime(currentOrder.orderReceivedDateTime)}
             </p>
           </div>
@@ -973,35 +974,35 @@ export const KDSTable = forwardRef((props, ref) => {
               <TableRow>
                 <TableCell
                   sx={{
-                    fontSize: "4rem",
+                    fontSize: "3.5rem",
                     fontWeight: "bold",
                     fontFamily: "Billfont !important",
                   }}
                   align="center"
                 >
-                  ********
+                  ----------
                   <hr></hr>
                   Qty
                   <hr></hr>
-                  ********
+                  ----------
                 </TableCell>
                 <TableCell
                   sx={{
-                    fontSize: "4rem",
+                    fontSize: "3.5rem",
                     fontWeight: "bold",
                     fontFamily: "Billfont !important",
                   }}
                   align="center"
                 >
-                  ************
+                  ------------
                   <hr></hr>
                   Dish Name
                   <hr></hr>
-                  ************
+                  ------------
                 </TableCell>
                 {/* <TableCell
                   sx={{
-                    fontSize: "4rem",
+                    fontSize: "3.5rem",
                     fontWeight: "bold",
                     fontFamily: "Billfont !important",
                   }}
@@ -1016,7 +1017,7 @@ export const KDSTable = forwardRef((props, ref) => {
               <TableRow key={currentOrder.orderId}>
                 <TableCell
                   sx={{
-                    fontSize: "4rem",
+                    fontSize: "3.5rem",
                     fontWeight: "bold",
                     fontFamily: "Billfont !important",
                   }}
@@ -1027,7 +1028,7 @@ export const KDSTable = forwardRef((props, ref) => {
                 </TableCell>
                 <TableCell
                   sx={{
-                    fontSize: "4rem",
+                    fontSize: "3.5rem",
                     fontWeight: "bold",
                     fontFamily: "Billfont !important",
                   }}
@@ -1038,7 +1039,7 @@ export const KDSTable = forwardRef((props, ref) => {
                 </TableCell>
                 {/* <TableCell
                   sx={{
-                    fontSize: "4rem",
+                    fontSize: "3.5rem",
                     fontWeight: "bold",
                     fontFamily: "Billfont !important",
                   }}
