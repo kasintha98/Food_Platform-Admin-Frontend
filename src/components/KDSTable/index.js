@@ -971,7 +971,7 @@ export const KDSTable = forwardRef((props, ref) => {
               {renderNowDate(currentOrder.orderReceivedDateTime)}
             </p>
             <p style={{ fontSize: "3.5rem", fontWeight: "bold" }}>
-              {renderNowTime(currentOrder.orderReceivedDateTime)}
+              {renderNowTime(currentOrder.createdDate)}
             </p>
           </div>
           <hr></hr>
