@@ -986,11 +986,11 @@ export const KDSTable = forwardRef((props, ref) => {
                   }}
                   align="center"
                 >
-                  ----------
+                  -------
                   <hr></hr>
                   Qty
                   <hr></hr>
-                  ----------
+                  -------
                 </TableCell>
                 <TableCell
                   sx={{
