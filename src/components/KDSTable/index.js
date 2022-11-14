@@ -947,7 +947,7 @@ export const KDSTable = forwardRef((props, ref) => {
 
       <div style={{ display: "none" }}>
         <div
-          style={{ marginTop: "25px", fontFamily: "Billfont" }}
+          style={{ fontFamily: "Billfont" }}
           className="text-center"
           ref={componentRef}
         >
