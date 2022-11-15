@@ -39,6 +39,7 @@ export const KDSTable = forwardRef((props, ref) => {
   const loading = useSelector((state) => state.order.loading);
   const stores = useSelector((state) => state.store.stores);
   const user = useSelector((state) => state.auth.user);
+  const kdsTime = useSelector((state) => state.user.kdsTime);
   const businessDateAll = useSelector((state) => state.user.businessDate);
   const [filteredData, setFilteredData] = useState([]);
   const [newSubStatus, setNewSubStatus] = useState(false);
@@ -75,31 +76,33 @@ export const KDSTable = forwardRef((props, ref) => {
   }, [props.counter, props.restaurantId, props.storeId, newSubStatus]);
 
   useEffect(() => {
-    setTimeout(function () {
-      //handleRefresh();
-      const today = businessDateAll
-        ? new Date(businessDateAll.businessDate)
-        : new Date();
-      dispatch(
-        getCustomerOrdersSilent(
-          props.restaurantId,
-          props.storeId,
-          null,
-          `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,
-          null,
-          null,
-          null,
-          "N",
-          null,
-          null,
-          true
-        )
-      ).then((res) => {
-        if (res) {
-          setFilteredData(filterByCounter(res, props.counter));
-        }
-      });
-    }, 6000);
+    setTimeout(
+      function () {
+        const today = businessDateAll
+          ? new Date(businessDateAll.businessDate)
+          : new Date();
+        dispatch(
+          getCustomerOrdersSilent(
+            props.restaurantId,
+            props.storeId,
+            null,
+            `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,
+            null,
+            null,
+            null,
+            "N",
+            null,
+            null,
+            true
+          )
+        ).then((res) => {
+          if (res) {
+            setFilteredData(filterByCounter(res, props.counter));
+          }
+        });
+      },
+      kdsTime ? kdsTime : 30000
+    );
   });
 
   useEffect(() => {

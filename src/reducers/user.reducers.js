@@ -29,6 +29,7 @@ const initState = {
   configPaymentModes: [],
   paymentModesForCashierReport: [],
   orderSourcesForCashierReport: [],
+  kdsTime: 30000,
 };
 
 export default (state = initState, action) => {
@@ -474,6 +475,13 @@ export default (state = initState, action) => {
       state = {
         ...state,
         configPaymentModes: [],
+      };
+      break;
+
+    case userConstants.GET_KDS_TIME_SUCCESS:
+      state = {
+        ...state,
+        kdsTime: action.payload,
       };
       break;
   }

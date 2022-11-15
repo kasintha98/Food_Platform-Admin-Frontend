@@ -1111,3 +1111,38 @@ export const getOrderSourceConfigDetailsCashierReport = (
     }
   };
 };
+
+export const getKDSTime = () => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: userConstants.GET_KDS_TIME_REQUEST });
+
+      const res = await axios.get(`/getConfigDetailsByCriteria`, {
+        params: {
+          restaurantId: "R001",
+          storeId: "ALL",
+          criteria: "KDS_REFRESH_TIME",
+        },
+      });
+
+      if (res.status === 200 && res.data) {
+        dispatch({
+          type: userConstants.GET_KDS_TIME_SUCCESS,
+          payload: Number(res.data[0].configCriteriaValue) * 1000,
+        });
+        return res.data;
+      } else {
+        dispatch({
+          type: userConstants.GET_KDS_TIME_FAILURE,
+          payload: { error: "Error fetching KDS time config data!" },
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch({
+        type: userConstants.GET_KDS_TIME_FAILURE,
+        payload: { error: "Error fetching KDS time config data!" },
+      });
+    }
+  };
+};

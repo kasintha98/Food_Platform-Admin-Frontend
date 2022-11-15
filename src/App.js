@@ -10,6 +10,7 @@ import {
   getPaymentModes,
   getOrderSourceConfigDetails,
   getReportTypes,
+  getKDSTime,
 } from "./actions";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -63,6 +64,7 @@ function App() {
     dispatch(updateCart());
     dispatch(getAllStores());
     dispatch(getPaymentModes());
+    dispatch(getKDSTime());
 
     if (localStorage.getItem("user")) {
       const user = JSON.parse(localStorage.getItem("user"));
