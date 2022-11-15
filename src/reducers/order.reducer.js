@@ -27,6 +27,14 @@ export default (state = initState, action) => {
         loading: false,
       };
       break;
+
+    case orderConstants.GET_CUSTOMER_ORDER_SILENT_SUCCESS:
+      state = {
+        ...state,
+        orders: action.payload,
+      };
+      break;
+
     case orderConstants.GET_ALL_ORDER_REQUEST:
       state = {
         ...state,

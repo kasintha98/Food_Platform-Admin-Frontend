@@ -5,6 +5,7 @@ import React, {
   useImperativeHandle,
   useRef,
 } from "react";
+import bellSound from "../../audio/bell.wav";
 import { useDispatch, useSelector } from "react-redux";
 import { OrderDetailsTable } from "../OrderDetailsTable";
 import Timer from "react-timer-wrapper";
@@ -24,6 +25,7 @@ import {
   updateOrder,
   updateFoodPackagedFlag,
   updateFoodPackagedFlagByItem,
+  getCustomerOrdersSilent,
 } from "../../actions";
 import { useReactToPrint } from "react-to-print";
 import { Button } from "@mui/material";
@@ -45,6 +47,7 @@ export const KDSTable = forwardRef((props, ref) => {
 
   const dispatch = useDispatch();
   const componentRef = useRef();
+  const prevCountRef = useRef();
 
   useEffect(() => {
     const today = businessDateAll
@@ -70,6 +73,38 @@ export const KDSTable = forwardRef((props, ref) => {
       }
     });
   }, [props.counter, props.restaurantId, props.storeId, newSubStatus]);
+
+  useEffect(() => {
+    setTimeout(function () {
+      //handleRefresh();
+      const today = businessDateAll
+        ? new Date(businessDateAll.businessDate)
+        : new Date();
+      dispatch(
+        getCustomerOrdersSilent(
+          props.restaurantId,
+          props.storeId,
+          null,
+          `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,
+          null,
+          null,
+          null,
+          "N",
+          null,
+          null,
+          true
+        )
+      ).then((res) => {
+        if (res) {
+          setFilteredData(filterByCounter(res, props.counter));
+        }
+      });
+    }, 6000);
+  });
+
+  useEffect(() => {
+    prevCountRef.current = filteredData.length;
+  }, [filteredData]);
 
   useImperativeHandle(ref, () => ({
     handleRefresh,
@@ -134,6 +169,11 @@ export const KDSTable = forwardRef((props, ref) => {
         setTableTwoData(odd);
       }
     }); */
+
+    if (orders.length > prevCountRef.current) {
+      var bell = new Audio(bellSound);
+      bell.play();
+    }
     return orders;
   };
 

@@ -383,3 +383,60 @@ export const updateFoodPackagedFlagByItem = (
     }
   };
 };
+
+export const getCustomerOrdersSilent = (
+  restaurantId,
+  storeId,
+  orderStatus,
+  orderReceivedDate,
+  orderId,
+  deliveryUserId,
+  orderDeliveryType,
+  foodPackagedFlag,
+  orderReceivedFromDate,
+  orderSource,
+  descending
+) => {
+  return async (dispatch) => {
+    dispatch({ type: orderConstants.GET_CUSTOMER_ORDER_SILENT_REQUEST });
+    try {
+      const body = {
+        restaurantId,
+        storeId,
+        orderStatus,
+        orderReceivedDate,
+        orderId,
+        deliveryUserId,
+        orderDeliveryType,
+        foodPackagedFlag,
+        orderReceivedFromDate:
+          orderReceivedFromDate === orderReceivedDate
+            ? null
+            : orderReceivedFromDate,
+        orderSource,
+        descending,
+      };
+
+      console.log(body);
+
+      const res = await axios.post("/queryOrderViewByParams", body);
+
+      if (res.status === 200) {
+        dispatch({
+          type: orderConstants.GET_CUSTOMER_ORDER_SILENT_SUCCESS,
+          payload: res.data,
+        });
+        dispatch(getAllOrders(orderReceivedDate, restaurantId, storeId));
+        return res.data;
+      } else {
+        dispatch({
+          type: orderConstants.GET_CUSTOMER_ORDER_SILENT_FAILURE,
+          payload: res.data,
+        });
+        return false;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
