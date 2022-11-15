@@ -382,6 +382,7 @@ export const InvoiceTable = (props) => {
                 scope="row"
                 colspan="1"
                 sx={{ fontStyle: "italic" }}
+                align="center"
               >
                 {props.isBill ? <hr></hr> : null}
                 {props.isBill ? null : "Rs. "}
