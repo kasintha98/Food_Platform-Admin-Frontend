@@ -331,7 +331,7 @@ export default function ProductCard(props) {
       currentProduct && currentProduct.price ? qty * currentProduct.price : 0;
 
     const total = prodTotal + choicePrice * qty + toppingAllPrice * qty;
-    return <span>{total}</span>;
+    return <span>{Number(total).toFixed(2)}</span>;
   };
 
   const renderPictureModal = () => {
@@ -904,7 +904,6 @@ export default function ProductCard(props) {
                         }}
                       >
                         Add to my order ₹ {showCustPrice()}
-                        .00
                       </CheckoutButton>
                     </Col>
                   </Row>

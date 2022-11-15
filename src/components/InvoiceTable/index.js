@@ -80,15 +80,19 @@ export const InvoiceTable = (props) => {
           {(Number(item.quantity) -
             Number(props.drinkReduceKey.reducingDrinkaQty)) *
             item.price +
-            (item.extraSubTotalWithQty ? item.extraSubTotalWithQty : 0)}
+            (item.extraSubTotalWithQty ? item.extraSubTotalWithQty : 0).toFixed(
+              2
+            )}
         </>
       );
     } else if (props.pastaReduceKey && props.pastaReduceKey.pastaKey === key) {
       return (
         <>
-          {(Number(item.quantity) -
-            Number(props.pastaReduceKey.reducingPastaQty)) *
-            item.price}
+          {(
+            (Number(item.quantity) -
+              Number(props.pastaReduceKey.reducingPastaQty)) *
+            item.price
+          ).toFixed(2)}
         </>
       );
     } else if (props.combo1OfferReduceTotal) {
@@ -98,25 +102,31 @@ export const InvoiceTable = (props) => {
       ) {
         return (
           <>
-            {(Number(item.quantity) -
-              Number(props.combo1OfferReduceTotal.reducingPizzaQty)) *
-              item.price}
+            {(
+              (Number(item.quantity) -
+                Number(props.combo1OfferReduceTotal.reducingPizzaQty)) *
+              item.price
+            ).toFixed(2)}
           </>
         );
       } else if (props.combo1OfferReduceTotal.noodlesKey === key) {
         return (
           <>
-            {(Number(item.quantity) -
-              Number(props.combo1OfferReduceTotal.reducingNoodlesQty)) *
-              item.price}
+            {(
+              (Number(item.quantity) -
+                Number(props.combo1OfferReduceTotal.reducingNoodlesQty)) *
+              item.price
+            ).toFixed(2)}
           </>
         );
       } else if (props.combo1OfferReduceTotal.manchuriKey === key) {
         return (
           <>
-            {(Number(item.quantity) -
-              Number(props.combo1OfferReduceTotal.reducingManchuriQty)) *
-              item.price}
+            {(
+              (Number(item.quantity) -
+                Number(props.combo1OfferReduceTotal.reducingManchuriQty)) *
+              item.price
+            ).toFixed(2)}
           </>
         );
       } else if (
@@ -124,19 +134,24 @@ export const InvoiceTable = (props) => {
       ) {
         return (
           <>
-            {(Number(item.quantity) -
-              Number(
-                props.combo1OfferReduceTotal.drinkObj.find((x) => x.key === key)
-                  .reducingDrinkQty
-              )) *
-              item.price}
+            {(
+              (Number(item.quantity) -
+                Number(
+                  props.combo1OfferReduceTotal.drinkObj.find(
+                    (x) => x.key === key
+                  ).reducingDrinkQty
+                )) *
+              item.price
+            ).toFixed(2)}
           </>
         );
       } else {
         return (
           <>
-            {item.quantity * item.price +
-              (item.extraSubTotalWithQty ? item.extraSubTotalWithQty : 0)}
+            {(
+              item.quantity * item.price +
+              (item.extraSubTotalWithQty ? item.extraSubTotalWithQty : 0)
+            ).toFixed(2)}
           </>
         );
       }
@@ -147,33 +162,41 @@ export const InvoiceTable = (props) => {
       ) {
         return (
           <>
-            {(Number(item.quantity) -
-              Number(props.combo2OfferReduceTotal.reducingPizzaQty)) *
-              item.price}
+            {(
+              (Number(item.quantity) -
+                Number(props.combo2OfferReduceTotal.reducingPizzaQty)) *
+              item.price
+            ).toFixed(2)}
           </>
         );
       } else if (props.combo2OfferReduceTotal.garBreadKey === key) {
         return (
           <>
-            {(Number(item.quantity) -
-              Number(props.combo2OfferReduceTotal.reducingBreadQty)) *
-              item.price}
+            {(
+              (Number(item.quantity) -
+                Number(props.combo2OfferReduceTotal.reducingBreadQty)) *
+              item.price
+            ).toFixed(2)}
           </>
         );
       } else if (props.combo2OfferReduceTotal.lavaCakeKey === key) {
         return (
           <>
-            {(Number(item.quantity) -
-              Number(props.combo2OfferReduceTotal.reducingLavaQty)) *
-              item.price}
+            {(
+              (Number(item.quantity) -
+                Number(props.combo2OfferReduceTotal.reducingLavaQty)) *
+              item.price
+            ).toFixed(2)}
           </>
         );
       } else if (props.combo2OfferReduceTotal.pastaKey === key) {
         return (
           <>
-            {(Number(item.quantity) -
-              Number(props.combo2OfferReduceTotal.reducingPastaQty)) *
-              item.price}
+            {(
+              (Number(item.quantity) -
+                Number(props.combo2OfferReduceTotal.reducingPastaQty)) *
+              item.price
+            ).toFixed(2)}
           </>
         );
       } else if (
@@ -181,51 +204,60 @@ export const InvoiceTable = (props) => {
       ) {
         return (
           <>
-            {(Number(item.quantity) -
-              Number(
-                props.combo2OfferReduceTotal.drinkObj.find((x) => x.key === key)
-                  .reducingDrinkQty
-              )) *
-              item.price}
+            {(
+              (Number(item.quantity) -
+                Number(
+                  props.combo2OfferReduceTotal.drinkObj.find(
+                    (x) => x.key === key
+                  ).reducingDrinkQty
+                )) *
+              item.price
+            ).toFixed(2)}
           </>
         );
       } else {
-        return <>{item.quantity * item.price}</>;
+        return <>{(item.quantity * item.price).toFixed(2)}</>;
       }
     } else if (props.friesOfferReduceTotal) {
       if (props.friesOfferReduceTotal.drinkKey === key) {
         return (
           <>
-            {(Number(item.quantity) -
-              Number(props.friesOfferReduceTotal.reducingDrinkQty)) *
-              item.price}
+            {(
+              (Number(item.quantity) -
+                Number(props.friesOfferReduceTotal.reducingDrinkQty)) *
+              item.price
+            ).toFixed(2)}
           </>
         );
       } else if (props.friesOfferReduceTotal.friesKey === key) {
         return (
           <>
-            {(Number(item.quantity) -
-              Number(props.friesOfferReduceTotal.reducingFriesQty)) *
-              item.price}
+            {(
+              (Number(item.quantity) -
+                Number(props.friesOfferReduceTotal.reducingFriesQty)) *
+              item.price
+            ).toFixed(2)}
           </>
         );
       } else {
-        return <>{item.quantity * item.price}</>;
+        return <>{(item.quantity * item.price).toFixed(2)}</>;
       }
     } else if (props.bOGOLowestPizzaKey) {
       if (props.bOGOLowestPizzaKey.some((el) => el.productId === key)) {
         return (
           <>
-            {Number(
-              props.bOGOLowestPizzaKey.find((x) => x.productId === key).qty
-            ) * item.price}
+            {(
+              Number(
+                props.bOGOLowestPizzaKey.find((x) => x.productId === key).qty
+              ) * item.price
+            ).toFixed(2)}
           </>
         );
       } else {
-        return <>{item.quantity * item.price}</>;
+        return <>{(item.quantity * item.price).toFixed(2)}</>;
       }
     } else {
-      return <>{item.quantity * item.price}</>;
+      return <>{(item.quantity * item.price).toFixed(2)}</>;
     }
   };
 
@@ -233,45 +265,59 @@ export const InvoiceTable = (props) => {
     if (props.drinkReduceKey) {
       return (
         <>
-          {Number(props.grandTot) +
+          {(
+            Number(props.grandTot) +
             Number(renderDiscount(true)) -
-            Number(props.drinkReduceKey.price)}
+            Number(props.drinkReduceKey.price)
+          ).toFixed(2)}
         </>
       );
     } else if (props.pastaReduceKey) {
       return (
         <>
-          {Number(props.grandTot) +
+          {(
+            Number(props.grandTot) +
             Number(renderDiscount(true)) -
-            Number(props.pastaReduceKey.newPrice)}
+            Number(props.pastaReduceKey.newPrice)
+          ).toFixed(2)}
         </>
       );
     } else if (props.friesOfferReduceTotal) {
       return (
         <>
-          {Number(props.grandTot) +
+          {(
+            Number(props.grandTot) +
             Number(renderDiscount(true)) -
-            Number(props.friesOfferReduceTotal.price)}
+            Number(props.friesOfferReduceTotal.price)
+          ).toFixed(2)}
         </>
       );
     } else if (props.combo1OfferReduceTotal) {
       return (
         <>
-          {Number(props.grandTot) +
+          {(
+            Number(props.grandTot) +
             Number(renderDiscount(true)) -
-            Number(props.combo1OfferReduceTotal.price)}
+            Number(props.combo1OfferReduceTotal.price)
+          ).toFixed(2)}
         </>
       );
     } else if (props.combo2OfferReduceTotal) {
       return (
         <>
-          {Number(props.grandTot) +
+          {(
+            Number(props.grandTot) +
             Number(renderDiscount(true)) -
-            Number(props.combo2OfferReduceTotal.price)}
+            Number(props.combo2OfferReduceTotal.price)
+          ).toFixed(2)}
         </>
       );
     } else {
-      return <>{Number(props.grandTot) + Number(renderDiscount(true))}</>;
+      return (
+        <>
+          {(Number(props.grandTot) + Number(renderDiscount(true))).toFixed(2)}
+        </>
+      );
     }
   };
 
@@ -315,13 +361,12 @@ export const InvoiceTable = (props) => {
                     sx={{ padding: "0px 5px 0px 0px", minWidth: "90px" }}
                   >
                     {props.isBill ? null : "Rs. "}
-                    {row.price}
-                    .00
+                    {Number(row.price).toFixed(2)}
                   </CusTableCell>
-                  <CusTableCell sx={{ padding: 0 }}>
+                  <CusTableCell sx={{ padding: 0 }} align="center">
                     {props.isBill ? null : "Rs. "}
                     {/* {Number(row.quantity) * Number(row.price)} */}
-                    {renderAllTotal(row.productId, row)}.00
+                    {renderAllTotal(row.productId, row)}
                   </CusTableCell>
                 </TableRow>
               </>
@@ -344,22 +389,20 @@ export const InvoiceTable = (props) => {
               </CusTableCell>
             </TableRow>
 
-            {props.fullResp.discountPercentage &&
-            Number(props.fullResp.discountPercentage) ? (
-              <TableRow>
-                <CusTableCell component="th" scope="row" colspan="3">
-                  Discount
-                </CusTableCell>
-                <CusTableCell
-                  component="th"
-                  scope="row"
-                  colspan="1"
-                  sx={{ fontStyle: "italic" }}
-                >
-                  {renderDiscount()}
-                </CusTableCell>
-              </TableRow>
-            ) : null}
+            <TableRow>
+              <CusTableCell component="th" scope="row" colspan="3">
+                Discount
+              </CusTableCell>
+              <CusTableCell
+                component="th"
+                scope="row"
+                colspan="1"
+                sx={{ fontStyle: "italic" }}
+                align="center"
+              >
+                Rs. {props.fullResp.discountAmount}
+              </CusTableCell>
+            </TableRow>
 
             {props.fullResp.couponCode ? (
               <TableRow>
@@ -371,6 +414,7 @@ export const InvoiceTable = (props) => {
                   scope="row"
                   colspan="1"
                   sx={{ fontStyle: "italic" }}
+                  align="center"
                 >
                   {props.fullResp.couponCode}
                 </CusTableCell>
@@ -387,9 +431,10 @@ export const InvoiceTable = (props) => {
                   scope="row"
                   colspan="1"
                   sx={{ fontStyle: "italic" }}
+                  align="center"
                 >
                   {props.isBill ? null : "Rs. "}
-                  {props.drinkReduceKey.price}.00
+                  {Number(props.drinkReduceKey.price).toFixed(2)}
                 </CusTableCell>
               </TableRow>
             ) : null}
@@ -404,9 +449,10 @@ export const InvoiceTable = (props) => {
                   scope="row"
                   colspan="1"
                   sx={{ fontStyle: "italic" }}
+                  align="center"
                 >
                   {props.isBill ? null : "Rs. "}
-                  {props.combo1OfferReduceTotal.price}.00
+                  {Number(props.combo1OfferReduceTotal.price).toFixed(2)}
                 </CusTableCell>
               </TableRow>
             ) : null}
@@ -421,9 +467,10 @@ export const InvoiceTable = (props) => {
                   scope="row"
                   colspan="1"
                   sx={{ fontStyle: "italic" }}
+                  align="center"
                 >
                   {props.isBill ? null : "Rs. "}
-                  {props.combo2OfferReduceTotal.price}.00
+                  {Number(props.combo2OfferReduceTotal.price).toFixed(2)}
                 </CusTableCell>
               </TableRow>
             ) : null}
@@ -438,9 +485,10 @@ export const InvoiceTable = (props) => {
                   scope="row"
                   colspan="1"
                   sx={{ fontStyle: "italic" }}
+                  align="center"
                 >
                   {props.isBill ? null : "Rs. "}
-                  {props.pastaReduceKey.newPrice}.00
+                  {Number(props.pastaReduceKey.newPrice).toFixed(2)}
                 </CusTableCell>
               </TableRow>
             ) : null}
@@ -455,9 +503,10 @@ export const InvoiceTable = (props) => {
                   scope="row"
                   colspan="1"
                   sx={{ fontStyle: "italic" }}
+                  align="center"
                 >
                   {props.isBill ? null : "Rs. "}
-                  {props.friesOfferReduceTotal.price}.00
+                  {Number(props.friesOfferReduceTotal.price).toFixed(2)}
                 </CusTableCell>
               </TableRow>
             ) : null}
@@ -472,6 +521,7 @@ export const InvoiceTable = (props) => {
                   scope="row"
                   colspan="1"
                   sx={{ fontStyle: "italic" }}
+                  align="center"
                 >
                   {props.isBill ? null : "Rs. "}
                   {props.bOGOLowestPizzaKey[0].allBogoReduceCost}
@@ -489,6 +539,7 @@ export const InvoiceTable = (props) => {
                   scope="row"
                   colspan="1"
                   sx={{ fontStyle: "italic" }}
+                  align="center"
                 >
                   {props.isBill ? null : "Rs. "}
                   {props.fullResp.deliveryCharges}
@@ -505,6 +556,7 @@ export const InvoiceTable = (props) => {
                 scope="row"
                 colspan="1"
                 sx={{ fontStyle: "italic" }}
+                align="center"
               >
                 {props.isBill ? null : "Rs. "}
                 {props.cgst}
@@ -520,6 +572,7 @@ export const InvoiceTable = (props) => {
                 scope="row"
                 colspan="1"
                 sx={{ fontStyle: "italic" }}
+                align="center"
               >
                 {props.isBill ? null : "Rs. "}
                 {props.sgst}
@@ -534,10 +587,27 @@ export const InvoiceTable = (props) => {
                 scope="row"
                 colspan="1"
                 sx={{ fontStyle: "italic" }}
+                align="center"
               >
                 {props.isBill ? null : "Rs. "}{props.fullResp.deliveryCharges}
               </CusTableCell>
             </TableRow> */}
+
+            <TableRow>
+              <CusTableCell component="th" scope="row" colspan="3">
+                Packing Charges
+              </CusTableCell>
+              <CusTableCell
+                component="th"
+                scope="row"
+                colspan="1"
+                sx={{ fontStyle: "italic" }}
+                align="center"
+              >
+                {props.isBill ? null : "Rs. "}
+                {props.fullResp.packagingCharges}
+              </CusTableCell>
+            </TableRow>
 
             <TableRow
               sx={{
@@ -550,7 +620,12 @@ export const InvoiceTable = (props) => {
                 Grand Total
                 {props.isBill ? <hr></hr> : null}
               </CusTableCell>
-              <CusTableCell component="th" scope="row" colspan="1">
+              <CusTableCell
+                component="th"
+                scope="row"
+                colspan="1"
+                align="center"
+              >
                 {props.isBill ? <hr></hr> : null}
                 {props.isBill ? null : "Rs. "}
                 {props.overallPriceWithTax}

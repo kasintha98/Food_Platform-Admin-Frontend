@@ -923,3 +923,39 @@ export const saveSubProductNew = (topping) => {
     }
   };
 };
+
+export const getAllProduct = () => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: productConstants.GET_MASTER_PRODUCTS_REQUEST,
+      });
+
+      const res = await axios.get(`/getAllProduct`);
+
+      if (res && res.status === 200) {
+        const productsList = {
+          products: res.data,
+        };
+        console.log(productsList);
+
+        dispatch({
+          type: productConstants.GET_MASTER_PRODUCTS_SUCCESS,
+          payload: productsList,
+        });
+
+        return res.data;
+      } else {
+        console.log("error");
+        dispatch({
+          type: productConstants.GET_MASTER_PRODUCTS_FAILURE,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch({
+        type: productConstants.GET_MASTER_PRODUCTS_FAILURE,
+      });
+    }
+  };
+};

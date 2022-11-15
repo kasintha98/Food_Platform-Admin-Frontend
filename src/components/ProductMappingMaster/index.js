@@ -17,6 +17,7 @@ import {
   getAllMenuIngredientsByRestoAndStoreId,
   saveMenuIngredient,
   saveSubProductNew,
+  getAllProduct,
 } from "../../actions";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
@@ -24,6 +25,7 @@ import { Row, Col, Form, Modal } from "react-bootstrap";
 import Select from "@mui/material/Select";
 import styled from "@emotion/styled";
 import MenuItem from "@mui/material/MenuItem";
+import Checkbox from "@mui/material/Checkbox";
 import {
   Typography,
   TextField,
@@ -152,7 +154,9 @@ const kdsRouters = ["PIZZA", "CHINESE", "DRINKS", "FAST FOOD"];
 
 export const ProductMappingMaster = () => {
   const stores = useSelector((state) => state.store.stores);
+  //const productsByRes = useSelector((state) => state.product.products);
   const productList = useSelector((state) => state.product.products);
+  //const productList = useSelector((state) => state.product.masterProducts);
   const user = useSelector((state) => state.auth.user);
   const allSectionsFromMaster = useSelector(
     (state) => state.product.allSectionsFromMaster
@@ -232,6 +236,10 @@ export const ProductMappingMaster = () => {
   const [isRefresh, setIsRefresh] = useState(false);
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getAllProduct());
+  }, []);
 
   useEffect(() => {
     if (selectedStoreObj) {
@@ -1316,6 +1324,11 @@ export const ProductMappingMaster = () => {
                   DISH NAME
                 </CusTableCell1>
                 <CusTableCell1 align="center">Price</CusTableCell1>
+                {selectedStoreObj ? (
+                  <CusTableCell1 align="center">
+                    {selectedStoreObj.resturantName}
+                  </CusTableCell1>
+                ) : null}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -1352,7 +1365,7 @@ export const ProductMappingMaster = () => {
                             align="center"
                             style={{ minWidth: "100px" }}
                           >
-                            <FormControl fullWidth>
+                            {/* <FormControl fullWidth>
                               <NativeSelect
                                 defaultValue={product.dish}
                                 inputProps={{
@@ -1369,29 +1382,6 @@ export const ProductMappingMaster = () => {
                                   },
                                 }}
                                 disabled={!isSave[product.id]}
-                                /* onClick={() => {
-                                  if (!allDishOfSection[product.section]) {
-                                    console.log(
-                                      product.section,
-                                      currentSection
-                                    );
-                                    dispatch(
-                                      getDishesBySection(
-                                        product.section,
-                                        selectedStoreObj.restaurantId,
-                                        selectedStoreObj.storeId
-                                      )
-                                    ).then((res) => {
-                                      if (res) {
-                                        const data = {
-                                          ...allDishOfSection,
-                                          [product.section]: res,
-                                        };
-                                        setAllDishOfSection(data);
-                                      }
-                                    });
-                                  }
-                                }} */
                               >
                                 {allDishesBySection[product.section] &&
                                 allDishesBySection[product.section].length >
@@ -1436,13 +1426,14 @@ export const ProductMappingMaster = () => {
                                   </option>
                                 )}
                               </NativeSelect>
-                            </FormControl>
+                            </FormControl> */}
+                            {product.dish}
                           </CusTableCell>
                           <CusTableCell
                             align="center"
                             style={{ minWidth: "150px" }}
                           >
-                            <CusTextField
+                            {/* <CusTextField
                               disabled={!isSave[product.id]}
                               key={product.id}
                               defaultValue={product.dishType}
@@ -1464,14 +1455,15 @@ export const ProductMappingMaster = () => {
                               }}
                               fullWidth
                               variant="standard"
-                            />
+                            /> */}
+                            {product.dishType}
                           </CusTableCell>
 
                           <CusTableCell
                             align="center"
                             style={{ minWidth: "70px" }}
                           >
-                            <div style={{ display: "flex" }}>
+                            {/* <div style={{ display: "flex" }}>
                               &nbsp;
                               <span
                                 style={{
@@ -1507,8 +1499,23 @@ export const ProductMappingMaster = () => {
                                 fullWidth
                                 variant="standard"
                               />
-                            </div>
+                            </div> */}
+                            {product.price}
                           </CusTableCell>
+                          {selectedStoreObj ? (
+                            <CusTableCell align="center">
+                              <Checkbox
+                                checked={
+                                  /* prevCheckedRoles[row.moduleId] ||
+                          checkedRoles[row.moduleId]
+                            ? true
+                            : */ false
+                                }
+                                /* onChange={handleChange} */
+                                name={product.productId}
+                              />
+                            </CusTableCell>
+                          ) : null}
                         </TableRow>
                       ))}
                     </>

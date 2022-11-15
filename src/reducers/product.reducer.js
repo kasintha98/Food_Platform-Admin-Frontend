@@ -17,6 +17,7 @@ const initState = {
   allDishToppingMappingByRestoAndStore: [],
   allSectionsFromMaster: [],
   allDishesFromMaster: [],
+  masterProducts: [],
 };
 
 export default (state = initState, action) => {
@@ -252,6 +253,13 @@ export default (state = initState, action) => {
       state = {
         ...state,
         allDishesFromMaster: [],
+      };
+      break;
+
+    case productConstants.GET_MASTER_PRODUCTS_SUCCESS:
+      state = {
+        ...state,
+        masterProducts: action.payload,
       };
       break;
   }

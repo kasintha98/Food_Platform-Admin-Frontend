@@ -522,6 +522,8 @@ export default function NewCheckout(props) {
         (extraSubTotal ? extraSubTotal : 0) +
         (choiceTotal ? choiceTotal : 0);
 
+      let discountAmount = 0;
+
       if (
         couponReduxObj &&
         Number(couponReduxObj.couponDetails.discountPercentage)
@@ -529,6 +531,9 @@ export default function NewCheckout(props) {
         const afterAddCoupon =
           (100 - Number(couponReduxObj.couponDetails.discountPercentage)) / 100;
         total = total * afterAddCoupon;
+        discountAmount =
+          total *
+          (Number(couponReduxObj.couponDetails.discountPercentage) / 100);
       }
 
       if (allBogoReduceCost) {
@@ -667,6 +672,8 @@ export default function NewCheckout(props) {
             : props.selectedOrderTypeObj.paymentStatus,
         paymentMode: currentPaymentType,
         deliveryCharges: Number(delCharge) ? Number(delCharge) : 0,
+        packagingCharges: Number(0).toFixed(2),
+        discountAmount: discountAmount.toFixed(2),
         customerAddressId: defaultAddress ? 99999 : currentGetAddress.id,
         cgstCalculatedValue: cgstCaluclatedValue.toFixed(2),
         sgstCalculatedValue: sgstCalculatedValue.toFixed(2),
@@ -2122,7 +2129,11 @@ export default function NewCheckout(props) {
                                   color: "#2e7d32",
                                 }}
                               >
-                                ₹ {pasta59OfferReduceTotal.newPrice}.00
+                                ₹{" "}
+                                {Number(
+                                  pasta59OfferReduceTotal.newPrice
+                                ).toFixed(2)}
+                                .00
                               </Typography>
                             </div>
                           </Row>
@@ -2150,7 +2161,7 @@ export default function NewCheckout(props) {
                                   color: "#2e7d32",
                                 }}
                               >
-                                ₹ {drinkReduceKey.price}.00
+                                ₹ {Number(drinkReduceKey.price).toFixed(2)}
                               </Typography>
                             </div>
                           </Row>
@@ -2178,7 +2189,10 @@ export default function NewCheckout(props) {
                                   color: "#2e7d32",
                                 }}
                               >
-                                ₹ {combo1OfferReduceTotal.price}.00
+                                ₹{" "}
+                                {Number(combo1OfferReduceTotal.price).toFixed(
+                                  2
+                                )}
                               </Typography>
                             </div>
                           </Row>
@@ -2206,7 +2220,8 @@ export default function NewCheckout(props) {
                                   color: "#2e7d32",
                                 }}
                               >
-                                ₹ {friesOfferReduceTotal.price}.00
+                                ₹{" "}
+                                {Number(friesOfferReduceTotal.price).toFixed(2)}
                               </Typography>
                             </div>
                           </Row>
@@ -2234,7 +2249,10 @@ export default function NewCheckout(props) {
                                   color: "#2e7d32",
                                 }}
                               >
-                                ₹ {combo2OfferReduceTotal.price}.00
+                                ₹{" "}
+                                {Number(combo2OfferReduceTotal.price).toFixed(
+                                  2
+                                )}
                               </Typography>
                             </div>
                           </Row>
