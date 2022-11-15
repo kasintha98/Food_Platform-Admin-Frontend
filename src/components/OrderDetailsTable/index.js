@@ -6,12 +6,13 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import styled from "@emotion/styled";
 
-const CusTableCell = styled(TableCell)`
-  color: black;
-  font-weight: 600 !important;
-`;
-
 export const OrderDetailsTable = (props) => {
+  const CusTableCell = styled(TableCell)`
+    color: black;
+    font-weight: 600 !important;
+    ${props.isBill && "font-size: 3rem; font-family: Billfont"}
+  `;
+
   return (
     <div>
       {props.fullResp ? (

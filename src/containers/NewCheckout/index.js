@@ -35,6 +35,7 @@ import { InvoiceTable } from "../../components/InvoiceTable";
 import Pdf from "react-to-pdf";
 import { toast } from "react-toastify";
 import "react-phone-number-input/style.css";
+import { useReactToPrint } from "react-to-print";
 import ReactToPrint from "react-to-print";
 import { OrderInvoice } from "../../components/OrderInvoice";
 
@@ -159,6 +160,7 @@ export default function NewCheckout(props) {
   const ref = React.createRef();
   const refH = useRef(null);
   const refCardHeight = useRef(null);
+  const componentRef = useRef();
 
   const history = useHistory();
 
@@ -172,6 +174,10 @@ export default function NewCheckout(props) {
     if (refCardHeight.current) {
       setCardHeight(refCardHeight.current.clientHeight);
     }
+  });
+
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
   });
 
   const options = {
@@ -1661,18 +1667,32 @@ export default function NewCheckout(props) {
               {props.storeObj ? (
                 <div ref={ref}>
                   <div style={{ display: "none" }}>
-                    <div id="billNew">
+                    <div id="billNew" ref={componentRef}>
                       <div
                         className="text-center"
                         style={{ marginTop: "25px" }}
                       >
-                        <Typography sx={{ fontWeight: "600" }}>
+                        <Typography
+                          sx={{
+                            fontSize: "3rem",
+                            fontWeight: "bold",
+                            fontFamily: "Billfont",
+                            color: "black",
+                          }}
+                        >
                           {orderResp ? orderResp.storeName : "Hangries"}
                         </Typography>
 
                         <section>
                           {props.storeObj ? (
-                            <Typography>
+                            <Typography
+                              sx={{
+                                fontSize: "2.5rem",
+                                fontWeight: "bold",
+                                fontFamily: "Billfont",
+                                color: "black",
+                              }}
+                            >
                               <span>{props.storeObj.address1},</span> <br></br>
                               {props.storeObj.address2 ? (
                                 <span>{props.storeObj.address2},</span>
@@ -1688,27 +1708,56 @@ export default function NewCheckout(props) {
                           ) : null}
                         </section>
                         <hr></hr>
-                        <Typography sx={{ fontWeight: "600" }}>
+                        <Typography
+                          sx={{
+                            fontSize: "3rem",
+                            fontWeight: "bold",
+                            fontFamily: "Billfont",
+                            color: "black",
+                          }}
+                        >
                           GST NO:{" "}
                           {props.storeObj
                             ? props.storeObj.storeGstNumber
                             : null}
                         </Typography>
-                        <p className="id">
+                        <p
+                          className="id"
+                          style={{
+                            fontSize: "3rem",
+                            fontWeight: "bold",
+                            fontFamily: "Billfont",
+                            color: "black",
+                          }}
+                        >
                           Order ID: {orderResp ? orderResp.orderId : null}
                         </p>
                         <hr></hr>
 
                         <div
-                          style={{ display: "inline-flex", columnGap: "5px" }}
+                          style={{ display: "inline-flex", columnGap: "15px" }}
                         >
-                          <p>
+                          <p
+                            style={{
+                              fontSize: "3rem",
+                              fontWeight: "bold",
+                              fontFamily: "Billfont",
+                              color: "black",
+                            }}
+                          >
                             Cashier:{" "}
                             {orderResp
                               ? orderResp.createdBy.toUpperCase()
                               : null}
                           </p>
-                          <p>
+                          <p
+                            style={{
+                              fontSize: "3rem",
+                              fontWeight: "bold",
+                              fontFamily: "Billfont",
+                              color: "black",
+                            }}
+                          >
                             Table No:{" "}
                             {orderResp && orderResp.storeTableId
                               ? orderResp.storeTableId
@@ -1716,7 +1765,14 @@ export default function NewCheckout(props) {
                           </p>
                         </div>
                         <div>
-                          <p>
+                          <p
+                            style={{
+                              fontSize: "3rem",
+                              fontWeight: "bold",
+                              fontFamily: "Billfont",
+                              color: "black",
+                            }}
+                          >
                             <span>
                               {orderResp ? orderResp.orderDeliveryType : null}
                             </span>
@@ -1728,13 +1784,38 @@ export default function NewCheckout(props) {
                         <div
                           style={{ display: "inline-flex", columnGap: "10px" }}
                         >
-                          <Typography>Date: {renderNowDate()}</Typography>
-                          <Typography>Time: {renderNowTime()}</Typography>
+                          <Typography
+                            sx={{
+                              fontSize: "3rem",
+                              fontWeight: "bold",
+                              fontFamily: "Billfont",
+                              color: "black",
+                            }}
+                          >
+                            Date: {renderNowDate()}
+                          </Typography>
+                          <Typography
+                            sx={{
+                              fontSize: "3rem",
+                              fontWeight: "bold",
+                              fontFamily: "Billfont",
+                              color: "black",
+                            }}
+                          >
+                            Time: {renderNowTime()}
+                          </Typography>
                         </div>
                       </div>
                       <hr></hr>
                       <div>
-                        <Typography sx={{ color: "black" }}>
+                        <Typography
+                          sx={{
+                            color: "black",
+                            fontSize: "3rem",
+                            fontWeight: "bold",
+                            fontFamily: "Billfont",
+                          }}
+                        >
                           Name:{" "}
                           {firstName ? (
                             <span>
@@ -1744,7 +1825,14 @@ export default function NewCheckout(props) {
                             <span>{orderResp?.customerName.toUpperCase()}</span>
                           )}
                         </Typography>
-                        <Typography sx={{ color: "black" }}>
+                        <Typography
+                          sx={{
+                            color: "black",
+                            fontSize: "3rem",
+                            fontWeight: "bold",
+                            fontFamily: "Billfont",
+                          }}
+                        >
                           Mob No:{" "}
                           {phoneNo ? (
                             <span>{phoneNo}</span>
@@ -1752,7 +1840,14 @@ export default function NewCheckout(props) {
                             <span>{orderResp?.mobileNumber}</span>
                           )}
                         </Typography>
-                        <h5 sx={{ color: "black" }}>
+                        <h5
+                          style={{
+                            color: "black",
+                            fontSize: "3rem",
+                            fontWeight: "bold",
+                            fontFamily: "Billfont",
+                          }}
+                        >
                           Address:{" "}
                           {orderResp?.address ? (
                             <span>{orderResp?.address}</span>
@@ -1926,7 +2021,7 @@ export default function NewCheckout(props) {
               <Col className="col-6">
                 <Button
                   color="secondary"
-                  onClick={handleManualPrint}
+                  onClick={/* handleManualPrint */ handlePrint}
                   className="w-100"
                   variant="contained"
                 >

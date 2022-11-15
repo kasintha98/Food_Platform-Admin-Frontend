@@ -1,10 +1,13 @@
-import React from "react";
+import React, { forwardRef, useImperativeHandle } from "react";
+import { useReactToPrint } from "react-to-print";
 import { useSelector } from "react-redux";
 import Typography from "@mui/material/Typography";
 import { OrderDetailsTable } from "../OrderDetailsTable";
 
-export const OrderInvoicePrint = (props) => {
+export const OrderInvoicePrint = forwardRef((props, ref) => {
   const stores = useSelector((state) => state.store.stores);
+
+  const componentRef = React.useRef();
 
   const renderNowDate = () => {
     const dateObj = new Date(
@@ -14,7 +17,14 @@ export const OrderInvoicePrint = (props) => {
     const day = dateObj.getDate();
     const year = dateObj.getFullYear();
     return (
-      <span>
+      <span
+        style={{
+          fontSize: "3rem",
+          fontWeight: "bold",
+          fontFamily: "Billfont",
+          color: "black",
+        }}
+      >
         {day}/{month.toUpperCase()}/{year}
       </span>
     );
@@ -30,8 +40,27 @@ export const OrderInvoicePrint = (props) => {
       minute: "numeric",
     });
 
-    return <span>{time}</span>;
+    return (
+      <span
+        style={{
+          fontSize: "3rem",
+          fontWeight: "bold",
+          fontFamily: "Billfont",
+          color: "black",
+        }}
+      >
+        {time}
+      </span>
+    );
   };
+
+  useImperativeHandle(ref, () => ({
+    handlePrint,
+  }));
+
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
 
   const renderStoreGST = (restaurantId, storeId) => {
     const foundMatch = stores.find(
@@ -39,7 +68,18 @@ export const OrderInvoicePrint = (props) => {
     );
 
     if (foundMatch) {
-      return <>GST NO: {foundMatch.storeGstNumber}</>;
+      return (
+        <span
+          style={{
+            fontSize: "3rem",
+            fontWeight: "bold",
+            fontFamily: "Billfont",
+            color: "black",
+          }}
+        >
+          GST NO: {foundMatch.storeGstNumber}
+        </span>
+      );
     }
   };
 
@@ -51,7 +91,14 @@ export const OrderInvoicePrint = (props) => {
     if (foundMatch) {
       return (
         <section>
-          <Typography>
+          <Typography
+            sx={{
+              color: "black",
+              fontSize: "2.5rem",
+              fontWeight: "bold",
+              fontFamily: "Billfont",
+            }}
+          >
             <span>{foundMatch.address1},</span> <br></br>
             {foundMatch.address2 ? <span>{foundMatch.address2},</span> : null}
             {foundMatch.address3 ? <span>{foundMatch.address3},</span> : null}
@@ -66,33 +113,45 @@ export const OrderInvoicePrint = (props) => {
   };
 
   return (
-    <div id="billNew">
+    <div id="billNew" ref={componentRef} style={{ fontFamily: "Billfont" }}>
       <div className="text-center" style={{ marginTop: "25px" }}>
-        <Typography sx={{ fontWeight: "600" }}>
+        <Typography
+          sx={{
+            fontSize: "3rem",
+            fontWeight: "bold",
+            fontFamily: "Billfont",
+            color: "black",
+          }}
+        >
           {props.currentOrder ? props.currentOrder.restaurantName : "Hangries"}
         </Typography>
-        <Typography sx={{ color: "black" }}>
+        <Typography>
           {renderStoreAddress(
             props.currentOrder.restaurantId,
             props.currentOrder.storeId
           )}
         </Typography>
         <hr></hr>
-        <Typography sx={{ fontWeight: "600" }}>
+        <Typography>
           {renderStoreGST(
             props.currentOrder.restaurantId,
             props.currentOrder.storeId
           )}
         </Typography>
 
-        <p className="id">
+        <p
+          style={{ fontSize: "3rem", fontWeight: "bold", color: "black" }}
+          className="id"
+        >
           Order ID: {props.currentOrder ? props.currentOrder.orderId : null}
         </p>
         <hr></hr>
 
-        <div style={{ display: "inline-flex", columnGap: "5px" }}>
-          <p>Cashier: {props.currentOrder.createdBy.toUpperCase()}</p>
-          <p>
+        <div style={{ display: "inline-flex", columnGap: "15px" }}>
+          <p style={{ fontSize: "3rem", fontWeight: "bold", color: "black" }}>
+            Cashier: {props.currentOrder.createdBy.toUpperCase()}
+          </p>
+          <p style={{ fontSize: "3rem", fontWeight: "bold", color: "black" }}>
             Table No:{" "}
             {props.currentOrder && props.currentOrder.storeTableId
               ? props.currentOrder.storeTableId
@@ -100,7 +159,7 @@ export const OrderInvoicePrint = (props) => {
           </p>
         </div>
         <div>
-          <p>
+          <p style={{ fontSize: "3rem", fontWeight: "bold", color: "black" }}>
             <span>{props.currentOrder.orderDeliveryType}</span>
             <span> [{props.currentOrder.paymentStatus}]</span>
           </p>
@@ -108,20 +167,65 @@ export const OrderInvoicePrint = (props) => {
       </div>
       <div style={{ display: "inline-flex", columnGap: "10px" }}>
         <Typography>
-          Date: {renderNowDate(props.currentOrder.orderReceivedDateTime)}
+          <span
+            style={{
+              fontSize: "3rem",
+              fontWeight: "bold",
+              fontFamily: "Billfont",
+              color: "black",
+            }}
+          >
+            Date:
+          </span>{" "}
+          {renderNowDate(props.currentOrder.orderReceivedDateTime)}
         </Typography>
         <Typography>
-          Time: {renderNowTime(props.currentOrder.createdDate)}
+          <span
+            style={{
+              fontSize: "3rem",
+              fontWeight: "bold",
+              fontFamily: "Billfont",
+              color: "black",
+            }}
+          >
+            Time:
+          </span>{" "}
+          {renderNowTime(props.currentOrder.createdDate)}
         </Typography>
       </div>
       <hr></hr>
       <div>
-        <Typography>
+        <Typography
+          style={{
+            fontSize: "3rem",
+            fontWeight: "bold",
+            fontFamily: "Billfont",
+            color: "black",
+          }}
+        >
           Name: {props.currentOrder.customerName.toUpperCase()}
         </Typography>
         {/* <Typography>Address: {props.currentOrder.address}</Typography> */}
-        <Typography>Mob No: {props.currentOrder.mobileNumber}</Typography>
-        <h5 sx={{ color: "black" }}>Address: {props.currentOrder.address}</h5>
+        <Typography
+          style={{
+            fontSize: "3rem",
+            fontWeight: "bold",
+            fontFamily: "Billfont",
+            color: "black",
+          }}
+        >
+          Mob No: {props.currentOrder.mobileNumber}
+        </Typography>
+        <h5
+          style={{
+            color: "black",
+            fontSize: "3rem",
+            fontWeight: "bold",
+            fontFamily: "Billfont",
+          }}
+        >
+          Address: {props.currentOrder.address}
+        </h5>
       </div>
       <hr></hr>
 
@@ -131,4 +235,4 @@ export const OrderInvoicePrint = (props) => {
       ></OrderDetailsTable>
     </div>
   );
-};
+});

@@ -95,6 +95,7 @@ export const DeliveryManagement = () => {
 
   const ref = React.createRef();
   const refH = React.useRef(null);
+  const componentRef = React.useRef();
 
   useEffect(() => {
     if (refH.current) {
@@ -372,6 +373,7 @@ export const DeliveryManagement = () => {
               <div style={{ display: "none" }}>
                 <OrderInvoicePrint
                   currentOrder={currentOrder}
+                  ref={componentRef}
                 ></OrderInvoicePrint>
               </div>
               <div ref={refH}>
@@ -385,7 +387,11 @@ export const DeliveryManagement = () => {
             <Col className="col-6">
               <Button
                 color="secondary"
-                onClick={handleManualPrint}
+                onClick={
+                  /* handleManualPrint */ () => {
+                    componentRef.current.handlePrint();
+                  }
+                }
                 className="w-100"
                 variant="contained"
               >
