@@ -114,7 +114,7 @@ export const OrderInvoicePrint = forwardRef((props, ref) => {
 
   return (
     <div id="billNew" ref={componentRef} style={{ fontFamily: "Billfont" }}>
-      <div className="text-center" /* style={{ marginTop: "25px" }} */>
+      <div className="text-center" style={{ marginTop: "5px" }}>
         <Typography
           sx={{
             fontSize: "3rem",

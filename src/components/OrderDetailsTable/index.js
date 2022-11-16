@@ -20,7 +20,7 @@ export const OrderDetailsTable = (props) => {
           sx={{ width: "100%", overflowX: "auto" }}
           aria-label="simple table"
         >
-          <TableHead>
+          <TableHead sx={{ display: "table-row-group" }}>
             <TableRow>
               <CusTableCell>
                 Dish Name{props.isBill ? <hr></hr> : null}
