@@ -1680,14 +1680,16 @@ export default function NewCheckout(props) {
                             color: "black",
                           }}
                         >
-                          {orderResp ? orderResp.storeName : "Hangries"}
+                          {orderResp
+                            ? orderResp.storeName.toUpperCase()
+                            : "HANGRIES"}
                         </Typography>
 
                         <section>
                           {props.storeObj ? (
                             <Typography
                               sx={{
-                                fontSize: "2.5rem",
+                                fontSize: "3rem",
                                 fontWeight: "bold",
                                 fontFamily: "Billfont",
                                 color: "black",
@@ -1707,7 +1709,13 @@ export default function NewCheckout(props) {
                             </Typography>
                           ) : null}
                         </section>
-                        <hr></hr>
+                        <div
+                          style={{
+                            borderBottom: "8px dashed black",
+                            marginTop: "15px",
+                            marginBottom: "15px",
+                          }}
+                        ></div>
                         <Typography
                           sx={{
                             fontSize: "3rem",
@@ -1732,7 +1740,13 @@ export default function NewCheckout(props) {
                         >
                           Order ID: {orderResp ? orderResp.orderId : null}
                         </p>
-                        <hr></hr>
+                        <div
+                          style={{
+                            borderBottom: "8px dashed black",
+                            marginTop: "15px",
+                            marginBottom: "15px",
+                          }}
+                        ></div>
 
                         <div
                           style={{ display: "inline-flex", columnGap: "15px" }}
@@ -1806,8 +1820,14 @@ export default function NewCheckout(props) {
                           </Typography>
                         </div>
                       </div>
-                      <hr></hr>
-                      <div>
+                      <div
+                        style={{
+                          borderBottom: "8px dashed black",
+                          marginTop: "15px",
+                          marginBottom: "15px",
+                        }}
+                      ></div>
+                      <div className="text-center">
                         <Typography
                           sx={{
                             color: "black",
@@ -1840,7 +1860,7 @@ export default function NewCheckout(props) {
                             <span>{orderResp?.mobileNumber}</span>
                           )}
                         </Typography>
-                        <h5
+                        <p
                           style={{
                             color: "black",
                             fontSize: "3rem",
@@ -1852,7 +1872,7 @@ export default function NewCheckout(props) {
                           {orderResp?.address ? (
                             <span>{orderResp?.address}</span>
                           ) : null}
-                        </h5>
+                        </p>
                       </div>
                       <div>
                         <InvoiceTable

@@ -330,7 +330,12 @@ export const InvoiceTable = (props) => {
           aria-label="simple table"
         >
           <TableHead sx={{ display: "table-row-group" }}>
-            <TableRow>
+            <TableRow
+              sx={{
+                borderBottom: props.isBill && "8px dashed black",
+                borderTop: props.isBill && "8px dashed black",
+              }}
+            >
               <CusTableCell>
                 Dish Name{props.isBill ? <hr></hr> : null}
               </CusTableCell>
@@ -364,7 +369,7 @@ export const InvoiceTable = (props) => {
                     {props.isBill ? null : "Rs. "}
                     {Number(row.price).toFixed(2)}
                   </CusTableCell>
-                  <CusTableCell sx={{ padding: 0 }} align="center">
+                  <CusTableCell sx={{ padding: 0 }} align="right">
                     {props.isBill ? null : "Rs. "}
                     {/* {Number(row.quantity) * Number(row.price)} */}
                     {renderAllTotal(row.productId, row)}
@@ -373,7 +378,13 @@ export const InvoiceTable = (props) => {
               </>
             ))}
 
-            <TableRow sx={{ borderTop: "2px solid black" }}>
+            <TableRow
+              sx={{
+                borderTop: props.isBill
+                  ? "8px dashed black"
+                  : "2px solid black",
+              }}
+            >
               <CusTableCell component="th" scope="row" colspan="3">
                 {props.isBill ? <hr></hr> : null}
                 Total
@@ -383,7 +394,7 @@ export const InvoiceTable = (props) => {
                 scope="row"
                 colspan="1"
                 sx={{ fontStyle: "italic" }}
-                align="center"
+                align="right"
               >
                 {props.isBill ? <hr></hr> : null}
                 {props.isBill ? null : "Rs. "}
@@ -400,10 +411,10 @@ export const InvoiceTable = (props) => {
                 scope="row"
                 colspan="1"
                 sx={{ fontStyle: "italic" }}
-                align="center"
+                align="right"
               >
                 {props.isBill ? null : "Rs. "}
-                {props.fullResp.discountAmount}
+                {props.fullResp.discountAmount.toFixed(2)}
               </CusTableCell>
             </TableRow>
 
@@ -417,7 +428,7 @@ export const InvoiceTable = (props) => {
                   scope="row"
                   colspan="1"
                   sx={{ fontStyle: "italic" }}
-                  align="center"
+                  align="right"
                 >
                   {props.fullResp.couponCode}
                 </CusTableCell>
@@ -434,7 +445,7 @@ export const InvoiceTable = (props) => {
                   scope="row"
                   colspan="1"
                   sx={{ fontStyle: "italic" }}
-                  align="center"
+                  align="right"
                 >
                   {props.isBill ? null : "Rs. "}
                   {Number(props.drinkReduceKey.price).toFixed(2)}
@@ -452,7 +463,7 @@ export const InvoiceTable = (props) => {
                   scope="row"
                   colspan="1"
                   sx={{ fontStyle: "italic" }}
-                  align="center"
+                  align="right"
                 >
                   {props.isBill ? null : "Rs. "}
                   {Number(props.combo1OfferReduceTotal.price).toFixed(2)}
@@ -470,7 +481,7 @@ export const InvoiceTable = (props) => {
                   scope="row"
                   colspan="1"
                   sx={{ fontStyle: "italic" }}
-                  align="center"
+                  align="right"
                 >
                   {props.isBill ? null : "Rs. "}
                   {Number(props.combo2OfferReduceTotal.price).toFixed(2)}
@@ -488,7 +499,7 @@ export const InvoiceTable = (props) => {
                   scope="row"
                   colspan="1"
                   sx={{ fontStyle: "italic" }}
-                  align="center"
+                  align="right"
                 >
                   {props.isBill ? null : "Rs. "}
                   {Number(props.pastaReduceKey.newPrice).toFixed(2)}
@@ -506,7 +517,7 @@ export const InvoiceTable = (props) => {
                   scope="row"
                   colspan="1"
                   sx={{ fontStyle: "italic" }}
-                  align="center"
+                  align="right"
                 >
                   {props.isBill ? null : "Rs. "}
                   {Number(props.friesOfferReduceTotal.price).toFixed(2)}
@@ -524,10 +535,10 @@ export const InvoiceTable = (props) => {
                   scope="row"
                   colspan="1"
                   sx={{ fontStyle: "italic" }}
-                  align="center"
+                  align="right"
                 >
                   {props.isBill ? null : "Rs. "}
-                  {props.bOGOLowestPizzaKey[0].allBogoReduceCost}
+                  {props.bOGOLowestPizzaKey[0].allBogoReduceCost.toFixed(2)}
                 </CusTableCell>
               </TableRow>
             ) : null}
@@ -542,10 +553,10 @@ export const InvoiceTable = (props) => {
                   scope="row"
                   colspan="1"
                   sx={{ fontStyle: "italic" }}
-                  align="center"
+                  align="right"
                 >
                   {props.isBill ? null : "Rs. "}
-                  {props.fullResp.deliveryCharges}
+                  {props.fullResp.deliveryCharges.toFixed(2)}
                 </CusTableCell>
               </TableRow>
             ) : null}
@@ -559,7 +570,7 @@ export const InvoiceTable = (props) => {
                 scope="row"
                 colspan="1"
                 sx={{ fontStyle: "italic" }}
-                align="center"
+                align="right"
               >
                 {props.isBill ? null : "Rs. "}
                 {props.cgst}
@@ -575,7 +586,7 @@ export const InvoiceTable = (props) => {
                 scope="row"
                 colspan="1"
                 sx={{ fontStyle: "italic" }}
-                align="center"
+                align="right"
               >
                 {props.isBill ? null : "Rs. "}
                 {props.sgst}
@@ -590,7 +601,7 @@ export const InvoiceTable = (props) => {
                 scope="row"
                 colspan="1"
                 sx={{ fontStyle: "italic" }}
-                align="center"
+                align="right"
               >
                 {props.isBill ? null : "Rs. "}{props.fullResp.deliveryCharges}
               </CusTableCell>
@@ -605,17 +616,21 @@ export const InvoiceTable = (props) => {
                 scope="row"
                 colspan="1"
                 sx={{ fontStyle: "italic" }}
-                align="center"
+                align="right"
               >
                 {props.isBill ? null : "Rs. "}
-                {props.fullResp.packagingCharges}
+                {props.fullResp.packagingCharges.toFixed(2)}
               </CusTableCell>
             </TableRow>
 
             <TableRow
               sx={{
-                borderTop: "2px solid black",
-                borderBottom: "2px solid black",
+                borderTop: props.isBill
+                  ? "8px dashed black"
+                  : "2px solid black",
+                borderBottom: props.isBill
+                  ? "8px dashed black"
+                  : "2px solid black",
               }}
             >
               <CusTableCell component="th" scope="row" colspan="3">
@@ -627,11 +642,11 @@ export const InvoiceTable = (props) => {
                 component="th"
                 scope="row"
                 colspan="1"
-                align="center"
+                align="right"
               >
                 {props.isBill ? <hr></hr> : null}
                 {props.isBill ? null : "Rs. "}
-                {props.overallPriceWithTax}
+                {props.overallPriceWithTax.toFixed(2)}
                 {props.isBill ? <hr></hr> : null}
               </CusTableCell>
             </TableRow>

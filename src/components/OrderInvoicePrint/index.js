@@ -94,7 +94,7 @@ export const OrderInvoicePrint = forwardRef((props, ref) => {
           <Typography
             sx={{
               color: "black",
-              fontSize: "2.5rem",
+              fontSize: "3rem",
               fontWeight: "bold",
               fontFamily: "Billfont",
             }}
@@ -123,7 +123,9 @@ export const OrderInvoicePrint = forwardRef((props, ref) => {
             color: "black",
           }}
         >
-          {props.currentOrder ? props.currentOrder.restaurantName : "Hangries"}
+          {props.currentOrder
+            ? props.currentOrder.restaurantName.toUpperCase()
+            : "HANGRIES"}
         </Typography>
         <Typography>
           {renderStoreAddress(
@@ -131,7 +133,24 @@ export const OrderInvoicePrint = forwardRef((props, ref) => {
             props.currentOrder.storeId
           )}
         </Typography>
-        <hr></hr>
+        {/* <p
+          style={{
+            fontSize: "3rem",
+            fontWeight: "bold",
+            fontFamily: "Billfont",
+            color: "black",
+          }}
+        >
+          --------------------------
+        </p> */}
+        <div
+          style={{
+            borderBottom: "8px dashed black",
+            marginTop: "15px",
+            marginBottom: "15px",
+          }}
+        ></div>
+
         <Typography>
           {renderStoreGST(
             props.currentOrder.restaurantId,
@@ -145,7 +164,23 @@ export const OrderInvoicePrint = forwardRef((props, ref) => {
         >
           Order ID: {props.currentOrder ? props.currentOrder.orderId : null}
         </p>
-        <hr></hr>
+        {/* <p
+          style={{
+            fontSize: "3rem",
+            fontWeight: "bold",
+            fontFamily: "Billfont",
+            color: "black",
+          }}
+        >
+          --------------------------
+        </p> */}
+        <div
+          style={{
+            borderBottom: "8px dashed black",
+            marginTop: "15px",
+            marginBottom: "15px",
+          }}
+        ></div>
 
         <div style={{ display: "inline-flex", columnGap: "15px" }}>
           <p style={{ fontSize: "3rem", fontWeight: "bold", color: "black" }}>
@@ -193,8 +228,27 @@ export const OrderInvoicePrint = forwardRef((props, ref) => {
           {renderNowTime(props.currentOrder.createdDate)}
         </Typography>
       </div>
-      <hr></hr>
-      <div>
+      {/* <p
+        style={{
+          fontSize: "3rem",
+          fontWeight: "bold",
+          fontFamily: "Billfont",
+          color: "black",
+          textAlign: "center",
+        }}
+      >
+        --------------------------
+      </p> */}
+
+      <div
+        style={{
+          borderBottom: "8px dashed black",
+          marginTop: "15px",
+          marginBottom: "15px",
+        }}
+      ></div>
+
+      <div className="text-center">
         <Typography
           style={{
             fontSize: "3rem",
@@ -227,7 +281,25 @@ export const OrderInvoicePrint = forwardRef((props, ref) => {
           Address: {props.currentOrder.address}
         </h5>
       </div>
-      <hr></hr>
+      {/* <p
+        style={{
+          fontSize: "3rem",
+          fontWeight: "bold",
+          fontFamily: "Billfont",
+          color: "black",
+          textAlign: "center",
+        }}
+      >
+        --------------------------
+      </p> */}
+
+      <div
+        style={{
+          borderBottom: "8px dashed black",
+          marginTop: "15px",
+          marginBottom: "15px",
+        }}
+      ></div>
 
       <OrderDetailsTable
         fullResp={props.currentOrder}
