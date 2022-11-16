@@ -406,6 +406,7 @@ export const saveNewOrder = (payload) => {
       dispatch({ type: userConstants.ADD_USER_ORDER_REQUEST });
 
       if (res.status === 200 && res.data) {
+        dispatch({ type: userConstants.ADD_USER_ORDER_SUCCESS });
         console.log(res);
         dispatch(resetCart());
         localStorage.removeItem("cart");
@@ -419,10 +420,12 @@ export const saveNewOrder = (payload) => {
           payload: { error },
         });
         toast.error("There was an error!");
+        return false;
       }
     } catch (error) {
       console.log(error);
       toast.error("There was an error from our end, Please try again!");
+      return false;
     }
   };
 };

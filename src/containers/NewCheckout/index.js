@@ -155,6 +155,7 @@ export default function NewCheckout(props) {
   const [valueAddress, setValueAddress] = useState("");
   const [addressId, setAddressId] = useState(null);
   const [changeAddressObj, setChangeAddressObj] = useState(null);
+  const [disableSaveBtn, setDisableSaveBtn] = useState(false);
 
   const dispatch = useDispatch();
   const ref = React.createRef();
@@ -523,6 +524,8 @@ export default function NewCheckout(props) {
         return;
       }
 
+      setDisableSaveBtn(true);
+
       let total =
         subTotal +
         (extraSubTotal ? extraSubTotal : 0) +
@@ -700,6 +703,7 @@ export default function NewCheckout(props) {
 
       const result = await dispatch(saveNewOrder(NewOrder)).then((res) => {
         if (res && res.data) {
+          setDisableSaveBtn(false);
           console.log(res.data);
           setOrderResp(res.data[0], () => {
             handleShowInvoice();
@@ -708,6 +712,8 @@ export default function NewCheckout(props) {
           clearAddress();
           dispatch(clearCoupon());
           return res.data;
+        } else {
+          setDisableSaveBtn(false);
         }
       });
       return result;
@@ -3170,12 +3176,14 @@ export default function NewCheckout(props) {
                 onClick={placeOrder}
                 variant="contained"
                 disabled={
-                  Object.keys(cart?.cartItems).length > 0 && currentPaymentType
+                  Object.keys(cart?.cartItems).length > 0 &&
+                  currentPaymentType &&
+                  !disableSaveBtn
                     ? false
                     : true
                 }
               >
-                PLACE ORDER
+                {!disableSaveBtn ? "PLACE ORDER" : "SAVING..."}
               </POButton>
             </Col>
           </Row>

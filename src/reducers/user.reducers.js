@@ -30,6 +30,7 @@ const initState = {
   paymentModesForCashierReport: [],
   orderSourcesForCashierReport: [],
   kdsTime: 30000,
+  saveOrderLoading: false,
 };
 
 export default (state = initState, action) => {
@@ -482,6 +483,27 @@ export default (state = initState, action) => {
       state = {
         ...state,
         kdsTime: action.payload,
+      };
+      break;
+
+    case userConstants.ADD_USER_ORDER_REQUEST:
+      state = {
+        ...state,
+        saveOrderLoading: true,
+      };
+      break;
+
+    case userConstants.ADD_USER_ORDER_SUCCESS:
+      state = {
+        ...state,
+        saveOrderLoading: false,
+      };
+      break;
+
+    case userConstants.ADD_USER_ORDER_FAILURE:
+      state = {
+        ...state,
+        saveOrderLoading: false,
       };
       break;
   }
