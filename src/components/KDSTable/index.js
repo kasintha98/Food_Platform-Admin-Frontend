@@ -75,7 +75,7 @@ export const KDSTable = forwardRef((props, ref) => {
     });
   }, [props.counter, props.restaurantId, props.storeId, newSubStatus]);
 
-  useEffect(() => {
+  /* useEffect(() => {
     setTimeout(
       function () {
         const today = businessDateAll
@@ -103,7 +103,7 @@ export const KDSTable = forwardRef((props, ref) => {
       },
       kdsTime ? kdsTime : 30000
     );
-  });
+  }); */
 
   useEffect(() => {
     prevCountRef.current = filteredData.length;
@@ -173,10 +173,11 @@ export const KDSTable = forwardRef((props, ref) => {
       }
     }); */
 
-    if (orders.length > prevCountRef.current) {
+    /* if (orders.length > prevCountRef.current) {
       var bell = new Audio(bellSound);
       bell.play();
-    }
+    } */
+
     return orders;
   };
 
