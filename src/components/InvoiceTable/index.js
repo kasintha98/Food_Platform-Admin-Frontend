@@ -402,7 +402,8 @@ export const InvoiceTable = (props) => {
                 sx={{ fontStyle: "italic" }}
                 align="center"
               >
-                Rs. {props.fullResp.discountAmount}
+                {props.isBill ? null : "Rs. "}
+                {props.fullResp.discountAmount}
               </CusTableCell>
             </TableRow>
 
