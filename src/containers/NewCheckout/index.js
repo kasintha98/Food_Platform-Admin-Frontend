@@ -1508,7 +1508,7 @@ export default function NewCheckout(props) {
       setAddressType(address.customerAddressType);
       setZipCode(address.zipCode);
       setCity(address.city);
-      setState(address.city);
+      setState(address.state);
       setCurrentGetAddress(address);
     }
   };
@@ -1533,6 +1533,9 @@ export default function NewCheckout(props) {
           setZipCode(props.storeObj.zipCode ? props.storeObj.zipCode : 0);
           setCity(props.storeObj.city);
           setState(props.storeObj.country);
+          setAddress1("");
+          setAddress2("");
+          setLandMark("");
         }
         if (res && res.length === 1) {
           setFoundAddress(res[0]);
@@ -1548,7 +1551,7 @@ export default function NewCheckout(props) {
           setIsNewCustomerFunc(false);
         } else {
           clearCustomer();
-          clearAddress();
+          //clearAddress();
           setFirstName("");
           setLastName("");
           setEmailId("");
