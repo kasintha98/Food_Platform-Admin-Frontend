@@ -18,6 +18,7 @@ const initState = {
   allSectionsFromMaster: [],
   allDishesFromMaster: [],
   masterProducts: [],
+  pageLoading: false,
 };
 
 export default (state = initState, action) => {
@@ -167,6 +168,7 @@ export default (state = initState, action) => {
       state = {
         ...state,
         loading: true,
+        pageLoading: true,
       };
       break;
     case productConstants.GET_PRODUCTS_BY_PAGE_SUCCESS:
@@ -174,12 +176,14 @@ export default (state = initState, action) => {
         ...state,
         productsOfPage: action.payload.products,
         loading: false,
+        pageLoading: false,
       };
       break;
     case productConstants.GET_PRODUCTS_BY_PAGE_FAILURE:
       state = {
         ...state,
         loading: false,
+        pageLoading: false,
         productsOfPage: [],
       };
       break;

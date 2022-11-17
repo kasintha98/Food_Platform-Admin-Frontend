@@ -390,6 +390,7 @@ export const updateMenuItem = (product) => {
         });
         console.log("error");
         toast.error("Error when updating menu item, please try again!");
+        return false;
       }
     } catch (error) {
       dispatch({
@@ -397,6 +398,7 @@ export const updateMenuItem = (product) => {
       });
       toast.error("Error when updating menu item, please try again!");
       console.log(error);
+      return false;
     }
   };
 };

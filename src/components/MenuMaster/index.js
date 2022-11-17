@@ -142,6 +142,10 @@ const kdsRouters = ["PIZZA", "CHINESE", "DRINKS", "FAST FOOD"];
 export const MenuMaster = () => {
   const stores = useSelector((state) => state.store.stores);
   const productList = useSelector((state) => state.product.products);
+  const productsOfPageRed = useSelector(
+    (state) => state.product.productsOfPage
+  );
+  const pageLoading = useSelector((state) => state.product.pageLoading);
   const allSectionsFromMaster = useSelector(
     (state) => state.product.allSectionsFromMaster
   );
@@ -211,16 +215,20 @@ export const MenuMaster = () => {
   const [isAddNewCategory, setIsAddNewCategory] = useState(false);
   const [addNewDishText, setAddNewDishText] = useState("");
   const [addNewSectionText, setAddNewSectionText] = useState("");
+  const [isRefreshProducts, setIsRefreshProducts] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (selectedStoreObj) {
+      setIsLoading(true);
       dispatch(
         getProductsNew(selectedStoreObj.restaurantId, selectedStoreObj.storeId)
       ).then((res) => {
         if (res) {
           setFirstProductList(res);
+          setIsLoading(false);
         }
       });
 
@@ -261,6 +269,7 @@ export const MenuMaster = () => {
   useEffect(() => {
     console.log(sectionKeyword, categoryKeyword, nameKeyword);
     if (selectedStoreObj) {
+      setIsLoading(true);
       if (isSearched && !sectionKeyword && !categoryKeyword && !nameKeyword) {
         dispatch(
           getProductsNew(
@@ -284,6 +293,7 @@ export const MenuMaster = () => {
               )
             ).then((res) => {
               setProductsOfPage(res);
+              setIsLoading(false);
             });
           }
         });
@@ -302,13 +312,46 @@ export const MenuMaster = () => {
           )
         ).then((res) => {
           setProductsOfPage(res);
+          setIsLoading(false);
         });
       }
     }
   }, [page, selectedStoreObj, sectionKeyword, categoryKeyword, nameKeyword]);
 
+  useEffect(() => {
+    console.log("c price", currentPrice);
+    if (selectedStoreObj) {
+      setIsLoading(true);
+      dispatch(
+        getProductsNewWithPaging(
+          selectedStoreObj.restaurantId,
+          selectedStoreObj.storeId,
+          Number(page - 1) * itemsPerPage,
+          page * itemsPerPage,
+          [],
+          sectionKeyword,
+          categoryKeyword,
+          nameKeyword,
+          []
+        )
+      ).then((res) => {
+        console.log("prod page", res);
+        setProductsOfPage(res);
+        setIsLoading(false);
+      });
+    }
+  }, [isRefreshProducts, selectedStoreObj]);
+
   const handleCloseAdd = () => setShowAdd(false);
   const handleShowAdd = () => setShowAdd(true);
+
+  const handleProductRefresh = () => {
+    if (isRefreshProducts) {
+      setIsRefreshProducts(false);
+    } else {
+      setIsRefreshProducts(true);
+    }
+  };
 
   const handleChangeStore = (event) => {
     setSelectedStore(event.target.value);
@@ -458,9 +501,33 @@ export const MenuMaster = () => {
     dispatch(updateMenuItem(newProduct)).then((res) => {
       if (res && productImage[product.id]) {
         dispatch(uploadImage(formDataImage));
+        clearProductUpdatedValues(product.id);
+        handleProductRefresh();
+      } else {
+        clearProductUpdatedValues(product.id);
+        handleProductRefresh();
       }
     });
     console.log(newProduct);
+  };
+
+  const clearProductUpdatedValues = (id) => {
+    setCurrentSection("");
+    setCurrentDish("");
+    setCurrentVeg("");
+    setCurrentSpice("");
+    //delete currentDishType[id];
+    setCurrentDishType({});
+    //delete currentDishDesc[id];
+    setCurrentDishDesc({});
+    setCurrentSize("");
+    //delete currentPrice[id];
+    setCurrentPrice({});
+    //delete productImage[id];
+    setProductImage({});
+    setCurrentMenuFlag("");
+    setCurrentIngredientFlag("");
+    setCurrentKdsRoutingName("");
   };
 
   const saveNewProduct = () => {
@@ -1521,9 +1588,13 @@ export const MenuMaster = () => {
                 </TableRow>
               ) : (
                 <>
-                  {productList && productList.length > 0 && productsOfPage ? (
-                    <>
-                      {productsOfPage.map((product, index) => (
+                  {productList &&
+                  productList.length > 0 &&
+                  productsOfPageRed &&
+                  !pageLoading ? (
+                    /* productsOfPage &&
+                  !isLoading  */ <>
+                      {productsOfPageRed.map((product, index) => (
                         <TableRow key={product.id}>
                           <CusTableCell align="center">
                             {index + 1 + (page - 1) * itemsPerPage}
@@ -2137,9 +2208,10 @@ export const MenuMaster = () => {
                     <TableRow>
                       <TableCell colSpan={15}>
                         <Alert severity="warning">
-                          {selectedStoreObj
+                          {selectedStoreObj && !pageLoading
                             ? "No products found!"
                             : "Please select a store!"}{" "}
+                          {pageLoading ? "Loading Data..." : null}
                         </Alert>
                       </TableCell>
                     </TableRow>
