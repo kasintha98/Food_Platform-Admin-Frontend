@@ -259,12 +259,12 @@ export const KDSTable = forwardRef((props, ref) => {
 
       if (order.orderStatus === "ACCEPTED") {
         dispatch(updateOrder(orderId, "PROCESSING", null, true, user.loginId));
-        setTimeout(function () {
-          if (foundMatch && foundMatch.storeKOTPrintFlag === "Y") {
-            handlePrint();
-          }
-        }, 1000);
       }
+      setTimeout(function () {
+        if (foundMatch && foundMatch.storeKOTPrintFlag === "Y") {
+          handlePrint();
+        }
+      }, 1000);
     }
     if (currentOrderDetailStatus === "PROCESSING") {
       handleSubProductFromTopProduct(
