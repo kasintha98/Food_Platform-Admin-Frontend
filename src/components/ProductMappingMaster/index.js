@@ -18,6 +18,7 @@ import {
   saveMenuIngredient,
   saveSubProductNew,
   getAllProduct,
+  saveProductMenuMapping,
 } from "../../actions";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
@@ -31,9 +32,7 @@ import {
   TextField,
   Button,
   Alert,
-  NativeSelect,
   TableContainer,
-  Pagination,
 } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -57,7 +56,17 @@ const CusInputLabel = styled(InputLabel)`
     top: 0px !important;
   }
 `;
+const SaveButton = styled(Button)`
+  background-color: #92d050;
+  width: 150px;
+  color: #fff;
+  border-radius: 10px;
 
+  &:hover {
+    background-color: #7cbf33;
+    color: #fff;
+  }
+`;
 const CusTextField = styled(TextField)`
  & label {
   font-size: 0.75rem;
@@ -83,41 +92,6 @@ const CusTextField = styled(TextField)`
  }
 `;
 
-const CusTextField2 = styled(TextField)`
- & label {
-  font-size: 0.75rem;
-  top: -11px;
-}
-
-& .Mui-focused{
-  top: 0px !important;
-  & lable{
-    display: none
-  }
-}
-
-& label .Mui-focused{
-  display: none
-}
-
-& fieldset{
-  font-size: 0.75rem;
-}
-
-& .MuiFormLabel-filled{
-  top: 0px !important;
-  & lable{
-    display: none
-  }
-}
-
-& input{
-  font-size: 0.75rem;
-  padding: 0.25rem;
-}
- }
-`;
-
 const CusTableCell = styled(TableCell)`
   padding: 0;
   font-size: 14px;
@@ -132,21 +106,7 @@ const CusTableCell1 = styled(TableCell)`
   color: #fff;
 `;
 
-const CusTableCell2 = styled(TableCell)`
-  padding: 0;
-  font-size: 14px;
-  border: 1px solid #000;
-  padding-top: 8px;
-  padding-bottom: 8px;
-`;
-
 const CusMenuItem = styled(MenuItem)``;
-
-const CusNativeSelect = styled(NativeSelect)`
-  & svg {
-    display: none;
-  }
-`;
 
 const itemsPerPage = 33;
 
@@ -156,7 +116,9 @@ export const ProductMappingMaster = () => {
   const stores = useSelector((state) => state.store.stores);
   //const productsByRes = useSelector((state) => state.product.products);
   const productList = useSelector((state) => state.product.products);
-  //const productList = useSelector((state) => state.product.masterProducts);
+  const productListMaster = useSelector(
+    (state) => state.product.masterProducts
+  );
   const user = useSelector((state) => state.auth.user);
   const allSectionsFromMaster = useSelector(
     (state) => state.product.allSectionsFromMaster
@@ -234,6 +196,8 @@ export const ProductMappingMaster = () => {
   const [newCategoryTopping, setNewCategoryTopping] = useState("");
   const [newIngredientTypeTopping, setNewIngredientTypeTopping] = useState("");
   const [isRefresh, setIsRefresh] = useState(false);
+  const [mappings, setMappings] = useState([]);
+  const [checkList, setCheckList] = useState({});
 
   const dispatch = useDispatch();
 
@@ -295,55 +259,6 @@ export const ProductMappingMaster = () => {
       );
     }
   }, [newSelectedStoreObj]);
-
-  useEffect(() => {
-    console.log(sectionKeyword, categoryKeyword, nameKeyword);
-    if (selectedStoreObj) {
-      if (isSearched && !sectionKeyword && !categoryKeyword && !nameKeyword) {
-        dispatch(
-          getProductsNew(
-            selectedStoreObj.restaurantId,
-            selectedStoreObj.storeId
-          )
-        ).then((res) => {
-          if (res) {
-            setFirstProductList(res);
-            dispatch(
-              getProductsNewWithPaging(
-                selectedStoreObj.restaurantId,
-                selectedStoreObj.storeId,
-                Number(page - 1) * itemsPerPage,
-                page * itemsPerPage,
-                res,
-                sectionKeyword,
-                categoryKeyword,
-                nameKeyword,
-                res
-              )
-            ).then((res) => {
-              setProductsOfPage(res);
-            });
-          }
-        });
-      } else {
-        dispatch(
-          getProductsNewWithPaging(
-            selectedStoreObj.restaurantId,
-            selectedStoreObj.storeId,
-            Number(page - 1) * itemsPerPage,
-            page * itemsPerPage,
-            productList,
-            sectionKeyword,
-            categoryKeyword,
-            nameKeyword,
-            firstProductList
-          )
-        ).then((res) => {
-          setProductsOfPage(res);
-        });
-      }
-    }
-  }, [page, selectedStoreObj, sectionKeyword, categoryKeyword, nameKeyword]);
 
   const handleCloseAdd = () => setShowAdd(false);
   const handleShowAdd = () => setShowAdd(true);
@@ -547,7 +462,7 @@ export const ProductMappingMaster = () => {
       section: newSection,
       dish: newDish,
       dishCategory: newVeg,
-      dishSpiceIndicatory: newSpice === "None" ? "" : newSpice,
+      dishSpiceIndicator: newSpice === "None" ? "" : newSpice,
       dishType: newDishType,
       dishDescriptionId: newDishDesc,
       productSize: newSize,
@@ -555,12 +470,13 @@ export const ProductMappingMaster = () => {
       imagePath: newProductImage.name.split(".").slice(0, -1).join("."),
       menuAvailableFlag: newMenuFlag,
       commonImage: newCommonImage,
-      ingredientExistsFalg: newIngredientFlag,
+      ingredientExistFlag: newIngredientFlag,
       kdsRoutingName: newKdsRoutingName,
       createdBy: user.loginId,
       createdDate: new Date(),
       updatedBy: user.loginId,
       updatedDate: new Date(),
+      productStatus: "ACTIVE",
     };
 
     const formDataImage = new FormData();
@@ -605,7 +521,7 @@ export const ProductMappingMaster = () => {
       category: newCategoryTopping,
       imagePath: "IMAGE1",
       createdBy: user.loginId,
-      subProductStatus: "Y",
+      subProductStatus: "ACTIVE",
       size: newSizeTopping,
       createdDate: new Date(),
       updatedBy: user.loginId,
@@ -829,7 +745,7 @@ export const ProductMappingMaster = () => {
 
         {!isAddNewSection && !isAddNewCategory && (
           <Modal.Body>
-            <FormControl fullWidth>
+            {/* <FormControl fullWidth>
               <CusInputLabel
                 sx={{ fontSize: "0.75rem", lineHeight: "1rem", top: "-11px" }}
                 id="demo-simple-select-label"
@@ -855,7 +771,7 @@ export const ProductMappingMaster = () => {
                   </CusMenuItem>
                 ))}
               </CusSelect>
-            </FormControl>
+            </FormControl> */}
 
             <Row className="justify-content-center align-items-center mt-3">
               <Col sm={8}>
@@ -1196,6 +1112,44 @@ export const ProductMappingMaster = () => {
     );
   };
 
+  const handleMenuAdd = (check, product) => {
+    let foundProduct = productList.find(
+      (el) => el.productId === product.productId && el.menuAvailableFlag === "Y"
+    );
+
+    if (foundProduct) {
+      let obj = {
+        productId: foundProduct.productId,
+        storeId: foundProduct.storeId,
+        menuAvailable: !check.target.checked ? "N" : "Y",
+      };
+      let newMap = mappings;
+      newMap.push(obj);
+      setMappings(newMap);
+      dispatch(saveProductMenuMapping(newMap)).then((res) => {
+        if (res) {
+          setMappings([]);
+        }
+      });
+    } else {
+      let obj = {
+        productId: product.productId,
+        storeId: selectedStoreObj.storeId,
+        menuAvailable: !check.target.checked ? "N" : "Y",
+      };
+      let newMap = mappings;
+      newMap.push(obj);
+      setMappings(newMap);
+      dispatch(saveProductMenuMapping(newMap)).then((res) => {
+        if (res) {
+          setMappings([]);
+        }
+      });
+    }
+
+    console.log(check.target.checked, foundProduct);
+  };
+
   return (
     <div>
       <Row className="align-items-center text-center">
@@ -1262,11 +1216,12 @@ export const ProductMappingMaster = () => {
             variant="contained"
             color="success"
             onClick={() => {
-              if (selectedStoreObj) {
+              /* if (selectedStoreObj) {
                 handleShowAddTopping();
               } else {
                 toast.error("Please select a store first!");
-              }
+              } */
+              handleShowAddTopping();
             }}
           >
             ADD NEW TOPPINGS
@@ -1348,9 +1303,9 @@ export const ProductMappingMaster = () => {
                 </TableRow>
               ) : (
                 <>
-                  {productList && productList.length > 0 && productsOfPage ? (
+                  {productListMaster && productListMaster.length > 0 ? (
                     <>
-                      {productsOfPage.map((product, index) => (
+                      {productListMaster.map((product, index) => (
                         <TableRow key={product.id}>
                           <CusTableCell align="center">
                             {index + 1 + (page - 1) * itemsPerPage}
@@ -1506,12 +1461,17 @@ export const ProductMappingMaster = () => {
                             <CusTableCell align="center">
                               <Checkbox
                                 checked={
-                                  /* prevCheckedRoles[row.moduleId] ||
-                          checkedRoles[row.moduleId]
-                            ? true
-                            : */ false
+                                  productList.find(
+                                    (el) =>
+                                      el.productId === product.productId &&
+                                      el.menuAvailableFlag === "Y"
+                                  )
+                                    ? true
+                                    : false
                                 }
-                                /* onChange={handleChange} */
+                                onChange={(e) => {
+                                  handleMenuAdd(e, product);
+                                }}
                                 name={product.productId}
                               />
                             </CusTableCell>
@@ -1536,18 +1496,14 @@ export const ProductMappingMaster = () => {
           </Table>
         </TableContainer>
       </div>
-      {productList && productList.length > 0 && selectedStore ? (
-        <div
-          className="mt-3"
-          style={{ justifyContent: "center", display: "flex" }}
+      {/* <div className="mt-3">
+        <SaveButton
+          onClick={saveMapping}
+          disabled={mappings.length < 1 ? true : false}
         >
-          <Pagination
-            count={Math.ceil(productList.length / itemsPerPage)}
-            page={page}
-            onChange={handlePage}
-          />
-        </div>
-      ) : null}
+          SAVE
+        </SaveButton>
+      </div> */}
       {renderAddModalNew()}
       {renderAddModalTopping()}
     </div>

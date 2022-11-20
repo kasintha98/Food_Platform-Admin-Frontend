@@ -867,6 +867,8 @@ export const saveProduct = (product) => {
         type: productConstants.SAVE_NEW_PRODUCT_REQUEST,
       });
 
+      console.log("pro", product);
+
       const res = await axios.post(`/saveProduct`, product);
 
       if (res.status === 200) {
@@ -875,6 +877,8 @@ export const saveProduct = (product) => {
           payload: res.data,
         });
         toast.success("Product added successfully!");
+
+        console.log(res.data);
         return res.data;
       } else {
         dispatch({
@@ -936,14 +940,9 @@ export const getAllProduct = () => {
       const res = await axios.get(`/getAllProduct`);
 
       if (res && res.status === 200) {
-        const productsList = {
-          products: res.data,
-        };
-        console.log(productsList);
-
         dispatch({
           type: productConstants.GET_MASTER_PRODUCTS_SUCCESS,
-          payload: productsList,
+          payload: res.data,
         });
 
         return res.data;
@@ -957,6 +956,78 @@ export const getAllProduct = () => {
       console.log(error);
       dispatch({
         type: productConstants.GET_MASTER_PRODUCTS_FAILURE,
+      });
+    }
+  };
+};
+
+export const saveProductMenuMapping = (mapArray, restaurantId, storeId) => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: productConstants.SAVE_PRODUCT_MAPPING_REQUEST,
+      });
+
+      const res = await axios.post(`/saveProductMenuMapping`, {
+        mappings: mapArray,
+      });
+
+      if (res.status === 200) {
+        dispatch({
+          type: productConstants.SAVE_PRODUCT_MAPPING_SUCCESS,
+          payload: res.data,
+        });
+        //dispatch(getProductsNew(restaurantId, storeId));
+        dispatch({
+          type: productConstants.GET_PRODUCTS_BY_SLUG_SUCCESS,
+          payload: {
+            products: res.data,
+          },
+        });
+        toast.success("Menu updated successfully!");
+        return res.data;
+      } else {
+        dispatch({
+          type: productConstants.SAVE_PRODUCT_MAPPING_FAILURE,
+        });
+        toast.error("Error when updating, please try again!");
+      }
+    } catch (error) {
+      dispatch({
+        type: productConstants.SAVE_PRODUCT_MAPPING_FAILURE,
+      });
+      toast.error("Error when updating, please try again!");
+      console.log(error);
+    }
+  };
+};
+
+export const getAllSubProduct = () => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: productConstants.GET_ALL_SUB_PRODUCTS_REQUEST,
+      });
+
+      const res = await axios.get(`/getAllSubProduct`);
+
+      if (res && res.status === 200) {
+        dispatch({
+          type: productConstants.GET_ALL_SUB_PRODUCTS_SUCCESS,
+          payload: res.data,
+        });
+
+        return res.data;
+      } else {
+        console.log("error");
+        dispatch({
+          type: productConstants.GET_ALL_SUB_PRODUCTS_FAILURE,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch({
+        type: productConstants.GET_ALL_SUB_PRODUCTS_FAILURE,
       });
     }
   };

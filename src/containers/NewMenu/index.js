@@ -13,6 +13,7 @@ import {
   getAllStores,
   GetDeliveryPrice,
   GetTaxDetails,
+  getAllSectionsFromMaster,
 } from "../../actions";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
@@ -78,6 +79,9 @@ export default function NewMenu(props) {
   const sections = useSelector((state) => state.product.sections);
   const dishesOfSection = useSelector((state) => state.product.dishesOfSection);
   const productList = useSelector((state) => state.product);
+  const allSectionsFromMaster = useSelector(
+    (state) => state.product.allSectionsFromMaster
+  );
 
   const [value, setValue] = useState(sections[0]);
   const [subTotal, setSubtotal] = useState(0);
