@@ -22,7 +22,7 @@ import Signin from "./containers/Signin";
 import Signup from "./containers/Signup";
 import Products from "./containers/Products";
 import Employee from "./containers/Employee";
-import Inventory from "./containers/Inventory";
+import { Inventory } from "./containers/Inventory";
 import Purchases from "./containers/Purchases";
 import PrivateRoute from "./HOC/PrivateRoute";
 import { useDispatch, useSelector } from "react-redux";

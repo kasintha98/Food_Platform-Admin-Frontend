@@ -4,6 +4,8 @@ const initState = {
   inventory: [],
   loading: false,
   error: null,
+  allSuppliers: [],
+  allSuppliersLoading: false,
 };
 
 const buildNewInventory = (inventory, inventoryOne) => {
@@ -75,6 +77,27 @@ export default (state = initState, action) => {
         ...initState,
         loading: false,
         error: action.payload.error,
+      };
+      break;
+
+    case inventoryConstants.GET_ALL_SUPPLIERS_REQUEST:
+      state = {
+        ...state,
+        allSuppliersLoading: true,
+      };
+      break;
+    case inventoryConstants.GET_ALL_SUPPLIERS_SUCCESS:
+      state = {
+        ...state,
+        allSuppliersLoading: false,
+        allSuppliers: action.payload,
+      };
+      break;
+    case inventoryConstants.GET_ALL_SUPPLIERS_FAILURE:
+      state = {
+        ...state,
+        allSuppliersLoading: false,
+        allSuppliers: action.payload,
       };
       break;
   }

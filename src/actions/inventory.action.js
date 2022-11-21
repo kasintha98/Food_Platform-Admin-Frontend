@@ -115,3 +115,98 @@ export const deleteInventory = (id) => {
     }
   };
 };
+
+export const getAllSuppliers = () => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: inventoryConstants.GET_ALL_SUPPLIERS_REQUEST });
+
+      const res = await axios.get("/getAllSuppliers");
+      if (res.status === 200) {
+        dispatch({
+          type: inventoryConstants.GET_ALL_SUPPLIERS_SUCCESS,
+          payload: res.data,
+        });
+      } else {
+        toast.error("Error getting supplier data!");
+        dispatch({
+          type: inventoryConstants.GET_ALL_SUPPLIERS_FAILURE,
+          payload: [],
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Error getting supplier data!");
+      dispatch({
+        type: inventoryConstants.GET_ALL_SUPPLIERS_FAILURE,
+        payload: [],
+      });
+    }
+  };
+};
+
+export const saveUpdateSupplier = (supplier) => {
+  return async (dispatch) => {
+    dispatch({ type: inventoryConstants.SAVE_UPDATE_SUPPLIERS_REQUEST });
+
+    try {
+      const res = await axios.post("/saveSupplier", supplier);
+
+      if (res.status === 200) {
+        dispatch({
+          type: inventoryConstants.SAVE_UPDATE_SUPPLIERS_SUCCESS,
+          payload: res.data,
+        });
+        dispatch(getAllSuppliers());
+        toast.success("Supplier Saved Successfully!");
+        return res.data;
+      } else {
+        dispatch({
+          type: inventoryConstants.SAVE_UPDATE_SUPPLIERS_FAILURE,
+          payload: null,
+        });
+        toast.error("Error when saving! Please try again!");
+      }
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+      toast.error("Error when saving! Please try again!");
+    }
+  };
+};
+
+export const deleteSupplier = (id, updatedBy) => {
+  return async (dispatch) => {
+    dispatch({ type: inventoryConstants.DELETE_SUPPLIERS_REQUEST });
+
+    try {
+      const supplier = {
+        id: id,
+        supplierStatus: "INACTIVE",
+        updatedBy: updatedBy,
+      };
+
+      const res = await axios.post("/saveSupplierStatus", supplier);
+
+      if (res.status === 200) {
+        dispatch({
+          type: inventoryConstants.DELETE_SUPPLIERS_SUCCESS,
+          payload: res.data,
+        });
+        dispatch(getAllSuppliers());
+        toast.success("Supplier Soft Deleted Successfully!");
+        return res.data;
+      } else {
+        dispatch({
+          type: inventoryConstants.DELETE_SUPPLIERS_FAILURE,
+          payload: null,
+        });
+        toast.error("Error when deleting! Please try again!");
+      }
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+      toast.error("Error when deleting! Please try again!");
+    }
+  };
+};
