@@ -19,8 +19,12 @@ import {
   Select,
   InputLabel,
   MenuItem,
+  IconButton,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import CloseIcon from "@mui/icons-material/Close";
+import DoneIcon from "@mui/icons-material/Done";
+import EditIcon from "@mui/icons-material/Edit";
 import {
   getAllSuppliers,
   saveUpdateSupplier,
@@ -48,7 +52,8 @@ const CusInputLabel = styled(InputLabel)`
 const CusTableCell1 = styled(TableCell)`
   font-size: 0.75rem;
   font-weight: bold;
-  background-color: #ffc000;
+  background-color: #35455e;
+  color: #fff;
 `;
 
 const SaveButton = styled(Button)`
@@ -106,6 +111,7 @@ export const SuppliersMaster = () => {
   const user = useSelector((state) => state.auth.user);
 
   const [isSave, setIsSave] = useState({});
+  const [isAddNew, setIsAddNew] = useState(false);
   const [supplierCategory, setSupplierCategory] = useState("");
   const [supplierStatus, setSupplierStatus] = useState("");
   const [currentSupplierName, setCurrentSupplierName] = useState({});
@@ -119,7 +125,7 @@ export const SuppliersMaster = () => {
   const [currentSupplierGst, setCurrentSupplierGst] = useState({});
   const [currentSupplierTan, setCurrentSupplierTan] = useState({});
   const [showAdd, setShowAdd] = useState(false);
-  const [newsupplierCategory, setNewSupplierCategory] = useState("");
+  const [newsupplierCategory, setNewSupplierCategory] = useState("EXTERNAL");
   const [newSupplierName, setNewSupplierName] = useState("");
   const [newSupplierAddress, setNewSupplierAddress] = useState("");
   const [newSupplierCity, setNewSupplierCity] = useState("");
@@ -130,6 +136,7 @@ export const SuppliersMaster = () => {
   const [newSupplierFax, setNewSupplierFax] = useState("");
   const [newSupplierGst, setNewSupplierGst] = useState("");
   const [newSupplierTan, setNewSupplierTan] = useState("");
+  const [newSupplierStatus, setNewSupplierStatus] = useState("");
 
   const dispatch = useDispatch();
 
@@ -210,20 +217,13 @@ export const SuppliersMaster = () => {
   };
 
   const saveNewSupplier = () => {
-    if (
-      !newSupplierName ||
-      !newSupplierAddress ||
-      !newSupplierCity ||
-      !newSupplierState ||
-      !newSupplierPinCode ||
-      !newSupplierPhone ||
-      !newSupplierEmail ||
-      !newSupplierFax ||
-      !newSupplierGst ||
-      !newSupplierTan ||
-      !newsupplierCategory
-    ) {
-      toast.error("Please fill all the fields!");
+    if (!newSupplierName) {
+      toast.error("Supplier name is mandatory!");
+      return;
+    }
+
+    if (!newsupplierCategory) {
+      toast.error("Supplier category is mandatory!");
       return;
     }
 
@@ -239,7 +239,7 @@ export const SuppliersMaster = () => {
       supplierGstNumber: newSupplierGst,
       supplierTANNumber: newSupplierTan,
       supplierCategory: newsupplierCategory,
-      supplierStatus: "ACTIVE",
+      supplierStatus: newSupplierStatus ? newSupplierStatus : "ACTIVE",
       createdBy: user.loginId,
       createdDate: new Date(),
       updatedBy: user.loginId,
@@ -250,6 +250,7 @@ export const SuppliersMaster = () => {
       if (res) {
         handleCloseAdd();
         clearStates();
+        setIsAddNew(false);
       }
     });
   };
@@ -283,6 +284,7 @@ export const SuppliersMaster = () => {
     setNewSupplierFax("");
     setNewSupplierGst("");
     setNewSupplierTan("");
+    setNewSupplierStatus("");
   };
 
   const renderAddModal = () => {
@@ -495,7 +497,9 @@ export const SuppliersMaster = () => {
                                 name: "status",
                                 id: "uncontrolled-native",
                               }}
-                              onChange={handleSupplierCategoryUpdate}
+                              onChange={(event) => {
+                                setSupplierCategory(event.target.value);
+                              }}
                               sx={{ fontSize: "0.75rem" }}
                               disabled={!isSave[item.id]}
                             >
@@ -691,15 +695,7 @@ export const SuppliersMaster = () => {
                           />
                         </CusTableCell>
 
-                        <CusTableCell
-                          align="center"
-                          sx={{
-                            backgroundColor:
-                              item.supplierStatus === "INACTIVE"
-                                ? "lightcoral"
-                                : "yellowgreen",
-                          }}
-                        >
+                        <CusTableCell align="center">
                           <FormControl fullWidth>
                             <NativeSelect
                               key={item.id}
@@ -709,7 +705,15 @@ export const SuppliersMaster = () => {
                                 id: "uncontrolled-native",
                               }}
                               onChange={handleSupplierStatusUpdate}
-                              sx={{ fontSize: "0.75rem" }}
+                              sx={{
+                                fontSize: "0.75rem",
+                                "& .MuiInputBase-input.Mui-disabled": {
+                                  WebkitTextFillColor:
+                                    item.supplierStatus === "INACTIVE"
+                                      ? "red !important"
+                                      : "green !important",
+                                },
+                              }}
                               disabled={!isSave[item.id]}
                             >
                               <option
@@ -727,48 +731,44 @@ export const SuppliersMaster = () => {
                             </NativeSelect>
                           </FormControl>
                         </CusTableCell>
-                        <CusTableCell align="center" sx={{ minWidth: "150px" }}>
+                        <CusTableCell align="center">
                           {isSave[item.id] ? (
-                            <Button
+                            <IconButton
                               key={item.id}
-                              variant="contained"
-                              color="success"
                               sx={{
                                 fontSize: "0.75rem",
-                                lineHeight: "1rem",
-                                padding: "5px 16px",
+                                color: "green",
                               }}
                               onClick={() => {
                                 updateSupplierHandle(item);
                               }}
                             >
-                              Save
-                            </Button>
+                              <DoneIcon
+                                sx={{ height: "0.95rem", width: "0.95rem" }}
+                              ></DoneIcon>
+                            </IconButton>
                           ) : (
-                            <Button
+                            <IconButton
                               key={item.id}
-                              variant="contained"
-                              color="warning"
                               sx={{
                                 fontSize: "0.75rem",
-                                lineHeight: "1rem",
-                                padding: "5px 16px",
+                                color: "green",
                               }}
                               onClick={() => {
                                 onEditClickHandle(item.id);
                               }}
                             >
-                              EDIT
-                            </Button>
+                              <EditIcon
+                                sx={{ height: "0.95rem", width: "0.95rem" }}
+                              ></EditIcon>
+                            </IconButton>
                           )}
-                          <Button
+
+                          <IconButton
                             key={item.id}
-                            variant="contained"
-                            color="error"
                             sx={{
                               fontSize: "0.75rem",
-                              lineHeight: "1rem",
-                              padding: "5px 16px",
+                              color: "red",
                             }}
                             onClick={() => {
                               softDeleteSupplier(item.id);
@@ -777,10 +777,211 @@ export const SuppliersMaster = () => {
                             <DeleteIcon
                               sx={{ height: "0.95rem", width: "0.95rem" }}
                             ></DeleteIcon>
-                          </Button>
+                          </IconButton>
                         </CusTableCell>
                       </TableRow>
                     ))}
+
+                    {isAddNew ? (
+                      <TableRow>
+                        <CusTableCell align="center">
+                          {allSuppliers ? allSuppliers.length + 1 : "#"}
+                        </CusTableCell>
+                        <CusTableCell align="center">
+                          <FormControl fullWidth>
+                            <NativeSelect
+                              inputProps={{
+                                name: "status",
+                                id: "uncontrolled-native",
+                              }}
+                              onChange={(event) => {
+                                setNewSupplierCategory(event.target.value);
+                              }}
+                              sx={{ fontSize: "0.75rem" }}
+                            >
+                              <option
+                                value={"EXTERNAL"}
+                                style={{ fontSize: "0.75rem" }}
+                              >
+                                EXTERNAL
+                              </option>
+                              <option
+                                value={"INTERNAL"}
+                                style={{ fontSize: "0.75rem" }}
+                              >
+                                INTERNAL
+                              </option>
+                            </NativeSelect>
+                          </FormControl>
+                        </CusTableCell>
+                        <CusTableCell align="center">
+                          <CusTextField
+                            value={newSupplierName}
+                            onChange={(event) => {
+                              setNewSupplierName(event.target.value);
+                            }}
+                            fullWidth
+                            variant="standard"
+                          />
+                        </CusTableCell>
+                        <CusTableCell align="center">
+                          <CusTextField
+                            value={newSupplierAddress}
+                            onChange={(event) => {
+                              setNewSupplierAddress(event.target.value);
+                            }}
+                            fullWidth
+                            variant="standard"
+                          />
+                        </CusTableCell>
+                        <CusTableCell align="center">
+                          <CusTextField
+                            value={newSupplierCity}
+                            onChange={(event) => {
+                              setNewSupplierCity(event.target.value);
+                            }}
+                            fullWidth
+                            variant="standard"
+                          />
+                        </CusTableCell>
+                        <CusTableCell align="center">
+                          <CusTextField
+                            value={newSupplierState}
+                            onChange={(event) => {
+                              setNewSupplierState(event.target.value);
+                            }}
+                            fullWidth
+                            variant="standard"
+                          />
+                        </CusTableCell>
+
+                        <CusTableCell align="center">
+                          <CusTextField
+                            value={newSupplierPinCode}
+                            onChange={(event) => {
+                              setNewSupplierPinCode(event.target.value);
+                            }}
+                            fullWidth
+                            variant="standard"
+                          />
+                        </CusTableCell>
+
+                        <CusTableCell align="center">
+                          <CusTextField
+                            value={newSupplierPhone}
+                            onChange={(event) => {
+                              setNewSupplierPhone(event.target.value);
+                            }}
+                            fullWidth
+                            variant="standard"
+                          />
+                        </CusTableCell>
+
+                        <CusTableCell align="center">
+                          <CusTextField
+                            value={newSupplierEmail}
+                            onChange={(event) => {
+                              setNewSupplierEmail(event.target.value);
+                            }}
+                            fullWidth
+                            variant="standard"
+                          />
+                        </CusTableCell>
+
+                        <CusTableCell align="center">
+                          <CusTextField
+                            value={newSupplierFax}
+                            onChange={(event) => {
+                              setNewSupplierFax(event.target.value);
+                            }}
+                            fullWidth
+                            variant="standard"
+                          />
+                        </CusTableCell>
+
+                        <CusTableCell align="center">
+                          <CusTextField
+                            value={newSupplierGst}
+                            onChange={(event) => {
+                              setNewSupplierGst(event.target.value);
+                            }}
+                            fullWidth
+                            variant="standard"
+                          />
+                        </CusTableCell>
+
+                        <CusTableCell align="center">
+                          <CusTextField
+                            value={newSupplierTan}
+                            onChange={(event) => {
+                              setNewSupplierTan(event.target.value);
+                            }}
+                            fullWidth
+                            variant="standard"
+                          />
+                        </CusTableCell>
+
+                        <CusTableCell align="center">
+                          <FormControl fullWidth>
+                            <NativeSelect
+                              inputProps={{
+                                name: "status",
+                                id: "uncontrolled-native",
+                              }}
+                              onChange={(event) => {
+                                setNewSupplierStatus(event.target.value);
+                              }}
+                              sx={{ fontSize: "0.75rem" }}
+                            >
+                              <option
+                                value={"ACTIVE"}
+                                style={{
+                                  fontSize: "0.75rem",
+                                }}
+                              >
+                                ACTIVE
+                              </option>
+                              <option
+                                value={"INACTIVE"}
+                                style={{
+                                  fontSize: "0.75rem",
+                                }}
+                              >
+                                INACTIVE
+                              </option>
+                            </NativeSelect>
+                          </FormControl>
+                        </CusTableCell>
+                        <CusTableCell align="center">
+                          <IconButton
+                            sx={{
+                              fontSize: "0.75rem",
+                              color: "green",
+                            }}
+                            onClick={() => {
+                              saveNewSupplier();
+                            }}
+                          >
+                            <DoneIcon
+                              sx={{ height: "0.95rem", width: "0.95rem" }}
+                            ></DoneIcon>
+                          </IconButton>
+                          <IconButton
+                            sx={{
+                              fontSize: "0.75rem",
+                              color: "red",
+                            }}
+                            onClick={() => {
+                              setIsAddNew(false);
+                            }}
+                          >
+                            <CloseIcon
+                              sx={{ height: "0.95rem", width: "0.95rem" }}
+                            ></CloseIcon>
+                          </IconButton>
+                        </CusTableCell>
+                      </TableRow>
+                    ) : null}
                   </>
                 ) : (
                   <TableRow>
@@ -794,7 +995,14 @@ export const SuppliersMaster = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <SaveButton className="mt-4" onClick={handleShowAdd}>
+      <SaveButton
+        className="mt-4"
+        onClick={
+          /* handleShowAdd */ () => {
+            setIsAddNew(true);
+          }
+        }
+      >
         ADD ANOTHER
       </SaveButton>
       {renderAddModal()}
