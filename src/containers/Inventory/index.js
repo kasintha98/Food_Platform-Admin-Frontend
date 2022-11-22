@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { getInventoryUOM, getInventoryCategories } from "../../actions";
 import Layout from "../NewLayout";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
@@ -6,13 +8,21 @@ import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import { SuppliersMaster } from "../../components/SuppliersMaster";
+import { InventoryItemMaster } from "../../components/InventoryItemMaster";
 
 export const Inventory = () => {
+  const dispatch = useDispatch();
+
   const [tabValue, setTabValue] = React.useState("SUPPLIERS MASTER");
 
   const handleChangeTab = (event, newValue) => {
     setTabValue(newValue);
   };
+
+  useEffect(() => {
+    dispatch(getInventoryUOM());
+    dispatch(getInventoryCategories());
+  }, []);
 
   return (
     <Layout sidebar headerTitle="INVENTORY MGMT">
@@ -53,7 +63,9 @@ export const Inventory = () => {
             </div>
           </TabPanel>
           <TabPanel value="INVENTORY ITEM MASTER">
-            <div>b</div>
+            <div>
+              <InventoryItemMaster></InventoryItemMaster>
+            </div>
           </TabPanel>
           <TabPanel value="RECIPE MASTER">
             <div>c</div>

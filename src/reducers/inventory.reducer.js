@@ -6,6 +6,12 @@ const initState = {
   error: null,
   allSuppliers: [],
   allSuppliersLoading: false,
+  allInventory: [],
+  allInventoryLoading: false,
+  activeInventory: [],
+  activeInventoryLoading: false,
+  uomList: [],
+  categoryList: [],
 };
 
 const buildNewInventory = (inventory, inventoryOne) => {
@@ -98,6 +104,62 @@ export default (state = initState, action) => {
         ...state,
         allSuppliersLoading: false,
         allSuppliers: action.payload,
+      };
+      break;
+
+    case inventoryConstants.GET_ALL_INVENTORY_ITEMS_REQUEST:
+      state = {
+        ...state,
+        allInventoryLoading: true,
+      };
+      break;
+    case inventoryConstants.GET_ALL_INVENTORY_ITEMS_SUCCESS:
+      state = {
+        ...state,
+        allInventoryLoading: false,
+        allInventory: action.payload,
+      };
+      break;
+    case inventoryConstants.GET_ALL_INVENTORY_ITEMS_FAILURE:
+      state = {
+        ...state,
+        allInventoryLoading: false,
+        allInventory: action.payload,
+      };
+      break;
+
+    case inventoryConstants.GET_ACTIVE_INVENTORY_ITEMS_REQUEST:
+      state = {
+        ...state,
+        activeInventoryLoading: true,
+      };
+      break;
+    case inventoryConstants.GET_ACTIVE_INVENTORY_ITEMS_SUCCESS:
+      state = {
+        ...state,
+        activeInventoryLoading: false,
+        activeInventory: action.payload,
+      };
+      break;
+    case inventoryConstants.GET_ACTIVE_INVENTORY_ITEMS_FAILURE:
+      state = {
+        ...state,
+        activeInventoryLoading: false,
+        activeInventory: action.payload,
+      };
+      break;
+
+    case inventoryConstants.GET_UOM_SUCCESS:
+      state = {
+        ...state,
+        uomList: action.payload,
+      };
+      break;
+
+    case inventoryConstants.GET_INVENTORY_CATEGORIES_SUCCESS:
+      state = {
+        ...state,
+        categoryList: action.payload,
       };
       break;
   }

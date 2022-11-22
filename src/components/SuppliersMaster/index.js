@@ -26,10 +26,11 @@ import CloseIcon from "@mui/icons-material/Close";
 import DoneIcon from "@mui/icons-material/Done";
 import EditIcon from "@mui/icons-material/Edit";
 import {
-  getAllSuppliers,
+  getActiveSuppliers,
   saveUpdateSupplier,
   deleteSupplier,
 } from "../../actions";
+import ReactPaginate from "react-paginate";
 import { useSelector, useDispatch } from "react-redux";
 
 const CusSelect = styled(Select)`
@@ -52,7 +53,7 @@ const CusInputLabel = styled(InputLabel)`
 const CusTableCell1 = styled(TableCell)`
   font-size: 0.75rem;
   font-weight: bold;
-  background-color: #35455e;
+  background-color: #00b0f0;
   color: #fff;
 `;
 
@@ -103,6 +104,40 @@ const CusTextField = styled(TextField)`
   }
 `;
 
+const MyPaginate = styled(ReactPaginate)`
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  list-style-type: none;
+  padding: 0 5rem;
+  li a {
+    border-radius: 7px;
+    padding: 0.1rem 1rem;
+    border: gray 1px solid;
+    cursor: pointer;
+  }
+  li.previous a,
+  li.next a,
+  li.break a {
+    border-color: transparent;
+  }
+  li.active a {
+    background-color: #0366d6;
+    border-color: transparent;
+    color: white;
+    min-width: 32px;
+  }
+  li.disabled a {
+    color: grey;
+  }
+  li.disable,
+  li.disabled a {
+    cursor: default;
+  }
+`;
+
 export const SuppliersMaster = () => {
   const allSuppliers = useSelector((state) => state.inventory.allSuppliers);
   const allSuppliersLoading = useSelector(
@@ -137,12 +172,30 @@ export const SuppliersMaster = () => {
   const [newSupplierGst, setNewSupplierGst] = useState("");
   const [newSupplierTan, setNewSupplierTan] = useState("");
   const [newSupplierStatus, setNewSupplierStatus] = useState("");
+  const [pagination, setPagination] = useState({
+    data: allSuppliers,
+    offset: 0,
+    numberPerPage: 10,
+    pageCount: 0,
+    currentData: allSuppliers.slice(0, 10),
+  });
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getAllSuppliers());
+    dispatch(getActiveSuppliers());
   }, []);
+
+  useEffect(() => {
+    setPagination((prevState) => ({
+      ...prevState,
+      pageCount: allSuppliers.length / prevState.numberPerPage,
+      currentData: allSuppliers.slice(
+        pagination.offset,
+        pagination.offset + pagination.numberPerPage
+      ),
+    }));
+  }, [pagination.numberPerPage, pagination.offset, allSuppliers]);
 
   const handleCloseAdd = () => setShowAdd(false);
   const handleShowAdd = () => setShowAdd(true);
@@ -216,16 +269,22 @@ export const SuppliersMaster = () => {
     });
   };
 
+  const handlePageClick = (event) => {
+    const selected = event.selected;
+    const offset = selected * pagination.numberPerPage;
+    setPagination({ ...pagination, offset });
+  };
+
   const saveNewSupplier = () => {
     if (!newSupplierName) {
       toast.error("Supplier name is mandatory!");
       return;
     }
 
-    if (!newsupplierCategory) {
+    /* if (!newsupplierCategory) {
       toast.error("Supplier category is mandatory!");
       return;
-    }
+    } */
 
     const newSupplier = {
       supplierName: newSupplierName,
@@ -238,7 +297,7 @@ export const SuppliersMaster = () => {
       supplierFaxNumber: newSupplierFax,
       supplierGstNumber: newSupplierGst,
       supplierTANNumber: newSupplierTan,
-      supplierCategory: newsupplierCategory,
+      supplierCategory: newsupplierCategory ? newsupplierCategory : "EXTERNAL",
       supplierStatus: newSupplierStatus ? newSupplierStatus : "ACTIVE",
       createdBy: user.loginId,
       createdDate: new Date(),
@@ -451,9 +510,9 @@ export const SuppliersMaster = () => {
           <TableHead>
             <TableRow>
               <CusTableCell1 align="center">NO</CusTableCell1>
-              <CusTableCell1 align="center">SUPPIER CATEGORY</CusTableCell1>
-              <CusTableCell1 align="center">SUPPLIER NAME</CusTableCell1>
-              <CusTableCell1 align="center">SUPPLIER ADDRESS</CusTableCell1>
+              <CusTableCell1 align="center">CATEGORY</CusTableCell1>
+              <CusTableCell1 align="center">NAME</CusTableCell1>
+              <CusTableCell1 align="center">ADDRESS</CusTableCell1>
               <CusTableCell1 align="center">CITY</CusTableCell1>
               <CusTableCell1 align="center">STATE</CusTableCell1>
               <CusTableCell1 align="center">PIN CODE</CusTableCell1>
@@ -461,8 +520,8 @@ export const SuppliersMaster = () => {
               <CusTableCell1 align="center">E-MAIL</CusTableCell1>
               <CusTableCell1 align="center">FAX NO</CusTableCell1>
               <CusTableCell1 align="center">GST NO</CusTableCell1>
-              <CusTableCell1 align="center">TAN NO</CusTableCell1>
-              <CusTableCell1 align="center">STATUS</CusTableCell1>
+              <CusTableCell1 align="center">TAX NO</CusTableCell1>
+              {/* <CusTableCell1 align="center">STATUS</CusTableCell1> */}
               <CusTableCell1 align="center">ACTION</CusTableCell1>
             </TableRow>
           </TableHead>
@@ -485,217 +544,224 @@ export const SuppliersMaster = () => {
               <>
                 {allSuppliers && allSuppliers.length > 0 ? (
                   <>
-                    {allSuppliers.map((item, index) => (
-                      <TableRow key={item.id}>
-                        <CusTableCell align="center">{index + 1}</CusTableCell>
-                        <CusTableCell align="center">
-                          <FormControl fullWidth>
-                            <NativeSelect
+                    {allSuppliers
+                      .slice(
+                        pagination.offset,
+                        pagination.offset + pagination.numberPerPage
+                      )
+                      .map((item, index) => (
+                        <TableRow key={item.id}>
+                          <CusTableCell align="center">
+                            {index + 1}
+                          </CusTableCell>
+                          <CusTableCell align="center">
+                            <FormControl fullWidth>
+                              <NativeSelect
+                                key={item.id}
+                                defaultValue={item.supplierCategory}
+                                inputProps={{
+                                  name: "status",
+                                  id: "uncontrolled-native",
+                                }}
+                                onChange={(event) => {
+                                  setSupplierCategory(event.target.value);
+                                }}
+                                sx={{ fontSize: "0.75rem" }}
+                                disabled={!isSave[item.id]}
+                              >
+                                <option
+                                  value={"EXTERNAL"}
+                                  style={{ fontSize: "0.75rem" }}
+                                >
+                                  EXTERNAL
+                                </option>
+                                <option
+                                  value={"INTERNAL"}
+                                  style={{ fontSize: "0.75rem" }}
+                                >
+                                  INTERNAL
+                                </option>
+                              </NativeSelect>
+                            </FormControl>
+                          </CusTableCell>
+                          <CusTableCell align="center">
+                            <CusTextField
                               key={item.id}
-                              defaultValue={item.supplierCategory}
-                              inputProps={{
-                                name: "status",
-                                id: "uncontrolled-native",
-                              }}
+                              defaultValue={item.supplierName}
+                              value={currentSupplierName[item.id]}
                               onChange={(event) => {
-                                setSupplierCategory(event.target.value);
+                                const names = {
+                                  ...currentSupplierName,
+                                  [item.id]: event.target.value,
+                                };
+                                setCurrentSupplierName(names);
                               }}
-                              sx={{ fontSize: "0.75rem" }}
+                              fullWidth
+                              variant="standard"
                               disabled={!isSave[item.id]}
-                            >
-                              <option
-                                value={"EXTERNAL"}
-                                style={{ fontSize: "0.75rem" }}
-                              >
-                                EXTERNAL
-                              </option>
-                              <option
-                                value={"INTERNAL"}
-                                style={{ fontSize: "0.75rem" }}
-                              >
-                                INTERNAL
-                              </option>
-                            </NativeSelect>
-                          </FormControl>
-                        </CusTableCell>
-                        <CusTableCell align="center">
-                          <CusTextField
-                            key={item.id}
-                            defaultValue={item.supplierName}
-                            value={currentSupplierName[item.id]}
-                            onChange={(event) => {
-                              const names = {
-                                ...currentSupplierName,
-                                [item.id]: event.target.value,
-                              };
-                              setCurrentSupplierName(names);
-                            }}
-                            fullWidth
-                            variant="standard"
-                            disabled={!isSave[item.id]}
-                          />
-                        </CusTableCell>
-                        <CusTableCell align="center">
-                          <CusTextField
-                            key={item.id}
-                            defaultValue={item.supplierAddress}
-                            value={currentSupplierAddress[item.id]}
-                            onChange={(event) => {
-                              const names = {
-                                ...currentSupplierAddress,
-                                [item.id]: event.target.value,
-                              };
-                              setCurrentSupplierAddress(names);
-                            }}
-                            fullWidth
-                            variant="standard"
-                            disabled={!isSave[item.id]}
-                          />
-                        </CusTableCell>
-                        <CusTableCell align="center">
-                          <CusTextField
-                            key={item.id}
-                            defaultValue={item.supplierCity}
-                            value={currentSupplierCity[item.id]}
-                            onChange={(event) => {
-                              const cities = {
-                                ...currentSupplierCity,
-                                [item.id]: event.target.value,
-                              };
-                              setCurrentSupplierCity(cities);
-                            }}
-                            fullWidth
-                            variant="standard"
-                            disabled={!isSave[item.id]}
-                          />
-                        </CusTableCell>
-                        <CusTableCell align="center">
-                          <CusTextField
-                            key={item.id}
-                            defaultValue={item.supplierState}
-                            value={currentSupplierState[item.id]}
-                            onChange={(event) => {
-                              const states = {
-                                ...currentSupplierState,
-                                [item.id]: event.target.value,
-                              };
-                              setCurrentSupplierState(states);
-                            }}
-                            fullWidth
-                            variant="standard"
-                            disabled={!isSave[item.id]}
-                          />
-                        </CusTableCell>
+                            />
+                          </CusTableCell>
+                          <CusTableCell align="center">
+                            <CusTextField
+                              key={item.id}
+                              defaultValue={item.supplierAddress}
+                              value={currentSupplierAddress[item.id]}
+                              onChange={(event) => {
+                                const names = {
+                                  ...currentSupplierAddress,
+                                  [item.id]: event.target.value,
+                                };
+                                setCurrentSupplierAddress(names);
+                              }}
+                              fullWidth
+                              variant="standard"
+                              disabled={!isSave[item.id]}
+                            />
+                          </CusTableCell>
+                          <CusTableCell align="center">
+                            <CusTextField
+                              key={item.id}
+                              defaultValue={item.supplierCity}
+                              value={currentSupplierCity[item.id]}
+                              onChange={(event) => {
+                                const cities = {
+                                  ...currentSupplierCity,
+                                  [item.id]: event.target.value,
+                                };
+                                setCurrentSupplierCity(cities);
+                              }}
+                              fullWidth
+                              variant="standard"
+                              disabled={!isSave[item.id]}
+                            />
+                          </CusTableCell>
+                          <CusTableCell align="center">
+                            <CusTextField
+                              key={item.id}
+                              defaultValue={item.supplierState}
+                              value={currentSupplierState[item.id]}
+                              onChange={(event) => {
+                                const states = {
+                                  ...currentSupplierState,
+                                  [item.id]: event.target.value,
+                                };
+                                setCurrentSupplierState(states);
+                              }}
+                              fullWidth
+                              variant="standard"
+                              disabled={!isSave[item.id]}
+                            />
+                          </CusTableCell>
 
-                        <CusTableCell align="center">
-                          <CusTextField
-                            key={item.id}
-                            defaultValue={item.supplierZipCode}
-                            value={currentSupplierPinCode[item.id]}
-                            onChange={(event) => {
-                              const pins = {
-                                ...currentSupplierPinCode,
-                                [item.id]: event.target.value,
-                              };
-                              setCurrentSupplierPinCode(pins);
-                            }}
-                            fullWidth
-                            variant="standard"
-                            disabled={!isSave[item.id]}
-                          />
-                        </CusTableCell>
+                          <CusTableCell align="center">
+                            <CusTextField
+                              key={item.id}
+                              defaultValue={item.supplierZipCode}
+                              value={currentSupplierPinCode[item.id]}
+                              onChange={(event) => {
+                                const pins = {
+                                  ...currentSupplierPinCode,
+                                  [item.id]: event.target.value,
+                                };
+                                setCurrentSupplierPinCode(pins);
+                              }}
+                              fullWidth
+                              variant="standard"
+                              disabled={!isSave[item.id]}
+                            />
+                          </CusTableCell>
 
-                        <CusTableCell align="center">
-                          <CusTextField
-                            key={item.id}
-                            defaultValue={item.supplierMobileNumber}
-                            value={currentSupplierPhone[item.id]}
-                            onChange={(event) => {
-                              const phomes = {
-                                ...currentSupplierPhone,
-                                [item.id]: event.target.value,
-                              };
-                              setCurrentSupplierPhone(phomes);
-                            }}
-                            fullWidth
-                            variant="standard"
-                            disabled={!isSave[item.id]}
-                          />
-                        </CusTableCell>
+                          <CusTableCell align="center">
+                            <CusTextField
+                              key={item.id}
+                              defaultValue={item.supplierMobileNumber}
+                              value={currentSupplierPhone[item.id]}
+                              onChange={(event) => {
+                                const phomes = {
+                                  ...currentSupplierPhone,
+                                  [item.id]: event.target.value,
+                                };
+                                setCurrentSupplierPhone(phomes);
+                              }}
+                              fullWidth
+                              variant="standard"
+                              disabled={!isSave[item.id]}
+                            />
+                          </CusTableCell>
 
-                        <CusTableCell align="center">
-                          <CusTextField
-                            key={item.id}
-                            defaultValue={item.supplierEmailId}
-                            value={currentSupplierEmail[item.id]}
-                            onChange={(event) => {
-                              const email = {
-                                ...currentSupplierEmail,
-                                [item.id]: event.target.value,
-                              };
-                              setCurrentSupplierEmail(email);
-                            }}
-                            fullWidth
-                            variant="standard"
-                            disabled={!isSave[item.id]}
-                          />
-                        </CusTableCell>
+                          <CusTableCell align="center">
+                            <CusTextField
+                              key={item.id}
+                              defaultValue={item.supplierEmailId}
+                              value={currentSupplierEmail[item.id]}
+                              onChange={(event) => {
+                                const email = {
+                                  ...currentSupplierEmail,
+                                  [item.id]: event.target.value,
+                                };
+                                setCurrentSupplierEmail(email);
+                              }}
+                              fullWidth
+                              variant="standard"
+                              disabled={!isSave[item.id]}
+                            />
+                          </CusTableCell>
 
-                        <CusTableCell align="center">
-                          <CusTextField
-                            key={item.id}
-                            defaultValue={item.supplierFaxNumber}
-                            value={currentSupplierFax[item.id]}
-                            onChange={(event) => {
-                              const faxes = {
-                                ...currentSupplierFax,
-                                [item.id]: event.target.value,
-                              };
-                              setCurrentSupplierFax(faxes);
-                            }}
-                            fullWidth
-                            variant="standard"
-                            disabled={!isSave[item.id]}
-                          />
-                        </CusTableCell>
+                          <CusTableCell align="center">
+                            <CusTextField
+                              key={item.id}
+                              defaultValue={item.supplierFaxNumber}
+                              value={currentSupplierFax[item.id]}
+                              onChange={(event) => {
+                                const faxes = {
+                                  ...currentSupplierFax,
+                                  [item.id]: event.target.value,
+                                };
+                                setCurrentSupplierFax(faxes);
+                              }}
+                              fullWidth
+                              variant="standard"
+                              disabled={!isSave[item.id]}
+                            />
+                          </CusTableCell>
 
-                        <CusTableCell align="center">
-                          <CusTextField
-                            key={item.id}
-                            defaultValue={item.supplierGstNumber}
-                            value={currentSupplierGst[item.id]}
-                            onChange={(event) => {
-                              const faxes = {
-                                ...currentSupplierGst,
-                                [item.id]: event.target.value,
-                              };
-                              setCurrentSupplierGst(faxes);
-                            }}
-                            fullWidth
-                            variant="standard"
-                            disabled={!isSave[item.id]}
-                          />
-                        </CusTableCell>
+                          <CusTableCell align="center">
+                            <CusTextField
+                              key={item.id}
+                              defaultValue={item.supplierGstNumber}
+                              value={currentSupplierGst[item.id]}
+                              onChange={(event) => {
+                                const faxes = {
+                                  ...currentSupplierGst,
+                                  [item.id]: event.target.value,
+                                };
+                                setCurrentSupplierGst(faxes);
+                              }}
+                              fullWidth
+                              variant="standard"
+                              disabled={!isSave[item.id]}
+                            />
+                          </CusTableCell>
 
-                        <CusTableCell align="center">
-                          <CusTextField
-                            key={item.id}
-                            defaultValue={item.supplierTANNumber}
-                            value={currentSupplierTan[item.id]}
-                            onChange={(event) => {
-                              const faxes = {
-                                ...currentSupplierTan,
-                                [item.id]: event.target.value,
-                              };
-                              setCurrentSupplierTan(faxes);
-                            }}
-                            fullWidth
-                            variant="standard"
-                            disabled={!isSave[item.id]}
-                          />
-                        </CusTableCell>
+                          <CusTableCell align="center">
+                            <CusTextField
+                              key={item.id}
+                              defaultValue={item.supplierTANNumber}
+                              value={currentSupplierTan[item.id]}
+                              onChange={(event) => {
+                                const faxes = {
+                                  ...currentSupplierTan,
+                                  [item.id]: event.target.value,
+                                };
+                                setCurrentSupplierTan(faxes);
+                              }}
+                              fullWidth
+                              variant="standard"
+                              disabled={!isSave[item.id]}
+                            />
+                          </CusTableCell>
 
-                        <CusTableCell align="center">
+                          {/* <CusTableCell align="center">
                           <FormControl fullWidth>
                             <NativeSelect
                               key={item.id}
@@ -730,57 +796,57 @@ export const SuppliersMaster = () => {
                               </option>
                             </NativeSelect>
                           </FormControl>
-                        </CusTableCell>
-                        <CusTableCell align="center">
-                          {isSave[item.id] ? (
-                            <IconButton
-                              key={item.id}
-                              sx={{
-                                fontSize: "0.75rem",
-                                color: "green",
-                              }}
-                              onClick={() => {
-                                updateSupplierHandle(item);
-                              }}
-                            >
-                              <DoneIcon
-                                sx={{ height: "0.95rem", width: "0.95rem" }}
-                              ></DoneIcon>
-                            </IconButton>
-                          ) : (
-                            <IconButton
-                              key={item.id}
-                              sx={{
-                                fontSize: "0.75rem",
-                                color: "green",
-                              }}
-                              onClick={() => {
-                                onEditClickHandle(item.id);
-                              }}
-                            >
-                              <EditIcon
-                                sx={{ height: "0.95rem", width: "0.95rem" }}
-                              ></EditIcon>
-                            </IconButton>
-                          )}
+                        </CusTableCell> */}
+                          <CusTableCell align="center">
+                            {isSave[item.id] ? (
+                              <IconButton
+                                key={item.id}
+                                sx={{
+                                  fontSize: "0.75rem",
+                                  color: "green",
+                                }}
+                                onClick={() => {
+                                  updateSupplierHandle(item);
+                                }}
+                              >
+                                <DoneIcon
+                                  sx={{ height: "0.95rem", width: "0.95rem" }}
+                                ></DoneIcon>
+                              </IconButton>
+                            ) : (
+                              <IconButton
+                                key={item.id}
+                                sx={{
+                                  fontSize: "0.75rem",
+                                  color: "green",
+                                }}
+                                onClick={() => {
+                                  onEditClickHandle(item.id);
+                                }}
+                              >
+                                <EditIcon
+                                  sx={{ height: "0.95rem", width: "0.95rem" }}
+                                ></EditIcon>
+                              </IconButton>
+                            )}
 
-                          <IconButton
-                            key={item.id}
-                            sx={{
-                              fontSize: "0.75rem",
-                              color: "red",
-                            }}
-                            onClick={() => {
-                              softDeleteSupplier(item.id);
-                            }}
-                          >
-                            <DeleteIcon
-                              sx={{ height: "0.95rem", width: "0.95rem" }}
-                            ></DeleteIcon>
-                          </IconButton>
-                        </CusTableCell>
-                      </TableRow>
-                    ))}
+                            <IconButton
+                              key={item.id}
+                              sx={{
+                                fontSize: "0.75rem",
+                                color: "red",
+                              }}
+                              onClick={() => {
+                                softDeleteSupplier(item.id);
+                              }}
+                            >
+                              <DeleteIcon
+                                sx={{ height: "0.95rem", width: "0.95rem" }}
+                              ></DeleteIcon>
+                            </IconButton>
+                          </CusTableCell>
+                        </TableRow>
+                      ))}
 
                     {isAddNew ? (
                       <TableRow>
@@ -921,7 +987,7 @@ export const SuppliersMaster = () => {
                           />
                         </CusTableCell>
 
-                        <CusTableCell align="center">
+                        {/* <CusTableCell align="center">
                           <FormControl fullWidth>
                             <NativeSelect
                               inputProps={{
@@ -951,7 +1017,7 @@ export const SuppliersMaster = () => {
                               </option>
                             </NativeSelect>
                           </FormControl>
-                        </CusTableCell>
+                        </CusTableCell> */}
                         <CusTableCell align="center">
                           <IconButton
                             sx={{
@@ -986,7 +1052,7 @@ export const SuppliersMaster = () => {
                 ) : (
                   <TableRow>
                     <TableCell colSpan={15}>
-                      <Alert severity="warning">No ingrefients found!</Alert>
+                      <Alert severity="warning">No suppliers found!</Alert>
                     </TableCell>
                   </TableRow>
                 )}
@@ -1005,6 +1071,17 @@ export const SuppliersMaster = () => {
       >
         ADD ANOTHER
       </SaveButton>
+      <MyPaginate
+        previousLabel={"Previous"}
+        nextLabel={"Next"}
+        breakLabel={"..."}
+        pageCount={pagination.pageCount}
+        marginPagesDisplayed={2}
+        pageRangeDisplayed={5}
+        onPageChange={handlePageClick}
+        containerClassName={"pagination"}
+        activeClassName={"active"}
+      />
       {renderAddModal()}
     </div>
   );

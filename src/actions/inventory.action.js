@@ -157,7 +157,7 @@ export const saveUpdateSupplier = (supplier) => {
           type: inventoryConstants.SAVE_UPDATE_SUPPLIERS_SUCCESS,
           payload: res.data,
         });
-        dispatch(getAllSuppliers());
+        dispatch(getActiveSuppliers());
         toast.success("Supplier Saved Successfully!");
         return res.data;
       } else {
@@ -193,7 +193,7 @@ export const deleteSupplier = (id, updatedBy) => {
           type: inventoryConstants.DELETE_SUPPLIERS_SUCCESS,
           payload: res.data,
         });
-        dispatch(getAllSuppliers());
+        dispatch(getActiveSuppliers());
         toast.success("Supplier Soft Deleted Successfully!");
         return res.data;
       } else {
@@ -207,6 +207,229 @@ export const deleteSupplier = (id, updatedBy) => {
     } catch (error) {
       console.log(error);
       toast.error("Error when deleting! Please try again!");
+    }
+  };
+};
+
+export const getAllInventory = () => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: inventoryConstants.GET_ALL_INVENTORY_ITEMS_REQUEST });
+
+      const res = await axios.get("/getAllItems");
+      if (res.status === 200) {
+        dispatch({
+          type: inventoryConstants.GET_ALL_INVENTORY_ITEMS_SUCCESS,
+          payload: res.data,
+        });
+      } else {
+        toast.error("Error getting inventory data!");
+        dispatch({
+          type: inventoryConstants.GET_ALL_INVENTORY_ITEMS_FAILURE,
+          payload: [],
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Error getting inventory data!");
+      dispatch({
+        type: inventoryConstants.GET_ALL_INVENTORY_ITEMS_FAILURE,
+        payload: [],
+      });
+    }
+  };
+};
+
+export const getActiveInventory = () => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: inventoryConstants.GET_ACTIVE_INVENTORY_ITEMS_REQUEST });
+
+      const res = await axios.get("/getItemsByStatus?status=ACTIVE");
+      if (res.status === 200) {
+        dispatch({
+          type: inventoryConstants.GET_ACTIVE_INVENTORY_ITEMS_SUCCESS,
+          payload: res.data,
+        });
+      } else {
+        toast.error("Error getting inventory data!");
+        dispatch({
+          type: inventoryConstants.GET_ACTIVE_INVENTORY_ITEMS_FAILURE,
+          payload: [],
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Error getting inventory data!");
+      dispatch({
+        type: inventoryConstants.GET_ACTIVE_INVENTORY_ITEMS_FAILURE,
+        payload: [],
+      });
+    }
+  };
+};
+
+export const getInventoryUOM = () => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: inventoryConstants.GET_UOM_REQUEST });
+
+      const res = await axios.get(`/getConfigDetailsByCriteria`, {
+        params: {
+          restaurantId: "R001",
+          storeId: "ALL",
+          criteria: "INVENTORY_ITEM_UOM",
+        },
+      });
+
+      if (res.status === 200 && res.data) {
+        dispatch({
+          type: inventoryConstants.GET_UOM_SUCCESS,
+          payload: res.data,
+        });
+        return res.data;
+      } else {
+        dispatch({
+          type: inventoryConstants.GET_UOM_FAILURE,
+          payload: { error: "Error fetching UOM config data!" },
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch({
+        type: inventoryConstants.GET_UOM_FAILURE,
+        payload: { error: "Error fetching UOM config data!" },
+      });
+    }
+  };
+};
+
+export const getInventoryCategories = () => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: inventoryConstants.GET_INVENTORY_CATEGORIES_REQUEST });
+
+      const res = await axios.get(`/getConfigDetailsByCriteria`, {
+        params: {
+          restaurantId: "R001",
+          storeId: "ALL",
+          criteria: "INVENTORY_ITEM_CATEGORY",
+        },
+      });
+
+      if (res.status === 200 && res.data) {
+        dispatch({
+          type: inventoryConstants.GET_INVENTORY_CATEGORIES_SUCCESS,
+          payload: res.data,
+        });
+        return res.data;
+      } else {
+        dispatch({
+          type: inventoryConstants.GET_INVENTORY_CATEGORIES_FAILURE,
+          payload: { error: "Error fetching categories config data!" },
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch({
+        type: inventoryConstants.GET_INVENTORY_CATEGORIES_FAILURE,
+        payload: { error: "Error fetching categories config data!" },
+      });
+    }
+  };
+};
+
+export const saveUpdateInventoryItem = (item) => {
+  return async (dispatch) => {
+    dispatch({ type: inventoryConstants.SAVE_UPDATE_INVENYORY_ITEM_REQUEST });
+
+    try {
+      const res = await axios.post("/saveItem", item);
+
+      if (res.status === 200) {
+        dispatch({
+          type: inventoryConstants.SAVE_UPDATE_INVENYORY_ITEM_SUCCESS,
+          payload: res.data,
+        });
+        dispatch(getActiveInventory());
+        toast.success("Item Saved Successfully!");
+        return res.data;
+      } else {
+        dispatch({
+          type: inventoryConstants.SAVE_UPDATE_INVENYORY_ITEM_FAILURE,
+          payload: null,
+        });
+        toast.error("Error when saving! Please try again!");
+      }
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+      toast.error("Error when saving! Please try again!");
+    }
+  };
+};
+
+export const deleteInventoryItem = (id, updatedBy) => {
+  return async (dispatch) => {
+    dispatch({ type: inventoryConstants.DELETE_INVENTORY_ITEM_REQUEST });
+
+    try {
+      const item = {
+        id: id,
+        itemStatus: "INACTIVE",
+        updatedBy: updatedBy,
+      };
+
+      const res = await axios.post("/saveItemStatus", item);
+
+      if (res.status === 200) {
+        dispatch({
+          type: inventoryConstants.DELETE_INVENTORY_ITEM_SUCCESS,
+          payload: res.data,
+        });
+        dispatch(getActiveInventory());
+        toast.success("Item Soft Deleted Successfully!");
+        return res.data;
+      } else {
+        dispatch({
+          type: inventoryConstants.DELETE_INVENTORY_ITEM_FAILURE,
+          payload: null,
+        });
+        toast.error("Error when deleting! Please try again!");
+      }
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+      toast.error("Error when deleting! Please try again!");
+    }
+  };
+};
+
+export const getActiveSuppliers = () => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: inventoryConstants.GET_ALL_SUPPLIERS_REQUEST });
+
+      const res = await axios.get("/getAllActiveSuppliers");
+      if (res.status === 200) {
+        dispatch({
+          type: inventoryConstants.GET_ALL_SUPPLIERS_SUCCESS,
+          payload: res.data,
+        });
+      } else {
+        toast.error("Error getting supplier data!");
+        dispatch({
+          type: inventoryConstants.GET_ALL_SUPPLIERS_FAILURE,
+          payload: [],
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Error getting supplier data!");
+      dispatch({
+        type: inventoryConstants.GET_ALL_SUPPLIERS_FAILURE,
+        payload: [],
+      });
     }
   };
 };
