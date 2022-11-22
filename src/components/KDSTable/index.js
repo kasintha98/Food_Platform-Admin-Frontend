@@ -45,6 +45,7 @@ export const KDSTable = forwardRef((props, ref) => {
   const [newSubStatus, setNewSubStatus] = useState(false);
   const [currentOrder, setCurrentOrder] = useState({});
   const [currentItem, setCurrentItem] = useState({});
+  const [currentSubProducts, setCurrentSubProducts] = useState([]);
 
   const dispatch = useDispatch();
   const componentRef = useRef();
@@ -203,6 +204,14 @@ export const KDSTable = forwardRef((props, ref) => {
   ) => {
     setCurrentOrder(order);
     setCurrentItem(item);
+    let allItems = order.orderDetails;
+    setCurrentSubProducts(
+      allItems.filter(
+        (x) => x.subProductId !== "NAA" && x.productId >= productId /* &&
+          subProductId === "NAA" */
+      )
+    );
+
     const foundMatch = stores.find((obj) => {
       return (
         obj.restaurantId === order.restaurantId && obj.storeId === order.storeId
@@ -1085,6 +1094,15 @@ export const KDSTable = forwardRef((props, ref) => {
                   align="center"
                 >
                   {currentItem.productName}
+                  {currentSubProducts ? (
+                    <>
+                      {currentSubProducts.map((prod) => (
+                        <span>
+                          <br></br> +{prod.ingredient}
+                        </span>
+                      ))}
+                    </>
+                  ) : null}
                   <hr></hr>
                 </TableCell>
                 {/* <TableCell
