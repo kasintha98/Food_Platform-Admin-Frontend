@@ -19,7 +19,7 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CloseIcon from "@mui/icons-material/Close";
-import DoneIcon from "@mui/icons-material/Done";
+import SaveIcon from "@mui/icons-material/Save";
 import EditIcon from "@mui/icons-material/Edit";
 import {
   getActiveInventory,
@@ -472,22 +472,22 @@ export const InventoryItemMaster = () => {
                                 key={item.id}
                                 sx={{
                                   fontSize: "0.75rem",
-                                  color: "green",
+                                  color: "#92D050",
                                 }}
                                 onClick={() => {
                                   updateItemHandle(item);
                                 }}
                               >
-                                <DoneIcon
+                                <SaveIcon
                                   sx={{ height: "0.95rem", width: "0.95rem" }}
-                                ></DoneIcon>
+                                ></SaveIcon>
                               </IconButton>
                             ) : (
                               <IconButton
                                 key={item.id}
                                 sx={{
                                   fontSize: "0.75rem",
-                                  color: "green",
+                                  color: "#FFC000",
                                 }}
                                 onClick={() => {
                                   onEditClickHandle(item.id);
@@ -645,15 +645,15 @@ export const InventoryItemMaster = () => {
                           <IconButton
                             sx={{
                               fontSize: "0.75rem",
-                              color: "green",
+                              color: "#92D050",
                             }}
                             onClick={() => {
                               saveNewItem();
                             }}
                           >
-                            <DoneIcon
+                            <SaveIcon
                               sx={{ height: "0.95rem", width: "0.95rem" }}
-                            ></DoneIcon>
+                            ></SaveIcon>
                           </IconButton>
                           <IconButton
                             sx={{

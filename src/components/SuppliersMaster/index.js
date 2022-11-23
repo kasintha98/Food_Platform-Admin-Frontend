@@ -23,7 +23,7 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CloseIcon from "@mui/icons-material/Close";
-import DoneIcon from "@mui/icons-material/Done";
+import SaveIcon from "@mui/icons-material/Save";
 import EditIcon from "@mui/icons-material/Edit";
 import {
   getActiveSuppliers,
@@ -552,7 +552,7 @@ export const SuppliersMaster = () => {
                       .map((item, index) => (
                         <TableRow key={item.id}>
                           <CusTableCell align="center">
-                            {index + 1}
+                            {index + 1 + pagination.offset}
                           </CusTableCell>
                           <CusTableCell align="center">
                             <FormControl fullWidth>
@@ -803,22 +803,22 @@ export const SuppliersMaster = () => {
                                 key={item.id}
                                 sx={{
                                   fontSize: "0.75rem",
-                                  color: "green",
+                                  color: "#92D050",
                                 }}
                                 onClick={() => {
                                   updateSupplierHandle(item);
                                 }}
                               >
-                                <DoneIcon
+                                <SaveIcon
                                   sx={{ height: "0.95rem", width: "0.95rem" }}
-                                ></DoneIcon>
+                                ></SaveIcon>
                               </IconButton>
                             ) : (
                               <IconButton
                                 key={item.id}
                                 sx={{
                                   fontSize: "0.75rem",
-                                  color: "green",
+                                  color: "#FFC000",
                                 }}
                                 onClick={() => {
                                   onEditClickHandle(item.id);
@@ -1022,15 +1022,15 @@ export const SuppliersMaster = () => {
                           <IconButton
                             sx={{
                               fontSize: "0.75rem",
-                              color: "green",
+                              color: "#92D050",
                             }}
                             onClick={() => {
                               saveNewSupplier();
                             }}
                           >
-                            <DoneIcon
+                            <SaveIcon
                               sx={{ height: "0.95rem", width: "0.95rem" }}
-                            ></DoneIcon>
+                            ></SaveIcon>
                           </IconButton>
                           <IconButton
                             sx={{
