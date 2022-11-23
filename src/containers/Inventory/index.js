@@ -1,6 +1,10 @@
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { getInventoryUOM, getInventoryCategories } from "../../actions";
+import {
+  getInventoryUOM,
+  getInventoryCategories,
+  getAllProduct,
+} from "../../actions";
 import Layout from "../NewLayout";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
@@ -9,6 +13,7 @@ import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import { SuppliersMaster } from "../../components/SuppliersMaster";
 import { InventoryItemMaster } from "../../components/InventoryItemMaster";
+import { RecipeMaster } from "../../components/RecipeMaster";
 
 export const Inventory = () => {
   const dispatch = useDispatch();
@@ -22,6 +27,7 @@ export const Inventory = () => {
   useEffect(() => {
     dispatch(getInventoryUOM());
     dispatch(getInventoryCategories());
+    dispatch(getAllProduct());
   }, []);
 
   return (
@@ -68,7 +74,7 @@ export const Inventory = () => {
             </div>
           </TabPanel>
           <TabPanel value="RECIPE MASTER">
-            <div>c</div>
+            <RecipeMaster></RecipeMaster>
           </TabPanel>
           <TabPanel value="NEW PURCHASE ORDER">
             <div>d</div>

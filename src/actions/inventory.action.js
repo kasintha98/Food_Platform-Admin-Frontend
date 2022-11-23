@@ -433,3 +433,32 @@ export const getActiveSuppliers = () => {
     }
   };
 };
+
+export const getActiveRecipes = () => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: inventoryConstants.GET_ACTIVE_RECIPES_REQUEST });
+
+      const res = await axios.get("/getAllActiveRecipes");
+      if (res.status === 200) {
+        dispatch({
+          type: inventoryConstants.GET_ACTIVE_RECIPES_SUCCESS,
+          payload: res.data,
+        });
+      } else {
+        toast.error("Error getting recipe data!");
+        dispatch({
+          type: inventoryConstants.GET_ACTIVE_RECIPES_FAILURE,
+          payload: [],
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Error getting recipe data!");
+      dispatch({
+        type: inventoryConstants.GET_ACTIVE_RECIPES_FAILURE,
+        payload: [],
+      });
+    }
+  };
+};

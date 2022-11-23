@@ -12,6 +12,8 @@ const initState = {
   activeInventoryLoading: false,
   uomList: [],
   categoryList: [],
+  activeRecipes: [],
+  activeRecipesLoading: false,
 };
 
 const buildNewInventory = (inventory, inventoryOne) => {
@@ -160,6 +162,27 @@ export default (state = initState, action) => {
       state = {
         ...state,
         categoryList: action.payload,
+      };
+      break;
+
+    case inventoryConstants.GET_ACTIVE_RECIPES_REQUEST:
+      state = {
+        ...state,
+        activeRecipesLoading: true,
+      };
+      break;
+    case inventoryConstants.GET_ACTIVE_RECIPES_SUCCESS:
+      state = {
+        ...state,
+        activeRecipesLoading: false,
+        activeRecipes: action.payload,
+      };
+      break;
+    case inventoryConstants.GET_ACTIVE_RECIPES_FAILURE:
+      state = {
+        ...state,
+        activeRecipesLoading: false,
+        activeRecipes: action.payload,
       };
       break;
   }
