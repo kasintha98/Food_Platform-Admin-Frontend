@@ -14,6 +14,7 @@ import TabPanel from "@mui/lab/TabPanel";
 import { SuppliersMaster } from "../../components/SuppliersMaster";
 import { InventoryItemMaster } from "../../components/InventoryItemMaster";
 import { RecipeMaster } from "../../components/RecipeMaster";
+import { NewPurchaseOrder } from "../../components/NewPurchaseOrder";
 
 export const Inventory = () => {
   const dispatch = useDispatch();
@@ -77,7 +78,9 @@ export const Inventory = () => {
             <RecipeMaster></RecipeMaster>
           </TabPanel>
           <TabPanel value="NEW PURCHASE ORDER">
-            <div>d</div>
+            <div>
+              <NewPurchaseOrder></NewPurchaseOrder>
+            </div>
           </TabPanel>
           <TabPanel value="SEARCH PURCHASE ORDER">
             <div>e</div>
