@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
-import { Modal } from "react-bootstrap";
+import { Modal, Row, Col } from "react-bootstrap";
 import { toast } from "react-toastify";
 import {
   TableContainer,
@@ -114,6 +114,11 @@ const CusTextField = styled(TextField)`
   }
 `;
 
+const CusTypo = styled(Typography)`
+  color: #7f7f7f;
+  font-weight: bold;
+`;
+
 export const RecipeMaster = () => {
   const activeRecipes = useSelector((state) => state.inventory.activeRecipes);
   const activeRecipesLoading = useSelector(
@@ -135,6 +140,9 @@ export const RecipeMaster = () => {
   });
   const [showAdd, setShowAdd] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
+  const [currentItemQty, setCurrentItemQty] = useState({});
+  const [itemUOM, setItemUOM] = useState("");
+  const [currentItemCost, setCurrentItemCost] = useState({});
 
   const dispatch = useDispatch();
 
@@ -181,6 +189,7 @@ export const RecipeMaster = () => {
   const renderAddModal = () => {
     return (
       <Modal
+        size="lg"
         show={showAdd}
         onHide={handleCloseAdd}
         style={{
@@ -194,9 +203,114 @@ export const RecipeMaster = () => {
             {currentProduct ? currentProduct.dishType : "ADD"}
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          <p>Test</p>
-        </Modal.Body>
+        {currentProduct ? (
+          <Modal.Body>
+            <Row>
+              <Col xs={5} align="center">
+                <CusTypo>Ingredient Name</CusTypo>
+              </Col>
+              <Col xs={2} align="center">
+                <CusTypo>Qty.</CusTypo>
+              </Col>
+              <Col xs={2} align="center">
+                <CusTypo>UOM</CusTypo>
+              </Col>
+              <Col xs={2} align="center">
+                <CusTypo>Cost</CusTypo>
+              </Col>
+              <Col xs={1} align="center"></Col>
+            </Row>
+
+            {getIngredientsByProductId(
+              currentProduct.productId,
+              activeRecipes
+            ).map((item) => (
+              <Row>
+                <Col xs={5} align="center">
+                  {item.itemId}
+                </Col>
+                <Col xs={2} align="center">
+                  <CusTextField
+                    key={item.id}
+                    defaultValue={item.itemQty}
+                    value={currentItemQty[item.id]}
+                    onChange={(event) => {
+                      const qty = {
+                        ...currentItemQty,
+                        [item.id]: event.target.value,
+                      };
+                      setCurrentItemQty(qty);
+                    }}
+                    fullWidth
+                    variant="standard"
+                  />
+                </Col>
+                <Col xs={2} align="center">
+                  <FormControl fullWidth>
+                    <NativeSelect
+                      key={item.id}
+                      defaultValue={item.itemUOM}
+                      inputProps={{
+                        name: "status",
+                        id: "uncontrolled-native",
+                      }}
+                      onChange={(event) => {
+                        setItemUOM(event.target.value);
+                      }}
+                      sx={{ fontSize: "0.75rem" }}
+                    >
+                      {uomList &&
+                        uomList.map((item) => (
+                          <option
+                            value={item.configCriteriaValue}
+                            style={{ fontSize: "0.75rem" }}
+                          >
+                            {item.configCriteriaDesc}
+                          </option>
+                        ))}
+                      <option value={""} style={{ fontSize: "0.75rem" }}>
+                        Select UOM
+                      </option>
+                    </NativeSelect>
+                  </FormControl>
+                </Col>
+                <Col xs={2} align="center">
+                  <CusTextField
+                    key={item.id}
+                    defaultValue={item.itemCost}
+                    value={currentItemCost[item.id]}
+                    onChange={(event) => {
+                      const ost = {
+                        ...currentItemCost,
+                        [item.id]: event.target.value,
+                      };
+                      setCurrentItemCost(ost);
+                    }}
+                    fullWidth
+                    variant="standard"
+                  />
+                </Col>
+                <Col xs={1} align="center">
+                  <IconButton
+                    key={item.id}
+                    sx={{
+                      fontSize: "0.75rem",
+                      color: "red",
+                    }}
+                    onClick={() => {
+                      /* softDeleteSupplier(item.id); */
+                    }}
+                  >
+                    <DeleteIcon
+                      sx={{ height: "0.95rem", width: "0.95rem" }}
+                    ></DeleteIcon>
+                  </IconButton>
+                </Col>
+              </Row>
+            ))}
+          </Modal.Body>
+        ) : null}
+
         <Modal.Footer>
           <Button variant="contained" color="error" onClick={handleCloseAdd}>
             Close
