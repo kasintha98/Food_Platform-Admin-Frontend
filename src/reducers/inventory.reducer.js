@@ -14,6 +14,8 @@ const initState = {
   categoryList: [],
   activeRecipes: [],
   activeRecipesLoading: false,
+  purchaseOrderCategory: [],
+  purchaseOrderCategoryLoading: false,
 };
 
 const buildNewInventory = (inventory, inventoryOne) => {
@@ -183,6 +185,27 @@ export default (state = initState, action) => {
         ...state,
         activeRecipesLoading: false,
         activeRecipes: action.payload,
+      };
+      break;
+
+    case inventoryConstants.GET_PURCHASE_ORDER_CATEGORY_REQUEST:
+      state = {
+        ...state,
+        purchaseOrderCategoryLoading: true,
+      };
+      break;
+    case inventoryConstants.GET_PURCHASE_ORDER_CATEGORY_SUCCESS:
+      state = {
+        ...state,
+        purchaseOrderCategoryLoading: false,
+        purchaseOrderCategory: action.payload,
+      };
+      break;
+    case inventoryConstants.GET_PURCHASE_ORDER_CATEGORY_FAILURE:
+      state = {
+        ...state,
+        purchaseOrderCategoryLoading: false,
+        purchaseOrderCategory: action.payload,
       };
       break;
   }

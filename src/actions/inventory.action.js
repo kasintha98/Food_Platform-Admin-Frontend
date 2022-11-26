@@ -251,6 +251,7 @@ export const getActiveInventory = () => {
           type: inventoryConstants.GET_ACTIVE_INVENTORY_ITEMS_SUCCESS,
           payload: res.data,
         });
+        return res.data;
       } else {
         toast.error("Error getting inventory data!");
         dispatch({
@@ -525,6 +526,43 @@ export const deleteRecipeItem = (id, updatedBy) => {
     } catch (error) {
       console.log(error);
       toast.error("Error when deleting! Please try again!");
+    }
+  };
+};
+
+export const getInventoryPurchaseCategory = () => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: inventoryConstants.GET_PURCHASE_ORDER_CATEGORY_REQUEST,
+      });
+
+      const res = await axios.get(`/getConfigDetailsByCriteria`, {
+        params: {
+          restaurantId: "R001",
+          storeId: "ALL",
+          criteria: "PURCHASE_ORDER_CATEGORY",
+        },
+      });
+
+      if (res.status === 200 && res.data) {
+        dispatch({
+          type: inventoryConstants.GET_PURCHASE_ORDER_CATEGORY_SUCCESS,
+          payload: res.data,
+        });
+        return res.data;
+      } else {
+        dispatch({
+          type: inventoryConstants.GET_PURCHASE_ORDER_CATEGORY_FAILURE,
+          payload: { error: "Error fetching purchase order config data!" },
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch({
+        type: inventoryConstants.GET_PURCHASE_ORDER_CATEGORY_FAILURE,
+        payload: { error: "Error fetching purchase order config data!" },
+      });
     }
   };
 };
