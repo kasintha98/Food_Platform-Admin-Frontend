@@ -22,7 +22,12 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import CloseIcon from "@mui/icons-material/Close";
 import SaveIcon from "@mui/icons-material/Save";
 import EditIcon from "@mui/icons-material/Edit";
-import { getActiveRecipes } from "../../actions";
+import {
+  getActiveRecipes,
+  getActiveInventory,
+  saveUpdateRecipeItem,
+  deleteRecipeItem,
+} from "../../actions";
 import { useSelector, useDispatch } from "react-redux";
 import ReactPaginate from "react-paginate";
 
@@ -124,6 +129,12 @@ export const RecipeMaster = () => {
   const activeRecipesLoading = useSelector(
     (state) => state.inventory.activeRecipesLoading
   );
+  const activeInventory = useSelector(
+    (state) => state.inventory.activeInventory
+  );
+  const activeInventoryLoading = useSelector(
+    (state) => state.inventory.activeInventoryLoading
+  );
   const uomList = useSelector((state) => state.inventory.uomList);
   const user = useSelector((state) => state.auth.user);
   const productListMaster = useSelector(
@@ -141,13 +152,23 @@ export const RecipeMaster = () => {
   const [showAdd, setShowAdd] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
   const [currentItemQty, setCurrentItemQty] = useState({});
-  const [itemUOM, setItemUOM] = useState("");
+  const [itemUOM, setItemUOM] = useState({});
+  const [itemIngredient, setItemIngredient] = useState({});
   const [currentItemCost, setCurrentItemCost] = useState({});
+  const [isAddNew, setIsAddNew] = useState(false);
+
+  const [newItemQty, setNewItemQty] = useState("");
+  const [newItemUOM, setNewItemUOM] = useState("");
+  const [newItemIngredient, setNewItemIngredient] = useState("");
+  const [newItemIngredientObj, setNewItemIngredientObj] = useState(null);
+  const [newItemCost, setNewItemCost] = useState("");
+  const [changed, setChanged] = useState(false);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getActiveRecipes());
+    dispatch(getActiveInventory());
   }, []);
 
   useEffect(() => {
@@ -183,8 +204,99 @@ export const RecipeMaster = () => {
     setPagination({ ...pagination, offset });
   };
 
-  const handleCloseAdd = () => setShowAdd(false);
+  const handleCloseAdd = () => {
+    setShowAdd(false);
+    clearData();
+    setChanged(false);
+  };
   const handleShowAdd = () => setShowAdd(true);
+
+  const saveNewIngredient = () => {
+    if (isAddNew) {
+      if (!newItemQty || !newItemUOM || !newItemIngredient || !newItemCost) {
+        toast.error("Please fill all the fields to add new ingredient item!");
+        return;
+      }
+
+      const newItem = {
+        restaurantId: "R001",
+        productId: currentProduct.productId,
+        itemId: newItemIngredientObj.itemId,
+        itemQty: newItemQty,
+        itemCost: newItemCost,
+        itemUOM: newItemUOM,
+        itemStatus: "ACTIVE",
+        createdBy: user.loginId,
+        createdDate: new Date(),
+        updatedBy: user.loginId,
+        updatedDate: new Date(),
+      };
+      setChanged(true);
+      dispatch(saveUpdateRecipeItem(newItem));
+    }
+
+    const allList = getIngredientsByProductId(
+      currentProduct.productId,
+      activeRecipes
+    );
+
+    for (let i = 0; i < allList.length; i++) {
+      const newItem = {
+        restaurantId: allList[i].restaurantId,
+        productId: allList[i].productId,
+        itemId: itemIngredient[allList[i].id]
+          ? itemIngredient[allList[i].id]
+          : allList[i].itemId,
+        itemQty: currentItemQty[allList[i].id]
+          ? currentItemQty[allList[i].id]
+          : allList[i].itemQty,
+        itemCost: currentItemCost[allList[i].id]
+          ? currentItemCost[allList[i].id]
+          : allList[i].itemCost,
+        itemUOM: itemUOM[allList[i].id]
+          ? itemUOM[allList[i].id]
+          : allList[i].itemUOM,
+      };
+
+      const oldItem = {
+        restaurantId: allList[i].restaurantId,
+        productId: allList[i].productId,
+        itemId: allList[i].itemId,
+        itemQty: allList[i].itemQty,
+        itemCost: allList[i].itemCost,
+        itemUOM: allList[i].itemUOM,
+      };
+
+      if (JSON.stringify(newItem) !== JSON.stringify(oldItem)) {
+        const newObj = {
+          ...newItem,
+          itemStatus: "ACTIVE",
+          createdBy: allList[i].createdBy,
+          createdDate: allList[i].createdDate,
+          updatedBy: user.loginId,
+          updatedDate: new Date(),
+        };
+        setChanged(true);
+        dispatch(saveUpdateRecipeItem(newObj));
+      }
+    }
+
+    if (!changed) {
+      toast.success("Nothing Changed!");
+      handleCloseAdd();
+    }
+  };
+
+  const clearData = () => {
+    setCurrentItemQty({});
+    setItemUOM({});
+    setItemIngredient({});
+    setCurrentItemCost({});
+  };
+
+  const deleteIngredient = (id) => {
+    dispatch(deleteRecipeItem(id, user.loginId));
+  };
 
   const renderAddModal = () => {
     return (
@@ -227,7 +339,37 @@ export const RecipeMaster = () => {
             ).map((item) => (
               <Row>
                 <Col xs={5} align="center">
-                  {item.itemId}
+                  <FormControl fullWidth>
+                    <NativeSelect
+                      key={item.id}
+                      defaultValue={item.itemId}
+                      inputProps={{
+                        name: "status",
+                        id: "uncontrolled-native",
+                      }}
+                      onChange={(event) => {
+                        let ing = {
+                          ...itemIngredient,
+                          [item.id]: event.target.value,
+                        };
+                        setItemIngredient(ing);
+                      }}
+                      sx={{ fontSize: "0.75rem" }}
+                    >
+                      {activeInventory &&
+                        activeInventory.map((item) => (
+                          <option
+                            value={item.itemId}
+                            style={{ fontSize: "0.75rem" }}
+                          >
+                            {item.itemName}
+                          </option>
+                        ))}
+                      <option value={""} style={{ fontSize: "0.75rem" }}>
+                        Select Ingredient
+                      </option>
+                    </NativeSelect>
+                  </FormControl>
                 </Col>
                 <Col xs={2} align="center">
                   <CusTextField
@@ -249,23 +391,24 @@ export const RecipeMaster = () => {
                   <FormControl fullWidth>
                     <NativeSelect
                       key={item.id}
-                      defaultValue={item.itemUOM}
+                      defaultValue={item.itemUom}
                       inputProps={{
                         name: "status",
                         id: "uncontrolled-native",
                       }}
                       onChange={(event) => {
-                        setItemUOM(event.target.value);
+                        let uom = { ...itemUOM, [item.id]: event.target.value };
+                        setItemUOM(uom);
                       }}
                       sx={{ fontSize: "0.75rem" }}
                     >
                       {uomList &&
-                        uomList.map((item) => (
+                        uomList.map((itemUom) => (
                           <option
-                            value={item.configCriteriaValue}
+                            value={itemUom.configCriteriaValue}
                             style={{ fontSize: "0.75rem" }}
                           >
-                            {item.configCriteriaDesc}
+                            {itemUom.configCriteriaDesc}
                           </option>
                         ))}
                       <option value={""} style={{ fontSize: "0.75rem" }}>
@@ -298,7 +441,7 @@ export const RecipeMaster = () => {
                       color: "red",
                     }}
                     onClick={() => {
-                      /* softDeleteSupplier(item.id); */
+                      deleteIngredient(item.id);
                     }}
                   >
                     <DeleteIcon
@@ -308,6 +451,110 @@ export const RecipeMaster = () => {
                 </Col>
               </Row>
             ))}
+            {isAddNew ? (
+              <Row>
+                <Col xs={5} align="center">
+                  <FormControl fullWidth>
+                    <NativeSelect
+                      inputProps={{
+                        name: "status",
+                        id: "uncontrolled-native",
+                      }}
+                      onChange={(event) => {
+                        setNewItemIngredient(event.target.value);
+                      }}
+                      sx={{ fontSize: "0.75rem" }}
+                    >
+                      <option value={""} style={{ fontSize: "0.75rem" }}>
+                        Select Ingredient
+                      </option>
+                      {activeInventory &&
+                        activeInventory.map((item) => (
+                          <option
+                            value={item.itemId}
+                            style={{ fontSize: "0.75rem" }}
+                            onClick={() => {
+                              setNewItemIngredientObj(item);
+                            }}
+                          >
+                            {item.itemName}
+                          </option>
+                        ))}
+                    </NativeSelect>
+                  </FormControl>
+                </Col>
+                <Col xs={2} align="center">
+                  <CusTextField
+                    value={newItemQty}
+                    onChange={(event) => {
+                      setNewItemQty(event.target.value);
+                    }}
+                    fullWidth
+                    variant="standard"
+                  />
+                </Col>
+                <Col xs={2} align="center">
+                  <FormControl fullWidth>
+                    <NativeSelect
+                      inputProps={{
+                        name: "status",
+                        id: "uncontrolled-native",
+                      }}
+                      onChange={(event) => {
+                        setNewItemUOM(event.target.value);
+                      }}
+                      sx={{ fontSize: "0.75rem" }}
+                    >
+                      <option value={""} style={{ fontSize: "0.75rem" }}>
+                        Select UOM
+                      </option>
+                      {uomList &&
+                        uomList.map((itemUom) => (
+                          <option
+                            value={itemUom.configCriteriaValue}
+                            style={{ fontSize: "0.75rem" }}
+                          >
+                            {itemUom.configCriteriaDesc}
+                          </option>
+                        ))}
+                    </NativeSelect>
+                  </FormControl>
+                </Col>
+                <Col xs={2} align="center">
+                  <CusTextField
+                    value={newItemCost}
+                    onChange={(event) => {
+                      setNewItemCost(event.target.value);
+                    }}
+                    fullWidth
+                    variant="standard"
+                  />
+                </Col>
+                <Col xs={1} align="center">
+                  <IconButton
+                    sx={{
+                      fontSize: "0.75rem",
+                      color: "red",
+                    }}
+                    onClick={() => {
+                      setIsAddNew(false);
+                    }}
+                  >
+                    <CloseIcon
+                      sx={{ height: "0.95rem", width: "0.95rem" }}
+                    ></CloseIcon>
+                  </IconButton>
+                </Col>
+              </Row>
+            ) : null}
+            <SaveButton
+              className="mt-4"
+              onClick={() => {
+                setIsAddNew(true);
+              }}
+            >
+              ADD ANOTHER
+            </SaveButton>
           </Modal.Body>
         ) : null}
 
@@ -320,7 +567,7 @@ export const RecipeMaster = () => {
             variant="contained"
             color="success"
             onClick={() => {
-              /* saveNewSupplier(); */
+              saveNewIngredient();
             }}
           >
             Save
@@ -345,7 +592,9 @@ export const RecipeMaster = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {productListLoading || activeRecipesLoading ? (
+            {productListLoading ||
+            activeRecipesLoading ||
+            activeInventoryLoading ? (
               <TableRow>
                 <TableCell colSpan={14}>
                   <div className="d-flex justify-content-center">
@@ -385,7 +634,7 @@ export const RecipeMaster = () => {
                               item.productId,
                               activeRecipes
                             ).map((item) => (
-                              <span>{item.itemId}, </span>
+                              <span>{item.itemName}, </span>
                             ))}
                           </CusTableCell>
                           <CusTableCell align="center">
@@ -413,6 +662,7 @@ export const RecipeMaster = () => {
           </TableBody>
         </Table>
       </TableContainer>
+
       <MyPaginate
         previousLabel={"Previous"}
         nextLabel={"Next"}

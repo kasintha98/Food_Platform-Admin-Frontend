@@ -462,3 +462,69 @@ export const getActiveRecipes = () => {
     }
   };
 };
+
+export const saveUpdateRecipeItem = (item) => {
+  return async (dispatch) => {
+    dispatch({ type: inventoryConstants.SAVE_UPDATE_RECIPE_ITEM_REQUEST });
+
+    try {
+      const res = await axios.post("/saveRecipe", item);
+
+      if (res.status === 200) {
+        dispatch({
+          type: inventoryConstants.SAVE_UPDATE_RECIPE_ITEM_SUCCESS,
+          payload: res.data,
+        });
+        dispatch(getActiveRecipes());
+        toast.success("Recipe saved Successfully!");
+        return res.data;
+      } else {
+        dispatch({
+          type: inventoryConstants.SAVE_UPDATE_RECIPE_ITEM_FAILURE,
+          payload: null,
+        });
+        toast.error("Error when saving! Please try again!");
+      }
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+      toast.error("Error when saving! Please try again!");
+    }
+  };
+};
+
+export const deleteRecipeItem = (id, updatedBy) => {
+  return async (dispatch) => {
+    dispatch({ type: inventoryConstants.DELETE_RECIPE_ITEM_REQUEST });
+
+    try {
+      const item = {
+        id: id,
+        itemStatus: "INACTIVE",
+        updatedBy: updatedBy,
+      };
+
+      const res = await axios.post("/saveRecipeStatus", item);
+
+      if (res.status === 200) {
+        dispatch({
+          type: inventoryConstants.DELETE_RECIPE_ITEM_SUCCESS,
+          payload: res.data,
+        });
+        dispatch(getActiveRecipes());
+        toast.success("Item Soft Deleted Successfully!");
+        return res.data;
+      } else {
+        dispatch({
+          type: inventoryConstants.DELETE_RECIPE_ITEM_FAILURE,
+          payload: null,
+        });
+        toast.error("Error when deleting! Please try again!");
+      }
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+      toast.error("Error when deleting! Please try again!");
+    }
+  };
+};
