@@ -206,6 +206,7 @@ export const RecipeMaster = () => {
 
   const handleCloseAdd = () => {
     setShowAdd(false);
+    setIsAddNew(false);
     clearData();
     setChanged(false);
   };
@@ -224,7 +225,8 @@ export const RecipeMaster = () => {
         itemId: newItemIngredientObj.itemId,
         itemQty: newItemQty,
         itemCost: newItemCost,
-        itemUOM: newItemUOM,
+        /* itemUOM: newItemUOM, */
+        itemUom: newItemUOM,
         itemStatus: "ACTIVE",
         createdBy: user.loginId,
         createdDate: new Date(),
@@ -253,9 +255,9 @@ export const RecipeMaster = () => {
         itemCost: currentItemCost[allList[i].id]
           ? currentItemCost[allList[i].id]
           : allList[i].itemCost,
-        itemUOM: itemUOM[allList[i].id]
+        itemUom: itemUOM[allList[i].id]
           ? itemUOM[allList[i].id]
-          : allList[i].itemUOM,
+          : allList[i].itemUom,
       };
 
       const oldItem = {
@@ -264,12 +266,13 @@ export const RecipeMaster = () => {
         itemId: allList[i].itemId,
         itemQty: allList[i].itemQty,
         itemCost: allList[i].itemCost,
-        itemUOM: allList[i].itemUOM,
+        itemUom: allList[i].itemUom,
       };
 
       if (JSON.stringify(newItem) !== JSON.stringify(oldItem)) {
         const newObj = {
           ...newItem,
+          id: allList[i].id,
           itemStatus: "ACTIVE",
           createdBy: allList[i].createdBy,
           createdDate: allList[i].createdDate,
@@ -282,7 +285,7 @@ export const RecipeMaster = () => {
     }
 
     if (!changed) {
-      toast.success("Nothing Changed!");
+      /* toast.success("Nothing Changed!"); */
       handleCloseAdd();
     }
   };
