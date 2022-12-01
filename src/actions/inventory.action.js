@@ -500,7 +500,7 @@ export const deleteRecipeItem = (id, updatedBy) => {
 
     try {
       const item = {
-        itemId: id,
+        id: id,
         itemStatus: "INACTIVE",
         updatedBy: updatedBy,
       };

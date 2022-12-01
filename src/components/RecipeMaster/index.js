@@ -214,14 +214,13 @@ export const RecipeMaster = () => {
 
   const saveNewIngredient = () => {
     if (isAddNew) {
-      if (
-        !newItemQty ||
-        !newItemUOM ||
-        !newItemIngredient ||
-        !newItemCost ||
-        !newItemIngredientObj
-      ) {
-        toast.error("Please fill all the fields to add new ingredient item!");
+      if (!newItemIngredient || !newItemIngredientObj) {
+        toast.error("Please select ingredient to add new ingredient item!");
+        return;
+      }
+
+      if (!newItemQty) {
+        toast.error("Please select quantity to add new ingredient item!");
         return;
       }
 
@@ -230,7 +229,7 @@ export const RecipeMaster = () => {
         productId: currentProduct.productId,
         itemId: newItemIngredientObj.itemId,
         itemQty: newItemQty,
-        itemCost: newItemCost,
+        itemCost: newItemCost ? newItemCost : "0.0",
         /* itemUOM: newItemUOM, */
         itemUom: newItemUOM,
         itemStatus: "ACTIVE",
@@ -278,7 +277,7 @@ export const RecipeMaster = () => {
       if (JSON.stringify(newItem) !== JSON.stringify(oldItem)) {
         const newObj = {
           ...newItem,
-          id: allList[i].itemId,
+          id: allList[i].id,
           itemStatus: "ACTIVE",
           createdBy: allList[i].createdBy,
           createdDate: allList[i].createdDate,
@@ -426,7 +425,9 @@ export const RecipeMaster = () => {
                       </option>
                     </NativeSelect>
                   </FormControl> */}
-                  {item.itemUom}
+                  <Typography sx={{ fontSize: "0.75rem" }}>
+                    {item.itemUom}
+                  </Typography>
                 </Col>
                 <Col xs={2} align="center">
                   <CusTextField
@@ -453,7 +454,7 @@ export const RecipeMaster = () => {
                       color: "red",
                     }}
                     onClick={() => {
-                      deleteIngredient(item.itemId);
+                      deleteIngredient(item.id);
                     }}
                   >
                     <DeleteIcon
@@ -509,10 +510,11 @@ export const RecipeMaster = () => {
                     }}
                     fullWidth
                     variant="standard"
+                    inputProps={{ style: { textAlign: "center" } }}
                   />
                 </Col>
                 <Col xs={2} align="center">
-                  <FormControl fullWidth>
+                  {/* <FormControl fullWidth>
                     <NativeSelect
                       inputProps={{
                         name: "status",
@@ -536,7 +538,12 @@ export const RecipeMaster = () => {
                           </option>
                         ))}
                     </NativeSelect>
-                  </FormControl>
+                  </FormControl> */}
+                  <Typography sx={{ fontSize: "0.75rem" }}>
+                    {newItemIngredientObj
+                      ? newItemIngredientObj.itemUOM
+                      : "N/A"}
+                  </Typography>
                 </Col>
                 <Col xs={2} align="center">
                   <CusTextField
@@ -546,6 +553,7 @@ export const RecipeMaster = () => {
                     }}
                     fullWidth
                     variant="standard"
+                    inputProps={{ style: { textAlign: "center" } }}
                   />
                 </Col>
                 <Col xs={1} align="center">

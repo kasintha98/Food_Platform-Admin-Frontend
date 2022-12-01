@@ -495,7 +495,8 @@ export const NewPurchaseOrder = () => {
             </div>
             <FormControl fullWidth>
               <InputLabel
-                sx={{ fontSize: "0.75rem", lineHeight: "1rem", top: "-9px" }}
+                shrink={true}
+                sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
                 id="demo-simple-select-label"
               >
                 Please select the supplier
@@ -507,19 +508,24 @@ export const NewPurchaseOrder = () => {
                 value={selectedSupplier}
                 label="Please select the supplier"
                 onChange={handleChangeSupplier}
+                notched={true}
               >
-                {allSuppliers.map((supplier) => (
-                  <MenuItem
-                    onClick={() => {
-                      handleSelectedSupplier(supplier);
-                    }}
-                    value={supplier.supplierId}
-                  >
-                    <span>
-                      {supplier.supplierName}, {supplier.supplierAddress}
-                    </span>
-                  </MenuItem>
-                ))}
+                {allSuppliers
+                  .filter(function (el) {
+                    return el.supplierCategory === "INTERNAL";
+                  })
+                  .map((supplier) => (
+                    <MenuItem
+                      onClick={() => {
+                        handleSelectedSupplier(supplier);
+                      }}
+                      value={supplier.supplierId}
+                    >
+                      <span>
+                        {supplier.supplierName}, {supplier.supplierAddress}
+                      </span>
+                    </MenuItem>
+                  ))}
               </CusSelect>
             </FormControl>
           </Col>
@@ -531,7 +537,8 @@ export const NewPurchaseOrder = () => {
             </div>
             <FormControl fullWidth>
               <InputLabel
-                sx={{ fontSize: "0.75rem", lineHeight: "1rem", top: "-9px" }}
+                shrink={true}
+                sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
                 id="demo-simple-select-label"
               >
                 Please select the store
@@ -543,6 +550,7 @@ export const NewPurchaseOrder = () => {
                 value={selectedStore}
                 label="Please select the store"
                 onChange={handleChangeStore}
+                notched={true}
               >
                 {stores.map((store) => (
                   <MenuItem

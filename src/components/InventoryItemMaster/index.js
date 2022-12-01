@@ -283,7 +283,9 @@ export const InventoryItemMaster = () => {
               <CusTableCell1 align="center">CATEGORY</CusTableCell1>
               <CusTableCell1 align="center">UOM</CusTableCell1>
               <CusTableCell1 align="center">GST</CusTableCell1>
-              <CusTableCell1 align="center">TRACK (YES /NO)</CusTableCell1>
+              <CusTableCell1 align="center" sx={{ width: "20px" }}>
+                TRACK<br></br>(YES /NO)
+              </CusTableCell1>
               <CusTableCell1 align="center">ACTION</CusTableCell1>
             </TableRow>
           </TableHead>
@@ -362,7 +364,7 @@ export const InventoryItemMaster = () => {
                                 onChange={(event) => {
                                   setItemCategory(event.target.value);
                                 }}
-                                sx={{ fontSize: "0.75rem" }}
+                                sx={{ fontSize: "0.75rem", paddingLeft: "5px" }}
                                 disabled={!isSave[item.id]}
                               >
                                 {categoryList &&
@@ -395,7 +397,7 @@ export const InventoryItemMaster = () => {
                                 onChange={(event) => {
                                   setItemUOM(event.target.value);
                                 }}
-                                sx={{ fontSize: "0.75rem" }}
+                                sx={{ fontSize: "0.75rem", paddingLeft: "5px" }}
                                 disabled={!isSave[item.id]}
                               >
                                 {uomList &&
@@ -417,7 +419,7 @@ export const InventoryItemMaster = () => {
                             </FormControl>
                           </CusTableCell>
 
-                          <CusTableCell align="center">
+                          <CusTableCell align="center" sx={{ width: "20px" }}>
                             <CusTextField
                               key={item.id}
                               defaultValue={item.itemGstPercentage}
@@ -447,7 +449,7 @@ export const InventoryItemMaster = () => {
                                 onChange={(event) => {
                                   setItemTrackingFlag(event.target.value);
                                 }}
-                                sx={{ fontSize: "0.75rem" }}
+                                sx={{ fontSize: "0.75rem", paddingLeft: "5px" }}
                                 disabled={!isSave[item.id]}
                               >
                                 <option
