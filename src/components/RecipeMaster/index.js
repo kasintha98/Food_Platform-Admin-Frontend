@@ -214,7 +214,13 @@ export const RecipeMaster = () => {
 
   const saveNewIngredient = () => {
     if (isAddNew) {
-      if (!newItemQty || !newItemUOM || !newItemIngredient || !newItemCost) {
+      if (
+        !newItemQty ||
+        !newItemUOM ||
+        !newItemIngredient ||
+        !newItemCost ||
+        !newItemIngredientObj
+      ) {
         toast.error("Please fill all the fields to add new ingredient item!");
         return;
       }
@@ -246,17 +252,17 @@ export const RecipeMaster = () => {
       const newItem = {
         restaurantId: allList[i].restaurantId,
         productId: allList[i].productId,
-        itemId: itemIngredient[allList[i].id]
-          ? itemIngredient[allList[i].id]
+        itemId: itemIngredient[allList[i].itemId]
+          ? itemIngredient[allList[i].itemId]
           : allList[i].itemId,
-        itemQty: currentItemQty[allList[i].id]
-          ? currentItemQty[allList[i].id]
+        itemQty: currentItemQty[allList[i].itemId]
+          ? currentItemQty[allList[i].itemId]
           : allList[i].itemQty,
-        itemCost: currentItemCost[allList[i].id]
-          ? currentItemCost[allList[i].id]
+        itemCost: currentItemCost[allList[i].itemId]
+          ? currentItemCost[allList[i].itemId]
           : allList[i].itemCost,
-        itemUom: itemUOM[allList[i].id]
-          ? itemUOM[allList[i].id]
+        itemUom: itemUOM[allList[i].itemId]
+          ? itemUOM[allList[i].itemId]
           : allList[i].itemUom,
       };
 
@@ -272,7 +278,7 @@ export const RecipeMaster = () => {
       if (JSON.stringify(newItem) !== JSON.stringify(oldItem)) {
         const newObj = {
           ...newItem,
-          id: allList[i].id,
+          id: allList[i].itemId,
           itemStatus: "ACTIVE",
           createdBy: allList[i].createdBy,
           createdDate: allList[i].createdDate,
@@ -344,7 +350,7 @@ export const RecipeMaster = () => {
                 <Col xs={5} align="center">
                   <FormControl fullWidth>
                     <NativeSelect
-                      key={item.id}
+                      key={item.itemId}
                       defaultValue={item.itemId}
                       inputProps={{
                         name: "status",
@@ -353,7 +359,7 @@ export const RecipeMaster = () => {
                       onChange={(event) => {
                         let ing = {
                           ...itemIngredient,
-                          [item.id]: event.target.value,
+                          [item.itemId]: event.target.value,
                         };
                         setItemIngredient(ing);
                       }}
@@ -376,31 +382,32 @@ export const RecipeMaster = () => {
                 </Col>
                 <Col xs={2} align="center">
                   <CusTextField
-                    key={item.id}
+                    key={item.itemId}
                     defaultValue={item.itemQty}
-                    value={currentItemQty[item.id]}
+                    value={currentItemQty[item.itemId]}
                     onChange={(event) => {
                       const qty = {
                         ...currentItemQty,
-                        [item.id]: event.target.value,
+                        [item.itemId]: event.target.value,
                       };
                       setCurrentItemQty(qty);
                     }}
                     fullWidth
                     variant="standard"
+                    inputProps={{ style: { textAlign: "center" } }}
                   />
                 </Col>
                 <Col xs={2} align="center">
-                  <FormControl fullWidth>
+                  {/* <FormControl fullWidth>
                     <NativeSelect
-                      key={item.id}
+                      key={item.itemId}
                       defaultValue={item.itemUom}
                       inputProps={{
                         name: "status",
                         id: "uncontrolled-native",
                       }}
                       onChange={(event) => {
-                        let uom = { ...itemUOM, [item.id]: event.target.value };
+                        let uom = { ...itemUOM, [item.itemId]: event.target.value };
                         setItemUOM(uom);
                       }}
                       sx={{ fontSize: "0.75rem" }}
@@ -418,33 +425,35 @@ export const RecipeMaster = () => {
                         Select UOM
                       </option>
                     </NativeSelect>
-                  </FormControl>
+                  </FormControl> */}
+                  {item.itemUom}
                 </Col>
                 <Col xs={2} align="center">
                   <CusTextField
-                    key={item.id}
+                    key={item.itemId}
                     defaultValue={item.itemCost}
-                    value={currentItemCost[item.id]}
+                    value={currentItemCost[item.itemId]}
                     onChange={(event) => {
                       const ost = {
                         ...currentItemCost,
-                        [item.id]: event.target.value,
+                        [item.itemId]: event.target.value,
                       };
                       setCurrentItemCost(ost);
                     }}
                     fullWidth
                     variant="standard"
+                    inputProps={{ style: { textAlign: "center" } }}
                   />
                 </Col>
                 <Col xs={1} align="center">
                   <IconButton
-                    key={item.id}
+                    key={item.itemId}
                     sx={{
                       fontSize: "0.75rem",
                       color: "red",
                     }}
                     onClick={() => {
-                      deleteIngredient(item.id);
+                      deleteIngredient(item.itemId);
                     }}
                   >
                     <DeleteIcon
@@ -468,7 +477,13 @@ export const RecipeMaster = () => {
                       }}
                       sx={{ fontSize: "0.75rem" }}
                     >
-                      <option value={""} style={{ fontSize: "0.75rem" }}>
+                      <option
+                        value={""}
+                        style={{ fontSize: "0.75rem" }}
+                        onClick={() => {
+                          setNewItemIngredientObj({});
+                        }}
+                      >
                         Select Ingredient
                       </option>
                       {activeInventory &&
@@ -621,7 +636,7 @@ export const RecipeMaster = () => {
                         pagination.offset + pagination.numberPerPage
                       )
                       .map((item, index) => (
-                        <TableRow key={item.id}>
+                        <TableRow key={item.itemId}>
                           <CusTableCell align="center">Hangries</CusTableCell>
                           <CusTableCell align="center">
                             {item.productId}
@@ -636,9 +651,12 @@ export const RecipeMaster = () => {
                             {getIngredientsByProductId(
                               item.productId,
                               activeRecipes
-                            ).map((item) => (
-                              <span>{item.itemName}, </span>
-                            ))}
+                            ).length > 0
+                              ? getIngredientsByProductId(
+                                  item.productId,
+                                  activeRecipes
+                                ).map((item) => <span>{item.itemName}, </span>)
+                              : "No Data"}
                           </CusTableCell>
                           <CusTableCell align="center">
                             <Button

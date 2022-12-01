@@ -181,7 +181,7 @@ export const deleteSupplier = (id, updatedBy) => {
 
     try {
       const supplier = {
-        id: id,
+        itemId: id,
         supplierStatus: "INACTIVE",
         updatedBy: updatedBy,
       };
@@ -376,7 +376,7 @@ export const deleteInventoryItem = (id, updatedBy) => {
 
     try {
       const item = {
-        id: id,
+        itemId: id,
         itemStatus: "INACTIVE",
         updatedBy: updatedBy,
       };
@@ -500,7 +500,7 @@ export const deleteRecipeItem = (id, updatedBy) => {
 
     try {
       const item = {
-        id: id,
+        itemId: id,
         itemStatus: "INACTIVE",
         updatedBy: updatedBy,
       };
@@ -563,6 +563,35 @@ export const getInventoryPurchaseCategory = () => {
         type: inventoryConstants.GET_PURCHASE_ORDER_CATEGORY_FAILURE,
         payload: { error: "Error fetching purchase order config data!" },
       });
+    }
+  };
+};
+
+export const saveUpdatePurchaseOrder = (item) => {
+  return async (dispatch) => {
+    dispatch({ type: inventoryConstants.SAVE_UPDATE_PURCHASE_ORDER_REQUEST });
+
+    try {
+      const res = await axios.post("/savePurchaseOrder", item);
+
+      if (res.status === 200) {
+        dispatch({
+          type: inventoryConstants.SAVE_UPDATE_PURCHASE_ORDER_SUCCESS,
+          payload: res.data,
+        });
+        toast.success("PO Item: " + item.itemId + " Saved Successfully!");
+        return res.data;
+      } else {
+        dispatch({
+          type: inventoryConstants.SAVE_UPDATE_PURCHASE_ORDER_FAILURE,
+          payload: null,
+        });
+        toast.error("Error when saving! Please try again!");
+      }
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+      toast.error("Error when saving! Please try again!");
     }
   };
 };

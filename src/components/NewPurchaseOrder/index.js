@@ -28,6 +28,7 @@ import {
   getActiveSuppliers,
   getActiveInventory,
   getInventoryPurchaseCategory,
+  saveUpdatePurchaseOrder,
 } from "../../actions";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -153,6 +154,7 @@ const CusTableCell = styled(TableCell)`
 export const NewPurchaseOrder = () => {
   const stores = useSelector((state) => state.store.stores);
   const allSuppliers = useSelector((state) => state.inventory.allSuppliers);
+  const user = useSelector((state) => state.auth.user);
   const allSuppliersLoading = useSelector(
     (state) => state.inventory.allSuppliersLoading
   );
@@ -168,7 +170,8 @@ export const NewPurchaseOrder = () => {
   const purchaseOrderCategory = useSelector(
     (state) => state.inventory.purchaseOrderCategory
   );
-  const [addedList, setAddedList] = useState([]);
+  const [addedList, setAddedList] = useState({});
+  const [addedListArray, setAddedListArray] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
   const [selectedStore, setSelectedStore] = useState("");
   const [selectedSupplier, setSelectedSupplier] = useState("");
@@ -183,7 +186,14 @@ export const NewPurchaseOrder = () => {
   const [newItemDiscount, setNewItemDiscount] = useState("");
   const [newItemStock, setNewItemStock] = useState("");
   const [newItemCategory, setNewItemCategory] = useState("");
-
+  const [isSave, setIsSave] = useState({});
+  const [currentSelectedItem, setCurrentSelectedItem] = useState({});
+  const [currentItemQty, setCurrentItemQty] = useState({});
+  const [currentItemWastage, setCurrentItemWastage] = useState({});
+  const [currentItemPrice, setCurrentItemPrice] = useState({});
+  const [currentItemDiscount, setCurrentItemDiscount] = useState({});
+  const [currentItemTotalStock, setCurrentItemTotalStock] = useState({});
+  const [currentItemCategory, setCurrentItemCategory] = useState({});
   const handleChangeBillDate = (newValue) => {
     setBillDate(newValue);
   };
@@ -212,6 +222,16 @@ export const NewPurchaseOrder = () => {
     setSelectedSupplierObj(supplier);
   };
 
+  const onEditClickHandle = (id) => {
+    let edits = { ...isSave, [id]: true };
+    setIsSave(edits);
+  };
+
+  const onSaveClickHandle = (id) => {
+    let edits = { ...isSave, [id]: false };
+    setIsSave(edits);
+  };
+
   const addItemToList = () => {
     const newObj = {
       itemId: selectedItem.itemId,
@@ -230,11 +250,130 @@ export const NewPurchaseOrder = () => {
       ).toFixed(2),
       itemCategory: newItemCategory,
     };
-
-    addedList.push(newObj);
-    setAddedList(addedList);
+    let a = { ...addedList, [selectedItem.itemId]: newObj };
+    setAddedList(a);
+    setAddedListArray(Object.values(a));
     setIsAddNew(false);
     clearData();
+  };
+
+  const updateItemHandle = (item) => {
+    const newObj = {
+      itemId: currentSelectedItem[item.itemId]
+        ? currentSelectedItem[item.itemId].itemId
+        : item.itemId,
+      itemName: currentSelectedItem[item.itemId]
+        ? currentSelectedItem[item.itemId].itemName
+        : item.itemName,
+      itemUOM: currentSelectedItem[item.itemId]
+        ? currentSelectedItem[item.itemId].itemUOM
+        : item.itemUOM,
+      itemQuantity: currentItemQty[item.itemId]
+        ? currentItemQty[item.itemId]
+        : item.itemQuantity,
+      itemWastage: currentItemWastage[item.itemId]
+        ? currentItemWastage[item.itemId]
+        : item.itemWastage,
+      itemPrice: currentItemPrice[item.itemId]
+        ? currentItemPrice[item.itemId]
+        : item.itemPrice,
+      itemDiscount: currentItemDiscount[item.itemId]
+        ? currentItemDiscount[item.itemId]
+        : item.itemDiscount,
+      itemFinalPrice: getFinalPrice(item),
+      itemTotalStock: currentItemTotalStock[item.itemId]
+        ? currentItemTotalStock[item.itemId]
+        : item.itemTotalStock,
+      itemGST: currentSelectedItem[item.itemId]
+        ? currentSelectedItem[item.itemId].itemGstPercentage
+        : item.itemGST,
+      itemGSTAmount: (
+        getFinalPrice(item) *
+        (Number(
+          currentSelectedItem[item.itemId]
+            ? currentSelectedItem[item.itemId].itemGstPercentage
+            : item.itemGST
+        ) /
+          100)
+      ).toFixed(2),
+      itemCategory: currentItemCategory[item.itemId]
+        ? currentItemCategory[item.itemId]
+        : item.itemCategory,
+    };
+
+    let a = { ...addedList, [newObj.itemId]: newObj };
+    setAddedList(a);
+    setAddedListArray(Object.values(a));
+    onSaveClickHandle(item.itemId);
+  };
+
+  const deleteItemFromList = (id) => {
+    let a = addedList;
+    delete a[id];
+    setAddedList(a);
+    setAddedListArray(Object.values(a));
+  };
+
+  const saveUpdatePurchaseOrderToDB = () => {
+    if (!addedList || Object.keys(addedList).length < 1) {
+      toast.error("Add at least one item to save!");
+      return;
+    }
+
+    if (!billNo) {
+      toast.error("Bill number is mandatory!");
+      return;
+    }
+
+    if (!billDate) {
+      toast.error("Bill date is mandatory!");
+      return;
+    }
+
+    if (!selectedStoreObj) {
+      toast.error("Receiving store  is mandatory!");
+      return;
+    }
+
+    if (!selectedSupplierObj) {
+      toast.error("Supplier is mandatory!");
+      return;
+    }
+
+    for (let i = 0; i < Object.keys(addedList).length; i++) {
+      let newObj = {
+        restaurantId: selectedStoreObj.restaurantId,
+        storeId: selectedStoreObj.storeId,
+        supplierId: selectedSupplierObj.supplierId,
+        purchaseDate: billDate,
+        billNumber: billNo,
+        itemId: Object.values(addedList)[i].itemId,
+        purchaseQty: Object.values(addedList)[i].itemQuantity,
+        wastageQty: Object.values(addedList)[i].itemWastage,
+        netQty:
+          Number(Object.values(addedList)[i].itemQuantity) -
+          Number(Object.values(addedList)[i].itemWastage),
+        quotedPurchasePrice: Object.values(addedList)[i].itemPrice,
+        discountAmount: Object.values(addedList)[i].itemDiscount,
+        netPurchasePrice: Object.values(addedList)[i].itemFinalPrice,
+        gstAmount: Object.values(addedList)[i].itemGSTAmount,
+        purchaseCategory: Object.values(addedList)[i].itemCategory,
+        purchaseOrderStatus: "CLOSED",
+        createdBy: user.loginId,
+        createdDate: new Date(),
+        updatedBy: user.loginId,
+        updatedDate: new Date(),
+      };
+
+      dispatch(saveUpdatePurchaseOrder(newObj)).then((res) => {
+        if (res) {
+          if (i === Object.keys(addedList).length - 1) {
+            clearDataAll();
+            toast.success("All items saved to database!");
+          }
+        }
+      });
+    }
   };
 
   const clearData = () => {
@@ -245,6 +384,59 @@ export const NewPurchaseOrder = () => {
     setNewItemDiscount("");
     setNewItemStock("");
     setNewItemCategory("");
+  };
+
+  const clearDataAll = () => {
+    setAddedList({});
+    setAddedListArray([]);
+    setSelectedItem(null);
+    setSelectedStore("");
+    setSelectedSupplier("");
+    setSelectedStoreObj(null);
+    setSelectedSupplierObj(null);
+    setBillNo("");
+    setBillDate(new Date());
+    setIsAddNew(false);
+    setNewItemQty("");
+    setNewItemWastage("");
+    setNewItemPrice("");
+    setNewItemDiscount("");
+    setNewItemStock("");
+    setNewItemCategory("");
+    setIsSave({});
+    setCurrentSelectedItem({});
+    setCurrentItemQty({});
+    setCurrentItemWastage({});
+    setCurrentItemPrice({});
+    setCurrentItemDiscount({});
+    setCurrentItemTotalStock({});
+    setCurrentItemCategory({});
+  };
+
+  const cancelPurchaseOrder = () => {
+    clearDataAll();
+    toast.success("All data cleared!");
+  };
+
+  const getFinalPrice = (item) => {
+    if (!currentItemPrice[item.itemId] && !currentItemDiscount[item.itemId]) {
+      return Number(item.itemFinalPrice);
+    }
+
+    if (currentItemPrice[item.itemId] && currentItemDiscount[item.itemId]) {
+      return (
+        Number(currentItemPrice[item.itemId]) -
+        Number(currentItemDiscount[item.itemId])
+      );
+    }
+
+    if (currentItemPrice[item.itemId] && !currentItemDiscount[item.itemId]) {
+      return Number(currentItemPrice[item.itemId]) - Number(item.itemDiscount);
+    }
+
+    if (!currentItemPrice[item.itemId] && currentItemDiscount[item.itemId]) {
+      return Number(item.itemPrice) - Number(item.itemDiscount);
+    }
   };
 
   return (
@@ -303,7 +495,7 @@ export const NewPurchaseOrder = () => {
             </div>
             <FormControl fullWidth>
               <InputLabel
-                sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
+                sx={{ fontSize: "0.75rem", lineHeight: "1rem", top: "-9px" }}
                 id="demo-simple-select-label"
               >
                 Please select the supplier
@@ -321,7 +513,7 @@ export const NewPurchaseOrder = () => {
                     onClick={() => {
                       handleSelectedSupplier(supplier);
                     }}
-                    value={supplier.id}
+                    value={supplier.supplierId}
                   >
                     <span>
                       {supplier.supplierName}, {supplier.supplierAddress}
@@ -339,7 +531,7 @@ export const NewPurchaseOrder = () => {
             </div>
             <FormControl fullWidth>
               <InputLabel
-                sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
+                sx={{ fontSize: "0.75rem", lineHeight: "1rem", top: "-9px" }}
                 id="demo-simple-select-label"
               >
                 Please select the store
@@ -413,158 +605,201 @@ export const NewPurchaseOrder = () => {
                 </TableRow>
               ) : (
                 <>
-                  {addedList &&
-                    addedList.map((item) => (
-                      <TableRow>
+                  {addedListArray &&
+                    addedListArray.map((item) => (
+                      <TableRow key={item.itemId}>
                         <CusTableCell align="center">
                           <Typography sx={{ fontSize: "0.75rem" }}>
-                            {addedList.length}
+                            {Object.keys(addedList).length}
                           </Typography>
                         </CusTableCell>
                         <CusTableCell align="center">
                           <Typography sx={{ fontSize: "0.75rem" }}>
-                            {item.itemId}
+                            {currentSelectedItem[item.itemId]
+                              ? currentSelectedItem[item.itemId].itemId
+                              : item.itemId}
                           </Typography>
                         </CusTableCell>
                         <CusTableCell align="center">
-                          {/* <CusAutocomplete
-      onChange={(event, newValue) => {
-        setSelectedItem(newValue);
-      }}
-      sx={{ fontSize: "0.75rem", marginTop: "15px" }}
-      options={activeInventory}
-      autoHighlight
-      getOptionLabel={(option) => option.itemName}
-      renderOption={(props, option) => (
-        <Box
-          component="li"
-          sx={{
-            "& > img": { mr: 2, flexShrink: 0 },
-            fontSize: "0.75rem",
-          }}
-          {...props}
-        >
-          {option.itemName}
-        </Box>
-      )}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          sx={{ fontSize: "0.75rem" }}
-          variant="standard"
-          inputProps={{
-            ...params.inputProps,
-            autoComplete: "new-password", // disable autocomplete and autofill
-          }}
-        />
-      )}
-    /> */}
-                          {item.itemName}
+                          <CusAutocomplete
+                            disabled={!isSave[item.itemId]}
+                            onChange={(event, newValue) => {
+                              const items = {
+                                ...currentSelectedItem,
+                                [item.itemId]: newValue,
+                              };
+                              setCurrentSelectedItem(items);
+                            }}
+                            defaultValue={item}
+                            sx={{ fontSize: "0.75rem", marginTop: "15px" }}
+                            options={activeInventory}
+                            autoHighlight
+                            getOptionLabel={(option) => option.itemName}
+                            renderOption={(props, option) => (
+                              <Box
+                                component="li"
+                                sx={{
+                                  "& > img": { mr: 2, flexShrink: 0 },
+                                  fontSize: "0.75rem",
+                                }}
+                                {...props}
+                              >
+                                {option.itemName}
+                              </Box>
+                            )}
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                sx={{ fontSize: "0.75rem" }}
+                                variant="standard"
+                                inputProps={{
+                                  ...params.inputProps,
+                                  autoComplete: "new-password", // disable autocomplete and autofill
+                                }}
+                              />
+                            )}
+                          />
                         </CusTableCell>
                         <CusTableCell align="center">
                           <Typography sx={{ fontSize: "0.75rem" }}>
-                            {item.itemUOM}
+                            {currentSelectedItem[item.itemId]
+                              ? currentSelectedItem[item.itemId].itemUOM
+                              : item.itemUOM}
                           </Typography>
                         </CusTableCell>
                         <CusTableCell align="center">
                           <CusTextField
                             defaultValue={item.itemQuantity}
-                            disabled={true}
-                            /* value={newItemQty}
+                            value={currentItemQty[item.itemId]}
                             onChange={(event) => {
-                              setNewItemQty(event.target.value);
-                            }} */
+                              const qty = {
+                                ...currentItemQty,
+                                [item.itemId]: event.target.value,
+                              };
+                              setCurrentItemQty(qty);
+                            }}
                             fullWidth
                             variant="standard"
+                            disabled={!isSave[item.itemId]}
                           />
                         </CusTableCell>
 
                         <CusTableCell align="center">
                           <CusTextField
                             defaultValue={item.itemWastage}
-                            disabled={true}
-                            /* value={newItemWastage}
+                            value={currentItemWastage[item.itemId]}
                             onChange={(event) => {
-                              setNewItemWastage(event.target.value);
-                            }} */
+                              const wastage = {
+                                ...currentItemWastage,
+                                [item.itemId]: event.target.value,
+                              };
+                              setCurrentItemWastage(wastage);
+                            }}
                             fullWidth
                             variant="standard"
+                            disabled={!isSave[item.itemId]}
                           />
                         </CusTableCell>
 
                         <CusTableCell align="center">
                           <CusTextField
                             defaultValue={item.itemPrice}
-                            disabled={true}
-                            /* value={newItemPrice}
+                            value={currentItemPrice[item.itemId]}
                             onChange={(event) => {
-                              setNewItemPrice(event.target.value);
-                            }} */
+                              const price = {
+                                ...currentItemPrice,
+                                [item.itemId]: event.target.value,
+                              };
+                              setCurrentItemPrice(price);
+                            }}
                             fullWidth
                             variant="standard"
+                            disabled={!isSave[item.itemId]}
                           />
                         </CusTableCell>
 
                         <CusTableCell align="center">
                           <CusTextField
                             defaultValue={item.itemDiscount}
-                            disabled={true}
-                            /* value={newItemDiscount}
+                            value={currentItemDiscount[item.itemId]}
                             onChange={(event) => {
-                              setNewItemDiscount(event.target.value);
-                            }} */
+                              const discount = {
+                                ...currentItemDiscount,
+                                [item.itemId]: event.target.value,
+                              };
+                              setCurrentItemDiscount(discount);
+                            }}
                             fullWidth
                             variant="standard"
+                            disabled={!isSave[item.itemId]}
                           />
                         </CusTableCell>
 
                         <CusTableCell align="center">
                           <Typography sx={{ fontSize: "0.75rem" }}>
-                            {item.itemFinalPrice}
+                            {getFinalPrice(item)}
                           </Typography>
                         </CusTableCell>
 
                         <CusTableCell align="center">
                           <CusTextField
                             defaultValue={item.itemTotalStock}
-                            disabled={true}
-                            /* value={newItemStock}
+                            value={currentItemTotalStock[item.itemId]}
                             onChange={(event) => {
-                              setNewItemStock(event.target.value);
-                            }} */
+                              const stock = {
+                                ...currentItemTotalStock,
+                                [item.itemId]: event.target.value,
+                              };
+                              setCurrentItemTotalStock(stock);
+                            }}
                             fullWidth
                             variant="standard"
+                            disabled={!isSave[item.itemId]}
                           />
                         </CusTableCell>
 
                         <CusTableCell align="center">
                           <Typography sx={{ fontSize: "0.75rem" }}>
-                            {item.itemGST}
+                            {currentSelectedItem[item.itemId]
+                              ? currentSelectedItem[item.itemId]
+                                  .itemGstPercentage
+                              : item.itemGST}
                           </Typography>
                         </CusTableCell>
 
                         <CusTableCell align="center">
                           <Typography sx={{ fontSize: "0.75rem" }}>
-                            {item.itemGSTAmount}
+                            {(
+                              getFinalPrice(item) *
+                              (Number(
+                                currentSelectedItem[item.itemId]
+                                  ? currentSelectedItem[item.itemId]
+                                      .itemGstPercentage
+                                  : item.itemGST
+                              ) /
+                                100)
+                            ).toFixed(2)}
                           </Typography>
                         </CusTableCell>
 
                         <FormControl fullWidth sx={{ marginTop: "5px" }}>
                           <NativeSelect
                             defaultValue={item.itemCategory}
-                            disabled={true}
+                            disabled={!isSave[item.itemId]}
                             inputProps={{
                               name: "status",
                               id: "uncontrolled-native",
                             }}
+                            value={currentItemCategory[item.itemId]}
                             onChange={(event) => {
-                              setNewItemCategory(event.target.value);
+                              const cat = {
+                                ...currentItemCategory,
+                                [item.itemId]: event.target.value,
+                              };
+                              setCurrentItemCategory(cat);
                             }}
                             sx={{ fontSize: "0.75rem" }}
                           >
-                            <option value={""} style={{ fontSize: "0.75rem" }}>
-                              Select Category
-                            </option>
                             {purchaseOrderCategory &&
                               purchaseOrderCategory.map((item) => (
                                 <option
@@ -574,30 +809,50 @@ export const NewPurchaseOrder = () => {
                                   {item.configCriteriaDesc}
                                 </option>
                               ))}
+                            <option value={""} style={{ fontSize: "0.75rem" }}>
+                              Select Category
+                            </option>
                           </NativeSelect>
                         </FormControl>
 
                         <CusTableCell align="center">
-                          <IconButton
-                            sx={{
-                              fontSize: "0.75rem",
-                              color: "#92D050",
-                            }}
-                            onClick={() => {
-                              /* addItemToList(); */
-                            }}
-                          >
-                            <EditIcon
-                              sx={{ height: "0.95rem", width: "0.95rem" }}
-                            ></EditIcon>
-                          </IconButton>
+                          {isSave[item.itemId] ? (
+                            <IconButton
+                              sx={{
+                                fontSize: "0.75rem",
+                                color: "#92D050",
+                              }}
+                              onClick={() => {
+                                updateItemHandle(item);
+                              }}
+                            >
+                              <SaveIcon
+                                sx={{ height: "0.95rem", width: "0.95rem" }}
+                              ></SaveIcon>
+                            </IconButton>
+                          ) : (
+                            <IconButton
+                              sx={{
+                                fontSize: "0.75rem",
+                                color: "#FFC000",
+                              }}
+                              onClick={() => {
+                                onEditClickHandle(item.itemId);
+                              }}
+                            >
+                              <EditIcon
+                                sx={{ height: "0.95rem", width: "0.95rem" }}
+                              ></EditIcon>
+                            </IconButton>
+                          )}
+
                           <IconButton
                             sx={{
                               fontSize: "0.75rem",
                               color: "red",
                             }}
                             onClick={() => {
-                              /* setIsAddNew(false); */
+                              deleteItemFromList(item.itemId);
                             }}
                           >
                             <DeleteIcon
@@ -612,7 +867,7 @@ export const NewPurchaseOrder = () => {
                     <TableRow>
                       <CusTableCell align="center">
                         <Typography sx={{ fontSize: "0.75rem" }}>
-                          {addedList.length + 1}
+                          {Object.keys(addedList).length + 1}
                         </Typography>
                       </CusTableCell>
                       <CusTableCell align="center">
@@ -810,6 +1065,26 @@ export const NewPurchaseOrder = () => {
         >
           ADD ANOTHER
         </SaveButton>
+        <div className="text-center">
+          <Row>
+            <Col sm={4}>
+              <SaveButton
+                className="mt-4"
+                onClick={saveUpdatePurchaseOrderToDB}
+              >
+                SAVE
+              </SaveButton>
+            </Col>
+            <Col sm={4}>
+              <SaveButton className="mt-4">PRINT</SaveButton>
+            </Col>
+            <Col sm={4}>
+              <SaveButton className="mt-4" onClick={cancelPurchaseOrder}>
+                CANCEL
+              </SaveButton>
+            </Col>
+          </Row>
+        </div>
       </div>
     </div>
   );
