@@ -181,7 +181,7 @@ export const deleteSupplier = (id, updatedBy) => {
 
     try {
       const supplier = {
-        itemId: id,
+        supplierId: id,
         supplierStatus: "INACTIVE",
         updatedBy: updatedBy,
       };
