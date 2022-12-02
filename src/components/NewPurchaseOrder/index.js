@@ -185,7 +185,7 @@ export const NewPurchaseOrder = () => {
   const [newItemPrice, setNewItemPrice] = useState("");
   const [newItemDiscount, setNewItemDiscount] = useState("");
   const [newItemStock, setNewItemStock] = useState("");
-  const [newItemCategory, setNewItemCategory] = useState("");
+  const [newItemCategory, setNewItemCategory] = useState("STANDARD");
   const [isSave, setIsSave] = useState({});
   const [currentSelectedItem, setCurrentSelectedItem] = useState({});
   const [currentItemQty, setCurrentItemQty] = useState({});
@@ -233,6 +233,15 @@ export const NewPurchaseOrder = () => {
   };
 
   const addItemToList = () => {
+    if (!selectedItem) {
+      toast.error("Please select an ingredient!");
+      return;
+    }
+
+    if (!newItemCategory) {
+      toast.error("Please select a category!");
+      return;
+    }
     const newObj = {
       itemId: selectedItem.itemId,
       itemName: selectedItem.itemName,
@@ -383,7 +392,7 @@ export const NewPurchaseOrder = () => {
     setNewItemPrice("");
     setNewItemDiscount("");
     setNewItemStock("");
-    setNewItemCategory("");
+    setNewItemCategory("STANDARD");
   };
 
   const clearDataAll = () => {
@@ -402,7 +411,7 @@ export const NewPurchaseOrder = () => {
     setNewItemPrice("");
     setNewItemDiscount("");
     setNewItemStock("");
-    setNewItemCategory("");
+    setNewItemCategory("STANDARD");
     setIsSave({});
     setCurrentSelectedItem({});
     setCurrentItemQty({});
@@ -510,22 +519,18 @@ export const NewPurchaseOrder = () => {
                 onChange={handleChangeSupplier}
                 notched={true}
               >
-                {allSuppliers
-                  .filter(function (el) {
-                    return el.supplierCategory === "INTERNAL";
-                  })
-                  .map((supplier) => (
-                    <MenuItem
-                      onClick={() => {
-                        handleSelectedSupplier(supplier);
-                      }}
-                      value={supplier.supplierId}
-                    >
-                      <span>
-                        {supplier.supplierName}, {supplier.supplierAddress}
-                      </span>
-                    </MenuItem>
-                  ))}
+                {allSuppliers.map((supplier) => (
+                  <MenuItem
+                    onClick={() => {
+                      handleSelectedSupplier(supplier);
+                    }}
+                    value={supplier.supplierId}
+                  >
+                    <span>
+                      {supplier.supplierName}, {supplier.supplierAddress}
+                    </span>
+                  </MenuItem>
+                ))}
               </CusSelect>
             </FormControl>
           </Col>
@@ -639,7 +644,11 @@ export const NewPurchaseOrder = () => {
                               setCurrentSelectedItem(items);
                             }}
                             defaultValue={item}
-                            sx={{ fontSize: "0.75rem", marginTop: "15px" }}
+                            sx={{
+                              fontSize: "0.75rem",
+                              marginTop: "15px",
+                              ".MuiFormControl-root": { marginTop: "4px" },
+                            }}
                             options={activeInventory}
                             autoHighlight
                             getOptionLabel={(option) => option.itemName}
@@ -689,6 +698,9 @@ export const NewPurchaseOrder = () => {
                             fullWidth
                             variant="standard"
                             disabled={!isSave[item.itemId]}
+                            InputProps={{
+                              disableUnderline: true, // <== added this
+                            }}
                           />
                         </CusTableCell>
 
@@ -706,6 +718,9 @@ export const NewPurchaseOrder = () => {
                             fullWidth
                             variant="standard"
                             disabled={!isSave[item.itemId]}
+                            InputProps={{
+                              disableUnderline: true, // <== added this
+                            }}
                           />
                         </CusTableCell>
 
@@ -723,6 +738,9 @@ export const NewPurchaseOrder = () => {
                             fullWidth
                             variant="standard"
                             disabled={!isSave[item.itemId]}
+                            InputProps={{
+                              disableUnderline: true, // <== added this
+                            }}
                           />
                         </CusTableCell>
 
@@ -740,6 +758,9 @@ export const NewPurchaseOrder = () => {
                             fullWidth
                             variant="standard"
                             disabled={!isSave[item.itemId]}
+                            InputProps={{
+                              disableUnderline: true, // <== added this
+                            }}
                           />
                         </CusTableCell>
 
@@ -763,6 +784,9 @@ export const NewPurchaseOrder = () => {
                             fullWidth
                             variant="standard"
                             disabled={!isSave[item.itemId]}
+                            InputProps={{
+                              disableUnderline: true, // <== added this
+                            }}
                           />
                         </CusTableCell>
 
@@ -790,7 +814,7 @@ export const NewPurchaseOrder = () => {
                           </Typography>
                         </CusTableCell>
 
-                        <FormControl fullWidth sx={{ marginTop: "5px" }}>
+                        <FormControl fullWidth sx={{ marginTop: "7px" }}>
                           <NativeSelect
                             defaultValue={item.itemCategory}
                             disabled={!isSave[item.itemId]}
@@ -888,7 +912,11 @@ export const NewPurchaseOrder = () => {
                           onChange={(event, newValue) => {
                             setSelectedItem(newValue);
                           }}
-                          sx={{ fontSize: "0.75rem", marginTop: "15px" }}
+                          sx={{
+                            fontSize: "0.75rem",
+                            marginTop: "15px",
+                            ".MuiFormControl-root": { marginTop: "5px" },
+                          }}
                           options={activeInventory}
                           autoHighlight
                           getOptionLabel={(option) => option.itemName}
@@ -931,6 +959,9 @@ export const NewPurchaseOrder = () => {
                           }}
                           fullWidth
                           variant="standard"
+                          InputProps={{
+                            disableUnderline: true, // <== added this
+                          }}
                         />
                       </CusTableCell>
 
@@ -942,6 +973,9 @@ export const NewPurchaseOrder = () => {
                           }}
                           fullWidth
                           variant="standard"
+                          InputProps={{
+                            disableUnderline: true, // <== added this
+                          }}
                         />
                       </CusTableCell>
 
@@ -953,6 +987,9 @@ export const NewPurchaseOrder = () => {
                           }}
                           fullWidth
                           variant="standard"
+                          InputProps={{
+                            disableUnderline: true, // <== added this
+                          }}
                         />
                       </CusTableCell>
 
@@ -964,6 +1001,9 @@ export const NewPurchaseOrder = () => {
                           }}
                           fullWidth
                           variant="standard"
+                          InputProps={{
+                            disableUnderline: true, // <== added this
+                          }}
                         />
                       </CusTableCell>
 
@@ -981,6 +1021,9 @@ export const NewPurchaseOrder = () => {
                           }}
                           fullWidth
                           variant="standard"
+                          InputProps={{
+                            disableUnderline: true, // <== added this
+                          }}
                         />
                       </CusTableCell>
 
@@ -1004,7 +1047,7 @@ export const NewPurchaseOrder = () => {
                         </Typography>
                       </CusTableCell>
 
-                      <FormControl fullWidth sx={{ marginTop: "5px" }}>
+                      <FormControl fullWidth sx={{ marginTop: "8px" }}>
                         <NativeSelect
                           inputProps={{
                             name: "status",
@@ -1015,9 +1058,6 @@ export const NewPurchaseOrder = () => {
                           }}
                           sx={{ fontSize: "0.75rem" }}
                         >
-                          <option value={""} style={{ fontSize: "0.75rem" }}>
-                            Select Category
-                          </option>
                           {purchaseOrderCategory &&
                             purchaseOrderCategory.map((item) => (
                               <option
@@ -1027,6 +1067,9 @@ export const NewPurchaseOrder = () => {
                                 {item.configCriteriaDesc}
                               </option>
                             ))}
+                          {/* <option value={""} style={{ fontSize: "0.75rem" }}>
+                            Select Category
+                          </option> */}
                         </NativeSelect>
                       </FormControl>
 

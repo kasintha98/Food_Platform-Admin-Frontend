@@ -555,18 +555,21 @@ export const SuppliersMaster = () => {
                             {index + 1 + pagination.offset}
                           </CusTableCell>
                           <CusTableCell align="center">
-                            <FormControl fullWidth>
+                            <FormControl fullWidth sx={{ marginTop: "5px" }}>
                               <NativeSelect
                                 key={item.supplierId}
                                 defaultValue={item.supplierCategory}
                                 inputProps={{
                                   name: "status",
                                   id: "uncontrolled-native",
+                                  disableUnderline: true,
                                 }}
                                 onChange={(event) => {
                                   setSupplierCategory(event.target.value);
                                 }}
-                                sx={{ fontSize: "0.75rem" }}
+                                sx={{
+                                  fontSize: "0.75rem",
+                                }}
                                 disabled={!isSave[item.supplierId]}
                               >
                                 <option
@@ -599,6 +602,9 @@ export const SuppliersMaster = () => {
                               fullWidth
                               variant="standard"
                               disabled={!isSave[item.supplierId]}
+                              InputProps={{
+                                disableUnderline: true, // <== added this
+                              }}
                             />
                           </CusTableCell>
                           <CusTableCell align="center">
@@ -616,6 +622,9 @@ export const SuppliersMaster = () => {
                               fullWidth
                               variant="standard"
                               disabled={!isSave[item.supplierId]}
+                              InputProps={{
+                                disableUnderline: true, // <== added this
+                              }}
                             />
                           </CusTableCell>
                           <CusTableCell align="center">
@@ -633,6 +642,9 @@ export const SuppliersMaster = () => {
                               fullWidth
                               variant="standard"
                               disabled={!isSave[item.supplierId]}
+                              InputProps={{
+                                disableUnderline: true, // <== added this
+                              }}
                             />
                           </CusTableCell>
                           <CusTableCell align="center">
@@ -650,6 +662,9 @@ export const SuppliersMaster = () => {
                               fullWidth
                               variant="standard"
                               disabled={!isSave[item.supplierId]}
+                              InputProps={{
+                                disableUnderline: true, // <== added this
+                              }}
                             />
                           </CusTableCell>
 
@@ -668,6 +683,9 @@ export const SuppliersMaster = () => {
                               fullWidth
                               variant="standard"
                               disabled={!isSave[item.supplierId]}
+                              InputProps={{
+                                disableUnderline: true, // <== added this
+                              }}
                             />
                           </CusTableCell>
 
@@ -686,6 +704,9 @@ export const SuppliersMaster = () => {
                               fullWidth
                               variant="standard"
                               disabled={!isSave[item.supplierId]}
+                              InputProps={{
+                                disableUnderline: true, // <== added this
+                              }}
                             />
                           </CusTableCell>
 
@@ -704,6 +725,9 @@ export const SuppliersMaster = () => {
                               fullWidth
                               variant="standard"
                               disabled={!isSave[item.supplierId]}
+                              InputProps={{
+                                disableUnderline: true, // <== added this
+                              }}
                             />
                           </CusTableCell>
 
@@ -740,6 +764,9 @@ export const SuppliersMaster = () => {
                               fullWidth
                               variant="standard"
                               disabled={!isSave[item.supplierId]}
+                              InputProps={{
+                                disableUnderline: true, // <== added this
+                              }}
                             />
                           </CusTableCell>
 
@@ -854,7 +881,7 @@ export const SuppliersMaster = () => {
                           {allSuppliers ? allSuppliers.length + 1 : "#"}
                         </CusTableCell>
                         <CusTableCell align="center">
-                          <FormControl fullWidth>
+                          <FormControl fullWidth sx={{ marginTop: "5px" }}>
                             <NativeSelect
                               inputProps={{
                                 name: "status",
@@ -888,6 +915,9 @@ export const SuppliersMaster = () => {
                             }}
                             fullWidth
                             variant="standard"
+                            InputProps={{
+                              disableUnderline: true, // <== added this
+                            }}
                           />
                         </CusTableCell>
                         <CusTableCell align="center">
@@ -898,6 +928,9 @@ export const SuppliersMaster = () => {
                             }}
                             fullWidth
                             variant="standard"
+                            InputProps={{
+                              disableUnderline: true, // <== added this
+                            }}
                           />
                         </CusTableCell>
                         <CusTableCell align="center">
@@ -908,6 +941,9 @@ export const SuppliersMaster = () => {
                             }}
                             fullWidth
                             variant="standard"
+                            InputProps={{
+                              disableUnderline: true, // <== added this
+                            }}
                           />
                         </CusTableCell>
                         <CusTableCell align="center">
@@ -918,6 +954,9 @@ export const SuppliersMaster = () => {
                             }}
                             fullWidth
                             variant="standard"
+                            InputProps={{
+                              disableUnderline: true, // <== added this
+                            }}
                           />
                         </CusTableCell>
 
@@ -929,6 +968,9 @@ export const SuppliersMaster = () => {
                             }}
                             fullWidth
                             variant="standard"
+                            InputProps={{
+                              disableUnderline: true, // <== added this
+                            }}
                           />
                         </CusTableCell>
 
@@ -940,6 +982,9 @@ export const SuppliersMaster = () => {
                             }}
                             fullWidth
                             variant="standard"
+                            InputProps={{
+                              disableUnderline: true, // <== added this
+                            }}
                           />
                         </CusTableCell>
 
@@ -951,6 +996,9 @@ export const SuppliersMaster = () => {
                             }}
                             fullWidth
                             variant="standard"
+                            InputProps={{
+                              disableUnderline: true, // <== added this
+                            }}
                           />
                         </CusTableCell>
 
@@ -973,6 +1021,9 @@ export const SuppliersMaster = () => {
                             }}
                             fullWidth
                             variant="standard"
+                            InputProps={{
+                              disableUnderline: true, // <== added this
+                            }}
                           />
                         </CusTableCell>
 

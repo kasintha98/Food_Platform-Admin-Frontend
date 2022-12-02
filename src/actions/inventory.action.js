@@ -579,7 +579,13 @@ export const saveUpdatePurchaseOrder = (item) => {
           type: inventoryConstants.SAVE_UPDATE_PURCHASE_ORDER_SUCCESS,
           payload: res.data,
         });
-        toast.success("PO Item: " + item.itemId + " Saved Successfully!");
+        toast.success(
+          "PO NO: " +
+            item.itemId +
+            " with Bill NO: " +
+            item.billNumber +
+            " Saved Successfully!"
+        );
         return res.data;
       } else {
         dispatch({

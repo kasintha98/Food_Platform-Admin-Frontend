@@ -191,16 +191,16 @@ export const InventoryItemMaster = () => {
   const updateItemHandle = (oldItem) => {
     const newItem = {
       ...oldItem,
-      itemId: currentItemNo[oldItem.id]
-        ? currentItemNo[oldItem.id]
+      itemId: currentItemNo[oldItem.itemId]
+        ? currentItemNo[oldItem.itemId]
         : oldItem.itemId,
-      itemName: currentItemName[oldItem.id]
-        ? currentItemName[oldItem.id]
+      itemName: currentItemName[oldItem.itemId]
+        ? currentItemName[oldItem.itemId]
         : oldItem.itemName,
       itemCategory: itemCategory ? itemCategory : oldItem.itemCategory,
       itemUOM: itemUOM ? itemUOM : oldItem.itemUOM,
-      itemGstPercentage: currentItemGst[oldItem.id]
-        ? currentItemGst[oldItem.id]
+      itemGstPercentage: currentItemGst[oldItem.itemId]
+        ? currentItemGst[oldItem.itemId]
         : oldItem.itemGstPercentage,
       itemTrackingFlag: itemTrackingFlag
         ? itemTrackingFlag
@@ -212,7 +212,7 @@ export const InventoryItemMaster = () => {
 
     dispatch(saveUpdateInventoryItem(newItem)).then((res) => {
       if (res) {
-        onSaveClickHandle(oldItem.id);
+        onSaveClickHandle(oldItem.itemId);
         clearStates();
       }
     });
@@ -273,7 +273,7 @@ export const InventoryItemMaster = () => {
 
   return (
     <div>
-      <TableContainer component={Paper} sx={{ maxHeight: 430 }}>
+      <TableContainer component={Paper} sx={{ maxHeight: 480 }}>
         <Table sx={{ minWidth: 800 }} aria-label="simple table">
           <TableHead>
             <TableRow>
@@ -314,48 +314,52 @@ export const InventoryItemMaster = () => {
                         pagination.offset + pagination.numberPerPage
                       )
                       .map((item, index) => (
-                        <TableRow key={item.id}>
+                        <TableRow key={item.itemId}>
                           <CusTableCell align="center">
                             {index + 1 + pagination.offset}
                           </CusTableCell>
                           <CusTableCell align="center">
                             <CusTextField
-                              key={item.id}
                               defaultValue={item.itemId}
-                              value={currentItemNo[item.id]}
+                              value={currentItemNo[item.itemId]}
                               onChange={(event) => {
                                 const nos = {
                                   ...currentItemNo,
-                                  [item.id]: event.target.value,
+                                  [item.itemId]: event.target.value,
                                 };
                                 setCurrentItemNo(nos);
                               }}
                               fullWidth
                               variant="standard"
-                              disabled={!isSave[item.id]}
+                              disabled={!isSave[item.itemId]}
+                              InputProps={{
+                                disableUnderline: true, // <== added this
+                              }}
                             />
                           </CusTableCell>
                           <CusTableCell align="center">
                             <CusTextField
-                              key={item.id}
                               defaultValue={item.itemName}
-                              value={currentItemName[item.id]}
+                              value={currentItemName[item.itemId]}
                               onChange={(event) => {
                                 const names = {
                                   ...currentItemName,
-                                  [item.id]: event.target.value,
+                                  [item.itemId]: event.target.value,
                                 };
                                 setCurrentItemName(names);
                               }}
                               fullWidth
                               variant="standard"
-                              disabled={!isSave[item.id]}
+                              disabled={!isSave[item.itemId]}
+                              InputProps={{
+                                disableUnderline: true, // <== added this
+                              }}
                             />
                           </CusTableCell>
                           <CusTableCell align="center">
-                            <FormControl fullWidth>
+                            <FormControl fullWidth sx={{ marginTop: "5px" }}>
                               <NativeSelect
-                                key={item.id}
+                                key={item.itemId}
                                 defaultValue={item.itemCategory}
                                 inputProps={{
                                   name: "status",
@@ -365,7 +369,7 @@ export const InventoryItemMaster = () => {
                                   setItemCategory(event.target.value);
                                 }}
                                 sx={{ fontSize: "0.75rem", paddingLeft: "5px" }}
-                                disabled={!isSave[item.id]}
+                                disabled={!isSave[item.itemId]}
                               >
                                 {categoryList &&
                                   categoryList.map((item) => (
@@ -386,9 +390,9 @@ export const InventoryItemMaster = () => {
                             </FormControl>
                           </CusTableCell>
                           <CusTableCell align="center">
-                            <FormControl fullWidth>
+                            <FormControl fullWidth sx={{ marginTop: "5px" }}>
                               <NativeSelect
-                                key={item.id}
+                                key={item.itemId}
                                 defaultValue={item.itemUOM}
                                 inputProps={{
                                   name: "status",
@@ -398,7 +402,7 @@ export const InventoryItemMaster = () => {
                                   setItemUOM(event.target.value);
                                 }}
                                 sx={{ fontSize: "0.75rem", paddingLeft: "5px" }}
-                                disabled={!isSave[item.id]}
+                                disabled={!isSave[item.itemId]}
                               >
                                 {uomList &&
                                   uomList.map((item) => (
@@ -421,26 +425,29 @@ export const InventoryItemMaster = () => {
 
                           <CusTableCell align="center" sx={{ width: "20px" }}>
                             <CusTextField
-                              key={item.id}
+                              key={item.itemId}
                               defaultValue={item.itemGstPercentage}
-                              value={currentItemGst[item.id]}
+                              value={currentItemGst[item.itemId]}
                               onChange={(event) => {
                                 const gst = {
                                   ...currentItemGst,
-                                  [item.id]: event.target.value,
+                                  [item.itemId]: event.target.value,
                                 };
                                 setCurrentItemGst(gst);
                               }}
                               fullWidth
                               variant="standard"
-                              disabled={!isSave[item.id]}
+                              disabled={!isSave[item.itemId]}
+                              InputProps={{
+                                disableUnderline: true, // <== added this
+                              }}
                             />
                           </CusTableCell>
 
                           <CusTableCell align="center">
-                            <FormControl fullWidth>
+                            <FormControl fullWidth sx={{ marginTop: "5px" }}>
                               <NativeSelect
-                                key={item.id}
+                                key={item.itemId}
                                 defaultValue={item.itemTrackingFlag}
                                 inputProps={{
                                   name: "status",
@@ -450,7 +457,7 @@ export const InventoryItemMaster = () => {
                                   setItemTrackingFlag(event.target.value);
                                 }}
                                 sx={{ fontSize: "0.75rem", paddingLeft: "5px" }}
-                                disabled={!isSave[item.id]}
+                                disabled={!isSave[item.itemId]}
                               >
                                 <option
                                   value={"Y"}
@@ -469,9 +476,9 @@ export const InventoryItemMaster = () => {
                           </CusTableCell>
 
                           <CusTableCell align="center">
-                            {isSave[item.id] ? (
+                            {isSave[item.itemId] ? (
                               <IconButton
-                                key={item.id}
+                                key={item.itemId}
                                 sx={{
                                   fontSize: "0.75rem",
                                   color: "#92D050",
@@ -486,13 +493,13 @@ export const InventoryItemMaster = () => {
                               </IconButton>
                             ) : (
                               <IconButton
-                                key={item.id}
+                                key={item.itemId}
                                 sx={{
                                   fontSize: "0.75rem",
                                   color: "#FFC000",
                                 }}
                                 onClick={() => {
-                                  onEditClickHandle(item.id);
+                                  onEditClickHandle(item.itemId);
                                 }}
                               >
                                 <EditIcon
@@ -502,13 +509,13 @@ export const InventoryItemMaster = () => {
                             )}
 
                             <IconButton
-                              key={item.id}
+                              key={item.itemId}
                               sx={{
                                 fontSize: "0.75rem",
                                 color: "red",
                               }}
                               onClick={() => {
-                                softDeleteItem(item.id);
+                                softDeleteItem(item.itemId);
                               }}
                             >
                               <DeleteIcon
@@ -532,6 +539,9 @@ export const InventoryItemMaster = () => {
                             }}
                             fullWidth
                             variant="standard"
+                            InputProps={{
+                              disableUnderline: true, // <== added this
+                            }}
                           />
                         </CusTableCell>
                         <CusTableCell align="center">
@@ -542,10 +552,13 @@ export const InventoryItemMaster = () => {
                             }}
                             fullWidth
                             variant="standard"
+                            InputProps={{
+                              disableUnderline: true, // <== added this
+                            }}
                           />
                         </CusTableCell>
                         <CusTableCell align="center">
-                          <FormControl fullWidth>
+                          <FormControl fullWidth sx={{ marginTop: "5px" }}>
                             <NativeSelect
                               inputProps={{
                                 name: "status",
@@ -575,7 +588,7 @@ export const InventoryItemMaster = () => {
                           </FormControl>
                         </CusTableCell>
                         <CusTableCell align="center">
-                          <FormControl fullWidth>
+                          <FormControl fullWidth sx={{ marginTop: "5px" }}>
                             <NativeSelect
                               inputProps={{
                                 name: "status",
@@ -613,11 +626,14 @@ export const InventoryItemMaster = () => {
                             }}
                             fullWidth
                             variant="standard"
+                            InputProps={{
+                              disableUnderline: true, // <== added this
+                            }}
                           />
                         </CusTableCell>
 
                         <CusTableCell align="center">
-                          <FormControl fullWidth>
+                          <FormControl fullWidth sx={{ marginTop: "5px" }}>
                             <NativeSelect
                               inputProps={{
                                 name: "status",
