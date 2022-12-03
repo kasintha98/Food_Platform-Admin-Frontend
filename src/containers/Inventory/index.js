@@ -15,6 +15,7 @@ import { SuppliersMaster } from "../../components/SuppliersMaster";
 import { InventoryItemMaster } from "../../components/InventoryItemMaster";
 import { RecipeMaster } from "../../components/RecipeMaster";
 import { NewPurchaseOrder } from "../../components/NewPurchaseOrder";
+import { SearchPurchaseOrder } from "../../components/SearchPurchaseOrder";
 
 export const Inventory = () => {
   const dispatch = useDispatch();
@@ -83,7 +84,9 @@ export const Inventory = () => {
             </div>
           </TabPanel>
           <TabPanel value="SEARCH PURCHASE ORDER">
-            <div>e</div>
+            <div>
+              <SearchPurchaseOrder></SearchPurchaseOrder>
+            </div>
           </TabPanel>
           <TabPanel value="CENTRAL INVENTORY TRACKING">
             <div>f</div>

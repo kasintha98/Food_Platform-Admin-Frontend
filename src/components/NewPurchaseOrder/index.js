@@ -444,7 +444,7 @@ export const NewPurchaseOrder = () => {
     }
 
     if (!currentItemPrice[item.itemId] && currentItemDiscount[item.itemId]) {
-      return Number(item.itemPrice) - Number(item.itemDiscount);
+      return Number(item.itemPrice) - Number(currentItemDiscount[item.itemId]);
     }
   };
 

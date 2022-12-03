@@ -16,6 +16,8 @@ const initState = {
   activeRecipesLoading: false,
   purchaseOrderCategory: [],
   purchaseOrderCategoryLoading: false,
+  closedPurchaseOrders: [],
+  closedPurchaseOrderLoading: false,
 };
 
 const buildNewInventory = (inventory, inventoryOne) => {
@@ -206,6 +208,27 @@ export default (state = initState, action) => {
         ...state,
         purchaseOrderCategoryLoading: false,
         purchaseOrderCategory: action.payload,
+      };
+      break;
+
+    case inventoryConstants.GET_CLOSED_PURCHASE_ORDERS_REQUEST:
+      state = {
+        ...state,
+        closedPurchaseOrderLoading: true,
+      };
+      break;
+    case inventoryConstants.GET_CLOSED_PURCHASE_ORDERS_SUCCESS:
+      state = {
+        ...state,
+        closedPurchaseOrderLoading: false,
+        closedPurchaseOrders: action.payload,
+      };
+      break;
+    case inventoryConstants.GET_CLOSED_PURCHASE_ORDERS_FAILURE:
+      state = {
+        ...state,
+        closedPurchaseOrderLoading: false,
+        closedPurchaseOrders: action.payload,
       };
       break;
   }

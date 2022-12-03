@@ -567,7 +567,7 @@ export const getInventoryPurchaseCategory = () => {
   };
 };
 
-export const saveUpdatePurchaseOrder = (item) => {
+export const saveUpdatePurchaseOrder = (item, isPullPo) => {
   return async (dispatch) => {
     dispatch({ type: inventoryConstants.SAVE_UPDATE_PURCHASE_ORDER_REQUEST });
 
@@ -586,6 +586,9 @@ export const saveUpdatePurchaseOrder = (item) => {
             item.billNumber +
             " Saved Successfully!"
         );
+        if (isPullPo) {
+          dispatch(getClosedPurchaseOrders());
+        }
         return res.data;
       } else {
         dispatch({
@@ -598,6 +601,36 @@ export const saveUpdatePurchaseOrder = (item) => {
     } catch (error) {
       console.log(error);
       toast.error("Error when saving! Please try again!");
+    }
+  };
+};
+
+export const getClosedPurchaseOrders = () => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: inventoryConstants.GET_CLOSED_PURCHASE_ORDERS_REQUEST });
+
+      const res = await axios.get("/getPurchaseOrdersByStatus?status=CLOSED");
+      if (res.status === 200) {
+        dispatch({
+          type: inventoryConstants.GET_CLOSED_PURCHASE_ORDERS_SUCCESS,
+          payload: res.data,
+        });
+        return res.data;
+      } else {
+        toast.error("Error getting purchase order data!");
+        dispatch({
+          type: inventoryConstants.GET_CLOSED_PURCHASE_ORDERS_FAILURE,
+          payload: [],
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Error getting purchase order data!");
+      dispatch({
+        type: inventoryConstants.GET_CLOSED_PURCHASE_ORDERS_FAILURE,
+        payload: [],
+      });
     }
   };
 };
