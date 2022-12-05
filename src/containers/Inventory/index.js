@@ -16,6 +16,7 @@ import { InventoryItemMaster } from "../../components/InventoryItemMaster";
 import { RecipeMaster } from "../../components/RecipeMaster";
 import { NewPurchaseOrder } from "../../components/NewPurchaseOrder";
 import { SearchPurchaseOrder } from "../../components/SearchPurchaseOrder";
+import { StoreInventoryTracking } from "../../components/StoreInventoryTracking";
 
 export const Inventory = () => {
   const dispatch = useDispatch();
@@ -92,7 +93,7 @@ export const Inventory = () => {
             <div>f</div>
           </TabPanel>
           <TabPanel value="STORE INVENTORY TRACKING">
-            <div>g</div>
+            <div><StoreInventoryTracking></StoreInventoryTracking></div>
           </TabPanel>
         </TabContext>
       </Box>

@@ -18,6 +18,8 @@ const initState = {
   purchaseOrderCategoryLoading: false,
   closedPurchaseOrders: [],
   closedPurchaseOrderLoading: false,
+  itemConsumptionSummary: [],
+  itemConsumptionSummaryLoading: false,
 };
 
 const buildNewInventory = (inventory, inventoryOne) => {
@@ -229,6 +231,27 @@ export default (state = initState, action) => {
         ...state,
         closedPurchaseOrderLoading: false,
         closedPurchaseOrders: action.payload,
+      };
+      break;
+
+    case inventoryConstants.GET_ITEM_CONSUMPTION_SUMMARY_REQUEST:
+      state = {
+        ...state,
+        itemConsumptionSummaryLoading: true,
+      };
+      break;
+    case inventoryConstants.GET_ITEM_CONSUMPTION_SUMMARY_SUCCESS:
+      state = {
+        ...state,
+        itemConsumptionSummaryLoading: false,
+        itemConsumptionSummary: action.payload,
+      };
+      break;
+    case inventoryConstants.GET_ITEM_CONSUMPTION_SUMMARY_FAILURE:
+      state = {
+        ...state,
+        itemConsumptionSummaryLoading: false,
+        itemConsumptionSummary: action.payload,
       };
       break;
   }

@@ -634,3 +634,35 @@ export const getClosedPurchaseOrders = () => {
     }
   };
 };
+
+export const getItemConsumptionSummery = () => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: inventoryConstants.GET_ITEM_CONSUMPTION_SUMMARY_REQUEST,
+      });
+
+      const res = await axios.get("/getItemConsumptionSummery");
+      if (res.status === 200) {
+        dispatch({
+          type: inventoryConstants.GET_ITEM_CONSUMPTION_SUMMARY_SUCCESS,
+          payload: res.data,
+        });
+        return res.data;
+      } else {
+        toast.error("Error getting item consumption data!");
+        dispatch({
+          type: inventoryConstants.GET_ITEM_CONSUMPTION_SUMMARY_FAILURE,
+          payload: [],
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Error getting item consumption data!");
+      dispatch({
+        type: inventoryConstants.GET_ITEM_CONSUMPTION_SUMMARY_FAILURE,
+        payload: [],
+      });
+    }
+  };
+};
