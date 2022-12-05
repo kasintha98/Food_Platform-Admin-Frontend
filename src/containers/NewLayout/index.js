@@ -12,7 +12,8 @@ import ListItem from "@mui/material/ListItem";
 import Toolbar from "@mui/material/Toolbar";
 import { NavLink } from "react-router-dom";
 import "./style.css";
-import { NewHeader } from "../../components/NewHeader";
+// import { NewHeader } from "../../components/NewHeader";
+import { NewHeader } from "../../components/NewHeaderUiCh";
 
 const drawerWidth = 240;
 

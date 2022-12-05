@@ -18,7 +18,8 @@ import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css file
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Signin from "./containers/Signin";
+// import Signin from "./containers/Signin";
+import Signin from "./containers/signinUiCh";
 import Signup from "./containers/Signup";
 import Products from "./containers/Products";
 import Employee from "./containers/Employee";
@@ -40,7 +41,8 @@ import { NewOrders } from "./containers/NewOrders";
 import { DeliveryManagement } from "./containers/DeliveryManagement";
 import { DeliveryTracking } from "./containers/DeliveryTracking";
 import { NewTrack } from "./containers/NewTrack";
-import { Welcome } from "./containers/Welcome";
+// import { Welcome } from "./containers/Welcome";
+import { Welcome } from "./containers/WelcomeUiCh";
 import { PageNotFound } from "./containers/PageNotFound";
 import { ForgotPassword } from "./containers/ForgotPassword";
 import { DineIn } from "./containers/DineIn";
