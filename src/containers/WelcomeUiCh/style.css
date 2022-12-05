@@ -1,0 +1,42 @@
+.chefImg {
+    width: 100% !important;
+    object-fit: contain;
+    height: 500px;  
+  }
+
+.chefColStyle {
+    max-width: 33.33% !important;
+    margin-top: 500 !important;
+}
+
+.welcomeTxtStyle {
+    font-family: 'Niconne', cursive !important;
+    font-size: 65px !important;
+    font-weight: bold !important;
+    color: #ff944e;
+    text-align: center !important;
+  }
+
+  .hangriesImg {
+    width: 100% !important;
+    object-fit: contain;
+    height: 350px;  
+  }
+
+  .hangriesImgStyle {
+    max-height: 20% !important;
+  }
+
+  .userInfoTxtStyle {
+    /* font-family: 'Roboto Condensed', sans-serif !important; */
+    font-family: 'Roboto', sans-serif !important;
+    font-weight: bolder !important;
+    font-size: 28px !important;
+    text-align: center !important;
+    color: #35455E !important;
+  }
+  .userInfoColStyle {
+    background-color: #ffdb4f !important;
+    padding: 20px !important;
+    border-radius:20px !important;
+  }
