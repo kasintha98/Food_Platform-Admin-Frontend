@@ -1,0 +1,92 @@
+.burgerImg {
+  width: 100% !important;
+  object-fit: fill;
+  height: 100%!important;  
+}
+
+.burgerColStyle {
+  max-width: 60% !important;
+  background-color: #eafe02;
+}
+
+.adminLabelColStyle {
+  max-width: 6% !important;
+  background-color: #eafe02;
+}
+
+.adminLabelTxtStyle {
+  font-family: 'Roboto Condensed', sans-serif !important;
+  font-weight: 900 !important;
+  font-size: 72px !important;
+  text-align: center;
+  margin-top: 600px !important; 
+  margin-left: 1px !important;
+  height: 90px !important;
+  width: 500px !important;
+  transform-origin: 20px;
+  transform:rotate(270deg)!important;
+  /* background-color: red; */
+
+}
+
+.otherColStyle {
+  max-width: 34% !important;
+  background-color: #eafe02;
+  /* background-color: red; */
+
+}
+
+.topRowStyle {
+margin-right: 1px !important;
+background-color: #eafe02;
+justify-content: end;
+}
+.topColStyle {
+  max-width: 60% !important;
+}
+
+.topImgStyle {
+  width: 100% !important;
+  object-fit: fill;
+  height: 100%!important; 
+}
+
+.loginModuleColStyle {
+  margin-top: 50% !important;
+}
+
+.textFielsStyle {
+  background-color: #fff !important;
+  width: 75% !important;
+  margin-top: 20px !important;
+  border-color: grey !important;
+}
+
+.arrowImgStyle {
+  max-width: 25% !important;
+  max-height: 55% !important;
+  margin-top: 15% !important;
+  text-align: right !important;
+}
+
+.formStyle {
+  font-family: 'Roboto Condensed', sans-serif !important; 
+  font-weight: 600 !important;
+  font-size: 15px !important;
+  text-align: center !important;
+  /* margin-top: 5% !important; */
+}
+
+.formGrpStyle {
+  margin-top: 10px !important;
+}
+
+.submitBtnStyle {
+  border-radius: 20px !important;
+  font-family: 'Roboto Condensed', sans-serif !important;
+  font-weight: bolder; 
+  margin-top: 5% !important;
+  background-color: #38b6ff !important;
+  max-width: 80% !important;
+  border-color: #38b6ff !important;
+}
