@@ -635,7 +635,7 @@ export const getClosedPurchaseOrders = () => {
   };
 };
 
-export const getItemConsumptionSummery = () => {
+export const getItemConsumptionSummery = (store) => {
   return async (dispatch) => {
     try {
       dispatch({
@@ -644,11 +644,18 @@ export const getItemConsumptionSummery = () => {
 
       const res = await axios.get("/getItemConsumptionSummery");
       if (res.status === 200) {
+        let filteredData = res.data.filter(function (el) {
+          return (
+            el.restaurantId === store.restaurantId &&
+            el.storeId === store.storeId
+          );
+        });
+
         dispatch({
           type: inventoryConstants.GET_ITEM_CONSUMPTION_SUMMARY_SUCCESS,
-          payload: res.data,
+          payload: filteredData,
         });
-        return res.data;
+        return filteredData;
       } else {
         toast.error("Error getting item consumption data!");
         dispatch({
@@ -663,6 +670,36 @@ export const getItemConsumptionSummery = () => {
         type: inventoryConstants.GET_ITEM_CONSUMPTION_SUMMARY_FAILURE,
         payload: [],
       });
+    }
+  };
+};
+
+export const saveItemConsumptionSummery = (item) => {
+  return async (dispatch) => {
+    dispatch({ type: inventoryConstants.SAVE_UPDATE_ITEM_CONSUMPTION_REQUEST });
+
+    try {
+      const res = await axios.post("/saveItemConsumptionSummery", item);
+
+      if (res.status === 200) {
+        dispatch({
+          type: inventoryConstants.SAVE_UPDATE_ITEM_CONSUMPTION_SUCCESS,
+          payload: res.data,
+        });
+        toast.success("Item Updated Successfully!");
+
+        return res.data;
+      } else {
+        dispatch({
+          type: inventoryConstants.SAVE_UPDATE_ITEM_CONSUMPTION_FAILURE,
+          payload: null,
+        });
+        toast.error("Error when updating! Please try again!");
+      }
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+      toast.error("Error when updating! Please try again!");
     }
   };
 };
