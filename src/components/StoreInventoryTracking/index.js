@@ -268,7 +268,7 @@ export const StoreInventoryTracking = () => {
                 </CusTableCell>
                 <CusTableCell align="center">
                   <Typography sx={{ fontSize: "0.75rem", color: "red" }}>
-                    C
+                    B
                   </Typography>
                 </CusTableCell>
                 <CusTableCell align="center">
@@ -397,13 +397,15 @@ export const StoreInventoryTracking = () => {
                             </TableRow>
                           ))}
                           <TableRow>
-                            <TableCell colSpan={11}></TableCell>
-                            <TableCell align="center">
-                              <Typography sx={{ fontSize: "0.75rem" }}>
+                            <CusTableCell colSpan={11}></CusTableCell>
+                            <CusTableCell align="center">
+                              <Typography
+                                sx={{ fontSize: "0.75rem", fontWeight: "bold" }}
+                              >
                                 Rs. {calculateTotalAmount()}
                               </Typography>
-                            </TableCell>
-                            <TableCell colSpan={2}></TableCell>
+                            </CusTableCell>
+                            <CusTableCell colSpan={2}></CusTableCell>
                           </TableRow>
                         </>
                       ) : (
