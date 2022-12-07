@@ -225,6 +225,16 @@ export const StoreInventoryTracking = () => {
     onSaveClickHandle(item.id);
   };
 
+  const getVariance = (item) => {
+    let e = currentItemEodConsumptionQty[item.id]
+      ? currentItemEodConsumptionQty[item.id]
+      : Number(item.itemEodConsumptionQty);
+
+    return (
+      Number(e) + Number(item.itemCurrConsumptionQty) - Number(item.poNetQty)
+    );
+  };
+
   const saveAllChangedList = () => {
     dispatch(saveAllItemConsumptionSummery(updatedItemList)).then((res) => {
       if (res) {
@@ -517,9 +527,8 @@ export const StoreInventoryTracking = () => {
                               <CusTableCell align="center">
                                 <Typography sx={{ fontSize: "0.75rem" }}>
                                   {/* {item.itemConsumptionVarianceQty} */}
-                                  {Number(item.itemEodConsumptionQty) +
-                                    Number(item.itemCurrConsumptionQty) -
-                                    Number(item.poNetQty)}
+
+                                  {getVariance(item)}
                                 </Typography>
                               </CusTableCell>
                               <CusTableCell align="center">
@@ -553,19 +562,13 @@ export const StoreInventoryTracking = () => {
                                 align="center"
                                 sx={{
                                   backgroundColor:
-                                    Number(item.itemEodConsumptionQty) +
-                                      Number(item.itemCurrConsumptionQty) -
-                                      Number(item.poNetQty) <
-                                    0
+                                    getVariance(item) < 0
                                       ? "yellow"
                                       : "lightgreen",
                                 }}
                               >
                                 <Typography sx={{ fontSize: "0.75rem" }}>
-                                  {Number(item.itemEodConsumptionQty) +
-                                    Number(item.itemCurrConsumptionQty) -
-                                    Number(item.poNetQty) <
-                                  0
+                                  {getVariance(item) < 0
                                     ? "In-Complete"
                                     : "Complete"}
                                   {/* {item.reconStatus} */}
