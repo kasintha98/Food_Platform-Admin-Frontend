@@ -80,6 +80,8 @@ const CusTableCell1 = styled(TableCell)`
   font-weight: bold;
   background-color: #00b0f0;
   color: #fff;
+  padding-top: 0;
+  padding-bottom: 0;
 `;
 
 const CusTableCell = styled(TableCell)`
