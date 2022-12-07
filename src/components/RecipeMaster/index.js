@@ -17,6 +17,8 @@ import {
   NativeSelect,
   TextField,
   IconButton,
+  Autocomplete,
+  Box,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CloseIcon from "@mui/icons-material/Close";
@@ -62,6 +64,29 @@ const MyPaginate = styled(ReactPaginate)`
   li.disable,
   li.disabled a {
     cursor: default;
+  }
+`;
+
+const CusAutocomplete = styled(Autocomplete)`
+  & input {
+    font-size: 0.75rem;
+    padding: 0 !important;
+    height: 0.75rem !important;
+  }
+
+  & legend {
+    font-size: 0.75rem !important;
+    padding: 0;
+  }
+
+  & label {
+    font-size: 0.75rem !important;
+    padding: 0 !important;
+    top: -15px;
+  }
+
+  & .MuiAutocomplete-root label {
+    top: 0px !important;
   }
 `;
 
@@ -347,7 +372,7 @@ export const RecipeMaster = () => {
             ).map((item) => (
               <Row>
                 <Col xs={5} align="center">
-                  <FormControl fullWidth>
+                  {/* <FormControl fullWidth>
                     <NativeSelect
                       key={item.itemId}
                       defaultValue={item.itemId}
@@ -377,7 +402,49 @@ export const RecipeMaster = () => {
                         Select Ingredient
                       </option>
                     </NativeSelect>
-                  </FormControl>
+                  </FormControl> */}
+
+                  <CusAutocomplete
+                    onChange={(event, newValue) => {
+                      let ing = {
+                        ...itemIngredient,
+                        [item.itemId]: newValue ? newValue.itemId : null,
+                      };
+                      setItemIngredient(ing);
+                    }}
+                    defaultValue={item}
+                    sx={{
+                      fontSize: "0.75rem",
+                      marginTop: "9px",
+                      ".MuiFormControl-root": { marginTop: "4px" },
+                    }}
+                    options={activeInventory}
+                    autoHighlight
+                    getOptionLabel={(option) => option.itemName}
+                    renderOption={(props, option) => (
+                      <Box
+                        component="li"
+                        sx={{
+                          "& > img": { mr: 2, flexShrink: 0 },
+                          fontSize: "0.75rem",
+                        }}
+                        {...props}
+                      >
+                        {option.itemName}
+                      </Box>
+                    )}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        sx={{ fontSize: "0.75rem" }}
+                        variant="standard"
+                        inputProps={{
+                          ...params.inputProps,
+                          autoComplete: "new-password", // disable autocomplete and autofill
+                        }}
+                      />
+                    )}
+                  />
                 </Col>
                 <Col xs={2} align="center">
                   <CusTextField
