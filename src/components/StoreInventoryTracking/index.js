@@ -516,7 +516,10 @@ export const StoreInventoryTracking = () => {
                               </CusTableCell>
                               <CusTableCell align="center">
                                 <Typography sx={{ fontSize: "0.75rem" }}>
-                                  {item.itemConsumptionVarianceQty}
+                                  {/* {item.itemConsumptionVarianceQty} */}
+                                  {Number(item.itemEodConsumptionQty) +
+                                    Number(item.itemCurrConsumptionQty) -
+                                    Number(item.poNetQty)}
                                 </Typography>
                               </CusTableCell>
                               <CusTableCell align="center">
@@ -550,13 +553,19 @@ export const StoreInventoryTracking = () => {
                                 align="center"
                                 sx={{
                                   backgroundColor:
-                                    Number(item.itemConsumptionVarianceQty) < 0
+                                    Number(item.itemEodConsumptionQty) +
+                                      Number(item.itemCurrConsumptionQty) -
+                                      Number(item.poNetQty) <
+                                    0
                                       ? "yellow"
                                       : "lightgreen",
                                 }}
                               >
                                 <Typography sx={{ fontSize: "0.75rem" }}>
-                                  {Number(item.itemConsumptionVarianceQty) < 0
+                                  {Number(item.itemEodConsumptionQty) +
+                                    Number(item.itemCurrConsumptionQty) -
+                                    Number(item.poNetQty) <
+                                  0
                                     ? "In-Complete"
                                     : "Complete"}
                                   {/* {item.reconStatus} */}
