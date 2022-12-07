@@ -297,7 +297,7 @@ export const StoreInventoryTracking = () => {
         <TableContainer
           className="mt-3"
           component={Paper}
-          sx={{ maxHeight: 430 }}
+          /* sx={{ maxHeight: 430 }} */
         >
           <Table sx={{ minWidth: 800 }} aria-label="simple table">
             <TableHead>
@@ -412,7 +412,7 @@ export const StoreInventoryTracking = () => {
                 </CusTableCell>
                 <CusTableCell align="center">
                   <Typography sx={{ fontSize: "0.75rem", color: "red" }}>
-                    (E + D - T)
+                    VARIANCE = (E + D) - T
                   </Typography>
                 </CusTableCell>
                 <CusTableCell align="center" colSpan={4}>
