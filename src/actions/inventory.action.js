@@ -703,3 +703,35 @@ export const saveItemConsumptionSummery = (item) => {
     }
   };
 };
+
+export const saveAllItemConsumptionSummery = (items) => {
+  return async (dispatch) => {
+    dispatch({
+      type: inventoryConstants.SAVE_UPDATE_ALL_ITEM_CONSUMPTION_REQUEST,
+    });
+
+    try {
+      const res = await axios.post("/saveAllItemConsumptionSummery", items);
+
+      if (res.status === 200) {
+        dispatch({
+          type: inventoryConstants.SAVE_UPDATE_ALL_ITEM_CONSUMPTION_SUCCESS,
+          payload: res.data,
+        });
+        toast.success("Items Updated Successfully!");
+
+        return res.data;
+      } else {
+        dispatch({
+          type: inventoryConstants.SAVE_UPDATE_ALL_ITEM_CONSUMPTION_FAILURE,
+          payload: null,
+        });
+        toast.error("Error when updating! Please try again!");
+      }
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+      toast.error("Error when updating! Please try again!");
+    }
+  };
+};

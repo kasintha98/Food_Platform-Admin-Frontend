@@ -22,7 +22,7 @@ import {
 } from "@mui/material";
 import {
   getItemConsumptionSummery,
-  saveItemConsumptionSummery,
+  saveAllItemConsumptionSummery,
 } from "../../actions";
 import SaveIcon from "@mui/icons-material/Save";
 import EditIcon from "@mui/icons-material/Edit";
@@ -158,6 +158,7 @@ export const StoreInventoryTracking = () => {
     pageCount: 0,
     currentData: itemConsumptionSummary.slice(0, 10),
   });
+  const [updatedItemList, setUpdatedItemList] = useState([]);
 
   const dispatch = useDispatch();
 
@@ -215,10 +216,17 @@ export const StoreInventoryTracking = () => {
       updatedDate: new Date(),
     };
 
-    dispatch(saveItemConsumptionSummery(newObj)).then((res) => {
+    let l = updatedItemList;
+    l.push(newObj);
+    setUpdatedItemList(l);
+
+    onSaveClickHandle(item.id);
+  };
+
+  const saveAllChangedList = () => {
+    dispatch(saveAllItemConsumptionSummery(updatedItemList)).then((res) => {
       if (res) {
         handleRefresh();
-        onSaveClickHandle(item.id);
       }
     });
   };
@@ -433,174 +441,166 @@ export const StoreInventoryTracking = () => {
                     <>
                       {itemConsumptionSummary.length > 0 ? (
                         <>
-                          {itemConsumptionSummary
-                            .slice(
-                              pagination.offset,
-                              pagination.offset + pagination.numberPerPage
-                            )
-                            .map((item, index) => (
-                              <TableRow key={item.id}>
-                                <CusTableCell align="center">
-                                  <Typography sx={{ fontSize: "0.75rem" }}>
-                                    {index + 1 + pagination.offset}
-                                  </Typography>
-                                </CusTableCell>
-                                <CusTableCell align="center">
-                                  <Typography sx={{ fontSize: "0.75rem" }}>
-                                    {item.itemId}
-                                  </Typography>
-                                </CusTableCell>
-                                <CusTableCell align="center">
-                                  <Typography sx={{ fontSize: "0.75rem" }}>
-                                    {item.itemName}
-                                  </Typography>
-                                </CusTableCell>
-                                <CusTableCell align="center">
-                                  <Typography sx={{ fontSize: "0.75rem" }}>
-                                    {item.itemUom}
-                                  </Typography>
-                                </CusTableCell>
-                                <CusTableCell align="center">
-                                  <Typography sx={{ fontSize: "0.75rem" }}>
-                                    {item.poOpngQty}
-                                  </Typography>
-                                </CusTableCell>
-                                <CusTableCell align="center">
-                                  <Typography sx={{ fontSize: "0.75rem" }}>
-                                    {item.poTodayQty}
-                                  </Typography>
-                                </CusTableCell>
-                                <CusTableCell align="center">
-                                  <Typography sx={{ fontSize: "0.75rem" }}>
-                                    {item.poWastageQty}
-                                  </Typography>
-                                </CusTableCell>
-                                <CusTableCell align="center">
-                                  <Typography sx={{ fontSize: "0.75rem" }}>
-                                    {item.poNetQty}
-                                  </Typography>
-                                </CusTableCell>
-                                <CusTableCell align="center">
-                                  <Typography sx={{ fontSize: "0.75rem" }}>
-                                    {item.itemCurrConsumptionQty}
-                                  </Typography>
-                                </CusTableCell>
-                                <CusTableCell align="center">
-                                  <Typography sx={{ fontSize: "0.75rem" }}>
-                                    <CusTextField
-                                      defaultValue={item.itemEodConsumptionQty}
-                                      value={
-                                        currentItemEodConsumptionQty[item.id]
-                                      }
-                                      onChange={(event) => {
-                                        const itemsEod = {
-                                          ...currentItemEodConsumptionQty,
-                                          [item.id]: event.target.value,
-                                        };
-                                        setCurrentItemEodConsumptionQty(
-                                          itemsEod
-                                        );
-                                      }}
-                                      fullWidth
-                                      variant="standard"
-                                      disabled={!isSave[item.id]}
-                                      InputProps={{
-                                        disableUnderline: true, // <== added this
-                                      }}
-                                    />
-                                    {/* {item.itemEodConsumptionQty} */}
-                                  </Typography>
-                                </CusTableCell>
-                                <CusTableCell align="center">
-                                  <Typography sx={{ fontSize: "0.75rem" }}>
-                                    {item.itemConsumptionVarianceQty}
-                                  </Typography>
-                                </CusTableCell>
-                                <CusTableCell align="center">
-                                  <Typography sx={{ fontSize: "0.75rem" }}>
-                                    Rs. {item.itemConsumptionAmount}
-                                  </Typography>
-                                </CusTableCell>
-                                <CusTableCell align="center">
-                                  <Typography sx={{ fontSize: "0.75rem" }}>
-                                    <CusTextField
-                                      defaultValue={item.remarks}
-                                      value={currentRemarks[item.id]}
-                                      onChange={(event) => {
-                                        const rem = {
-                                          ...currentRemarks,
-                                          [item.id]: event.target.value,
-                                        };
-                                        setCurrentRemarks(rem);
-                                      }}
-                                      fullWidth
-                                      variant="standard"
-                                      disabled={!isSave[item.id]}
-                                      InputProps={{
-                                        disableUnderline: true, // <== added this
-                                      }}
-                                    />
-                                    {/* {item.remarks} */}
-                                  </Typography>
-                                </CusTableCell>
-                                <CusTableCell
-                                  align="center"
-                                  sx={{
-                                    backgroundColor:
-                                      Number(item.itemConsumptionVarianceQty) <
-                                      0
-                                        ? "yellow"
-                                        : "lightgreen",
-                                  }}
-                                >
-                                  <Typography sx={{ fontSize: "0.75rem" }}>
-                                    {Number(item.itemConsumptionVarianceQty) < 0
-                                      ? "In-Complete"
-                                      : "Complete"}
-                                    {/* {item.reconStatus} */}
-                                  </Typography>
-                                </CusTableCell>
-                                <CusTableCell align="center">
-                                  {isSave[item.id] ? (
-                                    <IconButton
-                                      key={item.id}
+                          {itemConsumptionSummary.map((item, index) => (
+                            <TableRow key={item.id}>
+                              <CusTableCell align="center">
+                                <Typography sx={{ fontSize: "0.75rem" }}>
+                                  {index + 1 + pagination.offset}
+                                </Typography>
+                              </CusTableCell>
+                              <CusTableCell align="center">
+                                <Typography sx={{ fontSize: "0.75rem" }}>
+                                  {item.itemId}
+                                </Typography>
+                              </CusTableCell>
+                              <CusTableCell align="center">
+                                <Typography sx={{ fontSize: "0.75rem" }}>
+                                  {item.itemName}
+                                </Typography>
+                              </CusTableCell>
+                              <CusTableCell align="center">
+                                <Typography sx={{ fontSize: "0.75rem" }}>
+                                  {item.itemUom}
+                                </Typography>
+                              </CusTableCell>
+                              <CusTableCell align="center">
+                                <Typography sx={{ fontSize: "0.75rem" }}>
+                                  {item.poOpngQty}
+                                </Typography>
+                              </CusTableCell>
+                              <CusTableCell align="center">
+                                <Typography sx={{ fontSize: "0.75rem" }}>
+                                  {item.poTodayQty}
+                                </Typography>
+                              </CusTableCell>
+                              <CusTableCell align="center">
+                                <Typography sx={{ fontSize: "0.75rem" }}>
+                                  {item.poWastageQty}
+                                </Typography>
+                              </CusTableCell>
+                              <CusTableCell align="center">
+                                <Typography sx={{ fontSize: "0.75rem" }}>
+                                  {item.poNetQty}
+                                </Typography>
+                              </CusTableCell>
+                              <CusTableCell align="center">
+                                <Typography sx={{ fontSize: "0.75rem" }}>
+                                  {item.itemCurrConsumptionQty}
+                                </Typography>
+                              </CusTableCell>
+                              <CusTableCell align="center">
+                                <Typography sx={{ fontSize: "0.75rem" }}>
+                                  <CusTextField
+                                    defaultValue={item.itemEodConsumptionQty}
+                                    value={
+                                      currentItemEodConsumptionQty[item.id]
+                                    }
+                                    onChange={(event) => {
+                                      const itemsEod = {
+                                        ...currentItemEodConsumptionQty,
+                                        [item.id]: event.target.value,
+                                      };
+                                      setCurrentItemEodConsumptionQty(itemsEod);
+                                    }}
+                                    fullWidth
+                                    variant="standard"
+                                    disabled={!isSave[item.id]}
+                                    InputProps={{
+                                      disableUnderline: true, // <== added this
+                                    }}
+                                  />
+                                  {/* {item.itemEodConsumptionQty} */}
+                                </Typography>
+                              </CusTableCell>
+                              <CusTableCell align="center">
+                                <Typography sx={{ fontSize: "0.75rem" }}>
+                                  {item.itemConsumptionVarianceQty}
+                                </Typography>
+                              </CusTableCell>
+                              <CusTableCell align="center">
+                                <Typography sx={{ fontSize: "0.75rem" }}>
+                                  Rs. {item.itemConsumptionAmount}
+                                </Typography>
+                              </CusTableCell>
+                              <CusTableCell align="center">
+                                <Typography sx={{ fontSize: "0.75rem" }}>
+                                  <CusTextField
+                                    defaultValue={item.remarks}
+                                    value={currentRemarks[item.id]}
+                                    onChange={(event) => {
+                                      const rem = {
+                                        ...currentRemarks,
+                                        [item.id]: event.target.value,
+                                      };
+                                      setCurrentRemarks(rem);
+                                    }}
+                                    fullWidth
+                                    variant="standard"
+                                    disabled={!isSave[item.id]}
+                                    InputProps={{
+                                      disableUnderline: true, // <== added this
+                                    }}
+                                  />
+                                  {/* {item.remarks} */}
+                                </Typography>
+                              </CusTableCell>
+                              <CusTableCell
+                                align="center"
+                                sx={{
+                                  backgroundColor:
+                                    Number(item.itemConsumptionVarianceQty) < 0
+                                      ? "yellow"
+                                      : "lightgreen",
+                                }}
+                              >
+                                <Typography sx={{ fontSize: "0.75rem" }}>
+                                  {Number(item.itemConsumptionVarianceQty) < 0
+                                    ? "In-Complete"
+                                    : "Complete"}
+                                  {/* {item.reconStatus} */}
+                                </Typography>
+                              </CusTableCell>
+                              <CusTableCell align="center">
+                                {isSave[item.id] ? (
+                                  <IconButton
+                                    key={item.id}
+                                    sx={{
+                                      fontSize: "0.75rem",
+                                      color: "#92D050",
+                                    }}
+                                    onClick={() => {
+                                      updateItemHandle(item);
+                                    }}
+                                  >
+                                    <SaveIcon
                                       sx={{
-                                        fontSize: "0.75rem",
-                                        color: "#92D050",
+                                        height: "0.95rem",
+                                        width: "0.95rem",
                                       }}
-                                      onClick={() => {
-                                        updateItemHandle(item);
-                                      }}
-                                    >
-                                      <SaveIcon
-                                        sx={{
-                                          height: "0.95rem",
-                                          width: "0.95rem",
-                                        }}
-                                      ></SaveIcon>
-                                    </IconButton>
-                                  ) : (
-                                    <IconButton
-                                      key={item.id}
+                                    ></SaveIcon>
+                                  </IconButton>
+                                ) : (
+                                  <IconButton
+                                    key={item.id}
+                                    sx={{
+                                      fontSize: "0.75rem",
+                                      color: "#FFC000",
+                                    }}
+                                    onClick={() => {
+                                      onEditClickHandle(item.id);
+                                    }}
+                                  >
+                                    <EditIcon
                                       sx={{
-                                        fontSize: "0.75rem",
-                                        color: "#FFC000",
+                                        height: "0.95rem",
+                                        width: "0.95rem",
                                       }}
-                                      onClick={() => {
-                                        onEditClickHandle(item.id);
-                                      }}
-                                    >
-                                      <EditIcon
-                                        sx={{
-                                          height: "0.95rem",
-                                          width: "0.95rem",
-                                        }}
-                                      ></EditIcon>
-                                    </IconButton>
-                                  )}
-                                </CusTableCell>
-                              </TableRow>
-                            ))}
+                                    ></EditIcon>
+                                  </IconButton>
+                                )}
+                              </CusTableCell>
+                            </TableRow>
+                          ))}
                           <TableRow>
                             <CusTableCell colSpan={11}></CusTableCell>
                             <CusTableCell align="center">
@@ -640,10 +640,10 @@ export const StoreInventoryTracking = () => {
       </div>
       <div className="text-center mt-4">
         <Row>
-          <Col sm={6} style={{ textAlign: "end" }}>
+          <Col sm={4} style={{ textAlign: "end" }}>
             <SaveButton>INVENTORY EOD</SaveButton>
           </Col>
-          <Col sm={6} style={{ textAlign: "start" }}>
+          <Col sm={4} style={{ textAlign: "center" }}>
             <ExcelFile
               element={<SaveButton>DOWNLOAD</SaveButton>}
               filename="Item Consumption Summary"
@@ -688,9 +688,12 @@ export const StoreInventoryTracking = () => {
               </ExcelSheet>
             </ExcelFile>
           </Col>
+          <Col sm={4} style={{ textAlign: "start" }}>
+            <SaveButton onClick={saveAllChangedList}>SAVE</SaveButton>
+          </Col>
         </Row>
       </div>
-      <MyPaginate
+      {/* <MyPaginate
         previousLabel={"Previous"}
         nextLabel={"Next"}
         breakLabel={"..."}
@@ -700,7 +703,7 @@ export const StoreInventoryTracking = () => {
         onPageChange={handlePageClick}
         containerClassName={"pagination"}
         activeClassName={"active"}
-      />
+      /> */}
     </div>
   );
 };
