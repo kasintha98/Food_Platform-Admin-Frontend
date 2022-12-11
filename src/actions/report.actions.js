@@ -265,3 +265,51 @@ export const getSalesSummeryByPaymentModeReports = (
     }
   };
 };
+
+
+export const getDashboardSummary = (
+  restaurantId,
+  storeId,
+  fromDate,
+  toDate
+) => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: reportConstants.GET_REPORT_DASHBOARD_SUMMARY_REQUEST,
+      });
+
+      const reqBody = {
+        restaurantId: "R001",
+        storeId,
+        fromDate,
+        toDate,
+        reportName: "DASHBOARD_SUMMARY",
+      };
+
+      console.log(reqBody);
+
+      const res = await axios.post(`/getReports`, reqBody);
+
+      if (res.status === 200) {
+        dispatch({
+          type: reportConstants.GET_REPORT_DASHBOARD_SUMMARY_SUCCESS,
+          payload: res.data,
+        });
+
+        return res.data;
+      } else {
+        dispatch({
+          type: reportConstants.GET_REPORT_DASHBOARD_SUMMARY_FAILURE,
+          payload: { error: "Error fetching data!" },
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch({
+        type: reportConstants.GET_REPORT_DASHBOARD_SUMMARY_FAILURE,
+        payload: { error: "Error fetching data!" },
+      });
+    }
+  };
+};
