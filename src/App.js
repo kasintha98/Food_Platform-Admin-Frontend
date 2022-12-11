@@ -35,7 +35,9 @@ import { OrderAutomation } from "./containers/OrderAutomation";
 import { UserEntitlement } from "./containers/UserEntitlement";
 import { Customer } from "./containers/Customer";
 import { DeliveryBoy } from "./containers/DeliveryBoy";
-import { AdminDashboard } from "./containers/AdminDashboard";
+// import { AdminDashboard } from "./containers/AdminDashboard";
+import { AdminDashboard } from "./containers/AdminDashboardUiCh";
+
 import { NewReports } from "./containers/NewReports";
 import { NewOrders } from "./containers/NewOrders";
 import { DeliveryManagement } from "./containers/DeliveryManagement";
