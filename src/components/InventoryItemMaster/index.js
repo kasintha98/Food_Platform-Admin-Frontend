@@ -138,7 +138,9 @@ export const InventoryItemMaster = () => {
   const [itemTrackingFlag, setItemTrackingFlag] = useState("");
 
   const [newItemCategory, setNewItemCategory] = useState(
-    categoryList ? categoryList[0].configCriteriaValue : ""
+    categoryList && categoryList.length > 0
+      ? categoryList[0].configCriteriaValue
+      : ""
   );
   const [newItemUOM, setNewItemUOM] = useState(
     uomList ? uomList[0].configCriteriaValue : ""

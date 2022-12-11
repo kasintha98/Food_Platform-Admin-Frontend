@@ -28,6 +28,7 @@ import {
   getActiveSuppliers,
   getClosedPurchaseOrders,
   getSubmittedRecievedPurchaseOrders,
+  savePurchaseOrderStatus,
 } from "../../actions";
 import { EditPurchaseOrder } from "../EditPurchaseOrder";
 
@@ -107,6 +108,7 @@ const CusModal = styled(Modal)`
 
 export const SearchPurchaseOrder = () => {
   const businessDateAll = useSelector((state) => state.user.businessDate);
+  const user = useSelector((state) => state.auth.user);
   const allSuppliers = useSelector((state) => state.inventory.allSuppliers);
   const closedPurchaseOrders = useSelector(
     (state) => state.inventory.closedPurchaseOrders
@@ -189,6 +191,19 @@ export const SearchPurchaseOrder = () => {
     setShowAdd(false);
   };
   const handleShowAdd = () => setShowAdd(true);
+
+  const savePurchaseOrderStatusToDB = (id, status) => {
+    const obj = {
+      purchaseOrderId: id,
+      itemStatus: status,
+      updatedBy: user.loginId,
+    };
+    dispatch(savePurchaseOrderStatus(obj)).then((res) => {
+      if (res) {
+        setPOStatus("");
+      }
+    });
+  };
 
   const searchPurchaseOrders = () => {
     if (closedPurchaseOrders) {
@@ -446,6 +461,7 @@ export const SearchPurchaseOrder = () => {
           <Table sx={{ minWidth: 800 }} aria-label="simple table">
             <TableHead>
               <TableRow>
+                <CusTableCell1 align="center">PO NO</CusTableCell1>
                 <CusTableCell1 align="center">RESTAURANT</CusTableCell1>
                 <CusTableCell1 align="center">STORE NAME</CusTableCell1>
                 <CusTableCell1 align="center">BILL NO</CusTableCell1>
@@ -478,16 +494,6 @@ export const SearchPurchaseOrder = () => {
                         <TableRow key={item.purchaseOrderId}>
                           <CusTableCell align="center">
                             <Typography sx={{ fontSize: "0.75rem" }}>
-                              {item.restaurantId}
-                            </Typography>
-                          </CusTableCell>
-                          <CusTableCell align="center">
-                            <Typography sx={{ fontSize: "0.75rem" }}>
-                              {item.storeId}
-                            </Typography>
-                          </CusTableCell>
-                          <CusTableCell align="center">
-                            <Typography sx={{ fontSize: "0.75rem" }}>
                               <Button
                                 sx={{ fontSize: "0.75rem" }}
                                 onClick={() => {
@@ -495,8 +501,23 @@ export const SearchPurchaseOrder = () => {
                                   handleShowAdd();
                                 }}
                               >
-                                {item.billNumber ? item.billNumber : "N/A"}
+                                {item.purchaseOrderId}
                               </Button>
+                            </Typography>
+                          </CusTableCell>
+                          <CusTableCell align="center">
+                            <Typography sx={{ fontSize: "0.75rem" }}>
+                              {item.restaurantName}
+                            </Typography>
+                          </CusTableCell>
+                          <CusTableCell align="center">
+                            <Typography sx={{ fontSize: "0.75rem" }}>
+                              {item.storeName}
+                            </Typography>
+                          </CusTableCell>
+                          <CusTableCell align="center">
+                            <Typography sx={{ fontSize: "0.75rem" }}>
+                              {item.billNumber ? item.billNumber : "N/A"}
                             </Typography>
                           </CusTableCell>
                           <CusTableCell align="center">
@@ -506,7 +527,7 @@ export const SearchPurchaseOrder = () => {
                           </CusTableCell>
                           <CusTableCell align="center">
                             <Typography sx={{ fontSize: "0.75rem" }}>
-                              {item.supplierId}
+                              {item.supplierName}
                             </Typography>
                           </CusTableCell>
                           <CusTableCell align="center">
@@ -525,6 +546,10 @@ export const SearchPurchaseOrder = () => {
                                 }}
                                 onChange={(event) => {
                                   setPOStatus(event.target.value);
+                                  savePurchaseOrderStatusToDB(
+                                    item.purchaseOrderId,
+                                    event.target.value
+                                  );
                                 }}
                                 sx={{
                                   fontSize: "0.75rem",

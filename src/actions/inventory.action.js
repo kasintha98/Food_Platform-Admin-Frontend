@@ -745,16 +745,18 @@ export const getSubmittedRecievedPurchaseOrders = () => {
       /* const res = await axios.get("/getPurchaseOrdersByStatus?status=CLOSED"); */
       const res = await axios.get("/getAllPurchaseOrders");
       if (res.status === 200) {
+        let data = res.data.filter(function (el) {
+          return (
+            el.purchaseOrderStatus === "SUBMITTED" ||
+            el.purchaseOrderStatus === "RECEIVED"
+          );
+        });
+
         dispatch({
           type: inventoryConstants.GET_CLOSED_PURCHASE_ORDERS_SUCCESS,
-          payload: res.data.filter(function (el) {
-            return (
-              el.purchaseOrderStatus === "SUBMITTED" ||
-              el.purchaseOrderStatus === "RECEIVED"
-            );
-          }),
+          payload: data,
         });
-        return res.data;
+        return data;
       } else {
         toast.error("Error getting purchase order data!");
         dispatch({
@@ -767,6 +769,37 @@ export const getSubmittedRecievedPurchaseOrders = () => {
       toast.error("Error getting purchase order data!");
       dispatch({
         type: inventoryConstants.GET_CLOSED_PURCHASE_ORDERS_FAILURE,
+        payload: [],
+      });
+    }
+  };
+};
+
+export const savePurchaseOrderStatus = (item) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: inventoryConstants.SAVE_PURCHASE_ORDER_STATUS_REQUEST });
+
+      const res = await axios.post("/savePurchaseOrderStatus", item);
+      if (res.status === 200) {
+        dispatch({
+          type: inventoryConstants.SAVE_PURCHASE_ORDER_STATUS_SUCCESS,
+          payload: res.data,
+        });
+        dispatch(getSubmittedRecievedPurchaseOrders());
+        return res.data;
+      } else {
+        toast.error("Error saving purchase order status!");
+        dispatch({
+          type: inventoryConstants.SAVE_PURCHASE_ORDER_STATUS_FAILURE,
+          payload: [],
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Error saving purchase order status!");
+      dispatch({
+        type: inventoryConstants.SAVE_PURCHASE_ORDER_STATUS_FAILURE,
         payload: [],
       });
     }
