@@ -126,6 +126,7 @@ export const EditPurchaseOrder = (props) => {
     (state) => state.inventory.purchaseOrderCategory
   );
   const [isSave, setIsSave] = useState({});
+  const [loading, setLoading] = useState(true);
   const [currentSelectedItem, setCurrentSelectedItem] = useState({});
   const [currentItemQty, setCurrentItemQty] = useState({});
   const [currentItemWastage, setCurrentItemWastage] = useState({});
@@ -147,6 +148,7 @@ export const EditPurchaseOrder = (props) => {
           its = { ...its, [found.itemId]: found };
         }
         setCurrentSelectedItem(its);
+        setLoading(false);
       }
     });
     dispatch(getInventoryPurchaseCategory());
@@ -266,7 +268,8 @@ export const EditPurchaseOrder = (props) => {
       supplierId: props.product.supplierId,
       purchaseDate: props.product.purchaseDate,
       billNumber: props.product.billNumber,
-      purchaseOrderStatus: "CLOSED",
+      purchaseOrderStatus: props.product.purchaseOrderStatus,
+      purchaseOrderId: props.product.purchaseOrderId,
       createdBy: props.product.createdBy,
       createdDate: props.product.createdDate,
       updatedBy: user.loginId,
@@ -305,7 +308,9 @@ export const EditPurchaseOrder = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {activeInventoryLoading || purchaseOrderCategoryLoading ? (
+            {activeInventoryLoading ||
+            purchaseOrderCategoryLoading ||
+            loading ? (
               <TableRow>
                 <TableCell colSpan={14}>
                   <div className="d-flex justify-content-center">
@@ -556,6 +561,7 @@ export const EditPurchaseOrder = (props) => {
                       <CusTableCell align="center">
                         {isSave[item.itemId] ? (
                           <IconButton
+                            disabled={!props.isEnabled}
                             sx={{
                               fontSize: "0.75rem",
                               color: "#92D050",
@@ -570,6 +576,7 @@ export const EditPurchaseOrder = (props) => {
                           </IconButton>
                         ) : (
                           <IconButton
+                            disabled={!props.isEnabled}
                             sx={{
                               fontSize: "0.75rem",
                               color: "#FFC000",
@@ -585,6 +592,7 @@ export const EditPurchaseOrder = (props) => {
                         )}
 
                         <IconButton
+                          disabled={!props.isEnabled}
                           sx={{
                             fontSize: "0.75rem",
                             color: "red",

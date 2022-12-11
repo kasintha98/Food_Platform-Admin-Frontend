@@ -22,8 +22,13 @@ import {
   MenuItem,
   InputLabel,
   Select,
+  NativeSelect,
 } from "@mui/material";
-import { getActiveSuppliers, getClosedPurchaseOrders } from "../../actions";
+import {
+  getActiveSuppliers,
+  getClosedPurchaseOrders,
+  getSubmittedRecievedPurchaseOrders,
+} from "../../actions";
 import { EditPurchaseOrder } from "../EditPurchaseOrder";
 
 const CusDDT = styled(Dropdown.Toggle)`
@@ -130,6 +135,8 @@ export const SearchPurchaseOrder = () => {
   const [selectedStoreObj, setSelectedStoreObj] = useState(null);
   const [billNo, setBillNo] = useState("");
   const [selectedSupplier, setSelectedSupplier] = useState("");
+  const [poStatus, setPOStatus] = useState("");
+
   const [selectedSupplierObj, setSelectedSupplierObj] = useState(null);
   const [groupedData, setGroupedData] = useState({});
   const [currentProduct, setCurrentProduct] = useState(null);
@@ -139,7 +146,13 @@ export const SearchPurchaseOrder = () => {
 
   useEffect(() => {
     dispatch(getActiveSuppliers());
-    dispatch(getClosedPurchaseOrders()).then((res) => {
+
+    /* dispatch(getClosedPurchaseOrders()).then((res) => {
+      if (res) {
+        searchPurchaseOrders();
+      }
+    }); */
+    dispatch(getSubmittedRecievedPurchaseOrders()).then((res) => {
       if (res) {
         searchPurchaseOrders();
       }
@@ -213,22 +226,25 @@ export const SearchPurchaseOrder = () => {
         });
       }
 
-      groupByBillNo(searched);
+      groupBypurchaseOrderId(searched);
     }
   };
 
-  const groupByBillNo = (list) => {
+  const groupBypurchaseOrderId = (list) => {
     let grouped = list.reduce(function (r, a) {
-      r[a.billNumber] = r[a.billNumber] || { items: [], total: 0 };
-      r[a.billNumber].items.push(a);
-      r[a.billNumber].restaurantId = a.restaurantId;
-      r[a.billNumber].storeId = a.storeId;
-      r[a.billNumber].billNumber = a.billNumber;
-      r[a.billNumber].purchaseDate = a.purchaseDate;
-      r[a.billNumber].supplierId = a.supplierId;
-      r[a.billNumber].total = r[a.billNumber].total + a.netPurchasePrice;
-      r[a.billNumber].createdBy = a.createdBy;
-      r[a.billNumber].createdDate = a.createdDate;
+      r[a.purchaseOrderId] = r[a.purchaseOrderId] || { items: [], total: 0 };
+      r[a.purchaseOrderId].items.push(a);
+      r[a.purchaseOrderId].restaurantId = a.restaurantId;
+      r[a.purchaseOrderId].storeId = a.storeId;
+      r[a.purchaseOrderId].billNumber = a.billNumber;
+      r[a.purchaseOrderId].purchaseOrderId = a.purchaseOrderId;
+      r[a.purchaseOrderId].purchaseDate = a.purchaseDate;
+      r[a.purchaseOrderId].supplierId = a.supplierId;
+      r[a.purchaseOrderId].total =
+        r[a.purchaseOrderId].total + a.netPurchasePrice;
+      r[a.purchaseOrderId].createdBy = a.createdBy;
+      r[a.purchaseOrderId].createdDate = a.createdDate;
+      r[a.purchaseOrderId].purchaseOrderStatus = a.purchaseOrderStatus;
       return r;
     }, Object.create(null));
 
@@ -261,9 +277,17 @@ export const SearchPurchaseOrder = () => {
         <Modal.Header closeButton>
           <Modal.Title>EDIT PO</Modal.Title>
         </Modal.Header>
+        {console.log(currentProduct.purchaseOrderStatus)}
         {currentProduct ? (
           <Modal.Body>
-            <EditPurchaseOrder product={currentProduct}></EditPurchaseOrder>
+            <EditPurchaseOrder
+              product={currentProduct}
+              isEnabled={
+                currentProduct.purchaseOrderStatus === "SUBMITTED"
+                  ? true
+                  : false
+              }
+            ></EditPurchaseOrder>
           </Modal.Body>
         ) : null}
 
@@ -428,6 +452,7 @@ export const SearchPurchaseOrder = () => {
                 <CusTableCell1 align="center">BILL DATE</CusTableCell1>
                 <CusTableCell1 align="center">SUPPLIER</CusTableCell1>
                 <CusTableCell1 align="center">PURCHASE AMOUNT</CusTableCell1>
+                <CusTableCell1 align="center">PO STATUS</CusTableCell1>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -450,7 +475,7 @@ export const SearchPurchaseOrder = () => {
                   {Object.values(groupedData).length > 0 ? (
                     <>
                       {Object.values(groupedData).map((item) => (
-                        <TableRow key={item.billNumber}>
+                        <TableRow key={item.purchaseOrderId}>
                           <CusTableCell align="center">
                             <Typography sx={{ fontSize: "0.75rem" }}>
                               {item.restaurantId}
@@ -470,7 +495,7 @@ export const SearchPurchaseOrder = () => {
                                   handleShowAdd();
                                 }}
                               >
-                                {item.billNumber}
+                                {item.billNumber ? item.billNumber : "N/A"}
                               </Button>
                             </Typography>
                           </CusTableCell>
@@ -489,6 +514,37 @@ export const SearchPurchaseOrder = () => {
                               {item.total}
                             </Typography>
                           </CusTableCell>
+                          <CusTableCell align="center">
+                            <FormControl fullWidth sx={{ marginTop: "5px" }}>
+                              <NativeSelect
+                                defaultValue={item.purchaseOrderStatus}
+                                inputProps={{
+                                  name: "status",
+                                  id: "uncontrolled-native",
+                                  disableUnderline: true,
+                                }}
+                                onChange={(event) => {
+                                  setPOStatus(event.target.value);
+                                }}
+                                sx={{
+                                  fontSize: "0.75rem",
+                                }}
+                              >
+                                <option
+                                  value={"SUBMITTED"}
+                                  style={{ fontSize: "0.75rem" }}
+                                >
+                                  SUBMITTED
+                                </option>
+                                <option
+                                  value={"RECEIVED"}
+                                  style={{ fontSize: "0.75rem" }}
+                                >
+                                  RECEIVED
+                                </option>
+                              </NativeSelect>
+                            </FormControl>
+                          </CusTableCell>
                         </TableRow>
                       ))}
                     </>
@@ -496,7 +552,7 @@ export const SearchPurchaseOrder = () => {
                     <TableRow>
                       <TableCell colSpan={15}>
                         <Alert severity="warning">
-                          No data found for search criteria;
+                          No SUBMITTED/ RECEIVED PO found for search criteria;
                           {selectedStoreObj ? (
                             <>
                               <br></br>Store: {selectedStoreObj.resturantName}

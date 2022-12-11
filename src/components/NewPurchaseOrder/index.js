@@ -329,10 +329,10 @@ export const NewPurchaseOrder = () => {
       return;
     }
 
-    if (!billNo) {
+    /* if (!billNo) {
       toast.error("Bill number is mandatory!");
       return;
-    }
+    } */
 
     if (!billDate) {
       toast.error("Bill date is mandatory!");
@@ -367,7 +367,7 @@ export const NewPurchaseOrder = () => {
         netPurchasePrice: Object.values(addedList)[i].itemFinalPrice,
         gstAmount: Object.values(addedList)[i].itemGSTAmount,
         purchaseCategory: Object.values(addedList)[i].itemCategory,
-        purchaseOrderStatus: "CLOSED",
+        purchaseOrderStatus: "SUBMITTED",
         createdBy: user.loginId,
         createdDate: new Date(),
         updatedBy: user.loginId,

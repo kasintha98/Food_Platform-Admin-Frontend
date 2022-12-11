@@ -587,7 +587,7 @@ export const saveUpdatePurchaseOrder = (item, isPullPo) => {
             " Saved Successfully!"
         );
         if (isPullPo) {
-          dispatch(getClosedPurchaseOrders());
+          dispatch(getSubmittedRecievedPurchaseOrders());
         }
         return res.data;
       } else {
@@ -611,6 +611,7 @@ export const getClosedPurchaseOrders = () => {
       dispatch({ type: inventoryConstants.GET_CLOSED_PURCHASE_ORDERS_REQUEST });
 
       const res = await axios.get("/getPurchaseOrdersByStatus?status=CLOSED");
+      /* const res = await axios.get("/getAllPurchaseOrders"); */
       if (res.status === 200) {
         dispatch({
           type: inventoryConstants.GET_CLOSED_PURCHASE_ORDERS_SUCCESS,
@@ -732,6 +733,42 @@ export const saveAllItemConsumptionSummery = (items) => {
     } catch (error) {
       console.log(error);
       toast.error("Error when updating! Please try again!");
+    }
+  };
+};
+
+export const getSubmittedRecievedPurchaseOrders = () => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: inventoryConstants.GET_CLOSED_PURCHASE_ORDERS_REQUEST });
+
+      /* const res = await axios.get("/getPurchaseOrdersByStatus?status=CLOSED"); */
+      const res = await axios.get("/getAllPurchaseOrders");
+      if (res.status === 200) {
+        dispatch({
+          type: inventoryConstants.GET_CLOSED_PURCHASE_ORDERS_SUCCESS,
+          payload: res.data.filter(function (el) {
+            return (
+              el.purchaseOrderStatus === "SUBMITTED" ||
+              el.purchaseOrderStatus === "RECEIVED"
+            );
+          }),
+        });
+        return res.data;
+      } else {
+        toast.error("Error getting purchase order data!");
+        dispatch({
+          type: inventoryConstants.GET_CLOSED_PURCHASE_ORDERS_FAILURE,
+          payload: [],
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Error getting purchase order data!");
+      dispatch({
+        type: inventoryConstants.GET_CLOSED_PURCHASE_ORDERS_FAILURE,
+        payload: [],
+      });
     }
   };
 };
