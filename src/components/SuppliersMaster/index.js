@@ -361,6 +361,7 @@ export const SuppliersMaster = () => {
     const store = getStoreObjFromId(id);
 
     if (store && type === "NEW") {
+      setNewSupplierName(store.resturantName);
       setNewSupplierAddress(store.address1);
       setNewSupplierCity(store.city);
       setNewSupplierPinCode(store.zipCode ? store.zipCode : 0);
@@ -370,6 +371,10 @@ export const SuppliersMaster = () => {
       /* setCurrentSupplierAddress(store.address1);
       setCurrentSupplierCity(store.city);
       setCurrentSupplierPinCode(store.zipCode ? store.zipCode : 0); */
+      const names = {
+        ...currentSupplierName,
+        [itemId]: store.resturantName,
+      };
       const addresses = {
         ...currentSupplierAddress,
         [itemId]: store.address1,
@@ -382,6 +387,7 @@ export const SuppliersMaster = () => {
         ...currentSupplierPinCode,
         [itemId]: store.zipCode ? store.zipCode : 0,
       };
+      setCurrentSupplierName(names);
       setCurrentSupplierCity(cities);
       setCurrentSupplierAddress(addresses);
       setCurrentSupplierPinCode(zips);
