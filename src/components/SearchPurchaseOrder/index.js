@@ -141,6 +141,8 @@ export const SearchPurchaseOrder = () => {
 
   const [selectedSupplierObj, setSelectedSupplierObj] = useState(null);
   const [groupedData, setGroupedData] = useState({});
+  const [renderGroupedData, setRenderGroupedData] = useState([]);
+
   const [currentProduct, setCurrentProduct] = useState(null);
   const [showAdd, setShowAdd] = useState(false);
 
@@ -200,14 +202,20 @@ export const SearchPurchaseOrder = () => {
     };
     dispatch(savePurchaseOrderStatus(obj)).then((res) => {
       if (res) {
+        dispatch(getSubmittedRecievedPurchaseOrders()).then((res) => {
+          if (res) {
+            searchPurchaseOrders(res);
+          }
+        });
         setPOStatus("");
       }
     });
   };
 
-  const searchPurchaseOrders = () => {
-    if (closedPurchaseOrders) {
-      let searched = closedPurchaseOrders;
+  const searchPurchaseOrders = (mList) => {
+    let list = mList ? mList : closedPurchaseOrders;
+    if (list) {
+      let searched = list;
 
       if (selectedStoreObj) {
         searched = searched.filter(function (el) {
@@ -251,6 +259,9 @@ export const SearchPurchaseOrder = () => {
       r[a.purchaseOrderId].items.push(a);
       r[a.purchaseOrderId].restaurantId = a.restaurantId;
       r[a.purchaseOrderId].storeId = a.storeId;
+      r[a.purchaseOrderId].restaurantName = a.restaurantName;
+      r[a.purchaseOrderId].storeName = a.storeName;
+      r[a.purchaseOrderId].supplierName = a.supplierName;
       r[a.purchaseOrderId].billNumber = a.billNumber;
       r[a.purchaseOrderId].purchaseOrderId = a.purchaseOrderId;
       r[a.purchaseOrderId].purchaseDate = a.purchaseDate;
@@ -264,6 +275,7 @@ export const SearchPurchaseOrder = () => {
     }, Object.create(null));
 
     setGroupedData(grouped);
+    setRenderGroupedData(Object.values(grouped));
   };
 
   const renderDate = (date) => {
@@ -292,7 +304,6 @@ export const SearchPurchaseOrder = () => {
         <Modal.Header closeButton>
           <Modal.Title>EDIT PO</Modal.Title>
         </Modal.Header>
-        {console.log(currentProduct.purchaseOrderStatus)}
         {currentProduct ? (
           <Modal.Body>
             <EditPurchaseOrder
@@ -488,9 +499,9 @@ export const SearchPurchaseOrder = () => {
                 </TableRow>
               ) : (
                 <>
-                  {Object.values(groupedData).length > 0 ? (
+                  {renderGroupedData.length > 0 ? (
                     <>
-                      {Object.values(groupedData).map((item) => (
+                      {renderGroupedData.map((item) => (
                         <TableRow key={item.purchaseOrderId}>
                           <CusTableCell align="center">
                             <Typography sx={{ fontSize: "0.75rem" }}>

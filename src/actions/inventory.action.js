@@ -786,7 +786,8 @@ export const savePurchaseOrderStatus = (item) => {
           type: inventoryConstants.SAVE_PURCHASE_ORDER_STATUS_SUCCESS,
           payload: res.data,
         });
-        dispatch(getSubmittedRecievedPurchaseOrders());
+        toast.success("Saved purchase order status!");
+        /* dispatch(getSubmittedRecievedPurchaseOrders()); */
         return res.data;
       } else {
         toast.error("Error saving purchase order status!");
