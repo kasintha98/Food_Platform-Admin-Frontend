@@ -9,6 +9,7 @@ const initState = {
   salesSummeryByDateList: {},
   salesSummeryByOrderSource: {},
   salesSummeryByPaymentMode: [],
+  dashboardSummaryReport: {},
 };
 
 export default (state = initState, action) => {
@@ -123,6 +124,18 @@ export default (state = initState, action) => {
         salesSummeryByPaymentMode: [],
       };
       break;
+    case reportConstants.GET_REPORT_DASHBOARD_SUMMARY_SUCCESS:
+      state = {
+        ...state,
+        dashboardSummaryReport: action.payload,
+      };
+      break;
+    case reportConstants.GET_REPORT_DASHBOARD_SUMMARY_FAILURE:
+      state = {
+        ...state,
+        dashboardSummaryReport: {},
+      };
+        break;
   }
   return state;
 };
