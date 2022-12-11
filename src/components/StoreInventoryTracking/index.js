@@ -239,12 +239,7 @@ export const StoreInventoryTracking = () => {
   const saveAllChangedList = () => {
     dispatch(saveAllItemConsumptionSummery(updatedItemList)).then((res) => {
       if (res) {
-        //handleRefresh();
-        dispatch(performInventoryUpdateEOD(user.storeId)).then((res) => {
-          if (res) {
-            window.location.reload();
-          }
-        });
+        handleRefresh();
       }
     });
   };
@@ -430,7 +425,7 @@ export const StoreInventoryTracking = () => {
                 </CusTableCell>
                 <CusTableCell align="center">
                   <Typography sx={{ fontSize: "0.75rem", color: "red" }}>
-                    VARIANCE {/* = (E + D) - T */}
+                    VARIANCE = (E + D) - T
                   </Typography>
                 </CusTableCell>
                 <CusTableCell align="center" colSpan={4}>
@@ -665,7 +660,19 @@ export const StoreInventoryTracking = () => {
       <div className="text-center mt-4">
         <Row>
           <Col sm={4} style={{ textAlign: "end" }}>
-            <SaveButton>INVENTORY EOD</SaveButton>
+            <SaveButton
+              onClick={() => {
+                dispatch(performInventoryUpdateEOD(user.storeId)).then(
+                  (res) => {
+                    if (res) {
+                      window.location.reload();
+                    }
+                  }
+                );
+              }}
+            >
+              INVENTORY EOD
+            </SaveButton>
           </Col>
           <Col sm={4} style={{ textAlign: "center" }}>
             <ExcelFile

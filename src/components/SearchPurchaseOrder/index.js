@@ -5,6 +5,7 @@ import styled from "@emotion/styled";
 import { Row, Col, Dropdown, Modal } from "react-bootstrap";
 import { DateRangePicker, DefinedRange } from "react-date-range";
 import DropdownMenu from "@atlaskit/dropdown-menu";
+import SaveIcon from "@mui/icons-material/Save";
 import {
   TableContainer,
   Paper,
@@ -194,20 +195,20 @@ export const SearchPurchaseOrder = () => {
   };
   const handleShowAdd = () => setShowAdd(true);
 
-  const savePurchaseOrderStatusToDB = (id, status) => {
+  const savePurchaseOrderStatusToDB = (id) => {
     const obj = {
       purchaseOrderId: id,
-      itemStatus: status,
+      itemStatus: poStatus,
       updatedBy: user.loginId,
     };
     dispatch(savePurchaseOrderStatus(obj)).then((res) => {
       if (res) {
+        /* setPOStatus(""); */
         dispatch(getSubmittedRecievedPurchaseOrders()).then((res) => {
           if (res) {
             searchPurchaseOrders(res);
           }
         });
-        setPOStatus("");
       }
     });
   };
@@ -480,6 +481,7 @@ export const SearchPurchaseOrder = () => {
                 <CusTableCell1 align="center">SUPPLIER</CusTableCell1>
                 <CusTableCell1 align="center">PURCHASE AMOUNT</CusTableCell1>
                 <CusTableCell1 align="center">PO STATUS</CusTableCell1>
+                <CusTableCell1 align="center">ACTION</CusTableCell1>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -549,6 +551,9 @@ export const SearchPurchaseOrder = () => {
                           <CusTableCell align="center">
                             <FormControl fullWidth sx={{ marginTop: "5px" }}>
                               <NativeSelect
+                                disabled={
+                                  item.purchaseOrderStatus === "RECEIVED"
+                                }
                                 defaultValue={item.purchaseOrderStatus}
                                 inputProps={{
                                   name: "status",
@@ -557,10 +562,6 @@ export const SearchPurchaseOrder = () => {
                                 }}
                                 onChange={(event) => {
                                   setPOStatus(event.target.value);
-                                  savePurchaseOrderStatusToDB(
-                                    item.purchaseOrderId,
-                                    event.target.value
-                                  );
                                 }}
                                 sx={{
                                   fontSize: "0.75rem",
@@ -580,6 +581,27 @@ export const SearchPurchaseOrder = () => {
                                 </option>
                               </NativeSelect>
                             </FormControl>
+                          </CusTableCell>
+                          <CusTableCell align="center">
+                            <IconButton
+                              disabled={item.purchaseOrderStatus === "RECEIVED"}
+                              sx={{
+                                fontSize: "0.75rem",
+                                color: "#92D050",
+                              }}
+                              onClick={() => {
+                                savePurchaseOrderStatusToDB(
+                                  item.purchaseOrderId
+                                );
+                              }}
+                            >
+                              <SaveIcon
+                                sx={{
+                                  height: "0.95rem",
+                                  width: "0.95rem",
+                                }}
+                              ></SaveIcon>
+                            </IconButton>
                           </CusTableCell>
                         </TableRow>
                       ))}

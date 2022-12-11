@@ -305,7 +305,7 @@ export const SuppliersMaster = () => {
       supplierCategory: newsupplierCategory ? newsupplierCategory : "EXTERNAL",
       supplierStatus: newSupplierStatus ? newSupplierStatus : "ACTIVE",
       createdBy: user.loginId,
-      storeId: supplierStore,
+      storeId: newSupplierStore,
       createdDate: new Date(),
       updatedBy: user.loginId,
       updatedDate: new Date(),
@@ -642,7 +642,6 @@ export const SuppliersMaster = () => {
                           <CusTableCell align="center">
                             <FormControl fullWidth sx={{ marginTop: "5px" }}>
                               <NativeSelect
-                                key={item.supplierId}
                                 defaultValue={item.storeId}
                                 inputProps={{
                                   name: "status",
