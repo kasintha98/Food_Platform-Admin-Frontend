@@ -23,6 +23,7 @@ import {
 import {
   getItemConsumptionSummery,
   saveAllItemConsumptionSummery,
+  performInventoryUpdateEOD,
 } from "../../actions";
 import SaveIcon from "@mui/icons-material/Save";
 import EditIcon from "@mui/icons-material/Edit";
@@ -238,7 +239,12 @@ export const StoreInventoryTracking = () => {
   const saveAllChangedList = () => {
     dispatch(saveAllItemConsumptionSummery(updatedItemList)).then((res) => {
       if (res) {
-        handleRefresh();
+        //handleRefresh();
+        dispatch(performInventoryUpdateEOD(user.storeId)).then((res) => {
+          if (res) {
+            window.location.reload();
+          }
+        });
       }
     });
   };
@@ -424,7 +430,7 @@ export const StoreInventoryTracking = () => {
                 </CusTableCell>
                 <CusTableCell align="center">
                   <Typography sx={{ fontSize: "0.75rem", color: "red" }}>
-                    VARIANCE = (E + D) - T
+                    VARIANCE {/* = (E + D) - T */}
                   </Typography>
                 </CusTableCell>
                 <CusTableCell align="center" colSpan={4}>
@@ -526,9 +532,9 @@ export const StoreInventoryTracking = () => {
                               </CusTableCell>
                               <CusTableCell align="center">
                                 <Typography sx={{ fontSize: "0.75rem" }}>
-                                  {/* {item.itemConsumptionVarianceQty} */}
+                                  {item.itemConsumptionVarianceQty}
 
-                                  {getVariance(item)}
+                                  {/* {getVariance(item)} */}
                                 </Typography>
                               </CusTableCell>
                               <CusTableCell align="center">
@@ -562,15 +568,19 @@ export const StoreInventoryTracking = () => {
                                 align="center"
                                 sx={{
                                   backgroundColor:
-                                    getVariance(item) < 0
+                                    /* getVariance(item) */ item.itemConsumptionVarianceQty <
+                                    0
                                       ? "yellow"
                                       : "lightgreen",
                                 }}
                               >
                                 <Typography sx={{ fontSize: "0.75rem" }}>
-                                  {getVariance(item) < 0
-                                    ? "In-Complete"
-                                    : "Complete"}
+                                  {
+                                    /* getVariance(item) */ item.itemConsumptionVarianceQty <
+                                    0
+                                      ? "In-Complete"
+                                      : "Complete"
+                                  }
                                   {/* {item.reconStatus} */}
                                 </Typography>
                               </CusTableCell>

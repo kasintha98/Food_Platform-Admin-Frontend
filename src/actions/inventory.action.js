@@ -806,3 +806,35 @@ export const savePurchaseOrderStatus = (item) => {
     }
   };
 };
+
+export const performInventoryUpdateEOD = (storeId) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: inventoryConstants.PERFORM_INV_UPDATE_EOD_REQUEST });
+
+      const res = await axios.get(
+        `/performInventoryUpdateEOD?restaurantId=R001&storeId=${storeId}`
+      );
+      if (res.status === 200) {
+        dispatch({
+          type: inventoryConstants.PERFORM_INV_UPDATE_EOD_SUCCESS,
+          payload: res.data,
+        });
+        return true;
+      } else {
+        toast.error("Error performing inventory update EOD data!");
+        dispatch({
+          type: inventoryConstants.PERFORM_INV_UPDATE_EOD_FAILURE,
+          payload: [],
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Error performing inventory update EOD data!");
+      dispatch({
+        type: inventoryConstants.PERFORM_INV_UPDATE_EOD_FAILURE,
+        payload: [],
+      });
+    }
+  };
+};
