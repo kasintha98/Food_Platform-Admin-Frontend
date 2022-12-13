@@ -153,6 +153,7 @@ export const SalesRevenueByChanelChart = () => {
         }
   },
   vAxis: {
+    textPosition: 'none',
     gridlines: {
         color: 'transparent'
     }
@@ -161,10 +162,14 @@ export const SalesRevenueByChanelChart = () => {
     textStyle: {
       fontName:'Roboto Condensed, sans-serif',
       bold: true,
-      fontSize: 9,
-      color: '#fff',
+      fontSize: 11,
+      color: '#000',
     }
-  }
+  },
+  chartArea: {
+    height: "80%",
+    width: "95%"
+},
   };
 
 
@@ -202,7 +207,7 @@ export const SalesRevenueByChanelChart = () => {
   return (
     <div className="mainDivStyle">
       {orderSources &&
-      Object.keys(salesSummeryByOrderSource).length > 0 &&
+      Object.keys(salesSummeryByOrderSource).length > 0 && finalData.length > 1 &&
       salesSummeryByOrderSource.salesSummeryByOrderSource &&
       salesSummeryByOrderSource.salesSummeryByOrderSource.length > 0 ? (
         <>
