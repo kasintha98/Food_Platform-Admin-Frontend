@@ -166,27 +166,37 @@ export const RevenueByPaymentMode = (props) => {
 
   const options = {
     title: "Sales by payment mode",
-    pieHole: 0.4,
+    pieHole: 0.35,
     width:'100%',
     height:'400',
     is3D: false,
     chartArea: {
-      left: "5%",
-      top: "15%",
-      height: "80%",
-      width: "80%"
-  }
+      left: "1%",
+      top: "5%",
+      height: "100%",
+      width: "100%"
+  },
+  // legend: 'none',
+  // tooltip: { isHtml: true }
+  // tooltip: { trigger: "selection" }
+  legend: {
+    position: 'labeled',
+    textStyle: {
+          bold: true,
+          fontSize: 11,
+          fontName: 'Roboto Condensed, sans-serif',
+        }
+  },
+  pieSliceText: 'none',
   };
 
   // ----------------- Data Formatting End ----------------
 
 
   return (
-    <div style={{marginTop:'5px'}} >
+    <div style={{marginTop:'0px'}} >
       <Chart
         chartType="PieChart"
-        // width="100%"
-        // height="400px"
         data={finalData}
         options={options}
       />
