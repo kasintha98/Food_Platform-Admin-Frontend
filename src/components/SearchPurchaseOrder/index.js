@@ -202,23 +202,27 @@ export const SearchPurchaseOrder = () => {
     setIsSave(edits);
   };
 
-  const savePurchaseOrderStatusToDB = (id) => {
-    const obj = {
-      purchaseOrderId: id,
-      itemStatus: poStatus,
-      updatedBy: user.loginId,
-    };
-    dispatch(savePurchaseOrderStatus(obj)).then((res) => {
-      if (res) {
-        /* setPOStatus(""); */
-        dispatch(getSubmittedRecievedPurchaseOrders()).then((res) => {
-          if (res) {
-            setIsSave({});
-            searchPurchaseOrders(res);
-          }
-        });
-      }
-    });
+  const savePurchaseOrderStatusToDB = (id, item) => {
+    if (poStatus) {
+      const obj = {
+        purchaseOrderId: id,
+        itemStatus: poStatus,
+        updatedBy: user.loginId,
+      };
+      dispatch(savePurchaseOrderStatus(obj)).then((res) => {
+        if (res) {
+          setPOStatus("");
+          dispatch(getSubmittedRecievedPurchaseOrders()).then((res) => {
+            if (res) {
+              setIsSave({});
+              searchPurchaseOrders(res);
+            }
+          });
+        }
+      });
+    } else {
+      setIsSave({});
+    }
   };
 
   const searchPurchaseOrders = (mList) => {
@@ -630,7 +634,8 @@ export const SearchPurchaseOrder = () => {
                                 }}
                                 onClick={() => {
                                   savePurchaseOrderStatusToDB(
-                                    item.purchaseOrderId
+                                    item.purchaseOrderId,
+                                    item
                                   );
                                 }}
                               >
