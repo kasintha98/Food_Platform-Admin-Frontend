@@ -822,9 +822,10 @@ export const performInventoryUpdateEOD = (storeId, restaurantId) => {
           type: inventoryConstants.PERFORM_INV_UPDATE_EOD_SUCCESS,
           payload: res.data,
         });
+        toast.success("Inventory EOD success!");
         return true;
       } else {
-        toast.error("Error performing inventory update EOD data!");
+        toast.error("Inventory EOD error!");
         dispatch({
           type: inventoryConstants.PERFORM_INV_UPDATE_EOD_FAILURE,
           payload: [],
@@ -832,7 +833,7 @@ export const performInventoryUpdateEOD = (storeId, restaurantId) => {
       }
     } catch (error) {
       console.log(error);
-      toast.error("Error performing inventory update EOD data!");
+      toast.error("Inventory EOD error!");
       dispatch({
         type: inventoryConstants.PERFORM_INV_UPDATE_EOD_FAILURE,
         payload: [],

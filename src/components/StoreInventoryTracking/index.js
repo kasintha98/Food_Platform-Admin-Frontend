@@ -280,7 +280,8 @@ export const StoreInventoryTracking = () => {
       )
     ).then((res) => {
       if (res) {
-        window.location.reload();
+        //window.location.reload();
+        handleRefresh();
       }
     });
   };
