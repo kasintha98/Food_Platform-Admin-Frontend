@@ -116,6 +116,9 @@ export const AdminDashboard = () => {
 
   // console.log("+++++++++++++++++++++++");
   // console.log(dashboardSummaryReport.reportDashboardSummery);
+  // if(dashboardSummaryReport.reportDashboardSummery != null){
+  // console.log(dashboardSummaryReport.reportDashboardSummery[0].reportDashboardDetails);
+  // }
   // console.log("+++++++++++++++++++++++");
 
   const dashBoardData = {
@@ -313,17 +316,36 @@ export const AdminDashboard = () => {
   /**
    * Generate Data for Orders Chart
    */
+  // const primaryData = [["store","orders",{ role: "annotation", type: "number" }]];
+  // const getOrdersData = () =>{
+
+  //   if (
+  //     Object.keys(salesSummeryByDateList).length > 0 &&
+  //     salesSummeryByDateList.salesSummeryByDateList &&
+  //     salesSummeryByDateList.salesSummeryByDateList.length > 0
+  //   ) {
+  //     for (let i = 0; i < salesSummeryByDateList.salesSummeryByDateList.length; i++) {
+  //       var source = salesSummeryByDateList.salesSummeryByDateList[i].restaurantName;
+  //       var value = salesSummeryByDateList.salesSummeryByDateList[i].noOfOrders;
+  //       primaryData.push([source,value,value]);
+  //     }
+  //   }
+
+  //   return primaryData;
+
+  // }
+
   const primaryData = [["store","orders",{ role: "annotation", type: "number" }]];
   const getOrdersData = () =>{
 
     if (
-      Object.keys(salesSummeryByDateList).length > 0 &&
-      salesSummeryByDateList.salesSummeryByDateList &&
-      salesSummeryByDateList.salesSummeryByDateList.length > 0
+      Object.keys(dashboardSummaryReport).length > 0 &&
+      dashboardSummaryReport.reportDashboardSummery &&
+      dashboardSummaryReport.reportDashboardSummery.length > 0
     ) {
-      for (let i = 0; i < salesSummeryByDateList.salesSummeryByDateList.length; i++) {
-        var source = salesSummeryByDateList.salesSummeryByDateList[i].restaurantName;
-        var value = salesSummeryByDateList.salesSummeryByDateList[i].noOfOrders;
+      for (let i = 0; i < dashboardSummaryReport.reportDashboardSummery[0].reportDashboardDetails.length; i++) {
+        var source = dashboardSummaryReport.reportDashboardSummery[0].reportDashboardDetails[i].store_name;
+        var value = dashboardSummaryReport.reportDashboardSummery[0].reportDashboardDetails[i].total_orders;
         primaryData.push([source,value,value]);
       }
     }
@@ -331,6 +353,7 @@ export const AdminDashboard = () => {
     return primaryData;
 
   }
+
   const ordersData = getOrdersData();
 
   // console.log("***********ordersData**************");
@@ -341,23 +364,44 @@ export const AdminDashboard = () => {
    * Generate Data for Avg Order Value Chart
    */
   const avgPrimaryData = [["store","orders",{ role: "annotation", type: "number" }]];
+  // const getAvgOrderValuesData = () =>{
+
+  //   if (
+  //     Object.keys(salesSummeryByDateList).length > 0 &&
+  //     salesSummeryByDateList.salesSummeryByDateList &&
+  //     salesSummeryByDateList.salesSummeryByDateList.length > 0
+  //   ) {
+  //     for (let i = 0; i < salesSummeryByDateList.salesSummeryByDateList.length; i++) {
+  //       var source = salesSummeryByDateList.salesSummeryByDateList[i].restaurantName;
+  //       var value = Number(
+  //         Number(
+  //           salesSummeryByDateList.salesSummeryByDateList[i].orderValue
+  //         ) /
+  //           Number(
+  //             salesSummeryByDateList.salesSummeryByDateList[i].noOfOrders
+  //           )
+  //       ).toFixed(2);
+  //       avgPrimaryData.push([source,Number(value),value]);
+  //     }
+  //   }
+
+  //   return avgPrimaryData;
+
+  // }
+  // const avgOrdersValueData = getAvgOrderValuesData();
+
+
+
   const getAvgOrderValuesData = () =>{
 
     if (
-      Object.keys(salesSummeryByDateList).length > 0 &&
-      salesSummeryByDateList.salesSummeryByDateList &&
-      salesSummeryByDateList.salesSummeryByDateList.length > 0
+      Object.keys(dashboardSummaryReport).length > 0 &&
+      dashboardSummaryReport.reportDashboardSummery &&
+      dashboardSummaryReport.reportDashboardSummery.length > 0
     ) {
-      for (let i = 0; i < salesSummeryByDateList.salesSummeryByDateList.length; i++) {
-        var source = salesSummeryByDateList.salesSummeryByDateList[i].restaurantName;
-        var value = Number(
-          Number(
-            salesSummeryByDateList.salesSummeryByDateList[i].orderValue
-          ) /
-            Number(
-              salesSummeryByDateList.salesSummeryByDateList[i].noOfOrders
-            )
-        ).toFixed(2);
+      for (let i = 0; i < dashboardSummaryReport.reportDashboardSummery[0].reportDashboardDetails.length; i++) {
+        var source = dashboardSummaryReport.reportDashboardSummery[0].reportDashboardDetails[i].store_name;
+        var value = dashboardSummaryReport.reportDashboardSummery[0].reportDashboardDetails[i].avg_order_value;
         avgPrimaryData.push([source,Number(value),value]);
       }
     }
@@ -370,6 +414,76 @@ export const AdminDashboard = () => {
   // console.log("***********avgOrdersValueData**************");
   // console.log(avgOrdersValueData);
   // console.log("***********END*******");
+
+
+  /**
+   * Data Format for Sale over Time
+   */
+   const salesPrimaryData = [["store", "Value",{ role: "annotation", type: "string" }]];
+   const getSalesData = () =>{
+
+    if (
+      Object.keys(dashboardSummaryReport).length > 0 &&
+      dashboardSummaryReport.reportDashboardSummery &&
+      dashboardSummaryReport.reportDashboardSummery.length > 0
+    ) {
+      for (let i = 0; i < dashboardSummaryReport.reportDashboardSummery[0].reportDashboardDetails.length; i++) {
+        var source = dashboardSummaryReport.reportDashboardSummery[0].reportDashboardDetails[i].store_name;
+        var value = dashboardSummaryReport.reportDashboardSummery[0].reportDashboardDetails[i].total_sales;
+        salesPrimaryData.push([source,Number(value),value]);
+      }
+    }
+
+    return salesPrimaryData;
+
+  }
+  const salesChartData = getSalesData();
+
+  // console.log("***********salesChartData**************");
+  // console.log(salesChartData);
+  // console.log("***********END*******");
+
+  var optionsSales = {
+    title: "Sales",
+    bar: {groupWidth: "50%"},
+    colors: ['#38b6ff'],
+    width:'100%',
+    height:'490',
+    legend: 'none',
+    vAxis: {
+      // title: 'Stores',
+      titleTextStyle: {
+          fontName: 'Roboto Condensed, sans-serif',
+          fontSize: 9,
+          bold: true,
+          italic: false
+      },
+      textStyle : {
+            fontSize: 9,
+            fontName:'Roboto Condensed, sans-serif',
+            bold: true,
+        }
+  },
+  annotations: {
+    textStyle: {
+      fontName:'Roboto Condensed, sans-serif',
+      bold: true,
+      fontSize: 11,
+      color: '#000',
+    }
+  },
+  hAxis: {
+    textPosition: 'none',
+    viewWindow: {
+      min: 0,
+    },
+    gridlines: {
+        color: 'transparent',
+        // count: 10
+    }
+  },
+  };
+
 
   var optionsOrder = {
     title: "Orders count",
@@ -396,11 +510,12 @@ export const AdminDashboard = () => {
     textStyle: {
       fontName:'Roboto Condensed, sans-serif',
       bold: true,
-      fontSize: 9,
-      color: '#fff',
+      fontSize: 11,
+      color: '#000',
     }
   },
   hAxis: {
+    textPosition: 'none',
     viewWindow: {
       min: 0,
     },
@@ -439,8 +554,8 @@ export const AdminDashboard = () => {
     textStyle: {
       fontName:'Roboto Condensed, sans-serif',
       bold: true,
-      fontSize: 9,
-      color: '#fff',
+      fontSize: 11,
+      color: '#000',
       // The color of the text outline.
       // auraColor: '#d799ae',
       // The transparency of the text.
@@ -448,6 +563,7 @@ export const AdminDashboard = () => {
     }
   },
   hAxis: {
+    textPosition: 'none',
     viewWindow: {
       min: 0,
     },
@@ -703,11 +819,18 @@ export const AdminDashboard = () => {
               <Row style={{height:'520px', backgroundColor: '', marginTop: '0px' }}>
                 <Col className="secondColStyle" style={{ backgroundColor: '' }}>
                   <div>
-                    {salesSummeryByDateList &&
-                      salesSummeryByDateList.salesSummeryByDateList &&
-                      salesSummeryByDateList.salesSummeryByDateList.length > 0 ? (
+                    {dashboardSummaryReport && salesChartData.length > 1 &&
+                      dashboardSummaryReport.reportDashboardSummery &&
+                      dashboardSummaryReport.reportDashboardSummery.length > 0 ? (
                       <>
-                        <SalesOverTimeChart></SalesOverTimeChart>
+                        {/* <SalesOverTimeChart></SalesOverTimeChart> */}
+                        <div style={{marginTop:'10px'}}>
+                          <Chart
+                            chartType="BarChart"
+                            data={salesChartData}
+                            options={optionsSales}
+                          />
+                        </div>
                       </>
                     ) : (
                       <div className="mb-3 pl-3 pt-3">
@@ -723,9 +846,9 @@ export const AdminDashboard = () => {
                 </Col>
                 <Col className="secondColStyle" style={{ backgroundColor: '' }}>
                   <div>
-                    {salesSummeryByDateList &&
-                      salesSummeryByDateList.salesSummeryByDateList &&
-                      salesSummeryByDateList.salesSummeryByDateList.length > 0 ? (
+                    {dashboardSummaryReport && ordersData.length > 1 &&
+                      dashboardSummaryReport.reportDashboardSummery &&
+                      dashboardSummaryReport.reportDashboardSummery.length > 0 ? (
                       <>
                         <div style={{marginTop:'10px'}}>
                           <Chart
@@ -749,9 +872,9 @@ export const AdminDashboard = () => {
                 </Col>
                 <Col className="secondColStyle" style={{ backgroundColor: '' }}>
                   <div >
-                    {salesSummeryByDateList &&
-                      salesSummeryByDateList.salesSummeryByDateList &&
-                      salesSummeryByDateList.salesSummeryByDateList.length > 0 ? (
+                    {dashboardSummaryReport && avgOrdersValueData.length > 1 &&
+                      dashboardSummaryReport.reportDashboardSummery &&
+                      dashboardSummaryReport.reportDashboardSummery.length > 0 ? (
                       <>
                         <div style={{marginTop:'10px'}}>
                           <Chart
@@ -782,7 +905,7 @@ export const AdminDashboard = () => {
 
             <div style={{height:'520px', backgroundColor: '', marginTop: '0px' }}>
               <Row>
-                <Col style={{ maxWidth: '50%',height:'500px', backgroundColor: '', marginTop:'0px'}}>
+                <Col style={{ maxWidth: '45%',height:'500px', backgroundColor: '', marginTop:'0px'}}>
                   {salesSummeryByPaymentMode &&
                     configPaymentModes &&
                     salesSummeryByPaymentMode.length > 0 ? (
