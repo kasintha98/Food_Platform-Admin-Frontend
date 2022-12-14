@@ -203,7 +203,7 @@ export const SearchPurchaseOrder = () => {
   };
 
   const savePurchaseOrderStatusToDB = (id, item) => {
-    if (poStatus) {
+    if (poStatus && poStatus !== item.purchaseOrderStatus) {
       const obj = {
         purchaseOrderId: id,
         itemStatus: poStatus,
