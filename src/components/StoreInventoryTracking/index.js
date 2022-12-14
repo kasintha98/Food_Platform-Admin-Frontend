@@ -29,6 +29,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import EditIcon from "@mui/icons-material/Edit";
 import ReactPaginate from "react-paginate";
 import ReactExport from "react-export-excel";
+import { toast } from "react-toastify";
 const ExcelFile = ReactExport.ExcelFile;
 const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
 const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
@@ -237,11 +238,15 @@ export const StoreInventoryTracking = () => {
   };
 
   const saveAllChangedList = () => {
-    dispatch(saveAllItemConsumptionSummery(updatedItemList)).then((res) => {
-      if (res) {
-        handleRefresh();
-      }
-    });
+    if (updatedItemList && updatedItemList.length > 0) {
+      dispatch(saveAllItemConsumptionSummery(updatedItemList)).then((res) => {
+        if (res) {
+          handleRefresh();
+        }
+      });
+    } else {
+      toast.error("No items to be updated!");
+    }
   };
 
   const calculateTotalAmount = () => {
@@ -260,6 +265,24 @@ export const StoreInventoryTracking = () => {
     const selected = event.selected;
     const offset = selected * pagination.numberPerPage;
     setPagination({ ...pagination, offset });
+  };
+
+  const handleEODBtn = () => {
+    if (!selectedStoreObj) {
+      toast.error("Please select a store first!");
+      return;
+    }
+
+    dispatch(
+      performInventoryUpdateEOD(
+        selectedStoreObj.storeId,
+        selectedStoreObj.restaurantId
+      )
+    ).then((res) => {
+      if (res) {
+        window.location.reload();
+      }
+    });
   };
 
   return (
@@ -527,9 +550,9 @@ export const StoreInventoryTracking = () => {
                               </CusTableCell>
                               <CusTableCell align="center">
                                 <Typography sx={{ fontSize: "0.75rem" }}>
-                                  {item.itemConsumptionVarianceQty}
+                                  {/* {item.itemConsumptionVarianceQty} */}
 
-                                  {/* {getVariance(item)} */}
+                                  {getVariance(item)}
                                 </Typography>
                               </CusTableCell>
                               <CusTableCell align="center">
@@ -563,19 +586,19 @@ export const StoreInventoryTracking = () => {
                                 align="center"
                                 sx={{
                                   backgroundColor:
-                                    /* getVariance(item) */ item.itemConsumptionVarianceQty <
-                                    0
-                                      ? "yellow"
+                                    getVariance(
+                                      item
+                                    ) /* item.itemConsumptionVarianceQty */ < 0
+                                      ? "#FFBF00"
                                       : "lightgreen",
                                 }}
                               >
                                 <Typography sx={{ fontSize: "0.75rem" }}>
-                                  {
-                                    /* getVariance(item) */ item.itemConsumptionVarianceQty <
-                                    0
-                                      ? "In-Complete"
-                                      : "Complete"
-                                  }
+                                  {getVariance(
+                                    item
+                                  ) /* item.itemConsumptionVarianceQty */ < 0
+                                    ? "In-Complete"
+                                    : "Complete"}
                                   {/* {item.reconStatus} */}
                                 </Typography>
                               </CusTableCell>
@@ -662,13 +685,7 @@ export const StoreInventoryTracking = () => {
           <Col sm={4} style={{ textAlign: "end" }}>
             <SaveButton
               onClick={() => {
-                dispatch(performInventoryUpdateEOD(user.storeId)).then(
-                  (res) => {
-                    if (res) {
-                      window.location.reload();
-                    }
-                  }
-                );
+                handleEODBtn();
               }}
             >
               INVENTORY EOD

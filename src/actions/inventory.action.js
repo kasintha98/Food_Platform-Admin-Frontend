@@ -809,13 +809,13 @@ export const savePurchaseOrderStatus = (item) => {
   };
 };
 
-export const performInventoryUpdateEOD = (storeId) => {
+export const performInventoryUpdateEOD = (storeId, restaurantId) => {
   return async (dispatch) => {
     try {
       dispatch({ type: inventoryConstants.PERFORM_INV_UPDATE_EOD_REQUEST });
 
       const res = await axios.get(
-        `/performInventoryUpdateEOD?restaurantId=R001&storeId=${storeId}`
+        `/performInventoryUpdateEOD?restaurantId=${restaurantId}&storeId=${storeId}`
       );
       if (res.status === 200) {
         dispatch({
