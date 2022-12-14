@@ -226,10 +226,10 @@ export const InventoryItemMaster = () => {
       return;
     }
 
-    if (!newItemNo) {
+    /* if (!newItemNo) {
       toast.error("Item No is mandatory!");
       return;
-    }
+    } */
 
     const newItem = {
       itemId: newItemNo,
