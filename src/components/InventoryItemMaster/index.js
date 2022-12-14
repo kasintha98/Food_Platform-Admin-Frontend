@@ -333,7 +333,7 @@ export const InventoryItemMaster = () => {
                               }}
                               fullWidth
                               variant="standard"
-                              disabled={!isSave[item.itemId]}
+                              disabled={/* !isSave[item.itemId] */ true}
                               InputProps={{
                                 disableUnderline: true, // <== added this
                               }}
@@ -534,7 +534,7 @@ export const InventoryItemMaster = () => {
                           {activeInventory ? activeInventory.length + 1 : "#"}
                         </CusTableCell>
                         <CusTableCell align="center">
-                          <CusTextField
+                          {/* <CusTextField
                             value={newItemNo}
                             onChange={(event) => {
                               setNewItemNo(event.target.value);
@@ -544,7 +544,10 @@ export const InventoryItemMaster = () => {
                             InputProps={{
                               disableUnderline: true, // <== added this
                             }}
-                          />
+                          /> */}
+                          <Typography sx={{ fontSize: "0.75rem" }}>
+                            N/A
+                          </Typography>
                         </CusTableCell>
                         <CusTableCell align="center">
                           <CusTextField
