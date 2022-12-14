@@ -6,6 +6,7 @@ import { Row, Col, Dropdown, Modal } from "react-bootstrap";
 import { DateRangePicker, DefinedRange } from "react-date-range";
 import DropdownMenu from "@atlaskit/dropdown-menu";
 import SaveIcon from "@mui/icons-material/Save";
+import EditIcon from "@mui/icons-material/Edit";
 import {
   TableContainer,
   Paper,
@@ -139,6 +140,7 @@ export const SearchPurchaseOrder = () => {
   const [billNo, setBillNo] = useState("");
   const [selectedSupplier, setSelectedSupplier] = useState("");
   const [poStatus, setPOStatus] = useState("");
+  const [isSave, setIsSave] = useState({});
 
   const [selectedSupplierObj, setSelectedSupplierObj] = useState(null);
   const [groupedData, setGroupedData] = useState({});
@@ -195,6 +197,11 @@ export const SearchPurchaseOrder = () => {
   };
   const handleShowAdd = () => setShowAdd(true);
 
+  const onEditClickHandle = (id) => {
+    let edits = { ...isSave, [id]: true };
+    setIsSave(edits);
+  };
+
   const savePurchaseOrderStatusToDB = (id) => {
     const obj = {
       purchaseOrderId: id,
@@ -206,6 +213,7 @@ export const SearchPurchaseOrder = () => {
         /* setPOStatus(""); */
         dispatch(getSubmittedRecievedPurchaseOrders()).then((res) => {
           if (res) {
+            setIsSave({});
             searchPurchaseOrders(res);
           }
         });
@@ -551,9 +559,7 @@ export const SearchPurchaseOrder = () => {
                           <CusTableCell align="center">
                             <FormControl fullWidth sx={{ marginTop: "5px" }}>
                               <NativeSelect
-                                disabled={
-                                  item.purchaseOrderStatus === "RECEIVED"
-                                }
+                                disabled={!isSave[item.purchaseOrderId]}
                                 defaultValue={item.purchaseOrderStatus}
                                 inputProps={{
                                   name: "status",
@@ -567,7 +573,40 @@ export const SearchPurchaseOrder = () => {
                                   fontSize: "0.75rem",
                                 }}
                               >
-                                <option
+                                {item.purchaseOrderStatus === "SUBMITTED" ? (
+                                  <option
+                                    value={"SUBMITTED"}
+                                    style={{ fontSize: "0.75rem" }}
+                                  >
+                                    SUBMITTED
+                                  </option>
+                                ) : null}
+                                {item.purchaseOrderStatus === "SUBMITTED" ? (
+                                  <option
+                                    value={"RECEIVED"}
+                                    style={{ fontSize: "0.75rem" }}
+                                  >
+                                    RECEIVED
+                                  </option>
+                                ) : null}
+                                {item.purchaseOrderStatus === "RECEIVED" ? (
+                                  <option
+                                    value={"RECEIVED"}
+                                    style={{ fontSize: "0.75rem" }}
+                                  >
+                                    RECEIVED
+                                  </option>
+                                ) : null}
+                                {item.purchaseOrderStatus === "RECEIVED" ? (
+                                  <option
+                                    value={"SUBMITTED"}
+                                    style={{ fontSize: "0.75rem" }}
+                                  >
+                                    SUBMITTED
+                                  </option>
+                                ) : null}
+
+                                {/* <option
                                   value={"SUBMITTED"}
                                   style={{ fontSize: "0.75rem" }}
                                 >
@@ -578,30 +617,51 @@ export const SearchPurchaseOrder = () => {
                                   style={{ fontSize: "0.75rem" }}
                                 >
                                   RECEIVED
-                                </option>
+                                </option> */}
                               </NativeSelect>
                             </FormControl>
                           </CusTableCell>
                           <CusTableCell align="center">
-                            <IconButton
-                              disabled={item.purchaseOrderStatus === "RECEIVED"}
-                              sx={{
-                                fontSize: "0.75rem",
-                                color: "#92D050",
-                              }}
-                              onClick={() => {
-                                savePurchaseOrderStatusToDB(
-                                  item.purchaseOrderId
-                                );
-                              }}
-                            >
-                              <SaveIcon
+                            {isSave[item.purchaseOrderId] ? (
+                              <IconButton
                                 sx={{
-                                  height: "0.95rem",
-                                  width: "0.95rem",
+                                  fontSize: "0.75rem",
+                                  color: "#92D050",
                                 }}
-                              ></SaveIcon>
-                            </IconButton>
+                                onClick={() => {
+                                  savePurchaseOrderStatusToDB(
+                                    item.purchaseOrderId
+                                  );
+                                }}
+                              >
+                                <SaveIcon
+                                  sx={{
+                                    height: "0.95rem",
+                                    width: "0.95rem",
+                                  }}
+                                ></SaveIcon>
+                              </IconButton>
+                            ) : (
+                              <IconButton
+                                disabled={
+                                  item.purchaseOrderStatus === "RECEIVED"
+                                }
+                                sx={{
+                                  fontSize: "0.75rem",
+                                  color: "#FFC000",
+                                }}
+                                onClick={() => {
+                                  onEditClickHandle(item.purchaseOrderId);
+                                }}
+                              >
+                                <EditIcon
+                                  sx={{
+                                    height: "0.95rem",
+                                    width: "0.95rem",
+                                  }}
+                                ></EditIcon>
+                              </IconButton>
+                            )}
                           </CusTableCell>
                         </TableRow>
                       ))}
