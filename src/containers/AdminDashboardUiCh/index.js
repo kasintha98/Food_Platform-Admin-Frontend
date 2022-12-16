@@ -25,6 +25,9 @@ import { SalesRevenueByChanelChart } from "../../components/SalesRevenueByChanel
 // import { RevenueByPaymentMode } from "../../components/RevenueByPaymentMode";
 import { RevenueByPaymentMode } from "../../components/RevenueByPaymentModeUiCh";
 
+import { useMediaQuery } from "react-responsive";
+
+
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 import { Chart } from "react-google-charts";
@@ -52,9 +55,10 @@ import "./style.css";
 const CusMenuItem = styled(MenuItem)``;
 
 const CusDDT = styled(Dropdown.Toggle)`
-  font-weight: 500;
+  font-weight: 400;
   font-size: 0.875rem;
   line-height: 1.75;
+  font-family: Roboto Condensed, sans-serif;
 `;
 
 const CusSelect = styled(Select)`
@@ -91,6 +95,10 @@ const NumberDiv = styled.div`
 `;
 
 export const AdminDashboard = () => {
+  const isMobile = useMediaQuery({ query: `(max-width: 1224px)` });
+
+  // const scrWidth = window.screen.width;
+
   const stores = useSelector((state) => state.store.stores);
   const user = useSelector((state) => state.auth.user);
   const orderSources = useSelector((state) => state.user.orderSources);
@@ -112,7 +120,6 @@ export const AdminDashboard = () => {
   const dashboardSummaryReport = useSelector(
     (state) => state.report.dashboardSummaryReport
   );
-
 
   // console.log("+++++++++++++++++++++++");
   // console.log(dashboardSummaryReport.reportDashboardSummery);
@@ -596,7 +603,7 @@ export const AdminDashboard = () => {
               </Dropdown.Menu>
             </Dropdown>
 
-            <DropdownMenu
+            <DropdownMenu 
               isOpen={isOpen}
               onOpenChange={(attrs) => {
                 setIsOpen(attrs.isOpen);
@@ -610,21 +617,17 @@ export const AdminDashboard = () => {
                 ranges={dateState}
               />
             </DropdownMenu>
-          </Row>
-        </div>
 
-        <div className="mt-3">
-          <Row className="align-items-center">
-            <Col sm={3} className="m-0 p-0">
-              <FormControl fullWidth>
+             {/* <Col style={{backgroundColor:'red'}} sm={3} className="m-0 p-0"> */}
+              <FormControl style={{backgroundColor:'',marginLeft:"10px", width:"25%"}} >
                 <InputLabel
-                  sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
+                  sx={{ fontSize: "0.75rem", lineHeight: "2rem",marginTop:'1px'}}
                   id="demo-simple-select-label"
                 >
                   Please select the store
                 </InputLabel>
-                <CusSelect
-                  sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
+                <Select size = 'small'
+                  sx={{ fontSize: "0.75rem", lineHeight: "1rem", width:"100%", marginTop:'3px'  }}
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   value={selectedStore}
@@ -652,43 +655,13 @@ export const AdminDashboard = () => {
                     >
                       <span>
                         {store.resturantName}
-                        {/* <br></br>
-                        <span style={{ fontSize: "0.70rem", color: "#767171" }}>
-                          {store.address1}
-                        </span>
-                        {store.address2 ? (
-                          <>
-                            ,{" "}
-                            <span
-                              style={{
-                                fontSize: "0.70rem",
-                                color: "#767171",
-                              }}
-                            >
-                              {store.address2}
-                            </span>
-                          </>
-                        ) : null}
-                        {store.address3 ? (
-                          <>
-                            ,{" "}
-                            <span
-                              style={{
-                                fontSize: "0.70rem",
-                                color: "#767171",
-                              }}
-                            >
-                              {store.address3}
-                            </span>
-                          </>
-                        ) : null} */}
                       </span>
                     </CusMenuItem>
                   ))}
-                </CusSelect>
+                </Select>
               </FormControl>
-            </Col>
-            <Col sm={3}>
+            {/* </Col> */}
+            <Col style={{width:'40%'}} sm={4}>
               {user.roleCategory === "SUPER_ADMIN" ? (
                 <FormGroup>
                   <FormControlLabel
@@ -704,12 +677,23 @@ export const AdminDashboard = () => {
                 </FormGroup>
               ) : null}
             </Col>
+
           </Row>
         </div>
 
-        {salesSummeryByDateList && selectedStoreObj ? (
+       
+      
+        {!dashboardSummaryReport && !selectedStoreObj ? (
+          <>
+          <Alert severity="warning" className="mt-4">
+            No reports to show! Please select a store!
+          </Alert>
+          </>
+        ) : (
           <>
             {/* -------------- Tiles UI Start ------------- */}
+            { !isMobile ? (
+            <>
             <div style={{ maxWidth: '100%', justifyContent:'center'}}>
               <Row>
                 <Col className="mainColStyle" style={{ maxWidth: '50%', backgroundColor: '' }}>
@@ -899,10 +883,6 @@ export const AdminDashboard = () => {
               </Row>
             </div>
 
-            {/* ----------------Tiles UI end ------------------ */}
-
-
-
             <div style={{height:'520px', backgroundColor: '', marginTop: '0px' }}>
               <Row>
                 <Col style={{ maxWidth: '45%',height:'500px', backgroundColor: '', marginTop:'0px'}}>
@@ -923,12 +903,237 @@ export const AdminDashboard = () => {
                 </Col>
               </Row>
             </div>
-          </>
-        ) : (
-          <>
-            <Alert severity="warning" className="mt-4">
-              No reports to show! Please select a store!
-            </Alert>
+            </>
+            ) : (
+              <>
+              <div style={{ width: '768px', justifyContent:'center'}}>
+                <Col>
+                  <Col className="mainColStyle" style={{ maxWidth: '100%', backgroundColor: '' }}>
+                  {
+                    Object.keys(dashboardSummaryReport).length > 0 &&
+                    dashboardSummaryReport.reportDashboardSummery &&
+                    dashboardSummaryReport.reportDashboardSummery.length > 0 ? (
+                    <Row className="tilesRowStyle">
+                      <Col className="tilesMainColStyle" style={{ backgroundColor: ''}}>
+                        <div className="totalSalesTile">
+                          <div className="totalSaleFirstDiv">
+                            <img className="totalSaleRupeeImgStyle" src={sale_tile_rupee} alt="salerupee"></img>
+                            <div className="totalSaleSpanDiv">
+                              <span className="totalSaleTitleSpanStyle">Total Sales</span>
+                            </div>
+                          </div>
+                          <div className="totalSaleMiddleDiv">
+                              <span className="totalSaleValueSpanStyle">{dashBoardData.datasets[0].total_sales}</span>
+                          </div>
+                          <div className="totalSaleSecondDiv">
+                            <img className="totalSaleGraphImgStyle" src={sales_graph_image} alt="salegraph"></img>
+                          </div>
+                        </div>
+                      </Col>
+                      <Col className="tilesMainColStyle" style={{ backgroundColor: '' }}>
+                        <Col className="threeTilesStylMobile tempstyle1 baseTileStyle">
+                          <img className="tileImageStyleMobile" src={order_image} alt="orderimg"></img>
+                          <div className="labelDivStyle">
+                            <span style={{fontWeight:'500', fontSize:'16px',marginTop:'5%'}} className="baseSpanStyle">Total Orders</span>
+                            <span style={{fontWeight:'900', fontSize:'25px',marginTop:'2px'}} className="baseSpanStyle">{dashBoardData.datasets[0].total_orders}</span>
+                          </div>
+                        </Col>
+                        <Col className="threeTilesStylMobile tempstyle2 baseTileStyle">
+                          <img className="tileImageStyleMobile" src={order_not_paid_image} alt="orderimg"></img>
+                          <div className="labelDivStyle">
+                            <span style={{fontWeight:'500', fontSize:'16px',marginTop:'5%'}} className="baseSpanStyle">#Orders (Not Paid)</span>
+                            <span style={{fontWeight:'900', fontSize:'25px',marginTop:'2px'}} className="baseSpanStyle">{dashBoardData.datasets[0].orders_not_paid}</span>
+                          </div>
+                        </Col>
+                        <Col className="threeTilesStylMobile tempstyle3 baseTileStyle">
+                         <img className="tileImageStyleMobile" src={cancelled_order_img} alt="orderimg"></img>
+                          <div className="labelDivStyle">
+                            <span style={{fontWeight:'500', fontSize:'16px',marginTop:'5%'}} className="baseSpanStyle">#Orders Cancelled</span>
+                            <span style={{fontWeight:'900', fontSize:'25px',marginTop:'2px'}} className="baseSpanStyle">{dashBoardData.datasets[0].orders_cancelled}</span>
+                          </div>
+                        </Col>
+                      </Col>
+                      <Col className="tilesMainColStyle" style={{ backgroundColor: '' }}>
+                        <Col className="threeTilesStylMobile tempstyle1 baseTileStyle">
+                          <img className="tileImageStyleMobile" src={rupee_tile_image} alt="orderimg"></img>
+                          <div className="labelDivStyle">
+                            <span style={{fontWeight:'500', fontSize:'16px',marginTop:'5%'}} className="baseSpanStyle">Avg Order Vlaue</span>
+                            <span style={{fontWeight:'900', fontSize:'25px',marginTop:'2px'}} className="baseSpanStyle">{dashBoardData.datasets[0].avg_order_value}</span>
+                          </div>
+                        </Col>
+                        <Col className="threeTilesStylMobile tempstyle2 baseTileStyle">
+                          <img className="tileImageStyleMobile" src={rupee_tile_image} alt="orderimg"></img>
+                          <div className="labelDivStyle">
+                            <span style={{fontWeight:'500', fontSize:'16px',marginTop:'5%'}} className="baseSpanStyle">Outstanding Amt.</span>
+                            <span style={{fontWeight:'900', fontSize:'25px',marginTop:'2px'}} className="baseSpanStyle">{dashBoardData.datasets[0].outstanding_amount}</span>
+                          </div>
+                        </Col>
+                        <Col className="threeTilesStylMobile tempstyle3 baseTileStyle">
+                          <img className="tileImageStyleMobile" src={dollar_sign} alt="orderimg"></img>
+                          <div className="labelDivStyle">
+                            <span style={{fontWeight:'500', fontSize:'16px',marginTop:'5%'}} className="baseSpanStyle">Cancelled Amt.</span>
+                            <span style={{fontWeight:'900', fontSize:'25px',marginTop:'2px'}} className="baseSpanStyle">{dashBoardData.datasets[0].cancelled_amount}</span>
+                          </div>
+                        </Col>
+                      </Col>
+                    </Row>
+                    ): (
+                      <div className="mb-3 pl-3 pt-3">
+                          <Typography sx={{ fontWeight: "bold", color: "#7F7F7F" }}>
+                            Dashboard Summary
+                          </Typography>
+                          <Alert severity="warning" className="mt-4">
+                            No Data to show!
+                          </Alert>
+                        </div>
+                    )}
+                  </Col>
+                  <Col style={{ maxWidth: '100%', backgroundColor:''}}>
+                    {orderSources &&
+                        Object.keys(salesSummeryByOrderSource).length > 0 &&
+                        salesSummeryByOrderSource.salesSummeryByOrderSource &&
+                        salesSummeryByOrderSource.salesSummeryByOrderSource.length >
+                        0 ? (
+                        <>
+                          <SalesRevenueByChanelChart></SalesRevenueByChanelChart>
+                        </>
+                      ) : (
+                        <div className="mb-3 pl-3 pt-3">
+                          <Typography sx={{ fontWeight: "bold", color: "#7F7F7F" }}>
+                            Sales by Channels
+                          </Typography>
+                          <Alert severity="warning" className="mt-4">
+                            No reports to show!
+                          </Alert>
+                        </div>
+                      )}
+                  </Col>
+                </Col>
+              </div>
+              <div>
+  
+                <Col style={{height:'520px', backgroundColor: '', marginTop: '0px' }}>
+                  <Col className="secondColStyleMobile" style={{ backgroundColor: '' }}>
+                    <div>
+                      {dashboardSummaryReport && salesChartData.length > 1 &&
+                        dashboardSummaryReport.reportDashboardSummery &&
+                        dashboardSummaryReport.reportDashboardSummery.length > 0 ? (
+                        <>
+                          {/* <SalesOverTimeChart></SalesOverTimeChart> */}
+                          <div style={{marginTop:'10px'}}>
+                            <Chart
+                              chartType="BarChart"
+                              data={salesChartData}
+                              options={optionsSales}
+                            />
+                          </div>
+                        </>
+                      ) : (
+                        <div className="mb-3 pl-3 pt-3">
+                          <Typography sx={{ fontWeight: "bold", color: "#7F7F7F" }}>
+                            Sales Over Time
+                          </Typography>
+                          <Alert severity="warning" className="mt-4">
+                            No reports to show!
+                          </Alert>
+                        </div>
+                      )}
+                    </div>
+                  </Col>
+                  <Col className="secondColStyleMobile" style={{ backgroundColor: '' }}>
+                    <div>
+                      {dashboardSummaryReport && ordersData.length > 1 &&
+                        dashboardSummaryReport.reportDashboardSummery &&
+                        dashboardSummaryReport.reportDashboardSummery.length > 0 ? (
+                        <>
+                          <div style={{marginTop:'10px'}}>
+                            <Chart
+                              chartType="BarChart"
+                              data={ordersData}
+                              options={optionsOrder}
+                            />
+                          </div>
+                        </>
+                      ) : (
+                        <div className="mb-3 pl-3 pt-3">
+                          <Typography sx={{ fontWeight: "bold", color: "" }}>
+                            Sales Over Time
+                          </Typography>
+                          <Alert severity="warning" className="mt-4">
+                            No reports to show!
+                          </Alert>
+                        </div>
+                      )}
+                    </div>
+                  </Col>
+                  <Col className="secondColStyleMobile" style={{ backgroundColor: '' }}>
+                    <div >
+                      {dashboardSummaryReport && avgOrdersValueData.length > 1 &&
+                        dashboardSummaryReport.reportDashboardSummery &&
+                        dashboardSummaryReport.reportDashboardSummery.length > 0 ? (
+                        <>
+                          <div style={{marginTop:'10px'}}>
+                            <Chart
+                              chartType="BarChart"
+                              data={avgOrdersValueData}
+                              options={optionsAvgOrderValue}
+                            />
+                          </div>
+                        </>
+                      ) : (
+                        <div className="mb-3 pl-3 pt-3">
+                          <Typography sx={{ fontWeight: "bold", color: "#7F7F7F" }}>
+                            Sales Over Time
+                          </Typography>
+                          <Alert severity="warning" className="mt-4">
+                            No reports to show!
+                          </Alert>
+                        </div>
+                      )}
+                    </div>
+                  </Col>
+
+                  <Col style={{ maxWidth: '100%',height:'500px', backgroundColor: '', marginTop:'0px'}}>
+                    {salesSummeryByPaymentMode &&
+                      configPaymentModes &&
+                      salesSummeryByPaymentMode.length > 0 ? (
+                        <RevenueByPaymentMode></RevenueByPaymentMode>
+                    ) : (
+                      <div className="mb-3 pl-3 pt-3">
+                        <Typography sx={{ fontWeight: "bold", color: "#7F7F7F" }}>
+                          Revenue By Payment Mode
+                        </Typography>
+                        <Alert severity="warning" className="mt-4">
+                          No reports to show!
+                        </Alert>
+                      </div>
+                    )}
+                  </Col>
+                </Col>
+              </div>
+  
+              {/* <div style={{height:'520px', backgroundColor: '', marginTop: '0px' }}>
+                <Col>
+                  <Col style={{ maxWidth: '45%',height:'500px', backgroundColor: '', marginTop:'0px'}}>
+                    {salesSummeryByPaymentMode &&
+                      configPaymentModes &&
+                      salesSummeryByPaymentMode.length > 0 ? (
+                        <RevenueByPaymentMode></RevenueByPaymentMode>
+                    ) : (
+                      <div className="mb-3 pl-3 pt-3">
+                        <Typography sx={{ fontWeight: "bold", color: "#7F7F7F" }}>
+                          Revenue By Payment Mode
+                        </Typography>
+                        <Alert severity="warning" className="mt-4">
+                          No reports to show!
+                        </Alert>
+                      </div>
+                    )}
+                  </Col>
+                </Col>
+              </div> */}
+              </>
+            ) }
           </>
         )}
       </Layout>
