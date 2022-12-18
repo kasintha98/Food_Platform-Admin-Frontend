@@ -233,7 +233,7 @@ export const StoreInventoryTracking = () => {
       : Number(item.itemEodConsumptionQty);
 
     return (
-      Number(e) + Number(item.itemCurrConsumptionQty) - Number(item.poNetQty)
+      Number(Number(e) + Number(item.itemCurrConsumptionQty) - Number(item.poNetQty)).toFixed(2)
     );
   };
 
@@ -254,7 +254,7 @@ export const StoreInventoryTracking = () => {
       let total = 0;
       for (let i = 0; i < itemConsumptionSummary.length; i++) {
         total = total + Number(itemConsumptionSummary[i].itemConsumptionAmount);
-        return total;
+        return Number(total).toFixed(2);
       }
     } else {
       return 0;
