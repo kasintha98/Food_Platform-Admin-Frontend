@@ -38,7 +38,8 @@ import { DeliveryBoy } from "./containers/DeliveryBoy";
 // import { AdminDashboard } from "./containers/AdminDashboard";
 import { AdminDashboard } from "./containers/AdminDashboardUiCh";
 
-import { NewReports } from "./containers/NewReports";
+// import { NewReports } from "./containers/NewReports";
+import { NewReports } from "./containers/NewReportsUiCh";
 import { NewOrders } from "./containers/NewOrders";
 import { DeliveryManagement } from "./containers/DeliveryManagement";
 import { DeliveryTracking } from "./containers/DeliveryTracking";

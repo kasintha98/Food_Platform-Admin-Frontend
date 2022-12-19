@@ -906,7 +906,7 @@ export const AdminDashboard = () => {
             </>
             ) : (
               <>
-              <div style={{ width: '768px', justifyContent:'center'}}>
+              <div style={{ minWidth:800, justifyContent:'center'}}>
                 <Col>
                   <Col className="mainColStyle" style={{ maxWidth: '100%', backgroundColor: '' }}>
                   {

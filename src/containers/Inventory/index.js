@@ -34,7 +34,7 @@ export const Inventory = () => {
   }, []);
 
 
-  var htmlIframe = '<iframe width="80%" height="1068" src="https://datastudio.google.com/embed/reporting/2b4b72be-3bac-48a7-9dec-3e2d7e2a7926/page/PgjAD" frameborder="0" style="border:0" allowfullscreen></iframe>';
+  var htmlIframe = '<iframe width="100%" height="1068" src="https://datastudio.google.com/embed/reporting/2b4b72be-3bac-48a7-9dec-3e2d7e2a7926/page/PgjAD" frameborder="0" style="border:0" allowfullscreen></iframe>';
 
 
   return (
@@ -94,7 +94,7 @@ export const Inventory = () => {
             </div>
           </TabPanel>
           <TabPanel value="CENTRAL INVENTORY TRACKING">
-            <div style={{maxWidth:'100%',maxHeight:'1068px',marginLeft:'15%'}}>
+            <div style={{maxWidth:'100%',maxHeight:'1068px'}}>
               <div className="content" dangerouslySetInnerHTML={{__html: htmlIframe}}></div>
             </div>
           </TabPanel>
