@@ -123,6 +123,8 @@ export const NewReports = () => {
     storeId: user.roleCategory === "SUPER_ADMIN" ? null : user.storeId,
   });
 
+
+  const [isPresetHide, setPresetHide] = useState(false);
   var htmlConsumptionReportIframe = '<iframe width="100%" height="600" src="https://datastudio.google.com/embed/reporting/4bf3569b-468f-4613-aaf7-6c3daee772ad/page/UUPAD" frameborder="0" style="border:0" allowfullscreen></iframe>';
   var htmlCancelOrderReportIframe = '<iframe width="100%" height="600" src="https://datastudio.google.com/embed/reporting/77441cbd-12b2-4b57-b57c-6958572678e1/page/o7lAD" frameborder="0" style="border:0" allowfullscreen></iframe>';
   //const dispatch = useDispatch();
@@ -152,6 +154,12 @@ export const NewReports = () => {
   };
 
   const handleChangeReport = (event) => {
+    if(event.target.value === "CONSUMPTION REPORT" || event.target.value === "CANCELLED ORDER REPORT") {
+      setPresetHide(true);
+    }else{
+      setPresetHide(false);
+    }
+    
     setSelectedReport(event.target.value);
   };
 
@@ -164,6 +172,7 @@ export const NewReports = () => {
       <div>
         <div>
           <Row style={{ maxWidth: "100vw" }}>
+            {!isPresetHide ? (
             <Col md={4}>
               <Row className="align-items-center">
                 <div style={{ maxWidth: "125px !important" }}>
@@ -204,7 +213,8 @@ export const NewReports = () => {
                   </DropdownMenu>
                 </Col>
               </Row>
-            </Col>
+            </Col>):null}
+            {!isPresetHide ? (
             <Col md={4}>
               <Row className="align-items-center">
                 <div style={{ maxWidth: "125px !important" }}>
@@ -256,7 +266,7 @@ export const NewReports = () => {
                   </FormControl>
                 </Col>
               </Row>
-            </Col>
+            </Col>):null}
             <Col md={4}>
               <Row className="align-items-center">
                 <div style={{ maxWidth: "125px !important" }}>
