@@ -140,6 +140,7 @@ const MyPaginate = styled(ReactPaginate)`
 
 export const SuppliersMaster = () => {
   const allSuppliers = useSelector((state) => state.inventory.allSuppliers);
+  const stores = useSelector((state) => state.store.stores);
   const allSuppliersLoading = useSelector(
     (state) => state.inventory.allSuppliersLoading
   );
@@ -172,6 +173,9 @@ export const SuppliersMaster = () => {
   const [newSupplierGst, setNewSupplierGst] = useState("");
   const [newSupplierTan, setNewSupplierTan] = useState("");
   const [newSupplierStatus, setNewSupplierStatus] = useState("");
+  const [supplierStore, setSupplierStore] = useState(null);
+  const [newSupplierStore, setNewSupplierStore] = useState(null);
+
   const [pagination, setPagination] = useState({
     data: allSuppliers,
     offset: 0,
@@ -257,6 +261,7 @@ export const SuppliersMaster = () => {
       supplierStatus: supplierStatus
         ? supplierStatus
         : oldSupplier.supplierStatus,
+      storeId: supplierStore ? supplierStore : oldSupplier.storeId,
       updatedBy: user.loginId,
       updatedDate: new Date(),
     };
@@ -300,6 +305,7 @@ export const SuppliersMaster = () => {
       supplierCategory: newsupplierCategory ? newsupplierCategory : "EXTERNAL",
       supplierStatus: newSupplierStatus ? newSupplierStatus : "ACTIVE",
       createdBy: user.loginId,
+      storeId: newSupplierStore,
       createdDate: new Date(),
       updatedBy: user.loginId,
       updatedDate: new Date(),
@@ -344,6 +350,48 @@ export const SuppliersMaster = () => {
     setNewSupplierGst("");
     setNewSupplierTan("");
     setNewSupplierStatus("");
+  };
+
+  const getStoreObjFromId = (id) => {
+    const foundMatch = stores.find((x) => x.storeId === id);
+    return foundMatch;
+  };
+
+  const setFieldsBySelectedStore = (id, type, itemId) => {
+    const store = getStoreObjFromId(id);
+
+    if (store && type === "NEW") {
+      setNewSupplierName(store.resturantName);
+      setNewSupplierAddress(store.address1);
+      setNewSupplierCity(store.city);
+      setNewSupplierPinCode(store.zipCode ? store.zipCode : 0);
+    }
+
+    if (store && type === "OLD") {
+      /* setCurrentSupplierAddress(store.address1);
+      setCurrentSupplierCity(store.city);
+      setCurrentSupplierPinCode(store.zipCode ? store.zipCode : 0); */
+      const names = {
+        ...currentSupplierName,
+        [itemId]: store.resturantName,
+      };
+      const addresses = {
+        ...currentSupplierAddress,
+        [itemId]: store.address1,
+      };
+      const cities = {
+        ...currentSupplierCity,
+        [itemId]: store.city,
+      };
+      const zips = {
+        ...currentSupplierPinCode,
+        [itemId]: store.zipCode ? store.zipCode : 0,
+      };
+      setCurrentSupplierName(names);
+      setCurrentSupplierCity(cities);
+      setCurrentSupplierAddress(addresses);
+      setCurrentSupplierPinCode(zips);
+    }
   };
 
   const renderAddModal = () => {
@@ -511,6 +559,7 @@ export const SuppliersMaster = () => {
             <TableRow>
               <CusTableCell1 align="center">NO</CusTableCell1>
               <CusTableCell1 align="center">CATEGORY</CusTableCell1>
+              <CusTableCell1 align="center">STORE NAME</CusTableCell1>
               <CusTableCell1 align="center">NAME</CusTableCell1>
               <CusTableCell1 align="center">ADDRESS</CusTableCell1>
               <CusTableCell1 align="center">CITY</CusTableCell1>
@@ -566,6 +615,9 @@ export const SuppliersMaster = () => {
                                 }}
                                 onChange={(event) => {
                                   setSupplierCategory(event.target.value);
+                                  if (event.target.value === "EXTERNAL") {
+                                    setSupplierStore(null);
+                                  }
                                 }}
                                 sx={{
                                   fontSize: "0.75rem",
@@ -584,6 +636,50 @@ export const SuppliersMaster = () => {
                                 >
                                   INTERNAL
                                 </option>
+                              </NativeSelect>
+                            </FormControl>
+                          </CusTableCell>
+                          <CusTableCell align="center">
+                            <FormControl fullWidth sx={{ marginTop: "5px" }}>
+                              <NativeSelect
+                                defaultValue={item.storeId}
+                                inputProps={{
+                                  name: "status",
+                                  id: "uncontrolled-native",
+                                  disableUnderline: true,
+                                }}
+                                onChange={(event) => {
+                                  setSupplierStore(event.target.value);
+                                  setFieldsBySelectedStore(
+                                    event.target.value,
+                                    "OLD",
+                                    item.supplierId
+                                  );
+                                }}
+                                sx={{
+                                  fontSize: "0.75rem",
+                                }}
+                                disabled={
+                                  !isSave[item.supplierId] ||
+                                  supplierCategory === "EXTERNAL" ||
+                                  (supplierCategory === "" &&
+                                    item.supplierCategory === "EXTERNAL")
+                                }
+                              >
+                                <option
+                                  value={null}
+                                  style={{ fontSize: "0.75rem" }}
+                                >
+                                  None
+                                </option>
+                                {stores.map((store) => (
+                                  <option
+                                    value={store.storeId}
+                                    style={{ fontSize: "0.75rem" }}
+                                  >
+                                    {store.resturantName}
+                                  </option>
+                                ))}
                               </NativeSelect>
                             </FormControl>
                           </CusTableCell>
@@ -904,6 +1000,46 @@ export const SuppliersMaster = () => {
                               >
                                 INTERNAL
                               </option>
+                            </NativeSelect>
+                          </FormControl>
+                        </CusTableCell>
+                        <CusTableCell align="center">
+                          <FormControl fullWidth sx={{ marginTop: "5px" }}>
+                            <NativeSelect
+                              inputProps={{
+                                name: "status",
+                                id: "uncontrolled-native",
+                              }}
+                              onChange={(event) => {
+                                setNewSupplierStore(event.target.value);
+                                setFieldsBySelectedStore(
+                                  event.target.value,
+                                  "NEW"
+                                );
+                                if (event.target.value === "EXTERNAL") {
+                                  setNewSupplierStore(null);
+                                }
+                              }}
+                              sx={{ fontSize: "0.75rem" }}
+                              disabled={
+                                newsupplierCategory === "EXTERNAL" ||
+                                !newsupplierCategory
+                              }
+                            >
+                              <option
+                                value={null}
+                                style={{ fontSize: "0.75rem" }}
+                              >
+                                None
+                              </option>
+                              {stores.map((store) => (
+                                <option
+                                  value={store.storeId}
+                                  style={{ fontSize: "0.75rem" }}
+                                >
+                                  {store.resturantName}
+                                </option>
+                              ))}
                             </NativeSelect>
                           </FormControl>
                         </CusTableCell>

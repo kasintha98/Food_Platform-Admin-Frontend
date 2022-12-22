@@ -251,7 +251,7 @@ export const NewPurchaseOrder = () => {
       itemPrice: newItemPrice,
       itemDiscount: newItemDiscount,
       itemFinalPrice: Number(newItemPrice) - Number(newItemDiscount),
-      itemTotalStock: newItemStock,
+      itemTotalStock: Number(newItemQty) - Number(newItemWastage),
       itemGST: selectedItem.itemGstPercentage,
       itemGSTAmount: (
         (Number(newItemPrice) - Number(newItemDiscount)) *
@@ -329,10 +329,10 @@ export const NewPurchaseOrder = () => {
       return;
     }
 
-    if (!billNo) {
+    /* if (!billNo) {
       toast.error("Bill number is mandatory!");
       return;
-    }
+    } */
 
     if (!billDate) {
       toast.error("Bill date is mandatory!");
@@ -367,7 +367,7 @@ export const NewPurchaseOrder = () => {
         netPurchasePrice: Object.values(addedList)[i].itemFinalPrice,
         gstAmount: Object.values(addedList)[i].itemGSTAmount,
         purchaseCategory: Object.values(addedList)[i].itemCategory,
-        purchaseOrderStatus: "CLOSED",
+        purchaseOrderStatus: "SUBMITTED",
         createdBy: user.loginId,
         createdDate: new Date(),
         updatedBy: user.loginId,
@@ -585,18 +585,34 @@ export const NewPurchaseOrder = () => {
                 <CusTableCell1 align="center">ITEM NO</CusTableCell1>
                 <CusTableCell1 align="center">INGREDIENT NAME</CusTableCell1>
                 <CusTableCell1 align="center">UOM</CusTableCell1>
-                <CusTableCell1 align="center">QUANTITY</CusTableCell1>
-                <CusTableCell1 align="center">WASTAGE</CusTableCell1>
-                <CusTableCell1 align="center">PRICE</CusTableCell1>
-                <CusTableCell1 align="center">DISCOUNT</CusTableCell1>
-                <CusTableCell1 align="center">
+                <CusTableCell1 align="center" sx={{ maxWidth: "60px" }}>
+                  {/* QUANTITY */}QTY.
+                </CusTableCell1>
+                <CusTableCell1 align="center" sx={{ maxWidth: "60px" }}>
+                  {/* WASTAGE */}WAST.
+                </CusTableCell1>
+                <CusTableCell1 align="center" sx={{ maxWidth: "80px" }}>
+                  PRICE
+                </CusTableCell1>
+                <CusTableCell1 align="center" sx={{ maxWidth: "80px" }}>
+                  DISCOUNT
+                </CusTableCell1>
+                <CusTableCell1 align="center" sx={{ maxWidth: "115px" }}>
                   FINAL PURCHASE PRICE
                 </CusTableCell1>
-                <CusTableCell1 align="center">TOTAL STOCK</CusTableCell1>
-                <CusTableCell1 align="center">GST%</CusTableCell1>
+                <CusTableCell1 align="center" sx={{ maxWidth: "60px" }}>
+                  TOTAL STOCK
+                </CusTableCell1>
+                <CusTableCell1 align="center" sx={{ maxWidth: "80px" }}>
+                  GST%
+                </CusTableCell1>
                 <CusTableCell1 align="center">GST AMT.</CusTableCell1>
-                <CusTableCell1 align="center">CATEGORY</CusTableCell1>
-                <CusTableCell1 align="center">REMARKS</CusTableCell1>
+                <CusTableCell1 align="center" sx={{ maxWidth: "80px" }}>
+                  CATEGORY
+                </CusTableCell1>
+                <CusTableCell1 align="center" sx={{ maxWidth: "60px" }}>
+                  REMARKS
+                </CusTableCell1>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -619,11 +635,11 @@ export const NewPurchaseOrder = () => {
               ) : (
                 <>
                   {addedListArray &&
-                    addedListArray.map((item) => (
+                    addedListArray.map((item, index) => (
                       <TableRow key={item.itemId}>
                         <CusTableCell align="center">
                           <Typography sx={{ fontSize: "0.75rem" }}>
-                            {Object.keys(addedList).length}
+                            {index + 1}
                           </Typography>
                         </CusTableCell>
                         <CusTableCell align="center">
@@ -684,7 +700,7 @@ export const NewPurchaseOrder = () => {
                               : item.itemUOM}
                           </Typography>
                         </CusTableCell>
-                        <CusTableCell align="center">
+                        <CusTableCell align="center" sx={{ maxWidth: "60px" }}>
                           <CusTextField
                             defaultValue={item.itemQuantity}
                             value={currentItemQty[item.itemId]}
@@ -704,7 +720,7 @@ export const NewPurchaseOrder = () => {
                           />
                         </CusTableCell>
 
-                        <CusTableCell align="center">
+                        <CusTableCell align="center" sx={{ maxWidth: "60px" }}>
                           <CusTextField
                             defaultValue={item.itemWastage}
                             value={currentItemWastage[item.itemId]}
@@ -724,7 +740,7 @@ export const NewPurchaseOrder = () => {
                           />
                         </CusTableCell>
 
-                        <CusTableCell align="center">
+                        <CusTableCell align="center" sx={{ maxWidth: "80px" }}>
                           <CusTextField
                             defaultValue={item.itemPrice}
                             value={currentItemPrice[item.itemId]}
@@ -744,7 +760,7 @@ export const NewPurchaseOrder = () => {
                           />
                         </CusTableCell>
 
-                        <CusTableCell align="center">
+                        <CusTableCell align="center" sx={{ maxWidth: "80px" }}>
                           <CusTextField
                             defaultValue={item.itemDiscount}
                             value={currentItemDiscount[item.itemId]}
@@ -764,13 +780,13 @@ export const NewPurchaseOrder = () => {
                           />
                         </CusTableCell>
 
-                        <CusTableCell align="center">
+                        <CusTableCell align="center" sx={{ maxWidth: "115px" }}>
                           <Typography sx={{ fontSize: "0.75rem" }}>
                             {getFinalPrice(item)}
                           </Typography>
                         </CusTableCell>
 
-                        <CusTableCell align="center">
+                        <CusTableCell align="center" sx={{ maxWidth: "60px" }}>
                           <CusTextField
                             defaultValue={item.itemTotalStock}
                             value={currentItemTotalStock[item.itemId]}
@@ -790,7 +806,7 @@ export const NewPurchaseOrder = () => {
                           />
                         </CusTableCell>
 
-                        <CusTableCell align="center">
+                        <CusTableCell align="center" sx={{ maxWidth: "80px" }}>
                           <Typography sx={{ fontSize: "0.75rem" }}>
                             {currentSelectedItem[item.itemId]
                               ? currentSelectedItem[item.itemId]
@@ -814,38 +830,43 @@ export const NewPurchaseOrder = () => {
                           </Typography>
                         </CusTableCell>
 
-                        <FormControl fullWidth sx={{ marginTop: "7px" }}>
-                          <NativeSelect
-                            defaultValue={item.itemCategory}
-                            disabled={!isSave[item.itemId]}
-                            inputProps={{
-                              name: "status",
-                              id: "uncontrolled-native",
-                            }}
-                            value={currentItemCategory[item.itemId]}
-                            onChange={(event) => {
-                              const cat = {
-                                ...currentItemCategory,
-                                [item.itemId]: event.target.value,
-                              };
-                              setCurrentItemCategory(cat);
-                            }}
-                            sx={{ fontSize: "0.75rem" }}
-                          >
-                            {purchaseOrderCategory &&
-                              purchaseOrderCategory.map((item) => (
-                                <option
-                                  value={item.configCriteriaValue}
-                                  style={{ fontSize: "0.75rem" }}
-                                >
-                                  {item.configCriteriaDesc}
-                                </option>
-                              ))}
-                            <option value={""} style={{ fontSize: "0.75rem" }}>
-                              Select Category
-                            </option>
-                          </NativeSelect>
-                        </FormControl>
+                        <CusTableCell align="center" sx={{ maxWidth: "80px" }}>
+                          <FormControl fullWidth sx={{ marginTop: "7px" }}>
+                            <NativeSelect
+                              defaultValue={item.itemCategory}
+                              disabled={!isSave[item.itemId]}
+                              inputProps={{
+                                name: "status",
+                                id: "uncontrolled-native",
+                              }}
+                              value={currentItemCategory[item.itemId]}
+                              onChange={(event) => {
+                                const cat = {
+                                  ...currentItemCategory,
+                                  [item.itemId]: event.target.value,
+                                };
+                                setCurrentItemCategory(cat);
+                              }}
+                              sx={{ fontSize: "0.75rem" }}
+                            >
+                              {purchaseOrderCategory &&
+                                purchaseOrderCategory.map((item) => (
+                                  <option
+                                    value={item.configCriteriaValue}
+                                    style={{ fontSize: "0.75rem" }}
+                                  >
+                                    {item.configCriteriaDesc}
+                                  </option>
+                                ))}
+                              <option
+                                value={""}
+                                style={{ fontSize: "0.75rem" }}
+                              >
+                                Select Category
+                              </option>
+                            </NativeSelect>
+                          </FormControl>
+                        </CusTableCell>
 
                         <CusTableCell align="center">
                           {isSave[item.itemId] ? (
@@ -951,7 +972,7 @@ export const NewPurchaseOrder = () => {
                           {selectedItem ? selectedItem.itemUOM : "N/A"}
                         </Typography>
                       </CusTableCell>
-                      <CusTableCell align="center">
+                      <CusTableCell align="center" sx={{ maxWidth: "60px" }}>
                         <CusTextField
                           value={newItemQty}
                           onChange={(event) => {
@@ -965,7 +986,7 @@ export const NewPurchaseOrder = () => {
                         />
                       </CusTableCell>
 
-                      <CusTableCell align="center">
+                      <CusTableCell align="center" sx={{ maxWidth: "60px" }}>
                         <CusTextField
                           value={newItemWastage}
                           onChange={(event) => {
@@ -979,7 +1000,7 @@ export const NewPurchaseOrder = () => {
                         />
                       </CusTableCell>
 
-                      <CusTableCell align="center">
+                      <CusTableCell align="center" sx={{ maxWidth: "80px" }}>
                         <CusTextField
                           value={newItemPrice}
                           onChange={(event) => {
@@ -993,7 +1014,7 @@ export const NewPurchaseOrder = () => {
                         />
                       </CusTableCell>
 
-                      <CusTableCell align="center">
+                      <CusTableCell align="center" sx={{ maxWidth: "80px" }}>
                         <CusTextField
                           value={newItemDiscount}
                           onChange={(event) => {
@@ -1007,14 +1028,14 @@ export const NewPurchaseOrder = () => {
                         />
                       </CusTableCell>
 
-                      <CusTableCell align="center">
+                      <CusTableCell align="center" sx={{ maxWidth: "115px" }}>
                         <Typography sx={{ fontSize: "0.75rem" }}>
                           {Number(newItemPrice) - Number(newItemDiscount)}
                         </Typography>
                       </CusTableCell>
 
-                      <CusTableCell align="center">
-                        <CusTextField
+                      <CusTableCell align="center" sx={{ maxWidth: "60px" }}>
+                        {/* <CusTextField
                           value={newItemStock}
                           onChange={(event) => {
                             setNewItemStock(event.target.value);
@@ -1024,10 +1045,13 @@ export const NewPurchaseOrder = () => {
                           InputProps={{
                             disableUnderline: true, // <== added this
                           }}
-                        />
+                        /> */}
+                        <Typography sx={{ fontSize: "0.75rem" }}>
+                          {Number(newItemQty) - Number(newItemWastage)}
+                        </Typography>
                       </CusTableCell>
 
-                      <CusTableCell align="center">
+                      <CusTableCell align="center" sx={{ maxWidth: "80px" }}>
                         <Typography sx={{ fontSize: "0.75rem" }}>
                           {selectedItem
                             ? selectedItem.itemGstPercentage
@@ -1047,31 +1071,33 @@ export const NewPurchaseOrder = () => {
                         </Typography>
                       </CusTableCell>
 
-                      <FormControl fullWidth sx={{ marginTop: "8px" }}>
-                        <NativeSelect
-                          inputProps={{
-                            name: "status",
-                            id: "uncontrolled-native",
-                          }}
-                          onChange={(event) => {
-                            setNewItemCategory(event.target.value);
-                          }}
-                          sx={{ fontSize: "0.75rem" }}
-                        >
-                          {purchaseOrderCategory &&
-                            purchaseOrderCategory.map((item) => (
-                              <option
-                                value={item.configCriteriaValue}
-                                style={{ fontSize: "0.75rem" }}
-                              >
-                                {item.configCriteriaDesc}
-                              </option>
-                            ))}
-                          {/* <option value={""} style={{ fontSize: "0.75rem" }}>
+                      <CusTableCell align="center" sx={{ maxWidth: "80px" }}>
+                        <FormControl fullWidth sx={{ marginTop: "8px" }}>
+                          <NativeSelect
+                            inputProps={{
+                              name: "status",
+                              id: "uncontrolled-native",
+                            }}
+                            onChange={(event) => {
+                              setNewItemCategory(event.target.value);
+                            }}
+                            sx={{ fontSize: "0.75rem" }}
+                          >
+                            {purchaseOrderCategory &&
+                              purchaseOrderCategory.map((item) => (
+                                <option
+                                  value={item.configCriteriaValue}
+                                  style={{ fontSize: "0.75rem" }}
+                                >
+                                  {item.configCriteriaDesc}
+                                </option>
+                              ))}
+                            {/* <option value={""} style={{ fontSize: "0.75rem" }}>
                             Select Category
                           </option> */}
-                        </NativeSelect>
-                      </FormControl>
+                          </NativeSelect>
+                        </FormControl>
+                      </CusTableCell>
 
                       <CusTableCell align="center">
                         <IconButton

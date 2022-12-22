@@ -616,15 +616,17 @@ export const saveUpdatePurchaseOrder = (item, isPullPo) => {
           type: inventoryConstants.SAVE_UPDATE_PURCHASE_ORDER_SUCCESS,
           payload: res.data,
         });
+        let billStr = item.billNumber
+          ? ` with Bill NO: ${item.billNumber}`
+          : "";
         toast.success(
           "PO NO: " +
-            item.itemId +
-            " with Bill NO: " +
-            item.billNumber +
+            res.data.purchaseOrderId +
+            billStr +
             " Saved Successfully!"
         );
         if (isPullPo) {
-          dispatch(getClosedPurchaseOrders());
+          dispatch(getSubmittedRecievedPurchaseOrders());
         }
         return res.data;
       } else {
@@ -648,6 +650,7 @@ export const getClosedPurchaseOrders = () => {
       dispatch({ type: inventoryConstants.GET_CLOSED_PURCHASE_ORDERS_REQUEST });
 
       const res = await axios.get("/getPurchaseOrdersByStatus?status=CLOSED");
+      /* const res = await axios.get("/getAllPurchaseOrders"); */
       if (res.status === 200) {
         dispatch({
           type: inventoryConstants.GET_CLOSED_PURCHASE_ORDERS_SUCCESS,
@@ -666,6 +669,210 @@ export const getClosedPurchaseOrders = () => {
       toast.error("Error getting purchase order data!");
       dispatch({
         type: inventoryConstants.GET_CLOSED_PURCHASE_ORDERS_FAILURE,
+        payload: [],
+      });
+    }
+  };
+};
+
+export const getItemConsumptionSummery = (store) => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: inventoryConstants.GET_ITEM_CONSUMPTION_SUMMARY_REQUEST,
+      });
+
+      const res = await axios.get("/getItemConsumptionSummery");
+      if (res.status === 200) {
+        let filteredData = res.data.filter(function (el) {
+          return (
+            el.restaurantId === store.restaurantId &&
+            el.storeId === store.storeId
+          );
+        });
+
+        dispatch({
+          type: inventoryConstants.GET_ITEM_CONSUMPTION_SUMMARY_SUCCESS,
+          payload: filteredData,
+        });
+        return filteredData;
+      } else {
+        toast.error("Error getting item consumption data!");
+        dispatch({
+          type: inventoryConstants.GET_ITEM_CONSUMPTION_SUMMARY_FAILURE,
+          payload: [],
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Error getting item consumption data!");
+      dispatch({
+        type: inventoryConstants.GET_ITEM_CONSUMPTION_SUMMARY_FAILURE,
+        payload: [],
+      });
+    }
+  };
+};
+
+export const saveItemConsumptionSummery = (item) => {
+  return async (dispatch) => {
+    dispatch({ type: inventoryConstants.SAVE_UPDATE_ITEM_CONSUMPTION_REQUEST });
+
+    try {
+      const res = await axios.post("/saveItemConsumptionSummery", item);
+
+      if (res.status === 200) {
+        dispatch({
+          type: inventoryConstants.SAVE_UPDATE_ITEM_CONSUMPTION_SUCCESS,
+          payload: res.data,
+        });
+        toast.success("Item Updated Successfully!");
+
+        return res.data;
+      } else {
+        dispatch({
+          type: inventoryConstants.SAVE_UPDATE_ITEM_CONSUMPTION_FAILURE,
+          payload: null,
+        });
+        toast.error("Error when updating! Please try again!");
+      }
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+      toast.error("Error when updating! Please try again!");
+    }
+  };
+};
+
+export const saveAllItemConsumptionSummery = (items) => {
+  return async (dispatch) => {
+    dispatch({
+      type: inventoryConstants.SAVE_UPDATE_ALL_ITEM_CONSUMPTION_REQUEST,
+    });
+
+    try {
+      const res = await axios.post("/saveAllItemConsumptionSummery", items);
+
+      if (res.status === 200) {
+        dispatch({
+          type: inventoryConstants.SAVE_UPDATE_ALL_ITEM_CONSUMPTION_SUCCESS,
+          payload: res.data,
+        });
+        toast.success("Items Updated Successfully!");
+
+        return res.data;
+      } else {
+        dispatch({
+          type: inventoryConstants.SAVE_UPDATE_ALL_ITEM_CONSUMPTION_FAILURE,
+          payload: null,
+        });
+        toast.error("Error when updating! Please try again!");
+      }
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+      toast.error("Error when updating! Please try again!");
+    }
+  };
+};
+
+export const getSubmittedRecievedPurchaseOrders = () => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: inventoryConstants.GET_CLOSED_PURCHASE_ORDERS_REQUEST });
+
+      /* const res = await axios.get("/getPurchaseOrdersByStatus?status=CLOSED"); */
+      const res = await axios.get("/getAllPurchaseOrders");
+      if (res.status === 200) {
+        let data = res.data.filter(function (el) {
+          return (
+            el.purchaseOrderStatus === "SUBMITTED" ||
+            el.purchaseOrderStatus === "RECEIVED"
+          );
+        });
+
+        dispatch({
+          type: inventoryConstants.GET_CLOSED_PURCHASE_ORDERS_SUCCESS,
+          payload: data,
+        });
+        return data;
+      } else {
+        toast.error("Error getting purchase order data!");
+        dispatch({
+          type: inventoryConstants.GET_CLOSED_PURCHASE_ORDERS_FAILURE,
+          payload: [],
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Error getting purchase order data!");
+      dispatch({
+        type: inventoryConstants.GET_CLOSED_PURCHASE_ORDERS_FAILURE,
+        payload: [],
+      });
+    }
+  };
+};
+
+export const savePurchaseOrderStatus = (item) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: inventoryConstants.SAVE_PURCHASE_ORDER_STATUS_REQUEST });
+
+      const res = await axios.post("/savePurchaseOrderStatus", item);
+      if (res.status === 200) {
+        dispatch({
+          type: inventoryConstants.SAVE_PURCHASE_ORDER_STATUS_SUCCESS,
+          payload: res.data,
+        });
+        toast.success("Saved purchase order status!");
+        /* dispatch(getSubmittedRecievedPurchaseOrders()); */
+        return res.data;
+      } else {
+        toast.error("Error saving purchase order status!");
+        dispatch({
+          type: inventoryConstants.SAVE_PURCHASE_ORDER_STATUS_FAILURE,
+          payload: [],
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Error saving purchase order status!");
+      dispatch({
+        type: inventoryConstants.SAVE_PURCHASE_ORDER_STATUS_FAILURE,
+        payload: [],
+      });
+    }
+  };
+};
+
+export const performInventoryUpdateEOD = (storeId, restaurantId) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: inventoryConstants.PERFORM_INV_UPDATE_EOD_REQUEST });
+
+      const res = await axios.get(
+        `/performInventoryUpdateEOD?restaurantId=${restaurantId}&storeId=${storeId}`
+      );
+      if (res.status === 200) {
+        dispatch({
+          type: inventoryConstants.PERFORM_INV_UPDATE_EOD_SUCCESS,
+          payload: res.data,
+        });
+        toast.success("Inventory EOD success!");
+        return true;
+      } else {
+        toast.error("Inventory EOD error!");
+        dispatch({
+          type: inventoryConstants.PERFORM_INV_UPDATE_EOD_FAILURE,
+          payload: [],
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Inventory EOD error!");
+      dispatch({
+        type: inventoryConstants.PERFORM_INV_UPDATE_EOD_FAILURE,
         payload: [],
       });
     }

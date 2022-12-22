@@ -141,7 +141,9 @@ export const InventoryItemMaster = () => {
   const [itemTrackingFlag, setItemTrackingFlag] = useState("");
 
   const [newItemCategory, setNewItemCategory] = useState(
-    categoryList ? categoryList[0].configCriteriaValue : ""
+    categoryList && categoryList.length > 0
+      ? categoryList[0].configCriteriaValue
+      : ""
   );
   const [newItemSubCategory, setNewItemSubCategory] = useState(
     categorySubList ? categorySubList[0].configCriteriaValue : ""
@@ -235,10 +237,10 @@ export const InventoryItemMaster = () => {
       return;
     }
 
-    // if (!newItemNo) {
-    //   toast.error("Item No is mandatory!");
-    //   return;
-    // }
+    /* if (!newItemNo) {
+      toast.error("Item No is mandatory!");
+      return;
+    } */
 
     const newItem = {
       // itemId: newItemNo,
@@ -350,7 +352,7 @@ export const InventoryItemMaster = () => {
                               }}
                               fullWidth
                               variant="standard"
-                              disabled={!isSave[item.itemId]}
+                              disabled={/* !isSave[item.itemId] */ true}
                               InputProps={{
                                 disableUnderline: true, // <== added this
                               }}
@@ -605,7 +607,7 @@ export const InventoryItemMaster = () => {
                           {activeInventory ? activeInventory.length + 1 : "#"}
                         </CusTableCell>
                         <CusTableCell align="center">
-                          <CusTextField
+                          {/* <CusTextField
                             value={newItemNo}
                             onChange={(event) => {
                               setNewItemNo(event.target.value);
@@ -615,7 +617,10 @@ export const InventoryItemMaster = () => {
                             InputProps={{
                               disableUnderline: true, // <== added this
                             }}
-                          />
+                          /> */}
+                          <Typography sx={{ fontSize: "0.75rem" }}>
+                            N/A
+                          </Typography>
                         </CusTableCell>
                         <CusTableCell align="center">
                           <CusTextField
