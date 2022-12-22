@@ -125,6 +125,7 @@ export const NewReports = () => {
 
 
   const [isPresetHide, setPresetHide] = useState(false);
+  // var htmlConsumptionReportIframe = '<iframe width="100%" height="600" src="https://datastudio.google.com/embed/reporting/4bf3569b-468f-4613-aaf7-6c3daee772ad/page/UUPAD" frameborder="0" style="border:0" allowfullscreen></iframe>';
   var htmlConsumptionReportIframe = '<iframe width="100%" height="600" src="https://datastudio.google.com/embed/reporting/4bf3569b-468f-4613-aaf7-6c3daee772ad/page/UUPAD" frameborder="0" style="border:0" allowfullscreen></iframe>';
   var htmlCancelOrderReportIframe = '<iframe width="100%" height="600" src="https://datastudio.google.com/embed/reporting/77441cbd-12b2-4b57-b57c-6958572678e1/page/o7lAD" frameborder="0" style="border:0" allowfullscreen></iframe>';
   //const dispatch = useDispatch();
@@ -154,7 +155,7 @@ export const NewReports = () => {
   };
 
   const handleChangeReport = (event) => {
-    if(event.target.value === "CONSUMPTION REPORT" || event.target.value === "CANCELLED ORDER REPORT") {
+    if(event.target.value === "Inventory Stock Status" || event.target.value === "CANCELLED ORDER REPORT") {
       setPresetHide(true);
     }else{
       setPresetHide(false);
@@ -402,7 +403,7 @@ export const NewReports = () => {
             ></SalesSummeryByPaymentMode>
           )}
 
-          {selectedReport === "CONSUMPTION REPORT" && (
+          {selectedReport === "INVENTORY STOCK STATUS" && (
             <div style={{maxWidth:'100%',maxHeight:'1068px',minWidth:800}}>
               <div className="content" dangerouslySetInnerHTML={{__html: htmlConsumptionReportIframe}}></div>
             </div>

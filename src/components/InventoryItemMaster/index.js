@@ -126,19 +126,25 @@ export const InventoryItemMaster = () => {
   );
   const uomList = useSelector((state) => state.inventory.uomList);
   const categoryList = useSelector((state) => state.inventory.categoryList);
+  const categorySubList = useSelector((state) => state.inventory.categorySubList);
   const user = useSelector((state) => state.auth.user);
 
   const [isSave, setIsSave] = useState({});
   const [isAddNew, setIsAddNew] = useState(false);
   const [itemCategory, setItemCategory] = useState("");
+  const [itemSubCategory, setItemSubCategory] = useState("");
   const [itemUOM, setItemUOM] = useState("");
   const [currentItemName, setCurrentItemName] = useState({});
   const [currentItemNo, setCurrentItemNo] = useState({});
   const [currentItemGst, setCurrentItemGst] = useState({});
+  const [currentItemUnitCost, setCurrentItemUnitCost] = useState({});
   const [itemTrackingFlag, setItemTrackingFlag] = useState("");
 
   const [newItemCategory, setNewItemCategory] = useState(
     categoryList ? categoryList[0].configCriteriaValue : ""
+  );
+  const [newItemSubCategory, setNewItemSubCategory] = useState(
+    categorySubList ? categorySubList[0].configCriteriaValue : ""
   );
   const [newItemUOM, setNewItemUOM] = useState(
     uomList ? uomList[0].configCriteriaValue : ""
@@ -146,6 +152,7 @@ export const InventoryItemMaster = () => {
   const [newItemName, setNewItemName] = useState("");
   const [newItemNo, setNewItemNo] = useState("");
   const [newItemGst, setNewItemGst] = useState("");
+  const [newItemUnitCost, setNewItemUnitCost] = useState("");
   const [newTrackingFlag, setNewTrackingFlag] = useState("Y");
   const [pagination, setPagination] = useState({
     data: activeInventory,
@@ -198,10 +205,14 @@ export const InventoryItemMaster = () => {
         ? currentItemName[oldItem.itemId]
         : oldItem.itemName,
       itemCategory: itemCategory ? itemCategory : oldItem.itemCategory,
-      itemUOM: itemUOM ? itemUOM : oldItem.itemUOM,
+      itemSubCategory: itemSubCategory ? itemSubCategory : oldItem.itemSubCategory,
+      itemUom: itemUOM ? itemUOM : oldItem.itemUom,
       itemGstPercentage: currentItemGst[oldItem.itemId]
         ? currentItemGst[oldItem.itemId]
         : oldItem.itemGstPercentage,
+        itemUnitCost: currentItemUnitCost[oldItem.itemId]
+        ? currentItemUnitCost[oldItem.itemId]
+        : oldItem.itemUnitCost,
       itemTrackingFlag: itemTrackingFlag
         ? itemTrackingFlag
         : oldItem.itemTrackingFlag,
@@ -224,16 +235,18 @@ export const InventoryItemMaster = () => {
       return;
     }
 
-    if (!newItemNo) {
-      toast.error("Item No is mandatory!");
-      return;
-    }
+    // if (!newItemNo) {
+    //   toast.error("Item No is mandatory!");
+    //   return;
+    // }
 
     const newItem = {
-      itemId: newItemNo,
+      // itemId: newItemNo,
       itemName: newItemName,
       itemCategory: newItemCategory,
-      itemUOM: newItemUOM,
+      itemSubCategory: newItemSubCategory,
+      itemUom: newItemUOM,
+      itemUnitCost:newItemUnitCost,
       itemGstPercentage: newItemGst,
       itemTrackingFlag: newTrackingFlag ? newTrackingFlag : "Y",
       itemStatus: "ACTIVE",
@@ -257,17 +270,21 @@ export const InventoryItemMaster = () => {
 
   const clearStates = () => {
     setItemCategory("");
+    setItemSubCategory("");
     setItemUOM("");
     setCurrentItemName({});
     setCurrentItemNo({});
     setCurrentItemGst({});
+    setCurrentItemUnitCost({});
     setItemTrackingFlag("");
 
     setNewItemCategory("");
+    setNewItemSubCategory("");
     setNewItemUOM("");
     setNewItemName("");
     setNewItemNo("");
     setNewItemGst("");
+    setNewItemUnitCost("");
     setNewTrackingFlag("");
   };
 
@@ -281,8 +298,10 @@ export const InventoryItemMaster = () => {
               <CusTableCell1 align="center">ITEM NO</CusTableCell1>
               <CusTableCell1 align="center">ITEM NAME</CusTableCell1>
               <CusTableCell1 align="center">CATEGORY</CusTableCell1>
+              <CusTableCell1 align="center">SUB CATEGORY</CusTableCell1>
               <CusTableCell1 align="center">UOM</CusTableCell1>
               <CusTableCell1 align="center">GST</CusTableCell1>
+              <CusTableCell1 align="center">COST</CusTableCell1>
               <CusTableCell1 align="center" sx={{ width: "20px" }}>
                 TRACK<br></br>(YES /NO)
               </CusTableCell1>
@@ -393,7 +412,40 @@ export const InventoryItemMaster = () => {
                             <FormControl fullWidth sx={{ marginTop: "5px" }}>
                               <NativeSelect
                                 key={item.itemId}
-                                defaultValue={item.itemUOM}
+                                defaultValue={item.itemSubCategory}
+                                inputProps={{
+                                  name: "status",
+                                  id: "uncontrolled-native",
+                                }}
+                                onChange={(event) => {
+                                  setItemSubCategory(event.target.value);
+                                }}
+                                sx={{ fontSize: "0.75rem", paddingLeft: "5px" }}
+                                disabled={!isSave[item.itemId]}
+                              >
+                                {categorySubList &&
+                                  categorySubList.map((item) => (
+                                    <option
+                                      value={item.configCriteriaValue}
+                                      style={{ fontSize: "0.75rem" }}
+                                    >
+                                      {item.configCriteriaDesc}
+                                    </option>
+                                  ))}
+                                <option
+                                  value={""}
+                                  style={{ fontSize: "0.75rem" }}
+                                >
+                                  Select Sub Category
+                                </option>
+                              </NativeSelect>
+                            </FormControl>
+                          </CusTableCell>
+                          <CusTableCell align="center">
+                            <FormControl fullWidth sx={{ marginTop: "5px" }}>
+                              <NativeSelect
+                                key={item.itemId}
+                                defaultValue={item.itemUom}
                                 inputProps={{
                                   name: "status",
                                   id: "uncontrolled-native",
@@ -444,6 +496,27 @@ export const InventoryItemMaster = () => {
                             />
                           </CusTableCell>
 
+                          <CusTableCell align="center" sx={{ width: "20px" }}>
+                            <CusTextField
+                              key={item.itemId}
+                              defaultValue={item.itemUnitCost}
+                              value={currentItemUnitCost[item.itemId]}
+                              onChange={(event) => {
+                                const unitCost = {
+                                  ...currentItemUnitCost,
+                                  [item.itemId]: event.target.value,
+                                };
+                                setCurrentItemUnitCost(unitCost);
+                              }}
+                              fullWidth
+                              variant="standard"
+                              disabled={!isSave[item.itemId]}
+                              InputProps={{
+                                disableUnderline: true, // <== added this
+                              }}
+                            />
+                          </CusTableCell>
+
                           <CusTableCell align="center">
                             <FormControl fullWidth sx={{ marginTop: "5px" }}>
                               <NativeSelect
@@ -481,7 +554,7 @@ export const InventoryItemMaster = () => {
                                 key={item.itemId}
                                 sx={{
                                   fontSize: "0.75rem",
-                                  color: "#92D050",
+                                  color: "#92D050", // Update
                                 }}
                                 onClick={() => {
                                   updateItemHandle(item);
@@ -595,6 +668,36 @@ export const InventoryItemMaster = () => {
                                 id: "uncontrolled-native",
                               }}
                               onChange={(event) => {
+                                setNewItemSubCategory(event.target.value);
+                              }}
+                              sx={{ fontSize: "0.75rem" }}
+                            >
+                              <option
+                                value={""}
+                                style={{ fontSize: "0.75rem" }}
+                              >
+                                Select Sub Category
+                              </option>
+                              {categorySubList &&
+                                categorySubList.map((item) => (
+                                  <option
+                                    value={item.configCriteriaValue}
+                                    style={{ fontSize: "0.75rem" }}
+                                  >
+                                    {item.configCriteriaDesc}
+                                  </option>
+                                ))}
+                            </NativeSelect>
+                          </FormControl>
+                        </CusTableCell>
+                        <CusTableCell align="center">
+                          <FormControl fullWidth sx={{ marginTop: "5px" }}>
+                            <NativeSelect
+                              inputProps={{
+                                name: "status",
+                                id: "uncontrolled-native",
+                              }}
+                              onChange={(event) => {
                                 setNewItemUOM(event.target.value);
                               }}
                               sx={{ fontSize: "0.75rem" }}
@@ -623,6 +726,20 @@ export const InventoryItemMaster = () => {
                             value={newItemGst}
                             onChange={(event) => {
                               setNewItemGst(event.target.value);
+                            }}
+                            fullWidth
+                            variant="standard"
+                            InputProps={{
+                              disableUnderline: true, // <== added this
+                            }}
+                          />
+                        </CusTableCell>
+
+                        <CusTableCell align="center">
+                          <CusTextField
+                            value={newItemUnitCost}
+                            onChange={(event) => {
+                              setNewItemUnitCost(event.target.value);
                             }}
                             fullWidth
                             variant="standard"
@@ -663,7 +780,7 @@ export const InventoryItemMaster = () => {
                           <IconButton
                             sx={{
                               fontSize: "0.75rem",
-                              color: "#92D050",
+                              color: "#92D050", //Save
                             }}
                             onClick={() => {
                               saveNewItem();
