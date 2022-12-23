@@ -29,6 +29,7 @@ import {
   getActiveInventory,
   saveUpdateRecipeItem,
   deleteRecipeItem,
+  getCustomerDetails,
 } from "../../actions";
 import { useSelector, useDispatch } from "react-redux";
 import ReactPaginate from "react-paginate";
@@ -189,6 +190,8 @@ export const RecipeMaster = () => {
   const [newItemCost, setNewItemCost] = useState("");
   const [changed, setChanged] = useState(false);
 
+  const [itemCostPerUnit, setitemCostPerUnit] = useState("");
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -264,6 +267,9 @@ export const RecipeMaster = () => {
         updatedDate: new Date(),
       };
       setChanged(true);
+
+      // console.log("------------");
+      // console.log(newItem)
       dispatch(saveUpdateRecipeItem(newItem));
     }
 
@@ -331,6 +337,37 @@ export const RecipeMaster = () => {
     dispatch(deleteRecipeItem(id, user.loginId));
   };
 
+  // console.log("******* activeInventory ********");
+  // console.log(activeInventory);
+
+  // const finalData = []; 
+
+  const cleanBeforeAddNew = () => {
+    setNewItemIngredientObj({});
+    setNewItemIngredientObj({});
+    setNewItemCost();
+    setNewItemQty();
+    setNewItemUOM();
+  }
+
+  const getCustomerDetails = (event) => {
+    // console.log("******* Item ********");
+    // console.log(event);
+
+    const finalData = JSON.parse(event);
+    setNewItemIngredientObj(finalData);
+    setNewItemUOM(finalData.itemUom)
+
+    setNewItemIngredient(finalData.itemId);
+    setitemCostPerUnit(finalData.itemUnitCost);
+   
+  }
+
+  const calculateFinalCost = (qty) => {
+    var finalCost = itemCostPerUnit * qty;
+    setNewItemCost(finalCost);
+  }
+
   const renderAddModal = () => {
     return (
       <Modal
@@ -350,21 +387,22 @@ export const RecipeMaster = () => {
         </Modal.Header>
         {currentProduct ? (
           <Modal.Body>
-            <Row>
+            <Row style={{marginBottom:'10px'}}>
               <Col xs={5} align="center">
-                <CusTypo>Ingredient Name</CusTypo>
+                <CusTypo style={{fontFamily: 'Roboto, sans-serif', fontSize:14}}>INGREDIENTS</CusTypo>
               </Col>
               <Col xs={2} align="center">
-                <CusTypo>Qty.</CusTypo>
+                <CusTypo style={{fontFamily: 'Roboto, sans-serif', fontSize:14}}>QUANTITY</CusTypo>
               </Col>
               <Col xs={2} align="center">
-                <CusTypo>UOM</CusTypo>
+                <CusTypo style={{fontFamily: 'Roboto, sans-serif', fontSize:14}}>UOM</CusTypo>
               </Col>
               <Col xs={2} align="center">
-                <CusTypo>Cost</CusTypo>
+                <CusTypo style={{fontFamily: 'Roboto, sans-serif', fontSize:14}}>COST</CusTypo>
               </Col>
               <Col xs={1} align="center"></Col>
             </Row>
+            <div style={{backgroundColor:'#7f7f7f',height:'0.5px',marginBottom:'5px'}}></div>
 
             {getIngredientsByProductId(
               currentProduct.productId,
@@ -535,7 +573,44 @@ export const RecipeMaster = () => {
               <Row>
                 <Col xs={5} align="center">
                   <FormControl fullWidth>
-                    <NativeSelect
+
+                  <NativeSelect
+                      inputProps={{
+                        name: "status",
+                        id: "uncontrolled-native",
+                      }}
+                      onChange={(event) => {
+                        // setNewItemIngredient(event.target.value);
+                        getCustomerDetails(event.target.value);
+                      }}
+                      sx={{ fontSize: "0.75rem" }}
+                    >
+                      <option
+                        value={""}
+                        style={{ fontSize: "0.75rem" }}
+                        onClick={() => {
+                          setNewItemIngredientObj({});
+                        }}
+                      >
+                        Select Ingredient
+                      </option>
+                      {activeInventory &&
+                        activeInventory.map((item) => (
+                          <option
+                            value={JSON.stringify(item)}
+                            style={{ fontSize: "0.75rem" }}
+                            onClick={() => {
+                              // setNewItemIngredientObj(item);                             
+                            }}
+                          >
+                            {item.itemName}
+                          </option>
+                        ))}
+                    </NativeSelect>
+
+
+
+                    {/* <NativeSelect
                       inputProps={{
                         name: "status",
                         id: "uncontrolled-native",
@@ -566,7 +641,7 @@ export const RecipeMaster = () => {
                             {item.itemName}
                           </option>
                         ))}
-                    </NativeSelect>
+                    </NativeSelect> */}
                   </FormControl>
                 </Col>
                 <Col xs={2} align="center">
@@ -574,6 +649,7 @@ export const RecipeMaster = () => {
                     value={newItemQty}
                     onChange={(event) => {
                       setNewItemQty(event.target.value);
+                      calculateFinalCost(event.target.value);
                     }}
                     fullWidth
                     variant="standard"
@@ -608,8 +684,8 @@ export const RecipeMaster = () => {
                   </FormControl> */}
                   <Typography sx={{ fontSize: "0.75rem" }}>
                     {newItemIngredientObj
-                      ? newItemIngredientObj.itemUOM
-                      : "N/A"}
+                      ? newItemIngredientObj.itemUom
+                      : "N/A"}     
                   </Typography>
                 </Col>
                 <Col xs={2} align="center">
@@ -644,6 +720,7 @@ export const RecipeMaster = () => {
               className="mt-4"
               onClick={() => {
                 setIsAddNew(true);
+                cleanBeforeAddNew();
               }}
             >
               ADD ANOTHER
