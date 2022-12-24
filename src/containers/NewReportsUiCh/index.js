@@ -125,7 +125,9 @@ export const NewReports = () => {
 
 
   const [isPresetHide, setPresetHide] = useState(false);
-  var htmlConsumptionReportIframe = '<iframe width="100%" height="600" src="https://datastudio.google.com/embed/reporting/4bf3569b-468f-4613-aaf7-6c3daee772ad/page/UUPAD" frameborder="0" style="border:0" allowfullscreen></iframe>';
+  // var htmlConsumptionReportIframe = '<iframe width="100%" height="600" src="https://datastudio.google.com/embed/reporting/4bf3569b-468f-4613-aaf7-6c3daee772ad/page/UUPAD" frameborder="0" style="border:0" allowfullscreen></iframe>';
+  var htmlConsumptionReportIframe = '<iframe width="100%" height="600" src="https://datastudio.google.com/embed/reporting/8158a2e6-4f67-43b7-95ba-01b49ddf5ec3/page/UUPAD" frameborder="0" style="border:0" allowfullscreen></iframe>';
+  var htmlInventoryStockStatusReportIframe = '<iframe width="100%" height="600" src="https://datastudio.google.com/embed/reporting/4bf3569b-468f-4613-aaf7-6c3daee772ad/page/UUPAD" frameborder="0" style="border:0" allowfullscreen></iframe>';
   var htmlCancelOrderReportIframe = '<iframe width="100%" height="600" src="https://datastudio.google.com/embed/reporting/77441cbd-12b2-4b57-b57c-6958572678e1/page/o7lAD" frameborder="0" style="border:0" allowfullscreen></iframe>';
   //const dispatch = useDispatch();
 
@@ -146,7 +148,7 @@ export const NewReports = () => {
 
   const handleChangeStore = (event) => {
     setSelectedStore(event.target.value);
-    console.log(event.target.value);
+    // console.log(event.target.value);
   };
 
   const handleSelectedStore = (store) => {
@@ -154,7 +156,7 @@ export const NewReports = () => {
   };
 
   const handleChangeReport = (event) => {
-    if(event.target.value === "CONSUMPTION REPORT" || event.target.value === "CANCELLED ORDER REPORT") {
+    if(event.target.value === "INVENTORY STOCK STATUS" || event.target.value === "CANCELLED ORDER REPORT" ||  event.target.value === "CONSUMPTION REPORT") {
       setPresetHide(true);
     }else{
       setPresetHide(false);
@@ -405,6 +407,11 @@ export const NewReports = () => {
           {selectedReport === "CONSUMPTION REPORT" && (
             <div style={{maxWidth:'100%',maxHeight:'1068px',minWidth:800}}>
               <div className="content" dangerouslySetInnerHTML={{__html: htmlConsumptionReportIframe}}></div>
+            </div>
+          )}
+          {selectedReport === "INVENTORY STOCK STATUS" && (
+            <div style={{maxWidth:'100%',maxHeight:'1068px',minWidth:800}}>
+              <div className="content" dangerouslySetInnerHTML={{__html: htmlInventoryStockStatusReportIframe}}></div>
             </div>
           )}
 

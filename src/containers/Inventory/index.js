@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import {
   getInventoryUOM,
   getInventoryCategories,
+  getInventorySubCategories,
   getAllProduct,
 } from "../../actions";
 import Layout from "../NewLayout";
@@ -30,6 +31,7 @@ export const Inventory = () => {
   useEffect(() => {
     dispatch(getInventoryUOM());
     dispatch(getInventoryCategories());
+    dispatch(getInventorySubCategories());
     dispatch(getAllProduct());
   }, []);
 

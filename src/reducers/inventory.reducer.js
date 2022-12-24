@@ -12,6 +12,7 @@ const initState = {
   activeInventoryLoading: false,
   uomList: [],
   categoryList: [],
+  categorySubList: [],
   activeRecipes: [],
   activeRecipesLoading: false,
   purchaseOrderCategory: [],
@@ -168,6 +169,13 @@ export default (state = initState, action) => {
       state = {
         ...state,
         categoryList: action.payload,
+      };
+      break;
+
+    case inventoryConstants.GET_INVENTORY_SUB_CATEGORIES_SUCCESS:
+      state = {
+        ...state,
+        categorySubList: action.payload,
       };
       break;
 
