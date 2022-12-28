@@ -155,9 +155,20 @@ export const RecipeMaster = () => {
   const activeRecipesLoading = useSelector(
     (state) => state.inventory.activeRecipesLoading
   );
+
+  // const activeInventory = useSelector(
+  //   (state) => state.inventory.activeInventory
+  // );
+
   const activeInventory = useSelector(
-    (state) => state.inventory.activeInventory
+    (state) => state.inventory.activeInventory.filter(recipe => {
+      return recipe.itemCategory === "RECIPE";
+    })
   );
+
+  // console.log("******* activeInventory ********");
+  // console.log(activeInventory);
+
   const activeInventoryLoading = useSelector(
     (state) => state.inventory.activeInventoryLoading
   );
@@ -178,7 +189,7 @@ export const RecipeMaster = () => {
   const [showAdd, setShowAdd] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
   const [currentItemQty, setCurrentItemQty] = useState({});
-  const [itemUOM, setItemUOM] = useState({});
+  const [itemUom, setItemUOM] = useState({});
   const [itemIngredient, setItemIngredient] = useState({});
   const [currentItemCost, setCurrentItemCost] = useState({});
   const [isAddNew, setIsAddNew] = useState(false);
@@ -220,7 +231,8 @@ export const RecipeMaster = () => {
     let total = 0;
 
     for (let i = 0; i < items.length; i++) {
-      total = total + Number(items[i].itemQty) * Number(items[i].itemCost);
+      // total = total + Number(items[i].itemQty) * Number(items[i].itemCost);
+      total = total +  Number(items[i].itemCost);
     }
 
     return total.toFixed(2);
@@ -258,7 +270,7 @@ export const RecipeMaster = () => {
         itemId: newItemIngredientObj.itemId,
         itemQty: newItemQty,
         itemCost: newItemCost ? newItemCost : "0.0",
-        /* itemUOM: newItemUOM, */
+        /* itemUom: newItemUOM, */
         itemUom: newItemUOM,
         itemStatus: "ACTIVE",
         createdBy: user.loginId,
@@ -291,8 +303,8 @@ export const RecipeMaster = () => {
         itemCost: currentItemCost[allList[i].itemId]
           ? currentItemCost[allList[i].itemId]
           : allList[i].itemCost,
-        itemUom: itemUOM[allList[i].itemId]
-          ? itemUOM[allList[i].itemId]
+        itemUom: itemUom[allList[i].itemId]
+          ? itemUom[allList[i].itemId]
           : allList[i].itemUom,
       };
 
@@ -511,7 +523,7 @@ export const RecipeMaster = () => {
                         id: "uncontrolled-native",
                       }}
                       onChange={(event) => {
-                        let uom = { ...itemUOM, [item.itemId]: event.target.value };
+                        let uom = { ...itemUom, [item.itemId]: event.target.value };
                         setItemUOM(uom);
                       }}
                       sx={{ fontSize: "0.75rem" }}

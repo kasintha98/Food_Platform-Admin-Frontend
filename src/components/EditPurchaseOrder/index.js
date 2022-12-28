@@ -230,9 +230,9 @@ export const EditPurchaseOrder = (props) => {
       itemName: currentSelectedItem[item.itemId]
         ? currentSelectedItem[item.itemId].itemName
         : item.itemName,
-      itemUOM: currentSelectedItem[item.itemId]
-        ? currentSelectedItem[item.itemId].itemUOM
-        : item.itemUOM,
+      itemUom: currentSelectedItem[item.itemId]
+        ? currentSelectedItem[item.itemId].itemUom
+        : item.itemUom,
       purchaseQty: currentItemQty[item.itemId]
         ? Number(currentItemQty[item.itemId])
         : item.purchaseQty,
@@ -389,8 +389,8 @@ export const EditPurchaseOrder = (props) => {
                       <CusTableCell align="center">
                         <Typography sx={{ fontSize: "0.75rem" }}>
                           {currentSelectedItem[item.itemId]
-                            ? currentSelectedItem[item.itemId].itemUOM
-                            : item.itemUOM}
+                            ? currentSelectedItem[item.itemId].itemUom
+                            : item.itemUom}
                         </Typography>
                       </CusTableCell>
                       <CusTableCell align="center">

@@ -245,7 +245,7 @@ export const NewPurchaseOrder = () => {
     const newObj = {
       itemId: selectedItem.itemId,
       itemName: selectedItem.itemName,
-      itemUOM: selectedItem.itemUOM,
+      itemUom: selectedItem.itemUom,
       itemQuantity: newItemQty,
       itemWastage: newItemWastage,
       itemPrice: newItemPrice,
@@ -274,9 +274,9 @@ export const NewPurchaseOrder = () => {
       itemName: currentSelectedItem[item.itemId]
         ? currentSelectedItem[item.itemId].itemName
         : item.itemName,
-      itemUOM: currentSelectedItem[item.itemId]
-        ? currentSelectedItem[item.itemId].itemUOM
-        : item.itemUOM,
+      itemUom: currentSelectedItem[item.itemId]
+        ? currentSelectedItem[item.itemId].itemUom
+        : item.itemUom,
       itemQuantity: currentItemQty[item.itemId]
         ? currentItemQty[item.itemId]
         : item.itemQuantity,
@@ -696,8 +696,8 @@ export const NewPurchaseOrder = () => {
                         <CusTableCell align="center">
                           <Typography sx={{ fontSize: "0.75rem" }}>
                             {currentSelectedItem[item.itemId]
-                              ? currentSelectedItem[item.itemId].itemUOM
-                              : item.itemUOM}
+                              ? currentSelectedItem[item.itemId].itemUom
+                              : item.itemUom}
                           </Typography>
                         </CusTableCell>
                         <CusTableCell align="center" sx={{ maxWidth: "60px" }}>
@@ -969,7 +969,7 @@ export const NewPurchaseOrder = () => {
                       </CusTableCell>
                       <CusTableCell align="center">
                         <Typography sx={{ fontSize: "0.75rem" }}>
-                          {selectedItem ? selectedItem.itemUOM : "N/A"}
+                          {selectedItem ? selectedItem.itemUom : "N/A"}
                         </Typography>
                       </CusTableCell>
                       <CusTableCell align="center" sx={{ maxWidth: "60px" }}>

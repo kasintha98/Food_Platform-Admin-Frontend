@@ -133,7 +133,7 @@ export const InventoryItemMaster = () => {
   const [isAddNew, setIsAddNew] = useState(false);
   const [itemCategory, setItemCategory] = useState("");
   const [itemSubCategory, setItemSubCategory] = useState("");
-  const [itemUOM, setItemUOM] = useState("");
+  const [itemUom, setItemUOM] = useState("");
   const [currentItemName, setCurrentItemName] = useState({});
   const [currentItemNo, setCurrentItemNo] = useState({});
   const [currentItemGst, setCurrentItemGst] = useState({});
@@ -208,7 +208,7 @@ export const InventoryItemMaster = () => {
         : oldItem.itemName,
       itemCategory: itemCategory ? itemCategory : oldItem.itemCategory,
       itemSubCategory: itemSubCategory ? itemSubCategory : oldItem.itemSubCategory,
-      itemUom: itemUOM ? itemUOM : oldItem.itemUom,
+      itemUom: itemUom ? itemUom : oldItem.itemUom,
       itemGstPercentage: currentItemGst[oldItem.itemId]
         ? currentItemGst[oldItem.itemId]
         : oldItem.itemGstPercentage,
