@@ -18,6 +18,7 @@ import { RecipeMaster } from "../../components/RecipeMaster";
 import { NewPurchaseOrder } from "../../components/NewPurchaseOrder";
 import { SearchPurchaseOrder } from "../../components/SearchPurchaseOrder";
 import { StoreInventoryTracking } from "../../components/StoreInventoryTracking";
+import { NonRecipeInventory } from "../../components/NonRecipeInventory";
 
 export const Inventory = () => {
   const dispatch = useDispatch();
@@ -62,7 +63,7 @@ export const Inventory = () => {
                 value="SEARCH PURCHASE ORDER"
               />
               <Tab
-                label="CENTRAL INVENTORY TRACKING"
+                label="NON-RECIPE INVENTORY"
                 value="CENTRAL INVENTORY TRACKING"
               />
               <Tab
@@ -95,9 +96,14 @@ export const Inventory = () => {
               <SearchPurchaseOrder></SearchPurchaseOrder>
             </div>
           </TabPanel>
-          <TabPanel value="CENTRAL INVENTORY TRACKING">
+          {/* <TabPanel value="CENTRAL INVENTORY TRACKING">
             <div style={{maxWidth:'100%',maxHeight:'1068px'}}>
               <div className="content" dangerouslySetInnerHTML={{__html: htmlIframe}}></div>
+            </div>
+          </TabPanel> */}
+          <TabPanel value="CENTRAL INVENTORY TRACKING">
+            <div>
+            <NonRecipeInventory></NonRecipeInventory>
             </div>
           </TabPanel>
           <TabPanel value="STORE INVENTORY TRACKING">

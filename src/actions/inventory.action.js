@@ -675,19 +675,20 @@ export const getClosedPurchaseOrders = () => {
   };
 };
 
-export const getItemConsumptionSummery = (store) => {
+export const getItemConsumptionSummery = (store, type) => {
   return async (dispatch) => {
     try {
       dispatch({
         type: inventoryConstants.GET_ITEM_CONSUMPTION_SUMMARY_REQUEST,
       });
 
-      const res = await axios.get("/getItemConsumptionSummery");
+      const res = await axios.get("/getItemConsumptionSummery",null,{params:{type: type}});
       if (res.status === 200) {
         let filteredData = res.data.filter(function (el) {
           return (
             el.restaurantId === store.restaurantId &&
-            el.storeId === store.storeId
+            el.storeId === store.storeId &&
+            el.itemCategory === type
           );
         });
 

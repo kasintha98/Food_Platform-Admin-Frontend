@@ -138,7 +138,7 @@ const MyPaginate = styled(ReactPaginate)`
   }
 `;
 
-export const StoreInventoryTracking = () => {
+export const NonRecipeInventory = () => {
   const stores = useSelector((state) => state.store.stores);
   const user = useSelector((state) => state.auth.user);
   const itemConsumptionSummaryLoading = useSelector(
@@ -168,7 +168,7 @@ export const StoreInventoryTracking = () => {
 
   useEffect(() => {
     if (selectedStoreObj) {
-      dispatch(getItemConsumptionSummery(selectedStoreObj, "RECIPE"));
+      dispatch(getItemConsumptionSummery(selectedStoreObj, "NON-RECIPE"));
     }
   }, [selectedStoreObj, isRefresh]);
 
