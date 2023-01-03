@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
-import { Modal } from "react-bootstrap";
+import { Modal, Row, Col } from "react-bootstrap";
 import { toast } from "react-toastify";
 import {
   TableContainer,
@@ -104,6 +104,13 @@ const CusTextField = styled(TextField)`
   }
 `;
 
+const CuTypography = styled(Typography)`
+  color: #7f7f7f;
+  font-weight: bold;
+  font-size: 0.75rem;
+  line-height: 1rem;
+`;
+
 const MyPaginate = styled(ReactPaginate)`
   margin-top: 2rem;
   margin-bottom: 2rem;
@@ -173,8 +180,10 @@ export const SuppliersMaster = () => {
   const [newSupplierGst, setNewSupplierGst] = useState("");
   const [newSupplierTan, setNewSupplierTan] = useState("");
   const [newSupplierStatus, setNewSupplierStatus] = useState("");
+  const [keywords, setKeywords] = useState("");
   const [supplierStore, setSupplierStore] = useState(null);
   const [newSupplierStore, setNewSupplierStore] = useState(null);
+  const [searchedAllSuppliers, setSearchedAllSuppliers] = useState([]);
 
   const [pagination, setPagination] = useState({
     data: allSuppliers,
@@ -193,13 +202,23 @@ export const SuppliersMaster = () => {
   useEffect(() => {
     setPagination((prevState) => ({
       ...prevState,
-      pageCount: allSuppliers.length / prevState.numberPerPage,
-      currentData: allSuppliers.slice(
+      pageCount: searchedAllSuppliers.length / prevState.numberPerPage,
+      currentData: searchedAllSuppliers.slice(
         pagination.offset,
         pagination.offset + pagination.numberPerPage
       ),
     }));
-  }, [pagination.numberPerPage, pagination.offset, allSuppliers]);
+  }, [pagination.numberPerPage, pagination.offset, searchedAllSuppliers]);
+
+  useEffect(() => {
+    if(keywords && allSuppliers && allSuppliers.length > 0){
+        setSearchedAllSuppliers(allSuppliers.filter(function (el) {
+          return el.supplierName.toLowerCase().includes(keywords.toLowerCase());
+        }))
+    }else{
+      setSearchedAllSuppliers(allSuppliers)
+    }
+  }, [keywords, allSuppliers]);
 
   const handleCloseAdd = () => setShowAdd(false);
   const handleShowAdd = () => setShowAdd(true);
@@ -553,6 +572,25 @@ export const SuppliersMaster = () => {
 
   return (
     <div>
+      <Row>
+        <Col sm={6}>
+        <div style={{ display: "flex" }} className="align-items-center mb-3">
+              <div style={{ width: "150px" }}>
+                <CuTypography>Search By Name :</CuTypography>
+              </div>
+              <div style={{ width: "100%" }}>
+                <CusTextField
+                  value={keywords}
+                  onChange={(event) => {
+                    setKeywords(event.target.value);
+                  }}
+                  fullWidth
+                  label="Search By Name"
+                />
+              </div>
+            </div>
+        </Col>
+      </Row>
       <TableContainer component={Paper} sx={{ maxHeight: 430 }}>
         <Table sx={{ minWidth: 800 }} aria-label="simple table">
           <TableHead>
@@ -591,9 +629,9 @@ export const SuppliersMaster = () => {
               </TableRow>
             ) : (
               <>
-                {allSuppliers && allSuppliers.length > 0 ? (
+                {searchedAllSuppliers && searchedAllSuppliers.length > 0 ? (
                   <>
-                    {allSuppliers
+                    {searchedAllSuppliers
                       .slice(
                         pagination.offset,
                         pagination.offset + pagination.numberPerPage

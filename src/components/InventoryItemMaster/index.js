@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
+import { Row, Col } from "react-bootstrap";
 import { toast } from "react-toastify";
 import {
   TableContainer,
@@ -117,6 +118,14 @@ const CusTextField = styled(TextField)`
   }
 `;
 
+const CuTypography = styled(Typography)`
+  color: #7f7f7f;
+  font-weight: bold;
+  font-size: 0.75rem;
+  line-height: 1rem;
+`;
+
+
 export const InventoryItemMaster = () => {
   const activeInventory = useSelector(
     (state) => state.inventory.activeInventory
@@ -155,6 +164,7 @@ export const InventoryItemMaster = () => {
   const [newItemNo, setNewItemNo] = useState("");
   const [newItemGst, setNewItemGst] = useState("");
   const [newItemUnitCost, setNewItemUnitCost] = useState("");
+  const [keywords, setKeywords] = useState("");
   const [newTrackingFlag, setNewTrackingFlag] = useState("Y");
   const [pagination, setPagination] = useState({
     data: activeInventory,
@@ -163,6 +173,7 @@ export const InventoryItemMaster = () => {
     pageCount: 0,
     currentData: activeInventory.slice(0, 10),
   });
+  const [searchedAllActiveInventory, setSearchedAllActiveInventory] = useState([]);
 
   const dispatch = useDispatch();
 
@@ -173,13 +184,23 @@ export const InventoryItemMaster = () => {
   useEffect(() => {
     setPagination((prevState) => ({
       ...prevState,
-      pageCount: activeInventory.length / prevState.numberPerPage,
-      currentData: activeInventory.slice(
+      pageCount: searchedAllActiveInventory.length / prevState.numberPerPage,
+      currentData: searchedAllActiveInventory.slice(
         pagination.offset,
         pagination.offset + pagination.numberPerPage
       ),
     }));
-  }, [pagination.numberPerPage, pagination.offset, activeInventory]);
+  }, [pagination.numberPerPage, pagination.offset, searchedAllActiveInventory]);
+
+  useEffect(() => {
+    if(keywords && activeInventory && activeInventory.length > 0){
+        setSearchedAllActiveInventory(activeInventory.filter(function (el) {
+          return el.itemName.toLowerCase().includes(keywords.toLowerCase());
+        }))
+    }else{
+      setSearchedAllActiveInventory(activeInventory)
+    }
+  }, [keywords, activeInventory]);
 
   const handlePageClick = (event) => {
     const selected = event.selected;
@@ -292,6 +313,25 @@ export const InventoryItemMaster = () => {
 
   return (
     <div>
+       <Row>
+        <Col sm={6}>
+        <div style={{ display: "flex" }} className="align-items-center mb-3">
+              <div style={{ width: "150px" }}>
+                <CuTypography>Search By Name :</CuTypography>
+              </div>
+              <div style={{ width: "100%" }}>
+                <CusTextField
+                  value={keywords}
+                  onChange={(event) => {
+                    setKeywords(event.target.value);
+                  }}
+                  fullWidth
+                  label="Search By Name"
+                />
+              </div>
+            </div>
+        </Col>
+      </Row>
       <TableContainer component={Paper} sx={{ maxHeight: 480 }}>
         <Table sx={{ minWidth: 800 }} aria-label="simple table">
           <TableHead>
@@ -327,9 +367,9 @@ export const InventoryItemMaster = () => {
               </TableRow>
             ) : (
               <>
-                {activeInventory && activeInventory.length > 0 ? (
+                {searchedAllActiveInventory && searchedAllActiveInventory.length > 0 ? (
                   <>
-                    {activeInventory
+                    {searchedAllActiveInventory
                       .slice(
                         pagination.offset,
                         pagination.offset + pagination.numberPerPage
