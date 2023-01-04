@@ -247,7 +247,7 @@ export const InventoryItemMaster = () => {
     dispatch(saveUpdateInventoryItem(newItem)).then((res) => {
       if (res) {
         onSaveClickHandle(oldItem.itemId);
-        clearStates();
+        //clearStates();
       }
     });
   };
