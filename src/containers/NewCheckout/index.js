@@ -38,6 +38,7 @@ import "react-phone-number-input/style.css";
 import { useReactToPrint } from "react-to-print";
 import ReactToPrint from "react-to-print";
 import { OrderInvoice } from "../../components/OrderInvoice";
+import { PaytmButton } from "../../components/PayTM/paytmButton";
 
 const CusContainer = styled(Container)`
   margin-top: 50px;
@@ -3094,6 +3095,7 @@ export default function NewCheckout(props) {
                           <Row>
                             <Col>
                               <p>You selected {currentPaymentType}!</p>
+                              {/* <PaytmButton></PaytmButton> */}
                             </Col>
                             <Col>
                               <Button

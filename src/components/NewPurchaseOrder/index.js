@@ -576,9 +576,9 @@ export const NewPurchaseOrder = () => {
         <TableContainer
           className="mt-3"
           component={Paper}
-          sx={{ maxHeight: 430 }}
+          sx={{ maxHeight: 430 , minHeight: 190, minWidth: 750}}
         >
-          <Table sx={{ minWidth: 800 }} aria-label="simple table">
+          <Table sx={{ minWidth: 750 }} aria-label="simple table">
             <TableHead>
               <TableRow>
                 <CusTableCell1 align="center">NO</CusTableCell1>
