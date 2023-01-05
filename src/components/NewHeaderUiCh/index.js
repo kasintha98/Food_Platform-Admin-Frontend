@@ -549,6 +549,29 @@ export const NewHeader = (props) => {
               )}
 
             {modulesForUser.some(
+              (module) => module.moduleName === "INVENTORY MGMT"
+            ) && (
+                <div className="nav-item top-module_partition"> </div>
+            )}
+
+            {modulesForUser.some(
+              (module) => module.moduleName === "INVENTORY MGMT"
+            ) && (
+                <IconButton className="mainTopButton" style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  flexDirection: 'column',
+                  flexWrap: 'wrap',
+                  fontSize: '0.6125em',
+                  color: '#fff',
+                  width: 75,
+                }} component={Link} to="/inventory">
+                  <SummarizeOutlinedIcon />
+                  INVENTORY MGMT
+                </IconButton>
+              )}
+
+            {modulesForUser.some(
               (module) => module.moduleName === "EOD"
             ) && (
                 <div className="nav-item top-module_partition"> </div>

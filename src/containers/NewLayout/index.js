@@ -220,7 +220,7 @@ function NewLayout(props) {
         )}
 
         {modulesForUser.some(
-          (module) => module.moduleName === "ADMIN FUNCTIONS"
+          (module) => module.moduleName === "INVENTORY MGMT"
         ) && (
           <ListItem>
             <NavLink to={"/inventory"}>
