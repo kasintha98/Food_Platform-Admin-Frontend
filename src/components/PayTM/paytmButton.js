@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-const PaytmChecksum = require('./paytmChecksum');
+import PaytmChecksum from './paytmChecksum'
 const https = require('https');
 
 export function PaytmButton () {

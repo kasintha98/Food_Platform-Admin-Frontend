@@ -38,7 +38,7 @@ import "react-phone-number-input/style.css";
 import { useReactToPrint } from "react-to-print";
 import ReactToPrint from "react-to-print";
 import { OrderInvoice } from "../../components/OrderInvoice";
-import { PaytmButton } from "../../components/PayTM/paytmButton";
+//import { PaytmButton } from "../../components/PayTM/paytmButton";
 
 const CusContainer = styled(Container)`
   margin-top: 50px;
