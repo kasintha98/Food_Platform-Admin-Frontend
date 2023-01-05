@@ -18,6 +18,7 @@ import FastfoodOutlinedIcon from '@mui/icons-material/FastfoodOutlined'; // Dine
 import SpeedOutlinedIcon from '@mui/icons-material/SpeedOutlined'; //Dash
 import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined'; //Delivery
 import SummarizeOutlinedIcon from '@mui/icons-material/SummarizeOutlined'; //Reports
+import Inventory2OutlinedIcon from '@mui/icons-material/Inventory2Outlined';
 import AvTimerOutlinedIcon from '@mui/icons-material/AvTimerOutlined'; // Tracking
 import ConstructionOutlinedIcon from '@mui/icons-material/ConstructionOutlined'; //Admin
 import NightlightRoundOutlinedIcon from '@mui/icons-material/NightlightRoundOutlined'; //EOD
@@ -566,7 +567,7 @@ export const NewHeader = (props) => {
                   color: '#fff',
                   width: 75,
                 }} component={Link} to="/inventory">
-                  <SummarizeOutlinedIcon />
+                  <Inventory2OutlinedIcon />
                   INVENTORY MGMT
                 </IconButton>
               )}
