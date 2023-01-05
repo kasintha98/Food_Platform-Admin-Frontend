@@ -106,6 +106,14 @@ function App() {
           ></PrivateRoute>
         )}
 
+        {modulesForUser.some((module) => module.moduleName === "INVENTORY MGMT") && (
+          <PrivateRoute
+            path="/inventory"
+            exact
+            component={Inventory}
+          ></PrivateRoute>
+        )}
+
         {/* <PrivateRoute
           path="/newtrack"
           exact
