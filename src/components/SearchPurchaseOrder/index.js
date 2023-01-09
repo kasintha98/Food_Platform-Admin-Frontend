@@ -25,14 +25,20 @@ import {
   InputLabel,
   Select,
   NativeSelect,
+  Autocomplete,
+  Box
 } from "@mui/material";
 import {
   getActiveSuppliers,
   getClosedPurchaseOrders,
   getSubmittedRecievedPurchaseOrders,
   savePurchaseOrderStatus,
+  getActiveInventory,
+  getInventoryPurchaseCategory,
+  saveUpdatePurchaseOrder
 } from "../../actions";
 import { EditPurchaseOrder } from "../EditPurchaseOrder";
+import { lightGreen, yellow } from "@mui/material/colors";
 
 const CusDDT = styled(Dropdown.Toggle)`
   font-weight: 500;
@@ -108,6 +114,29 @@ const CusModal = styled(Modal)`
   },
 `;
 
+const CusAutocomplete = styled(Autocomplete)`
+  & input {
+    font-size: 0.75rem;
+    padding: 0 !important;
+    height: 0.75rem !important;
+  }
+
+  & legend {
+    font-size: 0.75rem !important;
+    padding: 0;
+  }
+
+  & label {
+    font-size: 0.75rem !important;
+    padding: 0 !important;
+    top: -15px;
+  }
+
+  & .MuiAutocomplete-root label {
+    top: 0px !important;
+  }
+`;
+
 export const SearchPurchaseOrder = () => {
   const businessDateAll = useSelector((state) => state.user.businessDate);
   const user = useSelector((state) => state.auth.user);
@@ -115,11 +144,23 @@ export const SearchPurchaseOrder = () => {
   const closedPurchaseOrders = useSelector(
     (state) => state.inventory.closedPurchaseOrders
   );
+  const activeInventory = useSelector(
+    (state) => state.inventory.activeInventory
+  );
+  const activeInventoryLoading = useSelector(
+    (state) => state.inventory.activeInventoryLoading
+  );
   const closedPurchaseOrderLoading = useSelector(
     (state) => state.inventory.closedPurchaseOrderLoading
   );
   const allSuppliersLoading = useSelector(
     (state) => state.inventory.allSuppliersLoading
+  );
+  const purchaseOrderCategoryLoading = useSelector(
+    (state) => state.inventory.purchaseOrderCategoryLoading
+  );
+  const purchaseOrderCategory = useSelector(
+    (state) => state.inventory.purchaseOrderCategory
   );
   const stores = useSelector((state) => state.store.stores);
   const [dateState, setDateState] = useState([
@@ -139,7 +180,9 @@ export const SearchPurchaseOrder = () => {
   const [selectedStoreObj, setSelectedStoreObj] = useState(null);
   const [billNo, setBillNo] = useState("");
   const [selectedSupplier, setSelectedSupplier] = useState("");
-  const [poStatus, setPOStatus] = useState("");
+  const [selectedSearchPOstatus, setSelectedSearchPOstatus] = useState("");
+  
+  const [poStatus, setPOStatus] = useState({});
   const [isSave, setIsSave] = useState({});
 
   const [selectedSupplierObj, setSelectedSupplierObj] = useState(null);
@@ -149,11 +192,21 @@ export const SearchPurchaseOrder = () => {
   const [currentProduct, setCurrentProduct] = useState(null);
   const [showAdd, setShowAdd] = useState(false);
 
+  const [currentSelectedItem, setCurrentSelectedItem] = useState({});
+  const [currentItemQty, setCurrentItemQty] = useState({});
+  const [currentItemWastage, setCurrentItemWastage] = useState({});
+  const [currentItemPrice, setCurrentItemPrice] = useState({});
+  const [currentItemDiscount, setCurrentItemDiscount] = useState({});
+  const [currentItemTotalStock, setCurrentItemTotalStock] = useState({});
+  const [currentItemCategory, setCurrentItemCategory] = useState({});
+  const [searchedList, setSearchedList] = useState([]);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getActiveSuppliers());
-
+    dispatch(getActiveInventory());
+    dispatch(getInventoryPurchaseCategory());
     /* dispatch(getClosedPurchaseOrders()).then((res) => {
       if (res) {
         searchPurchaseOrders();
@@ -174,10 +227,15 @@ export const SearchPurchaseOrder = () => {
     selectedSupplierObj,
     dateState,
     closedPurchaseOrders,
+    selectedSearchPOstatus
   ]);
 
   const handleChangeStore = (event) => {
     setSelectedStore(event.target.value);
+  };
+
+  const handleChangeSearchPOStatus = (event) => {
+    setSelectedSearchPOstatus(event.target.value);
   };
 
   const handleSelectedStore = (store) => {
@@ -202,6 +260,11 @@ export const SearchPurchaseOrder = () => {
     setIsSave(edits);
   };
 
+  const onSaveClickHandle = (id) => {
+    let edits = { ...isSave, [id]: false };
+    setIsSave(edits);
+  };
+
   const savePurchaseOrderStatusToDB = (id, item) => {
     if (poStatus && poStatus !== item.purchaseOrderStatus) {
       const obj = {
@@ -223,6 +286,73 @@ export const SearchPurchaseOrder = () => {
     } else {
       setIsSave({});
     }
+  };
+
+  const updateItemHandle = (item) => {
+    const newObj = {
+      ...item,
+      itemId: currentSelectedItem[item.purchaseOrderId+item.itemId]
+        ? currentSelectedItem[item.purchaseOrderId+item.itemId].itemId
+        : item.itemId,
+      itemName: currentSelectedItem[item.purchaseOrderId+item.itemId]
+        ? currentSelectedItem[item.purchaseOrderId+item.itemId].itemName
+        : getInventoryItemObjById(item.itemId).itemName,
+      itemUom: currentSelectedItem[item.purchaseOrderId+item.itemId]
+        ? currentSelectedItem[item.purchaseOrderId+item.itemId].itemUom
+        : getInventoryItemObjById(item.itemId).itemUom,
+      purchaseQty: currentItemQty[item.purchaseOrderId+item.itemId]
+        ? Number(currentItemQty[item.purchaseOrderId+item.itemId])
+        : item.purchaseQty,
+      wastageQty: currentItemWastage[item.purchaseOrderId+item.itemId]
+        ? Number(currentItemWastage[item.purchaseOrderId+item.itemId])
+        : item.wastageQty,
+      quotedPurchasePrice: currentItemPrice[item.purchaseOrderId+item.itemId]
+        ? Number(currentItemPrice[item.purchaseOrderId+item.itemId])
+        : item.quotedPurchasePrice,
+      discountAmount: currentItemDiscount[item.purchaseOrderId+item.itemId]
+        ? Number(currentItemDiscount[item.purchaseOrderId+item.itemId])
+        : item.discountAmount,
+      netPurchasePrice: getFinalPrice(item),
+      netQty: getTotalStock(item),
+      itemGST: currentSelectedItem[item.purchaseOrderId+item.itemId]
+        ? currentSelectedItem[item.purchaseOrderId+item.itemId].itemGstPercentage
+        : getInventoryItemObjById(item.itemId).itemGstPercentage,
+      gstAmount: (
+        getFinalPrice(item) *
+        (Number(
+          currentSelectedItem[item.purchaseOrderId+item.itemId]
+            ? currentSelectedItem[item.purchaseOrderId+item.itemId].itemGstPercentage
+            : getInventoryItemObjById(item.itemId).itemGstPercentage
+        ) /
+          100)
+      ).toFixed(2),
+      purchaseCategory: currentItemCategory[item.purchaseOrderId+item.itemId]
+        ? currentItemCategory[item.purchaseOrderId+item.itemId]
+        : item.purchaseCategory,
+      purchaseOrderStatus: poStatus[item.purchaseOrderId+item.itemId]
+      ? poStatus[item.purchaseOrderId+item.itemId]
+      : item.purchaseOrderStatus,
+
+      /* restaurantId: props.product.restaurantId,
+      storeId: props.product.storeId,
+      supplierId: props.product.supplierId,
+      purchaseDate: props.product.purchaseDate,
+      billNumber: props.product.billNumber,
+      purchaseOrderStatus: props.product.purchaseOrderStatus,
+      purchaseOrderId: props.product.purchaseOrderId,
+      createdBy: props.product.createdBy,
+      createdDate: props.product.createdDate, */
+      updatedBy: user.loginId,
+      updatedDate: new Date(),
+    };
+
+    console.log(newObj);
+
+    dispatch(saveUpdatePurchaseOrder(newObj, true)).then((res) => {
+      if (res) {
+        onSaveClickHandle(item.purchaseOrderId+item.itemId);
+      }
+    });
   };
 
   const searchPurchaseOrders = (mList) => {
@@ -262,7 +392,14 @@ export const SearchPurchaseOrder = () => {
         });
       }
 
-      groupBypurchaseOrderId(searched);
+      if(selectedSearchPOstatus){
+        searched = searched.filter(function (el) {
+          return el.purchaseOrderStatus.toLowerCase().includes(selectedSearchPOstatus.toLowerCase());
+        });
+      }
+
+      setSearchedList(searched)
+      //groupBypurchaseOrderId(searched);
     }
   };
 
@@ -302,6 +439,64 @@ export const SearchPurchaseOrder = () => {
       </span>
     );
   };
+
+  const getFinalPrice = (item) => {
+    if (!currentItemPrice[item.purchaseOrderId+item.itemId] && !currentItemDiscount[item.purchaseOrderId+item.itemId]) {
+      return Number(item.netPurchasePrice);
+    }
+
+    if (currentItemPrice[item.purchaseOrderId+item.itemId] && currentItemDiscount[item.purchaseOrderId+item.itemId]) {
+      return (
+        Number(currentItemPrice[item.purchaseOrderId+item.itemId]) -
+        Number(currentItemDiscount[item.purchaseOrderId+item.itemId])
+      );
+    }
+
+    if (currentItemPrice[item.purchaseOrderId+item.itemId] && !currentItemDiscount[item.purchaseOrderId+item.itemId]) {
+      return (
+        Number(currentItemPrice[item.purchaseOrderId+item.itemId]) - Number(item.discountAmount)
+      );
+    }
+
+    if (!currentItemPrice[item.purchaseOrderId+item.itemId] && currentItemDiscount[item.purchaseOrderId+item.itemId]) {
+      return (
+        Number(item.quotedPurchasePrice) -
+        Number(currentItemDiscount[item.purchaseOrderId+item.itemId])
+      );
+    }
+  };
+
+  const getTotalStock = (item) => {
+    if (!currentItemQty[item.purchaseOrderId+item.itemId] && !currentItemWastage[item.purchaseOrderId+item.itemId]) {
+      return Number(item.netQty);
+    }
+
+    if (currentItemQty[item.purchaseOrderId+item.itemId] && currentItemWastage[item.purchaseOrderId+item.itemId]) {
+      return (
+        Number(currentItemQty[item.purchaseOrderId+item.itemId]) -
+        Number(currentItemWastage[item.purchaseOrderId+item.itemId])
+      );
+    }
+
+    if (currentItemQty[item.purchaseOrderId+item.itemId] && !currentItemWastage[item.purchaseOrderId+item.itemId]) {
+      return Number(currentItemQty[item.purchaseOrderId+item.itemId]) - Number(item.wastageQty);
+    }
+
+    if (!currentItemQty[item.purchaseOrderId+item.itemId] && currentItemWastage[item.purchaseOrderId+item.itemId]) {
+      return Number(item.purchaseQty) - Number(currentItemWastage[item.purchaseOrderId+item.itemId]);
+    }
+  };
+
+  const getInventoryItemObjById = (id)=>{
+    let found =  activeInventory.find(
+      (o) => o.itemId === id
+    );
+    if(found){
+      return found;
+    }else{
+      return {}
+    }
+  }
 
   const renderEditModal = () => {
     return (
@@ -386,7 +581,7 @@ export const SearchPurchaseOrder = () => {
       </div>
       <div className="mt-3">
         <Row>
-          <Col sm={4}>
+          <Col sm={3}>
             <div style={{ display: "flex" }} className="align-items-center">
               <div style={{ width: "125px" }}>
                 <CuTypography>Select Store:</CuTypography>
@@ -422,7 +617,7 @@ export const SearchPurchaseOrder = () => {
               </FormControl>
             </div>
           </Col>
-          <Col sm={4}>
+          <Col sm={3}>
             <div style={{ display: "flex" }} className="align-items-center">
               <div style={{ width: "80px" }}>
                 <CuTypography>Bill No :</CuTypography>
@@ -439,7 +634,7 @@ export const SearchPurchaseOrder = () => {
               </div>
             </div>
           </Col>
-          <Col sm={4}>
+          <Col sm={3}>
             <div style={{ display: "flex" }} className="align-items-center">
               <div style={{ width: "125px" }}>
                 <CuTypography>By Vendor:</CuTypography>
@@ -477,27 +672,94 @@ export const SearchPurchaseOrder = () => {
               </FormControl>
             </div>
           </Col>
+          <Col sm={3}>
+            <div style={{ display: "flex" }} className="align-items-center">
+              <div style={{ width: "125px" }}>
+                <CuTypography>By PO Status:</CuTypography>
+              </div>
+              <FormControl fullWidth>
+                <InputLabel
+                  shrink={true}
+                  sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
+                  id="demo-simple-select-label"
+                >
+                  Please select PO Status
+                </InputLabel>
+                <CusSelect
+                  sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={selectedSearchPOstatus}
+                  label="Please select PO Status"
+                  onChange={handleChangeSearchPOStatus}
+                  notched={true}
+                >
+                  <MenuItem
+                      value={""}
+                    >
+                      <span>
+                      N/A
+                      </span>
+                  </MenuItem>
+                  <MenuItem
+                      value={"SUBMITTED"}
+                    >
+                      <span>
+                      SUBMITTED
+                      </span>
+                  </MenuItem>
+                  <MenuItem
+                      value={"RECEIVED"}
+                    >
+                      <span>
+                      RECEIVED
+                      </span>
+                  </MenuItem>
+                </CusSelect>
+              </FormControl>
+            </div>
+          </Col>
         </Row>
       </div>
 
       <div className="mt-3">
-        <TableContainer className="mt-3" component={Paper}>
-          <Table sx={{ minWidth: 800 }} aria-label="simple table">
+        <TableContainer className="mt-3" component={Paper} sx={{ maxHeight: "60vh", width: "92vw" }}>
+          <Table sx={{ minWidth: 1900, minHeight: 143 }} stickyHeader>
             <TableHead>
               <TableRow>
                 <CusTableCell1 align="center">PO NO</CusTableCell1>
-                <CusTableCell1 align="center">RESTAURANT</CusTableCell1>
-                <CusTableCell1 align="center">STORE NAME</CusTableCell1>
                 <CusTableCell1 align="center">BILL NO</CusTableCell1>
-                <CusTableCell1 align="center">BILL DATE</CusTableCell1>
                 <CusTableCell1 align="center">SUPPLIER</CusTableCell1>
-                <CusTableCell1 align="center">PURCHASE AMOUNT</CusTableCell1>
+                <CusTableCell1 align="center">STORE NAME</CusTableCell1>
+                <CusTableCell1 align="center">BILL DATE</CusTableCell1>
+                <CusTableCell1 align="center">ITEM NO</CusTableCell1>
+
+
+
+
+
+                <CusTableCell1 align="center">INGREDIENT NAME</CusTableCell1>
+                <CusTableCell1 align="center">UOM</CusTableCell1>
+                <CusTableCell1 align="center">QUANTITY</CusTableCell1>
+                <CusTableCell1 align="center">WASTAGE</CusTableCell1>
+                <CusTableCell1 align="center">PRICE</CusTableCell1>
+                <CusTableCell1 align="center">DISCOUNT</CusTableCell1>
+                <CusTableCell1 align="center">FINAL PURCHASE PRICE</CusTableCell1>
+                <CusTableCell1 align="center">TOTAL STOCK</CusTableCell1>
+                <CusTableCell1 align="center">GST%</CusTableCell1>
+                <CusTableCell1 align="center">GST AMT.</CusTableCell1>
+                <CusTableCell1 align="center">CATEGORY</CusTableCell1>
+               
+                
+                
+                
+                
                 <CusTableCell1 align="center">PO STATUS</CusTableCell1>
                 <CusTableCell1 align="center">ACTION</CusTableCell1>
               </TableRow>
             </TableHead>
             <TableBody>
-              {allSuppliersLoading || closedPurchaseOrderLoading ? (
+              {allSuppliersLoading || closedPurchaseOrderLoading || purchaseOrderCategoryLoading || activeInventoryLoading ? (
                 <TableRow>
                   <TableCell colSpan={14}>
                     <div className="d-flex justify-content-center">
@@ -513,10 +775,10 @@ export const SearchPurchaseOrder = () => {
                 </TableRow>
               ) : (
                 <>
-                  {renderGroupedData.length > 0 ? (
+                  {searchedList.length > 0 ? (
                     <>
-                      {renderGroupedData.map((item) => (
-                        <TableRow key={item.purchaseOrderId}>
+                      {searchedList.map((item) => (
+                        <TableRow key={[item.purchaseOrderId+item.itemId]}>
                           <CusTableCell align="center">
                             <Typography sx={{ fontSize: "0.75rem" }}>
                               <Button
@@ -532,22 +794,7 @@ export const SearchPurchaseOrder = () => {
                           </CusTableCell>
                           <CusTableCell align="center">
                             <Typography sx={{ fontSize: "0.75rem" }}>
-                              {item.restaurantName}
-                            </Typography>
-                          </CusTableCell>
-                          <CusTableCell align="center">
-                            <Typography sx={{ fontSize: "0.75rem" }}>
-                              {item.storeName}
-                            </Typography>
-                          </CusTableCell>
-                          <CusTableCell align="center">
-                            <Typography sx={{ fontSize: "0.75rem" }}>
                               {item.billNumber ? item.billNumber : "N/A"}
-                            </Typography>
-                          </CusTableCell>
-                          <CusTableCell align="center">
-                            <Typography sx={{ fontSize: "0.75rem" }}>
-                              {renderDate(item.purchaseDate)}
                             </Typography>
                           </CusTableCell>
                           <CusTableCell align="center">
@@ -557,13 +804,251 @@ export const SearchPurchaseOrder = () => {
                           </CusTableCell>
                           <CusTableCell align="center">
                             <Typography sx={{ fontSize: "0.75rem" }}>
-                              {item.total}
+                              {item.storeName}
                             </Typography>
                           </CusTableCell>
                           <CusTableCell align="center">
-                            <FormControl fullWidth sx={{ marginTop: "5px" }}>
+                            <Typography sx={{ fontSize: "0.75rem" }}>
+                              {renderDate(item.purchaseDate)}
+                            </Typography>
+                          </CusTableCell>
+
+
+                          <CusTableCell align="center">
+                            <Typography sx={{ fontSize: "0.75rem" }}>
+                              {currentSelectedItem[item.purchaseOrderId+item.itemId]
+                            ? currentSelectedItem[item.purchaseOrderId+item.itemId].itemId
+                            : item.itemId}
+                            </Typography>
+                          </CusTableCell>
+
+
+
+                      <CusTableCell align="center">
+                        <CusAutocomplete
+                          disabled={!isSave[item.purchaseOrderId+item.itemId]}
+                          onChange={(event, newValue) => {
+                            const items = {
+                              ...currentSelectedItem,
+                              [item.purchaseOrderId+item.itemId]: newValue,
+                            };
+                            setCurrentSelectedItem(items);
+                          }}
+                          defaultValue={getInventoryItemObjById(item.itemId)}
+                          sx={{
+                            fontSize: "0.75rem",
+                            marginTop: "15px",
+                            ".MuiFormControl-root": { marginTop: "4px" },
+                          }}
+                          options={activeInventory}
+                          autoHighlight
+                          getOptionLabel={(option) => option.itemName}
+                          renderOption={(props, option) => (
+                            <Box
+                              component="li"
+                              sx={{
+                                "& > img": { mr: 2, flexShrink: 0 },
+                                fontSize: "0.75rem",
+                              }}
+                              {...props}
+                            >
+                              {option.itemName}
+                            </Box>
+                          )}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              sx={{ fontSize: "0.75rem" }}
+                              variant="standard"
+                              inputProps={{
+                                ...params.inputProps,
+                                autoComplete: "new-password", // disable autocomplete and autofill
+                              }}
+                            />
+                          )}
+                        />
+                      </CusTableCell>
+                      <CusTableCell align="center">
+                        <Typography sx={{ fontSize: "0.75rem" }}>
+                          {currentSelectedItem[item.purchaseOrderId+item.itemId]
+                            ? currentSelectedItem[item.purchaseOrderId+item.itemId].itemUom
+                            : getInventoryItemObjById(item.itemId).itemUom}
+                        </Typography>
+                      </CusTableCell>
+                      <CusTableCell align="center">
+                        <CusTextField
+                          defaultValue={item.purchaseQty}
+                          value={currentItemQty[item.purchaseOrderId+item.itemId]}
+                          onChange={(event) => {
+                            const qty = {
+                              ...currentItemQty,
+                              [item.purchaseOrderId+item.itemId]: event.target.value,
+                            };
+                            setCurrentItemQty(qty);
+                          }}
+                          fullWidth
+                          variant="standard"
+                          disabled={!isSave[item.purchaseOrderId+item.itemId]}
+                          InputProps={{
+                            disableUnderline: true, // <== added this
+                          }}
+                        />
+                      </CusTableCell>
+
+                      <CusTableCell align="center">
+                        <CusTextField
+                          defaultValue={item.wastageQty}
+                          value={currentItemWastage[item.purchaseOrderId+item.itemId]}
+                          onChange={(event) => {
+                            const wastage = {
+                              ...currentItemWastage,
+                              [item.purchaseOrderId+item.itemId]: event.target.value,
+                            };
+                            setCurrentItemWastage(wastage);
+                          }}
+                          fullWidth
+                          variant="standard"
+                          disabled={!isSave[item.purchaseOrderId+item.itemId]}
+                          InputProps={{
+                            disableUnderline: true, // <== added this
+                          }}
+                        />
+                      </CusTableCell>
+
+                      <CusTableCell align="center">
+                        <CusTextField
+                          defaultValue={item.quotedPurchasePrice}
+                          value={currentItemPrice[item.purchaseOrderId+item.itemId]}
+                          onChange={(event) => {
+                            const price = {
+                              ...currentItemPrice,
+                              [item.purchaseOrderId+item.itemId]: event.target.value,
+                            };
+                            setCurrentItemPrice(price);
+                          }}
+                          fullWidth
+                          variant="standard"
+                          disabled={!isSave[item.purchaseOrderId+item.itemId]}
+                          InputProps={{
+                            disableUnderline: true, // <== added this
+                          }}
+                        />
+                      </CusTableCell>
+
+                      <CusTableCell align="center">
+                        <CusTextField
+                          defaultValue={item.discountAmount}
+                          value={currentItemDiscount[item.purchaseOrderId+item.itemId]}
+                          onChange={(event) => {
+                            const discount = {
+                              ...currentItemDiscount,
+                              [item.purchaseOrderId+item.itemId]: event.target.value,
+                            };
+                            setCurrentItemDiscount(discount);
+                          }}
+                          fullWidth
+                          variant="standard"
+                          disabled={!isSave[item.purchaseOrderId+item.itemId]}
+                          InputProps={{
+                            disableUnderline: true, // <== added this
+                          }}
+                        />
+                      </CusTableCell>
+
+                      <CusTableCell align="center">
+                        <Typography sx={{ fontSize: "0.75rem" }}>
+                          {getFinalPrice(item)}
+                        </Typography>
+                      </CusTableCell>
+
+                      <CusTableCell align="center">
+                        {/* <CusTextField
+                          defaultValue={item.netQty}
+                          value={currentItemTotalStock[item.purchaseOrderId+item.itemId]}
+                          onChange={(event) => {
+                            const stock = {
+                              ...currentItemTotalStock,
+                              [item.purchaseOrderId+item.itemId]: event.target.value,
+                            };
+                            setCurrentItemTotalStock(stock);
+                          }}
+                          fullWidth
+                          variant="standard"
+                          disabled={!isSave[item.purchaseOrderId+item.itemId]}
+                          InputProps={{
+                            disableUnderline: true, // <== added this
+                          }}
+                        /> */}
+                        <Typography sx={{ fontSize: "0.75rem" }}>
+                          {getTotalStock(item)}
+                        </Typography>
+                      </CusTableCell>
+
+                      <CusTableCell align="center">
+                        <Typography sx={{ fontSize: "0.75rem" }}>
+                          {currentSelectedItem[item.purchaseOrderId+item.itemId]
+                            ? currentSelectedItem[item.purchaseOrderId+item.itemId].itemGstPercentage
+                            : getInventoryItemObjById(item.itemId).itemGstPercentage}
+                        </Typography>
+                      </CusTableCell>
+
+                      <CusTableCell align="center">
+                        <Typography sx={{ fontSize: "0.75rem" }}>
+                          {(
+                            getFinalPrice(item) *
+                            (Number(
+                              currentSelectedItem[item.purchaseOrderId+item.itemId]
+                                ? currentSelectedItem[item.purchaseOrderId+item.itemId]
+                                    .itemGstPercentage
+                                : getInventoryItemObjById(item.itemId).itemGstPercentage
+                            ) /
+                              100)
+                          ).toFixed(2)}
+                        </Typography>
+                      </CusTableCell>
+
+                      <CusTableCell align="center">
+                              <FormControl fullWidth sx={{ marginTop: "7px" }}>
+                                <NativeSelect
+                                  defaultValue={item.purchaseCategory}
+                                  disabled={!isSave[item.purchaseOrderId+item.itemId]}
+                                  inputProps={{
+                                    name: "status",
+                                    id: "uncontrolled-native",
+                                  }}
+                                  value={currentItemCategory[item.purchaseOrderId+item.itemId]}
+                                  onChange={(event) => {
+                                    const cat = {
+                                      ...currentItemCategory,
+                                      [item.purchaseOrderId+item.itemId]: event.target.value,
+                                    };
+                                    setCurrentItemCategory(cat);
+                                  }}
+                                  sx={{ fontSize: "0.75rem" }}
+                                >
+                                  {purchaseOrderCategory &&
+                                    purchaseOrderCategory.map((item) => (
+                                      <option
+                                        value={item.configCriteriaValue}
+                                        style={{ fontSize: "0.75rem" }}
+                                      >
+                                        {item.configCriteriaDesc}
+                                      </option>
+                                    ))}
+                                  <option value={""} style={{ fontSize: "0.75rem" }}>
+                                    Select Category
+                                  </option>
+                                </NativeSelect>
+                              </FormControl>
+                          </CusTableCell>
+                      
+
+
+
+                          <CusTableCell align="center" sx={{backgroundColor: item.purchaseOrderStatus === "SUBMITTED" ? "yellow": "lightGreen"}}>
+                            <FormControl fullWidth sx={{ marginTop: "5px"}}>
                               <NativeSelect
-                                disabled={!isSave[item.purchaseOrderId]}
+                                disabled={!isSave[item.purchaseOrderId+item.itemId]}
                                 defaultValue={item.purchaseOrderStatus}
                                 inputProps={{
                                   name: "status",
@@ -571,7 +1056,7 @@ export const SearchPurchaseOrder = () => {
                                   disableUnderline: true,
                                 }}
                                 onChange={(event) => {
-                                  setPOStatus(event.target.value);
+                                  setPOStatus({...poStatus, [item.purchaseOrderId+item.itemId]: event.target.value});
                                 }}
                                 sx={{
                                   fontSize: "0.75rem",
@@ -626,17 +1111,18 @@ export const SearchPurchaseOrder = () => {
                             </FormControl>
                           </CusTableCell>
                           <CusTableCell align="center">
-                            {isSave[item.purchaseOrderId] ? (
+                            {isSave[item.purchaseOrderId+item.itemId] ? (
                               <IconButton
                                 sx={{
                                   fontSize: "0.75rem",
                                   color: "#92D050",
                                 }}
                                 onClick={() => {
-                                  savePurchaseOrderStatusToDB(
+                                  /* savePurchaseOrderStatusToDB(
                                     item.purchaseOrderId,
                                     item
-                                  );
+                                  ); */
+                                  updateItemHandle(item);
                                 }}
                               >
                                 <SaveIcon
@@ -648,15 +1134,15 @@ export const SearchPurchaseOrder = () => {
                               </IconButton>
                             ) : (
                               <IconButton
-                                disabled={
+                                /* disabled={
                                   item.purchaseOrderStatus === "RECEIVED"
-                                }
+                                } */
                                 sx={{
                                   fontSize: "0.75rem",
                                   color: "#FFC000",
                                 }}
                                 onClick={() => {
-                                  onEditClickHandle(item.purchaseOrderId);
+                                  onEditClickHandle(item.purchaseOrderId+item.itemId);
                                 }}
                               >
                                 <EditIcon
@@ -675,7 +1161,7 @@ export const SearchPurchaseOrder = () => {
                     <TableRow>
                       <TableCell colSpan={15}>
                         <Alert severity="warning">
-                          No SUBMITTED/ RECEIVED PO found for search criteria;
+                          No {selectedSearchPOstatus ? selectedSearchPOstatus : "SUBMITTED/ RECEIVED"} PO found for search criteria;
                           {selectedStoreObj ? (
                             <>
                               <br></br>Store: {selectedStoreObj.resturantName}
