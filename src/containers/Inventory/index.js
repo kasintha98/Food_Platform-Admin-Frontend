@@ -67,8 +67,8 @@ export const Inventory = () => {
                 value="CENTRAL INVENTORY TRACKING"
               />
               <Tab
-                label="STORE INVENTORY TRACKING"
-                value="STORE INVENTORY TRACKING"
+                label="STORE RECIPE INVENTORY"
+                value="STORE RECIPE INVENTORY"
               />
             </TabList>
           </Box>
@@ -106,7 +106,7 @@ export const Inventory = () => {
             <NonRecipeInventory></NonRecipeInventory>
             </div>
           </TabPanel>
-          <TabPanel value="STORE INVENTORY TRACKING">
+          <TabPanel value="STORE RECIPE INVENTORY">
             <div><StoreInventoryTracking></StoreInventoryTracking></div>
           </TabPanel>
         </TabContext>

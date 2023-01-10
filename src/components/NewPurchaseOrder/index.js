@@ -37,6 +37,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import CloseIcon from "@mui/icons-material/Close";
 import SaveIcon from "@mui/icons-material/Save";
 import EditIcon from "@mui/icons-material/Edit";
+import { YoutubeSearchedFor } from "@material-ui/icons";
 
 const CuTypography = styled(Typography)`
   color: #7f7f7f;
@@ -47,7 +48,7 @@ const CuTypography = styled(Typography)`
 const CusTableCell1 = styled(TableCell)`
   font-size: 0.75rem;
   font-weight: bold;
-  background-color: #00b0f0;
+  background-color: #35455e;
   color: #fff;
 `;
 
@@ -448,6 +449,18 @@ export const NewPurchaseOrder = () => {
     }
   };
 
+  const getSelectableStores = (list) =>{
+    if(user.roleCategory === "SUPER_ADMIN"){
+      return list;
+    }else{
+      return list.filter(function (el) {
+        return (
+          el.restaurantId === user.restaurantId && el.storeId === user.storeId
+        );
+      });
+    }
+  }
+
   return (
     <div>
       <div style={{ margin: "auto", width: "50%" }}>
@@ -557,7 +570,7 @@ export const NewPurchaseOrder = () => {
                 onChange={handleChangeStore}
                 notched={true}
               >
-                {stores.map((store) => (
+                {getSelectableStores(stores).map((store) => (
                   <MenuItem
                     onClick={() => {
                       handleSelectedStore(store);

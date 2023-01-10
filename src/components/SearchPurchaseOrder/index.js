@@ -98,7 +98,7 @@ const CusTextField = styled(TextField)`
 const CusTableCell1 = styled(TableCell)`
   font-size: 0.75rem;
   font-weight: bold;
-  background-color: #00b0f0;
+  background-color: #35455e;
   color: #fff;
 `;
 
@@ -369,6 +369,15 @@ export const SearchPurchaseOrder = () => {
         });
       }
 
+      if(user.roleCategory !== "SUPER_ADMIN"){
+        searched = searched.filter(function (el) {
+          return (
+            user.restaurantId === el.restaurantId &&
+            user.storeId === el.storeId
+          );
+        });
+      }
+
       if (billNo) {
         searched = searched.filter(function (el) {
           return el.billNumber.toLowerCase().includes(billNo.toLowerCase());
@@ -498,6 +507,18 @@ export const SearchPurchaseOrder = () => {
     }
   }
 
+  const getSelectableStores = (list) =>{
+    if(user.roleCategory === "SUPER_ADMIN"){
+      return list;
+    }else{
+      return list.filter(function (el) {
+        return (
+          el.restaurantId === user.restaurantId && el.storeId === user.storeId
+        );
+      });
+    }
+  }
+
   const renderEditModal = () => {
     return (
       <CusModal
@@ -586,35 +607,39 @@ export const SearchPurchaseOrder = () => {
               <div style={{ width: "125px" }}>
                 <CuTypography>Select Store:</CuTypography>
               </div>
+              {user.roleCategory === "SUPER_ADMIN" ? 
               <FormControl fullWidth>
-                <InputLabel
-                  shrink={true}
-                  sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
-                  id="demo-simple-select-label"
-                >
-                  Please select the store
-                </InputLabel>
-                <CusSelect
-                  sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={selectedStore}
-                  label="Please select the store"
-                  onChange={handleChangeStore}
-                  notched={true}
-                >
-                  {stores.map((store) => (
-                    <MenuItem
-                      onClick={() => {
-                        handleSelectedStore(store);
-                      }}
-                      value={store.resturantName}
-                    >
-                      <span>{store.resturantName}</span>
-                    </MenuItem>
-                  ))}
-                </CusSelect>
-              </FormControl>
+              <InputLabel
+                shrink={true}
+                sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
+                id="demo-simple-select-label"
+              >
+                Please select the store
+              </InputLabel>
+              <CusSelect
+                sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={selectedStore}
+                label="Please select the store"
+                onChange={handleChangeStore}
+                notched={true}
+              >
+                {stores.map((store) => (
+                  <MenuItem
+                    onClick={() => {
+                      handleSelectedStore(store);
+                    }}
+                    value={store.resturantName}
+                  >
+                    <span>{store.resturantName}</span>
+                  </MenuItem>
+                ))}
+              </CusSelect>
+            </FormControl> :
+            <CuTypography>{getSelectableStores(stores)[0].resturantName}</CuTypography>
+            }
+              
             </div>
           </Col>
           <Col sm={3}>

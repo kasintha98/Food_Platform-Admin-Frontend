@@ -47,7 +47,7 @@ const CuTypography = styled(Typography)`
 const CusTableCell1 = styled(TableCell)`
   font-size: 0.75rem;
   font-weight: bold;
-  background-color: #00b0f0;
+  background-color: #35455e;
   color: #fff;
 `;
 
