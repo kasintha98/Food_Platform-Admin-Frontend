@@ -96,10 +96,11 @@ const CusTextField = styled(TextField)`
 `;
 
 const CusTableCell1 = styled(TableCell)`
-  font-size: 0.75rem;
+  font-size: 10px;
   font-weight: bold;
   background-color: #35455e;
   color: #fff;
+  padding: 0;
 `;
 
 const CusTableCell = styled(TableCell)`
@@ -748,39 +749,29 @@ export const SearchPurchaseOrder = () => {
       </div>
 
       <div className="mt-3">
-        <TableContainer className="mt-3" component={Paper} sx={{ maxHeight: "60vh", width: "92vw" }}>
-          <Table sx={{ minWidth: 1900, minHeight: 143 }} stickyHeader>
+        <TableContainer className="mt-3" component={Paper} sx={{ maxHeight: "60vh", width: "92.7vw" }}>
+          <Table sx={{ marginBottom: 40 }} stickyHeader>
             <TableHead>
               <TableRow>
-                <CusTableCell1 align="center">PO NO</CusTableCell1>
-                <CusTableCell1 align="center">BILL NO</CusTableCell1>
+                <CusTableCell1 align="center">PO#</CusTableCell1>
+                <CusTableCell1 align="center">BILL#</CusTableCell1>
                 <CusTableCell1 align="center">SUPPLIER</CusTableCell1>
-                <CusTableCell1 align="center">STORE NAME</CusTableCell1>
+                <CusTableCell1 align="center">RECIEVING STORE</CusTableCell1>
                 <CusTableCell1 align="center">BILL DATE</CusTableCell1>
-                <CusTableCell1 align="center">ITEM NO</CusTableCell1>
-
-
-
-
-
+                <CusTableCell1 align="center">ITEM#</CusTableCell1>
                 <CusTableCell1 align="center">INGREDIENT NAME</CusTableCell1>
                 <CusTableCell1 align="center">UOM</CusTableCell1>
-                <CusTableCell1 align="center">QUANTITY</CusTableCell1>
-                <CusTableCell1 align="center">WASTAGE</CusTableCell1>
-                <CusTableCell1 align="center">PRICE</CusTableCell1>
-                <CusTableCell1 align="center">DISCOUNT</CusTableCell1>
-                <CusTableCell1 align="center">FINAL PURCHASE PRICE</CusTableCell1>
-                <CusTableCell1 align="center">TOTAL STOCK</CusTableCell1>
+                <CusTableCell1 align="center" sx={{width: 90}}>QTY</CusTableCell1>
+                <CusTableCell1 align="center" sx={{width: 60}}>WAST</CusTableCell1>
+                <CusTableCell1 align="center">COST</CusTableCell1>
+                <CusTableCell1 align="center" sx={{width: 90}}>DISCOUNT</CusTableCell1>
+                <CusTableCell1 align="center">PO VALUE</CusTableCell1>
+                <CusTableCell1 align="center">STOCK</CusTableCell1>
                 <CusTableCell1 align="center">GST%</CusTableCell1>
                 <CusTableCell1 align="center">GST AMT.</CusTableCell1>
                 <CusTableCell1 align="center">CATEGORY</CusTableCell1>
-               
-                
-                
-                
-                
                 <CusTableCell1 align="center">PO STATUS</CusTableCell1>
-                <CusTableCell1 align="center">ACTION</CusTableCell1>
+                <CusTableCell1 align="center" sx={{paddingRight: "5px !important"}}>ACTION</CusTableCell1>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -1159,9 +1150,9 @@ export const SearchPurchaseOrder = () => {
                               </IconButton>
                             ) : (
                               <IconButton
-                                /* disabled={
+                                disabled={
                                   item.purchaseOrderStatus === "RECEIVED"
-                                } */
+                                }
                                 sx={{
                                   fontSize: "0.75rem",
                                   color: "#FFC000",

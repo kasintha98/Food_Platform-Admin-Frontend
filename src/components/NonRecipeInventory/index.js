@@ -167,6 +167,12 @@ export const NonRecipeInventory = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    if (user.roleCategory !== "SUPER_ADMIN") {
+      setSelectedStoreObj(getSelectableStores(stores)[0])
+    }
+  }, []);
+
+  useEffect(() => {
     if (selectedStoreObj) {
       dispatch(getItemConsumptionSummery(selectedStoreObj, "NON-RECIPE"));
     }
@@ -291,6 +297,18 @@ export const NonRecipeInventory = () => {
     });
   };
 
+  const getSelectableStores = (list) =>{
+    if(user.roleCategory === "SUPER_ADMIN"){
+      return list;
+    }else{
+      return list.filter(function (el) {
+        return (
+          el.restaurantId === user.restaurantId && el.storeId === user.storeId
+        );
+      });
+    }
+  }
+
   return (
     <div>
       <div>
@@ -301,35 +319,38 @@ export const NonRecipeInventory = () => {
               <div style={{ width: "125px" }}>
                 <CuTypography>Select Store:</CuTypography>
               </div>
+              {user.roleCategory === "SUPER_ADMIN" ? 
               <FormControl fullWidth>
-                <InputLabel
-                  shrink={true}
-                  sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
-                  id="demo-simple-select-label"
-                >
-                  Please select the store
-                </InputLabel>
-                <CusSelect
-                  sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={selectedStore}
-                  label="Please select the store"
-                  onChange={handleChangeStore}
-                  notched={true}
-                >
-                  {stores.map((store) => (
-                    <MenuItem
-                      onClick={() => {
-                        handleSelectedStore(store);
-                      }}
-                      value={store.resturantName}
-                    >
-                      <span>{store.resturantName}</span>
-                    </MenuItem>
-                  ))}
-                </CusSelect>
-              </FormControl>
+              <InputLabel
+                shrink={true}
+                sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
+                id="demo-simple-select-label"
+              >
+                Please select the store
+              </InputLabel>
+              <CusSelect
+                sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={selectedStore}
+                label="Please select the store"
+                onChange={handleChangeStore}
+                notched={true}
+              >
+                {stores.map((store) => (
+                  <MenuItem
+                    onClick={() => {
+                      handleSelectedStore(store);
+                    }}
+                    value={store.resturantName}
+                  >
+                    <span>{store.resturantName}</span>
+                  </MenuItem>
+                ))}
+              </CusSelect>
+            </FormControl>:
+             <CuTypography>{getSelectableStores(stores)[0].resturantName}</CuTypography>
+              }
             </div>
           </Col>
           <Col sm={3}></Col>
