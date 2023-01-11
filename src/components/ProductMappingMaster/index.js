@@ -180,6 +180,7 @@ export const ProductMappingMaster = () => {
   const [newPrice, setNewPrice] = useState("");
   const [newPriceTopping, setNewPriceTopping] = useState("");
   const [newMenuFlag, setNewMenuFlag] = useState("");
+  const [newOnlineApplicableFlag, setNewOnlineApplicableFlag] = useState("");
   const [newIngredientFlag, setNewIngredientFlag] = useState("");
   const [newSize, setNewSize] = useState("");
   const [newSizeTopping, setNewSizeTopping] = useState("");
@@ -450,7 +451,8 @@ export const ProductMappingMaster = () => {
       !newMenuFlag ||
       !newCommonImage ||
       !newIngredientFlag ||
-      !newKdsRoutingName
+      !newKdsRoutingName ||
+      !newOnlineApplicableFlag
     ) {
       toast.error("Please fill all the fields!");
       return;
@@ -477,6 +479,7 @@ export const ProductMappingMaster = () => {
       updatedBy: user.loginId,
       updatedDate: new Date(),
       productStatus: "ACTIVE",
+      onlineApplicableFlag: newOnlineApplicableFlag
     };
 
     const formDataImage = new FormData();
@@ -1027,6 +1030,29 @@ export const ProductMappingMaster = () => {
                 </CusMenuItem>
               </CusSelect>
             </FormControl>
+
+            <FormControl fullWidth className="mt-3">
+            <CusInputLabel
+              sx={{ fontSize: "0.75rem", lineHeight: "1rem", top: "-11px" }}
+            >
+              Online Applicable (Y/N)
+            </CusInputLabel>
+            <CusSelect
+              label="Online Applicable (Y/N)"
+              onChange={(event) => {
+                setNewOnlineApplicableFlag(event.target.value);
+              }}
+              sx={{ fontSize: "0.75rem" }}
+            >
+              <CusMenuItem value={"Y"} style={{ fontSize: "0.75rem" }}>
+                Y
+              </CusMenuItem>
+              <CusMenuItem value={"N"} style={{ fontSize: "0.75rem" }}>
+                N
+              </CusMenuItem>
+            </CusSelect>
+          </FormControl>
+
 
             <FormControl fullWidth className="mt-3">
               <CusInputLabel

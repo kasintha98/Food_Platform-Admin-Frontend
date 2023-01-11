@@ -180,7 +180,9 @@ export const MenuMaster = () => {
   const [currentDishType, setCurrentDishType] = useState({});
   const [currentDishDesc, setCurrentDishDesc] = useState({});
   const [currentKdsRoutingName, setCurrentKdsRoutingName] = useState("");
-
+  const [currentOnlineApplicableFlag, setCurrentOnlineApplicableFlag] = useState("");
+  const [newOnlineApplicableFlag, setNewOnlineApplicableFlag] = useState("");
+  
   //const [currentImageName, setCurrentImageName] = useState({});
   const [currentPrice, setCurrentPrice] = useState({});
   const [currentMenuFlag, setCurrentMenuFlag] = useState("");
@@ -409,6 +411,10 @@ export const MenuMaster = () => {
     setCurrentIngredientFlag(event.target.value);
   };
 
+  const handleOnlineApplicableFlag = (event) => {
+    setCurrentOnlineApplicableFlag(event.target.value);
+  }
+
   const handleSizeUpdate = (event) => {
     console.log(event.target.value);
     setCurrentSize(event.target.value);
@@ -493,6 +499,9 @@ export const MenuMaster = () => {
       kdsRoutingName: currentKdsRoutingName
         ? currentKdsRoutingName
         : product.kdsRoutingName,
+        onlineApplicableFlag: currentOnlineApplicableFlag
+        ? currentOnlineApplicableFlag
+        : product.onlineApplicableFlag,
     };
 
     const formDataImage = new FormData();
@@ -528,6 +537,7 @@ export const MenuMaster = () => {
     setCurrentMenuFlag("");
     setCurrentIngredientFlag("");
     setCurrentKdsRoutingName("");
+    setCurrentOnlineApplicableFlag("")
   };
 
   const saveNewProduct = () => {
@@ -545,7 +555,8 @@ export const MenuMaster = () => {
       !newMenuFlag ||
       !newCommonImage ||
       !newIngredientFlag ||
-      !newKdsRoutingName
+      !newKdsRoutingName ||
+      !newOnlineApplicableFlag
     ) {
       toast.error("Please fill all the fields!");
       return;
@@ -567,6 +578,7 @@ export const MenuMaster = () => {
       commonImage: newCommonImage,
       ingredientExistsFalg: newIngredientFlag,
       kdsRoutingName: newKdsRoutingName,
+      onlineApplicableFlag: newOnlineApplicableFlag
     };
 
     const formDataImage = new FormData();
@@ -847,6 +859,28 @@ export const MenuMaster = () => {
               label="Topping (Y/N)"
               onChange={(event) => {
                 setNewIngredientFlag(event.target.value);
+              }}
+              sx={{ fontSize: "0.75rem" }}
+            >
+              <CusMenuItem value={"Y"} style={{ fontSize: "0.75rem" }}>
+                Y
+              </CusMenuItem>
+              <CusMenuItem value={"N"} style={{ fontSize: "0.75rem" }}>
+                N
+              </CusMenuItem>
+            </CusSelect>
+          </FormControl>
+
+          <FormControl fullWidth className="mt-3">
+            <CusInputLabel
+              sx={{ fontSize: "0.75rem", lineHeight: "1rem", top: "-11px" }}
+            >
+              Online Applicable (Y/N)
+            </CusInputLabel>
+            <CusSelect
+              label="Online Applicable (Y/N)"
+              onChange={(event) => {
+                setNewOnlineApplicableFlag(event.target.value);
               }}
               sx={{ fontSize: "0.75rem" }}
             >
@@ -1567,6 +1601,7 @@ export const MenuMaster = () => {
                 <CusTableCell align="center">Dish Visible (Y/N)</CusTableCell>
                 <CusTableCell align="center">KDS Counter Name</CusTableCell>
                 <CusTableCell align="center">Topping (Y/N)</CusTableCell>
+                <CusTableCell align="center">Online Applicable (Y/N)</CusTableCell>
                 <CusTableCell align="center">Add Toppings</CusTableCell>
                 <CusTableCell align="center">Action</CusTableCell>
               </TableRow>
@@ -2134,6 +2169,47 @@ export const MenuMaster = () => {
                                 },
                               }}
                             >
+                              <option
+                                value={"Y"}
+                                style={{ fontSize: "0.75rem" }}
+                              >
+                                Y
+                              </option>
+                              <option
+                                value={"N"}
+                                style={{ fontSize: "0.75rem" }}
+                              >
+                                N
+                              </option>
+                            </NativeSelect>
+                          </CusTableCell>
+                          <CusTableCell
+                            align="center"
+                            style={{ minWidth: "50px" }}
+                          >
+                            <NativeSelect
+                              disabled={!isSave[product.id]}
+                              defaultValue={product.onlineApplicableFlag}
+                              inputProps={{
+                                name: "status",
+                                id: "uncontrolled-native",
+                              }}
+                              onChange={handleOnlineApplicableFlag}
+                              sx={{
+                                fontSize: "0.75rem",
+                                "& .MuiInputBase-input.Mui-disabled": {
+                                  WebkitTextFillColor: isSave[product.id]
+                                    ? "black"
+                                    : "#404040",
+                                },
+                              }}
+                            >
+                              <option
+                                value={null}
+                                style={{ fontSize: "0.75rem" }}
+                              >
+                                null
+                              </option>
                               <option
                                 value={"Y"}
                                 style={{ fontSize: "0.75rem" }}
