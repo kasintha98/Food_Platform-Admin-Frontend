@@ -101,12 +101,16 @@ const CusTableCell1 = styled(TableCell)`
   background-color: #35455e;
   color: #fff;
   padding: 0;
+  padding-left: 3px;
+  padding-right: 3px;
 `;
 
 const CusTableCell = styled(TableCell)`
   padding: 0;
   font-size: 14px;
   border: 1px solid #000;
+  border-left: none;
+  border-right: none;
 `;
 
 const CusModal = styled(Modal)`
@@ -759,11 +763,11 @@ export const SearchPurchaseOrder = () => {
                 <CusTableCell1 align="center">RECIEVING STORE</CusTableCell1>
                 <CusTableCell1 align="center">BILL DATE</CusTableCell1>
                 <CusTableCell1 align="center">ITEM#</CusTableCell1>
-                <CusTableCell1 align="center">INGREDIENT NAME</CusTableCell1>
+                <CusTableCell1 align="center" sx={{minWidth: 170}}>INGREDIENT NAME</CusTableCell1>
                 <CusTableCell1 align="center">UOM</CusTableCell1>
                 <CusTableCell1 align="center" sx={{width: 90}}>QTY</CusTableCell1>
                 <CusTableCell1 align="center" sx={{width: 60}}>WAST</CusTableCell1>
-                <CusTableCell1 align="center">COST</CusTableCell1>
+                <CusTableCell1 align="center" sx={{width: 90}}>COST</CusTableCell1>
                 <CusTableCell1 align="center" sx={{width: 90}}>DISCOUNT</CusTableCell1>
                 <CusTableCell1 align="center">PO VALUE</CusTableCell1>
                 <CusTableCell1 align="center">STOCK</CusTableCell1>
@@ -797,7 +801,7 @@ export const SearchPurchaseOrder = () => {
                         <TableRow key={[item.purchaseOrderId+item.itemId]}>
                           <CusTableCell align="center">
                             <Typography sx={{ fontSize: "0.75rem" }}>
-                              <Button
+                              {/* <Button
                                 sx={{ fontSize: "0.75rem" }}
                                 onClick={() => {
                                   setCurrentProduct(item);
@@ -805,7 +809,8 @@ export const SearchPurchaseOrder = () => {
                                 }}
                               >
                                 {item.purchaseOrderId}
-                              </Button>
+                              </Button> */}
+                              {item.purchaseOrderId}
                             </Typography>
                           </CusTableCell>
                           <CusTableCell align="center">
