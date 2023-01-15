@@ -1001,6 +1001,11 @@ export const MenuMaster = () => {
     }
   };
 
+  const getStoreObjFromId = (id) => {
+    const foundMatch = stores.find((x) => x.storeId === id);
+    return foundMatch;
+  };
+
   const renderAddModalNew = () => {
     return (
       <Modal
@@ -1636,9 +1641,9 @@ export const MenuMaster = () => {
                           </CusTableCell>
                           <CusTableCell
                             align="center"
-                            style={{ minWidth: "175px" }}
+                            style={{ minWidth: "175px", fontSize: "0.75rem" }}
                           >
-                            <FormControl fullWidth>
+                            {/* <FormControl fullWidth>
                               <CusNativeSelect
                                 defaultValue={`${
                                   product.restaurantId - product.storeId
@@ -1670,7 +1675,8 @@ export const MenuMaster = () => {
                                   </option>
                                 ))}
                               </CusNativeSelect>
-                            </FormControl>
+                            </FormControl> */}
+                            {getStoreObjFromId(product.storeId).resturantName}
                           </CusTableCell>
                           <CusTableCell
                             align="center"
