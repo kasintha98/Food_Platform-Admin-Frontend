@@ -24,6 +24,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import CloseIcon from "@mui/icons-material/Close";
 import SaveIcon from "@mui/icons-material/Save";
 import EditIcon from "@mui/icons-material/Edit";
+import DoneIcon from '@mui/icons-material/Done';
 import {
   getActiveRecipes,
   getActiveInventory,
@@ -253,7 +254,7 @@ export const RecipeMaster = () => {
   const handleShowAdd = () => setShowAdd(true);
 
   const saveNewIngredient = () => {
-    if (isAddNew) {
+    /* if (isAddNew) {
       if (!newItemIngredient || !newItemIngredientObj) {
         toast.error("Please select ingredient to add new ingredient item!");
         return;
@@ -270,7 +271,6 @@ export const RecipeMaster = () => {
         itemId: newItemIngredientObj.itemId,
         itemQty: newItemQty,
         itemCost: newItemCost ? newItemCost : "0.0",
-        /* itemUom: newItemUOM, */
         itemUom: newItemUOM,
         itemStatus: "ACTIVE",
         createdBy: user.loginId,
@@ -279,11 +279,8 @@ export const RecipeMaster = () => {
         updatedDate: new Date(),
       };
       setChanged(true);
-
-      // console.log("------------");
-      // console.log(newItem)
       dispatch(saveUpdateRecipeItem(newItem));
-    }
+    } */
 
     const allList = getIngredientsByProductId(
       currentProduct.productId,
@@ -338,6 +335,43 @@ export const RecipeMaster = () => {
     }
   };
 
+  const saveNewIngredientToProduct = () => {
+    if (!newItemIngredient || !newItemIngredientObj) {
+      toast.error("Please select ingredient to add new ingredient item!");
+      return;
+    }
+
+    if (!newItemQty) {
+      toast.error("Please select quantity to add new ingredient item!");
+      return;
+    }
+
+    const newItem = {
+      restaurantId: "R001",
+      productId: currentProduct.productId,
+      itemId: newItemIngredientObj.itemId,
+      itemQty: newItemQty,
+      itemCost: newItemCost ? newItemCost : "0.0",
+      /* itemUom: newItemUOM, */
+      itemUom: newItemUOM,
+      itemStatus: "ACTIVE",
+      createdBy: user.loginId,
+      createdDate: new Date(),
+      updatedBy: user.loginId,
+      updatedDate: new Date(),
+    };
+    //setChanged(true);
+
+    // console.log("------------");
+    // console.log(newItem)
+    dispatch(saveUpdateRecipeItem(newItem)).then((res)=>{
+      if(res){
+        clearData()
+        setIsAddNew(false);
+      }
+    })
+  }
+
   const clearData = () => {
     setCurrentItemQty({});
     setItemUOM({});
@@ -378,6 +412,15 @@ export const RecipeMaster = () => {
   const calculateFinalCost = (qty) => {
     var finalCost = itemCostPerUnit * qty;
     setNewItemCost(finalCost);
+  }
+
+  const getTotalCost = (id, qty) => {
+    let match = activeInventory.find((x) => x.itemId === id);
+    if(match){
+      return Number(match.itemUnitCost) * Number(qty)
+    }else{
+      return 0;
+    }
   }
 
   const renderAddModal = () => {
@@ -507,6 +550,11 @@ export const RecipeMaster = () => {
                         [item.itemId]: event.target.value,
                       };
                       setCurrentItemQty(qty);
+                      const ost = {
+                        ...currentItemCost,
+                        [item.itemId]: getTotalCost(item.itemId, event.target.value),
+                      };
+                      setCurrentItemCost(ost);
                     }}
                     fullWidth
                     variant="standard"
@@ -712,7 +760,24 @@ export const RecipeMaster = () => {
                   />
                 </Col>
                 <Col xs={1} align="center">
-                  <IconButton
+                  {/* <Row>
+                    <Col>
+                    <IconButton
+                    sx={{
+                      fontSize: "0.75rem",
+                      color: "green",
+                    }}
+                    onClick={() => {
+                      saveNewIngredientToProduct();
+                    }}
+                  >
+                    <DoneIcon
+                      sx={{ height: "0.95rem", width: "0.95rem" }}
+                    ></DoneIcon>
+                  </IconButton>
+                  </Col>
+                    <Col>
+                    <IconButton
                     sx={{
                       fontSize: "0.75rem",
                       color: "red",
@@ -724,6 +789,21 @@ export const RecipeMaster = () => {
                     <CloseIcon
                       sx={{ height: "0.95rem", width: "0.95rem" }}
                     ></CloseIcon>
+                  </IconButton>
+                  </Col>
+                  </Row> */}
+                  <IconButton
+                    sx={{
+                      fontSize: "0.75rem",
+                      color: "green",
+                    }}
+                    onClick={() => {
+                      saveNewIngredientToProduct();
+                    }}
+                  >
+                    <DoneIcon
+                      sx={{ height: "0.95rem", width: "0.95rem" }}
+                    ></DoneIcon>
                   </IconButton>
                 </Col>
               </Row>
