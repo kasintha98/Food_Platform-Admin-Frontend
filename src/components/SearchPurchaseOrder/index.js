@@ -87,6 +87,7 @@ const CusTextField = styled(TextField)`
 & input{
   font-size: 0.75rem;
   padding: 0.25rem;
+  text-align: center !important;
 }
  }
 
@@ -124,6 +125,7 @@ const CusAutocomplete = styled(Autocomplete)`
     font-size: 0.75rem;
     padding: 0 !important;
     height: 0.75rem !important;
+    text-align: center !important;
   }
 
   & legend {
@@ -185,7 +187,7 @@ export const SearchPurchaseOrder = () => {
   const [selectedStoreObj, setSelectedStoreObj] = useState(null);
   const [billNo, setBillNo] = useState("");
   const [selectedSupplier, setSelectedSupplier] = useState("");
-  const [selectedSearchPOstatus, setSelectedSearchPOstatus] = useState("");
+  const [selectedSearchPOstatus, setSelectedSearchPOstatus] = useState("SUBMITTED");
   
   const [poStatus, setPOStatus] = useState({});
   const [isSave, setIsSave] = useState({});
@@ -205,6 +207,8 @@ export const SearchPurchaseOrder = () => {
   const [currentItemTotalStock, setCurrentItemTotalStock] = useState({});
   const [currentItemCategory, setCurrentItemCategory] = useState({});
   const [searchedList, setSearchedList] = useState([]);
+  const [filtered, setFiltered] = useState([]);
+  const [change, setChange] = useState(0);
 
   const dispatch = useDispatch();
 
@@ -413,9 +417,13 @@ export const SearchPurchaseOrder = () => {
       }
 
       setSearchedList(searched)
+      console.log(searched);
+      setFiltered(searched)
       //groupBypurchaseOrderId(searched);
     }
   };
+
+  useEffect(()=>{console.log("Changed"); setChange(change => change+1)}, [filtered])
 
   const groupBypurchaseOrderId = (list) => {
     let grouped = list.reduce(function (r, a) {
@@ -563,6 +571,391 @@ export const SearchPurchaseOrder = () => {
       </CusModal>
     );
   };
+
+  const renderTable = () =>{
+    return <>
+    {filtered.map((item) => (
+      <TableRow key={[item.purchaseOrderId+item.itemId]}>
+        <CusTableCell align="center" key={change}>
+          <Typography sx={{ fontSize: "0.75rem" }}>
+            {/* <Button
+              sx={{ fontSize: "0.75rem" }}
+              onClick={() => {
+                setCurrentProduct(item);
+                handleShowAdd();
+              }}
+            >
+              {item.purchaseOrderId}
+            </Button> */}
+            {item.purchaseOrderId}
+          </Typography>
+        </CusTableCell>
+        <CusTableCell align="center">
+          <Typography sx={{ fontSize: "0.75rem" }}>
+            {item.billNumber ? item.billNumber : "N/A"}
+          </Typography>
+        </CusTableCell>
+        <CusTableCell align="center">
+          <Typography sx={{ fontSize: "0.75rem" }}>
+            {item.supplierName}
+          </Typography>
+        </CusTableCell>
+        <CusTableCell align="center">
+          <Typography sx={{ fontSize: "0.75rem" }}>
+            {item.storeName}
+          </Typography>
+        </CusTableCell>
+        <CusTableCell align="center">
+          <Typography sx={{ fontSize: "0.75rem" }}>
+            {renderDate(item.purchaseDate)}
+          </Typography>
+        </CusTableCell>
+
+
+        <CusTableCell align="center">
+          <Typography sx={{ fontSize: "0.75rem" }}>
+            {currentSelectedItem[item.purchaseOrderId+item.itemId]
+          ? currentSelectedItem[item.purchaseOrderId+item.itemId].itemId
+          : item.itemId}
+          </Typography>
+        </CusTableCell>
+
+
+        <CusTableCell align="center">
+          <CusAutocomplete
+            disabled={!isSave[item.purchaseOrderId+item.itemId]}
+            onChange={(event, newValue) => {
+              const items = {
+                ...currentSelectedItem,
+                [item.purchaseOrderId+item.itemId]: newValue,
+              };
+              setCurrentSelectedItem(items);
+            }}
+            defaultValue={getInventoryItemObjById(item.itemId)}
+            sx={{
+              fontSize: "0.75rem",
+              marginTop: "15px",
+              ".MuiFormControl-root": { marginTop: "4px" },
+              ".Mui-disabled" : {color: "black"}
+            }}
+            options={activeInventory}
+            autoHighlight
+            getOptionLabel={(option) => option.itemName}
+            renderOption={(props, option) => (
+              <Box
+                component="li"
+                sx={{
+                  "& > img": { mr: 2, flexShrink: 0 },
+                  fontSize: "0.75rem",
+                }}
+                {...props}
+              >
+                {option.itemName}
+              </Box>
+            )}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                sx={{ fontSize: "0.75rem" }}
+                variant="standard"
+                inputProps={{
+                  ...params.inputProps,
+                  autoComplete: "new-password", // disable autocomplete and autofill
+                }}
+              />
+            )}
+          />
+        </CusTableCell>
+        <CusTableCell align="center">
+          <Typography sx={{ fontSize: "0.75rem" }}>
+            {currentSelectedItem[item.purchaseOrderId+item.itemId]
+              ? currentSelectedItem[item.purchaseOrderId+item.itemId].itemUom
+              : getInventoryItemObjById(item.itemId).itemUom}
+          </Typography>
+        </CusTableCell>
+        <CusTableCell align="center">
+          <CusTextField
+            defaultValue={item.purchaseQty}
+            value={currentItemQty[item.purchaseOrderId+item.itemId]}
+            onChange={(event) => {
+              const qty = {
+                ...currentItemQty,
+                [item.purchaseOrderId+item.itemId]: event.target.value,
+              };
+              setCurrentItemQty(qty);
+            }}
+            fullWidth
+            variant="standard"
+            disabled={!isSave[item.purchaseOrderId+item.itemId]}
+            InputProps={{
+              disableUnderline: true, // <== added this
+            }}
+          />
+        </CusTableCell>
+
+        <CusTableCell align="center">
+          <CusTextField
+            defaultValue={item.wastageQty}
+            value={currentItemWastage[item.purchaseOrderId+item.itemId]}
+            onChange={(event) => {
+              const wastage = {
+                ...currentItemWastage,
+                [item.purchaseOrderId+item.itemId]: event.target.value,
+              };
+              setCurrentItemWastage(wastage);
+            }}
+            fullWidth
+            variant="standard"
+            disabled={!isSave[item.purchaseOrderId+item.itemId]}
+            InputProps={{
+              disableUnderline: true, // <== added this
+            }}
+          />
+        </CusTableCell>
+
+        <CusTableCell align="center">
+          <CusTextField
+            defaultValue={item.quotedPurchasePrice}
+            value={currentItemPrice[item.purchaseOrderId+item.itemId]}
+            onChange={(event) => {
+              const price = {
+                ...currentItemPrice,
+                [item.purchaseOrderId+item.itemId]: event.target.value,
+              };
+              setCurrentItemPrice(price);
+            }}
+            fullWidth
+            variant="standard"
+            disabled={!isSave[item.purchaseOrderId+item.itemId]}
+            InputProps={{
+              disableUnderline: true, // <== added this
+            }}
+          />
+        </CusTableCell>
+
+        <CusTableCell align="center">
+          <CusTextField
+            defaultValue={item.discountAmount}
+            value={currentItemDiscount[item.purchaseOrderId+item.itemId]}
+            onChange={(event) => {
+              const discount = {
+                ...currentItemDiscount,
+                [item.purchaseOrderId+item.itemId]: event.target.value,
+              };
+              setCurrentItemDiscount(discount);
+            }}
+            fullWidth
+            variant="standard"
+            disabled={!isSave[item.purchaseOrderId+item.itemId]}
+            InputProps={{
+              disableUnderline: true, // <== added this
+            }}
+          />
+        </CusTableCell>
+
+        <CusTableCell align="center">
+          <Typography sx={{ fontSize: "0.75rem" }}>
+            {getFinalPrice(item)}
+          </Typography>
+        </CusTableCell>
+
+        <CusTableCell align="center">
+          {/* <CusTextField
+            defaultValue={item.netQty}
+            value={currentItemTotalStock[item.purchaseOrderId+item.itemId]}
+            onChange={(event) => {
+              const stock = {
+                ...currentItemTotalStock,
+                [item.purchaseOrderId+item.itemId]: event.target.value,
+              };
+              setCurrentItemTotalStock(stock);
+            }}
+            fullWidth
+            variant="standard"
+            disabled={!isSave[item.purchaseOrderId+item.itemId]}
+            InputProps={{
+              disableUnderline: true, // <== added this
+            }}
+          /> */}
+          <Typography sx={{ fontSize: "0.75rem" }}>
+            {getTotalStock(item)}
+          </Typography>
+        </CusTableCell>
+
+        <CusTableCell align="center">
+          <Typography sx={{ fontSize: "0.75rem" }}>
+            {currentSelectedItem[item.purchaseOrderId+item.itemId]
+              ? currentSelectedItem[item.purchaseOrderId+item.itemId].itemGstPercentage
+              : getInventoryItemObjById(item.itemId).itemGstPercentage}
+          </Typography>
+        </CusTableCell>
+
+        <CusTableCell align="center">
+          <Typography sx={{ fontSize: "0.75rem" }}>
+            {(
+              getFinalPrice(item) *
+              (Number(
+                currentSelectedItem[item.purchaseOrderId+item.itemId]
+                  ? currentSelectedItem[item.purchaseOrderId+item.itemId]
+                      .itemGstPercentage
+                  : getInventoryItemObjById(item.itemId).itemGstPercentage
+              ) /
+                100)
+            ).toFixed(2)}
+          </Typography>
+        </CusTableCell>
+
+        <CusTableCell align="center">
+                <FormControl fullWidth sx={{ marginTop: "7px" }}>
+                  <NativeSelect
+                    defaultValue={item.purchaseCategory}
+                    disabled={!isSave[item.purchaseOrderId+item.itemId]}
+                    inputProps={{
+                      name: "status",
+                      id: "uncontrolled-native",
+                    }}
+                    value={currentItemCategory[item.purchaseOrderId+item.itemId]}
+                    onChange={(event) => {
+                      const cat = {
+                        ...currentItemCategory,
+                        [item.purchaseOrderId+item.itemId]: event.target.value,
+                      };
+                      setCurrentItemCategory(cat);
+                    }}
+                    sx={{ fontSize: "0.75rem" }}
+                  >
+                    {purchaseOrderCategory &&
+                      purchaseOrderCategory.map((item) => (
+                        <option
+                          value={item.configCriteriaValue}
+                          style={{ fontSize: "0.75rem" }}
+                        >
+                          {item.configCriteriaDesc}
+                        </option>
+                      ))}
+                    <option value={""} style={{ fontSize: "0.75rem" }}>
+                      Select Category
+                    </option>
+                  </NativeSelect>
+                </FormControl>
+            </CusTableCell>
+    
+
+
+
+            <CusTableCell align="center" sx={{backgroundColor: item.purchaseOrderStatus === "SUBMITTED" ? "yellow": "lightGreen"}}>
+              <FormControl fullWidth sx={{ marginTop: "5px"}}>
+                <NativeSelect
+                  disabled={!isSave[item.purchaseOrderId+item.itemId]}
+                  defaultValue={item.purchaseOrderStatus}
+                  inputProps={{
+                    name: "status",
+                    id: "uncontrolled-native",
+                    disableUnderline: true,
+                  }}
+                  onChange={(event) => {
+                    setPOStatus({...poStatus, [item.purchaseOrderId+item.itemId]: event.target.value});
+                  }}
+                  sx={{
+                    fontSize: "0.75rem",
+                  }}
+                >
+                  {item.purchaseOrderStatus === "SUBMITTED" ? (
+                    <option
+                      value={"SUBMITTED"}
+                      style={{ fontSize: "0.75rem" }}
+                    >
+                      SUBMITTED
+                    </option>
+                  ) : null}
+                  {item.purchaseOrderStatus === "SUBMITTED" ? (
+                    <option
+                      value={"RECEIVED"}
+                      style={{ fontSize: "0.75rem" }}
+                    >
+                      RECEIVED
+                    </option>
+                  ) : null}
+                  {item.purchaseOrderStatus === "RECEIVED" ? (
+                    <option
+                      value={"RECEIVED"}
+                      style={{ fontSize: "0.75rem" }}
+                    >
+                      RECEIVED
+                    </option>
+                  ) : null}
+                  {item.purchaseOrderStatus === "RECEIVED" ? (
+                    <option
+                      value={"SUBMITTED"}
+                      style={{ fontSize: "0.75rem" }}
+                    >
+                      SUBMITTED
+                    </option>
+                  ) : null}
+
+                  {/* <option
+                    value={"SUBMITTED"}
+                    style={{ fontSize: "0.75rem" }}
+                  >
+                    SUBMITTED
+                  </option>
+                  <option
+                    value={"RECEIVED"}
+                    style={{ fontSize: "0.75rem" }}
+                  >
+                    RECEIVED
+                  </option> */}
+                </NativeSelect>
+              </FormControl>
+            </CusTableCell>
+            <CusTableCell align="center">
+              {isSave[item.purchaseOrderId+item.itemId] ? (
+                <IconButton
+                  sx={{
+                    fontSize: "0.75rem",
+                    color: "#92D050",
+                  }}
+                  onClick={() => {
+                    /* savePurchaseOrderStatusToDB(
+                      item.purchaseOrderId,
+                      item
+                    ); */
+                    updateItemHandle(item);
+                  }}
+                >
+                  <SaveIcon
+                    sx={{
+                      height: "0.95rem",
+                      width: "0.95rem",
+                    }}
+                  ></SaveIcon>
+                </IconButton>
+              ) : (
+                <IconButton
+                  disabled={
+                    item.purchaseOrderStatus === "RECEIVED"
+                  }
+                  sx={{
+                    fontSize: "0.75rem",
+                    color: "#FFC000",
+                  }}
+                  onClick={() => {
+                    onEditClickHandle(item.purchaseOrderId+item.itemId);
+                  }}
+                >
+                  <EditIcon
+                    sx={{
+                      height: "0.95rem",
+                      width: "0.95rem",
+                    }}
+                  ></EditIcon>
+                </IconButton>
+              )}
+            </CusTableCell>
+      </TableRow>
+    ))}
+  </>
+  }
 
   return (
     <div>
@@ -724,13 +1117,13 @@ export const SearchPurchaseOrder = () => {
                   onChange={handleChangeSearchPOStatus}
                   notched={true}
                 >
-                  <MenuItem
+                  {/* <MenuItem
                       value={""}
                     >
                       <span>
                       N/A
                       </span>
-                  </MenuItem>
+                  </MenuItem> */}
                   <MenuItem
                       value={"SUBMITTED"}
                     >
@@ -751,7 +1144,7 @@ export const SearchPurchaseOrder = () => {
           </Col>
         </Row>
       </div>
-
+      
       <div className="mt-3">
         <TableContainer className="mt-3" component={Paper} sx={{ maxHeight: "60vh", width: "92.7vw" }}>
           <Table sx={{ marginBottom: 40 }} stickyHeader>
@@ -795,389 +1188,12 @@ export const SearchPurchaseOrder = () => {
                 </TableRow>
               ) : (
                 <>
-                  {searchedList.length > 0 ? (
+                  {filtered.length > 0 ? (
                     <>
-                      {searchedList.map((item) => (
-                        <TableRow key={[item.purchaseOrderId+item.itemId]}>
-                          <CusTableCell align="center">
-                            <Typography sx={{ fontSize: "0.75rem" }}>
-                              {/* <Button
-                                sx={{ fontSize: "0.75rem" }}
-                                onClick={() => {
-                                  setCurrentProduct(item);
-                                  handleShowAdd();
-                                }}
-                              >
-                                {item.purchaseOrderId}
-                              </Button> */}
-                              {item.purchaseOrderId}
-                            </Typography>
-                          </CusTableCell>
-                          <CusTableCell align="center">
-                            <Typography sx={{ fontSize: "0.75rem" }}>
-                              {item.billNumber ? item.billNumber : "N/A"}
-                            </Typography>
-                          </CusTableCell>
-                          <CusTableCell align="center">
-                            <Typography sx={{ fontSize: "0.75rem" }}>
-                              {item.supplierName}
-                            </Typography>
-                          </CusTableCell>
-                          <CusTableCell align="center">
-                            <Typography sx={{ fontSize: "0.75rem" }}>
-                              {item.storeName}
-                            </Typography>
-                          </CusTableCell>
-                          <CusTableCell align="center">
-                            <Typography sx={{ fontSize: "0.75rem" }}>
-                              {renderDate(item.purchaseDate)}
-                            </Typography>
-                          </CusTableCell>
-
-
-                          <CusTableCell align="center">
-                            <Typography sx={{ fontSize: "0.75rem" }}>
-                              {currentSelectedItem[item.purchaseOrderId+item.itemId]
-                            ? currentSelectedItem[item.purchaseOrderId+item.itemId].itemId
-                            : item.itemId}
-                            </Typography>
-                          </CusTableCell>
-
-
-
-                      <CusTableCell align="center">
-                        <CusAutocomplete
-                          disabled={!isSave[item.purchaseOrderId+item.itemId]}
-                          onChange={(event, newValue) => {
-                            const items = {
-                              ...currentSelectedItem,
-                              [item.purchaseOrderId+item.itemId]: newValue,
-                            };
-                            setCurrentSelectedItem(items);
-                          }}
-                          defaultValue={getInventoryItemObjById(item.itemId)}
-                          sx={{
-                            fontSize: "0.75rem",
-                            marginTop: "15px",
-                            ".MuiFormControl-root": { marginTop: "4px" },
-                          }}
-                          options={activeInventory}
-                          autoHighlight
-                          getOptionLabel={(option) => option.itemName}
-                          renderOption={(props, option) => (
-                            <Box
-                              component="li"
-                              sx={{
-                                "& > img": { mr: 2, flexShrink: 0 },
-                                fontSize: "0.75rem",
-                              }}
-                              {...props}
-                            >
-                              {option.itemName}
-                            </Box>
-                          )}
-                          renderInput={(params) => (
-                            <TextField
-                              {...params}
-                              sx={{ fontSize: "0.75rem" }}
-                              variant="standard"
-                              inputProps={{
-                                ...params.inputProps,
-                                autoComplete: "new-password", // disable autocomplete and autofill
-                              }}
-                            />
-                          )}
-                        />
-                      </CusTableCell>
-                      <CusTableCell align="center">
-                        <Typography sx={{ fontSize: "0.75rem" }}>
-                          {currentSelectedItem[item.purchaseOrderId+item.itemId]
-                            ? currentSelectedItem[item.purchaseOrderId+item.itemId].itemUom
-                            : getInventoryItemObjById(item.itemId).itemUom}
-                        </Typography>
-                      </CusTableCell>
-                      <CusTableCell align="center">
-                        <CusTextField
-                          defaultValue={item.purchaseQty}
-                          value={currentItemQty[item.purchaseOrderId+item.itemId]}
-                          onChange={(event) => {
-                            const qty = {
-                              ...currentItemQty,
-                              [item.purchaseOrderId+item.itemId]: event.target.value,
-                            };
-                            setCurrentItemQty(qty);
-                          }}
-                          fullWidth
-                          variant="standard"
-                          disabled={!isSave[item.purchaseOrderId+item.itemId]}
-                          InputProps={{
-                            disableUnderline: true, // <== added this
-                          }}
-                        />
-                      </CusTableCell>
-
-                      <CusTableCell align="center">
-                        <CusTextField
-                          defaultValue={item.wastageQty}
-                          value={currentItemWastage[item.purchaseOrderId+item.itemId]}
-                          onChange={(event) => {
-                            const wastage = {
-                              ...currentItemWastage,
-                              [item.purchaseOrderId+item.itemId]: event.target.value,
-                            };
-                            setCurrentItemWastage(wastage);
-                          }}
-                          fullWidth
-                          variant="standard"
-                          disabled={!isSave[item.purchaseOrderId+item.itemId]}
-                          InputProps={{
-                            disableUnderline: true, // <== added this
-                          }}
-                        />
-                      </CusTableCell>
-
-                      <CusTableCell align="center">
-                        <CusTextField
-                          defaultValue={item.quotedPurchasePrice}
-                          value={currentItemPrice[item.purchaseOrderId+item.itemId]}
-                          onChange={(event) => {
-                            const price = {
-                              ...currentItemPrice,
-                              [item.purchaseOrderId+item.itemId]: event.target.value,
-                            };
-                            setCurrentItemPrice(price);
-                          }}
-                          fullWidth
-                          variant="standard"
-                          disabled={!isSave[item.purchaseOrderId+item.itemId]}
-                          InputProps={{
-                            disableUnderline: true, // <== added this
-                          }}
-                        />
-                      </CusTableCell>
-
-                      <CusTableCell align="center">
-                        <CusTextField
-                          defaultValue={item.discountAmount}
-                          value={currentItemDiscount[item.purchaseOrderId+item.itemId]}
-                          onChange={(event) => {
-                            const discount = {
-                              ...currentItemDiscount,
-                              [item.purchaseOrderId+item.itemId]: event.target.value,
-                            };
-                            setCurrentItemDiscount(discount);
-                          }}
-                          fullWidth
-                          variant="standard"
-                          disabled={!isSave[item.purchaseOrderId+item.itemId]}
-                          InputProps={{
-                            disableUnderline: true, // <== added this
-                          }}
-                        />
-                      </CusTableCell>
-
-                      <CusTableCell align="center">
-                        <Typography sx={{ fontSize: "0.75rem" }}>
-                          {getFinalPrice(item)}
-                        </Typography>
-                      </CusTableCell>
-
-                      <CusTableCell align="center">
-                        {/* <CusTextField
-                          defaultValue={item.netQty}
-                          value={currentItemTotalStock[item.purchaseOrderId+item.itemId]}
-                          onChange={(event) => {
-                            const stock = {
-                              ...currentItemTotalStock,
-                              [item.purchaseOrderId+item.itemId]: event.target.value,
-                            };
-                            setCurrentItemTotalStock(stock);
-                          }}
-                          fullWidth
-                          variant="standard"
-                          disabled={!isSave[item.purchaseOrderId+item.itemId]}
-                          InputProps={{
-                            disableUnderline: true, // <== added this
-                          }}
-                        /> */}
-                        <Typography sx={{ fontSize: "0.75rem" }}>
-                          {getTotalStock(item)}
-                        </Typography>
-                      </CusTableCell>
-
-                      <CusTableCell align="center">
-                        <Typography sx={{ fontSize: "0.75rem" }}>
-                          {currentSelectedItem[item.purchaseOrderId+item.itemId]
-                            ? currentSelectedItem[item.purchaseOrderId+item.itemId].itemGstPercentage
-                            : getInventoryItemObjById(item.itemId).itemGstPercentage}
-                        </Typography>
-                      </CusTableCell>
-
-                      <CusTableCell align="center">
-                        <Typography sx={{ fontSize: "0.75rem" }}>
-                          {(
-                            getFinalPrice(item) *
-                            (Number(
-                              currentSelectedItem[item.purchaseOrderId+item.itemId]
-                                ? currentSelectedItem[item.purchaseOrderId+item.itemId]
-                                    .itemGstPercentage
-                                : getInventoryItemObjById(item.itemId).itemGstPercentage
-                            ) /
-                              100)
-                          ).toFixed(2)}
-                        </Typography>
-                      </CusTableCell>
-
-                      <CusTableCell align="center">
-                              <FormControl fullWidth sx={{ marginTop: "7px" }}>
-                                <NativeSelect
-                                  defaultValue={item.purchaseCategory}
-                                  disabled={!isSave[item.purchaseOrderId+item.itemId]}
-                                  inputProps={{
-                                    name: "status",
-                                    id: "uncontrolled-native",
-                                  }}
-                                  value={currentItemCategory[item.purchaseOrderId+item.itemId]}
-                                  onChange={(event) => {
-                                    const cat = {
-                                      ...currentItemCategory,
-                                      [item.purchaseOrderId+item.itemId]: event.target.value,
-                                    };
-                                    setCurrentItemCategory(cat);
-                                  }}
-                                  sx={{ fontSize: "0.75rem" }}
-                                >
-                                  {purchaseOrderCategory &&
-                                    purchaseOrderCategory.map((item) => (
-                                      <option
-                                        value={item.configCriteriaValue}
-                                        style={{ fontSize: "0.75rem" }}
-                                      >
-                                        {item.configCriteriaDesc}
-                                      </option>
-                                    ))}
-                                  <option value={""} style={{ fontSize: "0.75rem" }}>
-                                    Select Category
-                                  </option>
-                                </NativeSelect>
-                              </FormControl>
-                          </CusTableCell>
-                      
-
-
-
-                          <CusTableCell align="center" sx={{backgroundColor: item.purchaseOrderStatus === "SUBMITTED" ? "yellow": "lightGreen"}}>
-                            <FormControl fullWidth sx={{ marginTop: "5px"}}>
-                              <NativeSelect
-                                disabled={!isSave[item.purchaseOrderId+item.itemId]}
-                                defaultValue={item.purchaseOrderStatus}
-                                inputProps={{
-                                  name: "status",
-                                  id: "uncontrolled-native",
-                                  disableUnderline: true,
-                                }}
-                                onChange={(event) => {
-                                  setPOStatus({...poStatus, [item.purchaseOrderId+item.itemId]: event.target.value});
-                                }}
-                                sx={{
-                                  fontSize: "0.75rem",
-                                }}
-                              >
-                                {item.purchaseOrderStatus === "SUBMITTED" ? (
-                                  <option
-                                    value={"SUBMITTED"}
-                                    style={{ fontSize: "0.75rem" }}
-                                  >
-                                    SUBMITTED
-                                  </option>
-                                ) : null}
-                                {item.purchaseOrderStatus === "SUBMITTED" ? (
-                                  <option
-                                    value={"RECEIVED"}
-                                    style={{ fontSize: "0.75rem" }}
-                                  >
-                                    RECEIVED
-                                  </option>
-                                ) : null}
-                                {item.purchaseOrderStatus === "RECEIVED" ? (
-                                  <option
-                                    value={"RECEIVED"}
-                                    style={{ fontSize: "0.75rem" }}
-                                  >
-                                    RECEIVED
-                                  </option>
-                                ) : null}
-                                {item.purchaseOrderStatus === "RECEIVED" ? (
-                                  <option
-                                    value={"SUBMITTED"}
-                                    style={{ fontSize: "0.75rem" }}
-                                  >
-                                    SUBMITTED
-                                  </option>
-                                ) : null}
-
-                                {/* <option
-                                  value={"SUBMITTED"}
-                                  style={{ fontSize: "0.75rem" }}
-                                >
-                                  SUBMITTED
-                                </option>
-                                <option
-                                  value={"RECEIVED"}
-                                  style={{ fontSize: "0.75rem" }}
-                                >
-                                  RECEIVED
-                                </option> */}
-                              </NativeSelect>
-                            </FormControl>
-                          </CusTableCell>
-                          <CusTableCell align="center">
-                            {isSave[item.purchaseOrderId+item.itemId] ? (
-                              <IconButton
-                                sx={{
-                                  fontSize: "0.75rem",
-                                  color: "#92D050",
-                                }}
-                                onClick={() => {
-                                  /* savePurchaseOrderStatusToDB(
-                                    item.purchaseOrderId,
-                                    item
-                                  ); */
-                                  updateItemHandle(item);
-                                }}
-                              >
-                                <SaveIcon
-                                  sx={{
-                                    height: "0.95rem",
-                                    width: "0.95rem",
-                                  }}
-                                ></SaveIcon>
-                              </IconButton>
-                            ) : (
-                              <IconButton
-                                disabled={
-                                  item.purchaseOrderStatus === "RECEIVED"
-                                }
-                                sx={{
-                                  fontSize: "0.75rem",
-                                  color: "#FFC000",
-                                }}
-                                onClick={() => {
-                                  onEditClickHandle(item.purchaseOrderId+item.itemId);
-                                }}
-                              >
-                                <EditIcon
-                                  sx={{
-                                    height: "0.95rem",
-                                    width: "0.95rem",
-                                  }}
-                                ></EditIcon>
-                              </IconButton>
-                            )}
-                          </CusTableCell>
-                        </TableRow>
-                      ))}
+                    {/* <p>{filtered.length}</p> */}
+                    {renderTable()}
                     </>
+                    
                   ) : (
                     <TableRow>
                       <TableCell colSpan={15}>

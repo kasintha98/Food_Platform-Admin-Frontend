@@ -879,3 +879,91 @@ export const performInventoryUpdateEOD = (storeId, restaurantId) => {
     }
   };
 };
+
+export const returnSearchedList = (list, closedPurchaseOrders, selectedStoreObj, user, billNo, selectedSupplierObj, dateState, selectedSearchPOstatus, mList) => {
+  return async (dispatch) => {
+    try {
+      /* dispatch({ type: inventoryConstants.PERFORM_INV_UPDATE_EOD_REQUEST });
+
+      const res = await axios.get(
+        `/performInventoryUpdateEOD?restaurantId=${restaurantId}&storeId=${storeId}`
+      );
+      if (res.status === 200) {
+        dispatch({
+          type: inventoryConstants.PERFORM_INV_UPDATE_EOD_SUCCESS,
+          payload: res.data,
+        });
+        toast.success("Inventory EOD success!");
+        return true;
+      } else {
+        toast.error("Inventory EOD error!");
+        dispatch({
+          type: inventoryConstants.PERFORM_INV_UPDATE_EOD_FAILURE,
+          payload: [],
+        });
+      } */
+      let list = mList ? mList : closedPurchaseOrders;
+      let searched = [];
+      if (list) {
+        
+        if (selectedStoreObj) {
+          searched = list.filter(function (el) {
+            return (
+              selectedStoreObj.restaurantId === el.restaurantId &&
+              selectedStoreObj.storeId === el.storeId
+            );
+          });
+        }
+  
+        if(user.roleCategory !== "SUPER_ADMIN"){
+          searched = list.filter(function (el) {
+            return (
+              user.restaurantId === el.restaurantId &&
+              user.storeId === el.storeId
+            );
+          });
+        }
+  
+        if (billNo) {
+          searched = list.filter(function (el) {
+            return el.billNumber.toLowerCase().includes(billNo.toLowerCase());
+          });
+        }
+  
+        if (selectedSupplierObj) {
+          searched = list.filter(function (el) {
+            return selectedSupplierObj.supplierId === el.supplierId;
+          });
+        }
+  
+        if (dateState[0]) {
+          searched = list.filter(function (el) {
+            return (
+              dateState[0].startDate.getTime() <=
+                new Date(el.purchaseDate).getTime() &&
+              dateState[0].endDate.getTime() >=
+                new Date(el.purchaseDate).getTime()
+            );
+          });
+        }
+  
+        if(selectedSearchPOstatus){
+          searched = list.filter(function (el) {
+            return el.purchaseOrderStatus.toLowerCase() === selectedSearchPOstatus.toLowerCase();
+          });
+        }
+  
+     
+        //groupBypurchaseOrderId(searched);
+      }
+      return searched;
+
+    } catch (error) {
+      toast.error("Error");
+      /* dispatch({
+        type: inventoryConstants.PERFORM_INV_UPDATE_EOD_FAILURE,
+        payload: [],
+      }); */
+    }
+  };
+};

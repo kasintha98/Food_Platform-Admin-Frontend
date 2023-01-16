@@ -169,7 +169,7 @@ export const OrderDetailsTable = (props) => {
               >
                 {props.isBill ? <hr></hr> : null}
                 {props.isBill ? null : "Rs. "}{" "}
-                {props.fullResp.discountAmount.toFixed(2)}
+                {props.fullResp.discountAmount ? props.fullResp.discountAmount.toFixed(2) : "0.00"}
               </CusTableCell>
             </TableRow>
             <TableRow>
@@ -229,7 +229,7 @@ export const OrderDetailsTable = (props) => {
                 align="right"
               >
                 {props.isBill ? null : "Rs. "}{" "}
-                {props.fullResp.packagingCharges.toFixed(2)}
+                {props.fullResp.packagingCharges ? props.fullResp.packagingCharges.toFixed(2) : "0.00"}
               </CusTableCell>
             </TableRow>
             <TableRow
