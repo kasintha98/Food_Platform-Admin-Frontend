@@ -1,11 +1,24 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import NewLayout from "../NewLayout";
-import { Row } from "react-bootstrap";
-import { Typography, Box, Tab } from "@mui/material";
+import { Row, Col } from "react-bootstrap";
+import {  
+  Box, 
+  Tab,
+  Button,
+  FormControl,
+  InputLabel,
+  TextField,
+  Select,
+  MenuItem
+} from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import styled from "@emotion/styled";
 import { OrderTable } from "../../components/OrderTable";
+import { toast } from "react-toastify";
+import {
+  getCustomerOrders,
+} from "../../actions";
 
 const CusTab = styled(Tab)`
   /* font-size: 0.75rem;
@@ -31,13 +44,100 @@ const CusTabList = styled(TabList)`
   }
 `;
 
+const CusSelect = styled(Select)`
+  & .MuiSelect-select {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+`;
+
+const CusMenuItem = styled(MenuItem)``;
+
 export const NewOrders = () => {
   const allOrders = useSelector((state) => state.order.allOrders);
+  const businessDateAll = useSelector((state) => state.user.businessDate);
+  const stores = useSelector((state) => state.store.stores);
+  const user = useSelector((state) => state.auth.user);
   const [tabValue, setTabValue] = useState("ALL");
+  const [keywords, setKeywords] = useState("");
+  const [selectedStore, setSelectedStore] = useState(
+    user.roleCategory === "SUPER_ADMIN"
+      ? "ALL"
+      : stores?.find(
+          (el) =>
+            el.restaurantId === user.restaurantId && el.storeId === user.storeId
+        )?.resturantName
+  );
+  const [selectedStoreObj, setSelectedStoreObj] = useState({
+    restaurantId:
+      user.roleCategory === "SUPER_ADMIN" ? null : user.restaurantId,
+    storeId: user.roleCategory === "SUPER_ADMIN" ? null : user.storeId,
+  });
+  const [isReset, setIsReset] = useState(false);
+
+
+  const dispatch = useDispatch();
 
   const handleChangeTab = (event, newValue) => {
     setTabValue(newValue);
   };
+
+  const handleChangeKeywords = (event) => {
+    setKeywords(event.target.value);
+  };
+
+  useEffect(()=>{
+    const today = businessDateAll
+    ? new Date(businessDateAll.businessDate)
+    : new Date();
+    dispatch(
+      getCustomerOrders(
+        selectedStoreObj.restaurantId,
+        selectedStoreObj.storeId,
+        tabValue === "ALL" ? null : tabValue,
+        `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
+      )
+    );
+  },[tabValue, isReset, selectedStoreObj])
+
+  const handleIsReset = () => {
+    if (isReset) {
+      setIsReset(false);
+    } else {
+      setIsReset(true);
+    }
+  };
+
+  const searchOrder = () => {
+    const today = businessDateAll
+      ? new Date(businessDateAll.businessDate)
+      : new Date();
+    dispatch(
+      getCustomerOrders(
+        selectedStoreObj.restaurantId,
+        selectedStoreObj.storeId,
+        tabValue === "ALL" ? null : tabValue,
+        `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,
+        keywords
+      )
+    );
+  };
+
+  const resetSearch = () => {
+    setKeywords("");
+    handleIsReset();
+    toast.success("Reset Orders!");
+  };
+
+  const handleChangeStore = (event) => {
+    setSelectedStore(event.target.value);
+    console.log(event.target.value);
+  };
+
+  const handleSelectedStore = (store) => {
+    setSelectedStoreObj(store);
+  };
+
 
   return (
     <NewLayout sidebar headerTitle="Orders">
@@ -170,29 +270,102 @@ export const NewOrders = () => {
             />
           </CusTabList>
         </Box>
+        <div>
+        <div className="mb-3 mt-3">
+            <Row className="align-items-center">
+              <Col sm={6}>
+                <TextField
+                  label="Search Order By ID"
+                  variant="standard"
+                  value={keywords}
+                  onChange={handleChangeKeywords}
+                  className="mr-3"
+                />
+                <Button
+                  variant="contained"
+                  color="success"
+                  disabled={!keywords}
+                  onClick={searchOrder}
+                >
+                  Search
+                </Button>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={resetSearch}
+                  className="ml-3"
+                >
+                  Reset
+                </Button>
+              </Col>
+              <Col sm={6}>
+                <FormControl fullWidth>
+                  <InputLabel
+                    sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
+                    id="demo-simple-select-label"
+                  >
+                    Please select the store
+                  </InputLabel>
+
+                  <CusSelect
+                    sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={selectedStore}
+                    label="Please select the store"
+                    onChange={handleChangeStore}
+                    disabled={user.roleCategory !== "SUPER_ADMIN"}
+                  >
+                    <CusMenuItem
+                      onClick={() => {
+                        handleSelectedStore({
+                          restaurantId: null,
+                          storeId: null,
+                        });
+                      }}
+                      value={"ALL"}
+                    >
+                      All Stores
+                    </CusMenuItem>
+                    {stores.map((store) => (
+                      <CusMenuItem
+                        onClick={() => {
+                          handleSelectedStore(store);
+                        }}
+                        value={store.resturantName}
+                      >
+                        <span>{store.resturantName}</span>
+                      </CusMenuItem>
+                    ))}
+                  </CusSelect>
+                </FormControl>
+              </Col>
+            </Row>
+          </div>
+        </div>
         <CusTabPanel value="ALL">
-          <OrderTable type={null}></OrderTable>
+          <OrderTable type={null} hideTopBar={true} newOrderUI={true}></OrderTable>
         </CusTabPanel>
         <CusTabPanel value="SUBMITTED">
-          <OrderTable type="SUBMITTED"></OrderTable>
+          <OrderTable type="SUBMITTED" hideTopBar={true} newOrderUI={true}></OrderTable>
         </CusTabPanel>
         <CusTabPanel value="ACCEPTED">
-          <OrderTable type="ACCEPTED"></OrderTable>
+          <OrderTable type="ACCEPTED" hideTopBar={true} newOrderUI={true}></OrderTable>
         </CusTabPanel>
         <CusTabPanel value="PROCESSING">
-          <OrderTable type="PROCESSING"></OrderTable>
+          <OrderTable type="PROCESSING" hideTopBar={true} newOrderUI={true}></OrderTable>
         </CusTabPanel>
         <CusTabPanel value="FOOD READY">
-          <OrderTable type="FOOD READY"></OrderTable>
+          <OrderTable type="FOOD READY" hideTopBar={true} newOrderUI={true}></OrderTable>
         </CusTabPanel>
         <CusTabPanel value="OUT FOR DELIVERY">
-          <OrderTable type="OUT FOR DELIVERY"></OrderTable>
+          <OrderTable type="OUT FOR DELIVERY" hideTopBar={true} newOrderUI={true}></OrderTable>
         </CusTabPanel>
         <CusTabPanel value="DELIVERED">
-          <OrderTable type="DELIVERED"></OrderTable>
+          <OrderTable type="DELIVERED" hideTopBar={true} newOrderUI={true}></OrderTable>
         </CusTabPanel>
         <CusTabPanel value="CANCELLED">
-          <OrderTable type="CANCELLED"></OrderTable>
+          <OrderTable type="CANCELLED" hideTopBar={true} newOrderUI={true}></OrderTable>
         </CusTabPanel>
       </TabContext>
     </NewLayout>

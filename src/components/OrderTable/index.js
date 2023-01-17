@@ -112,31 +112,35 @@ export const OrderTable = (props) => {
     const today = businessDateAll
       ? new Date(businessDateAll.businessDate)
       : new Date();
-    if (props.isForOrderSource) {
-      dispatch(
-        getCustomerOrders(
-          selectedStoreObj.restaurantId,
-          selectedStoreObj.storeId,
-          null,
-          `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,
-          null,
-          null,
-          null,
-          null,
-          null,
-          props.type
-        )
-      );
-    } else {
-      dispatch(
-        getCustomerOrders(
-          selectedStoreObj.restaurantId,
-          selectedStoreObj.storeId,
-          props.type,
-          `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
-        )
-      );
-    }
+
+      if(!props.newOrderUI){
+        if (props.isForOrderSource) {
+          dispatch(
+            getCustomerOrders(
+              selectedStoreObj.restaurantId,
+              selectedStoreObj.storeId,
+              null,
+              `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,
+              null,
+              null,
+              null,
+              null,
+              null,
+              props.type
+            )
+          );
+        } else {
+          dispatch(
+            getCustomerOrders(
+              selectedStoreObj.restaurantId,
+              selectedStoreObj.storeId,
+              props.type,
+              `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
+            )
+          );
+        }
+      }
+    
   }, [props.type, isReset, selectedStoreObj]);
 
   const ref = React.createRef();
@@ -419,7 +423,7 @@ export const OrderTable = (props) => {
   return (
     <div>
       <div>
-        {!props.type ? (
+        {!props.type && !props.hideTopBar ? (
           <div className="mb-3">
             <Row className="align-items-center">
               <Col sm={6}>
