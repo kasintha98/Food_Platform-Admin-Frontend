@@ -141,12 +141,14 @@ const MyPaginate = styled(ReactPaginate)`
 export const RecipeConsumptionReport = (props) => {
   const stores = useSelector((state) => state.store.stores);
   const user = useSelector((state) => state.auth.user);
-  const itemConsumptionSummaryLoading = useSelector(
+  const itemConsumptionSummary = useSelector((state) => state.report.allReports? state.report.allReports.reportItemConsumptionSummary : []);
+  const itemConsumptionSummaryLoading = useSelector((state) => state.report.loading);
+  /* const itemConsumptionSummaryLoading = useSelector(
     (state) => state.inventory.itemConsumptionSummaryLoading
-  );
-  const itemConsumptionSummary = useSelector(
+  ); */
+  /* const itemConsumptionSummary = useSelector(
     (state) => state.inventory.itemConsumptionSummary
-  );
+  ); */
   /* const [selectedStore, setSelectedStore] = useState("");
   const [selectedStoreObj, setSelectedStoreObj] = useState(null); */
   /* const [itemsByStore, setItemsByStore] = useState([]); */
@@ -166,13 +168,13 @@ export const RecipeConsumptionReport = (props) => {
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (props.selectedStoreObj) {
-      dispatch(getItemConsumptionSummery(props.selectedStoreObj, "RECIPE"));
-    }
-  }, [props.selectedStoreObj, isRefresh]);
-
   /* useEffect(() => {
+    if (props.selectedStoreObj) {
+      dispatch(getItemConsumptionSummery(props.selectedStoreObj, "NON-RECIPE"));
+    }
+  }, [props.selectedStoreObj, isRefresh]); */
+
+  useEffect(() => {
     dispatch(
       getAllReports(
         props.restaurantId ? props.restaurantId : "ALL",
@@ -192,7 +194,7 @@ export const RecipeConsumptionReport = (props) => {
     props.startDate,
     props.endDate,
     props.selectedReport,
-  ]); */
+  ]);
 
   useEffect(() => {
     setPagination((prevState) => ({
@@ -472,32 +474,32 @@ export const RecipeConsumptionReport = (props) => {
                               </CusTableCell>
                               <CusTableCell align="center">
                                 <Typography sx={{ fontSize: "0.75rem" }}>
-                                  {item.poOpngQty}
+                                  {item.opngQty}
                                 </Typography>
                               </CusTableCell>
                               <CusTableCell align="center">
                                 <Typography sx={{ fontSize: "0.75rem" }}>
-                                  {item.poTodayQty}
+                                  {item.itemOrdered}
                                 </Typography>
                               </CusTableCell>
                               <CusTableCell align="center">
                                 <Typography sx={{ fontSize: "0.75rem" }}>
-                                  {item.poWastageQty}
+                                  {item.itemWasted}
                                 </Typography>
                               </CusTableCell>
                               <CusTableCell align="center">
                                 <Typography sx={{ fontSize: "0.75rem" }}>
-                                  {item.poNetQty}
+                                  {}
                                 </Typography>
                               </CusTableCell>
                               <CusTableCell align="center">
                                 <Typography sx={{ fontSize: "0.75rem" }}>
-                                  {item.itemCurrConsumptionQty}
+                                  {item.itemConsumed}
                                 </Typography>
                               </CusTableCell>
                               <CusTableCell align="center">
                                 <Typography sx={{ fontSize: "0.75rem" }}>
-                                  <CusTextField
+                                  {/* <CusTextField
                                     defaultValue={item.itemEodConsumptionQty}
                                     value={
                                       currentItemEodConsumptionQty[item.id]
@@ -512,29 +514,27 @@ export const RecipeConsumptionReport = (props) => {
                                     }}
                                     fullWidth
                                     variant="standard"
-                                    /* disabled={!isSave[item.id]} */
                                     InputProps={{
                                       disableUnderline: true, // <== added this
                                     }}
-                                  />
-                                  {/* {item.itemEodConsumptionQty} */}
+                                  /> */}
+                                  {item.eodQty}
                                 </Typography>
                               </CusTableCell>
                               <CusTableCell align="center">
                                 <Typography sx={{ fontSize: "0.75rem" }}>
-                                  {/* {item.itemConsumptionVarianceQty} */}
-
-                                  {getVariance(item)}
+                                  {item.itemVariance}
+                                  {/* {getVariance(item)} */}
                                 </Typography>
                               </CusTableCell>
                               <CusTableCell align="center">
                                 <Typography sx={{ fontSize: "0.75rem" }}>
-                                  Rs. {item.itemConsumptionAmount}
+                                  Rs. {item.itemAmount}
                                 </Typography>
                               </CusTableCell>
                               <CusTableCell align="center">
                                 <Typography sx={{ fontSize: "0.75rem" }}>
-                                  <CusTextField
+                                  {/* <CusTextField
                                     defaultValue={item.remarks}
                                     value={currentRemarks[item.id]}
                                     onChange={(event) => {
@@ -547,12 +547,11 @@ export const RecipeConsumptionReport = (props) => {
                                     }}
                                     fullWidth
                                     variant="standard"
-                                    /* disabled={!isSave[item.id]} */
                                     InputProps={{
                                       disableUnderline: true, // <== added this
                                     }}
-                                  />
-                                  {/* {item.remarks} */}
+                                  /> */}
+                                  {item.remarks}
                                 </Typography>
                               </CusTableCell>
                               <CusTableCell
@@ -655,7 +654,7 @@ export const RecipeConsumptionReport = (props) => {
       </div>
       <div className="text-center mt-4">
         <Row>
-          <Col sm={2} style={{ textAlign: "end" }}>
+          <Col sm={4} style={{ textAlign: "end" }}>
             {/* <SaveButton
               onClick={() => {
                 handleEODBtn();
@@ -664,7 +663,7 @@ export const RecipeConsumptionReport = (props) => {
               INVENTORY EOD
             </SaveButton> */}
           </Col>
-          <Col sm={4} style={{ textAlign: "end" }}>
+          <Col sm={4} style={{ textAlign: "center" }}>
             <ExcelFile
               element={<SaveButton>DOWNLOAD</SaveButton>}
               filename="Item Consumption Summary"
@@ -709,10 +708,10 @@ export const RecipeConsumptionReport = (props) => {
               </ExcelSheet>
             </ExcelFile>
           </Col>
-          <Col sm={4} style={{ textAlign: "start" }}>
+          {/* <Col sm={4} style={{ textAlign: "start" }}>
             <SaveButton onClick={saveAllChangedList}>SAVE</SaveButton>
-          </Col>
-          <Col sm={2} style={{ textAlign: "end" }}>
+          </Col> */}
+          <Col sm={4} style={{ textAlign: "end" }}>
           </Col>
         </Row>
       </div>
