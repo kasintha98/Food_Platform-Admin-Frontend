@@ -30,6 +30,8 @@ import { SalesSummeryByDateListReport } from "../../components/SalesSummeryByDat
 import { SalesSummeryByDishType } from "../../components/SalesSummeryByDishType";
 import { SalesSummeryByOrderSourceReport } from "../../components/SalesSummeryByOrderSourceReport";
 import { SalesSummeryByPaymentMode } from "../../components/SalesSummeryByPaymentMode";
+import { RecipeConsumptionReport } from "../../components/RecipeConsumptionReport";
+import { NonRecipeConsumptionReport } from "../../components/NonRecipeConsumptionReport";
 
 const CusDDT = styled(Dropdown.Toggle)`
   font-weight: 500;
@@ -306,6 +308,22 @@ export const NewReports = () => {
                           <span>{type.configCriteriaDesc}</span>
                         </CusMenuItem>
                       ))}
+                      <CusMenuItem
+                          value={"ITEM_CONSUMPTION_SUMMARY_RECIPE"}
+                          onClick={() => {
+                            /* handleReportTyeObj(type); */
+                          }}
+                        >
+                          <span>Recipe Consumption Report</span>
+                        </CusMenuItem>
+                        <CusMenuItem
+                          value={"ITEM_CONSUMPTION_SUMMARY_NONRECIPE"}
+                          onClick={() => {
+                            /* handleReportTyeObj(type); */
+                          }}
+                        >
+                          <span>Non-Recipe Consumption Report</span>
+                        </CusMenuItem>
                     </CusSelect>
                   </FormControl>
                 </Col>
@@ -402,6 +420,28 @@ export const NewReports = () => {
               restaurantId={selectedStoreObj.restaurantId}
               selectedReport={selectedReport}
             ></SalesSummeryByPaymentMode>
+          )}
+
+          {selectedReport === "ITEM_CONSUMPTION_SUMMARY_RECIPE" && (
+            <RecipeConsumptionReport
+              startDate={dateState[0].startDate}
+              endDate={dateState[0].endDate}
+              storeId={selectedStoreObj.storeId}
+              restaurantId={selectedStoreObj.restaurantId}
+              selectedReport={selectedReport}
+              selectedStoreObj={selectedStoreObj}
+            ></RecipeConsumptionReport>
+          )}
+
+          {selectedReport === "ITEM_CONSUMPTION_SUMMARY_NONRECIPE" && (
+            <NonRecipeConsumptionReport
+              startDate={dateState[0].startDate}
+              endDate={dateState[0].endDate}
+              storeId={selectedStoreObj.storeId}
+              restaurantId={selectedStoreObj.restaurantId}
+              selectedReport={selectedReport}
+              selectedStoreObj={selectedStoreObj}
+            ></NonRecipeConsumptionReport>
           )}
 
           {selectedReport === "CONSUMPTION REPORT" && (
