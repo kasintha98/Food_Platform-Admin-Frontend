@@ -162,7 +162,7 @@ export const RecipeConsumptionReport = (props) => {
     offset: 0,
     numberPerPage: 10,
     pageCount: 0,
-    currentData: itemConsumptionSummary.slice(0, 10),
+    currentData: itemConsumptionSummary ? itemConsumptionSummary.slice(0, 10) : [],
   });
   const [updatedItemList, setUpdatedItemList] = useState([]);
 
@@ -314,7 +314,7 @@ export const RecipeConsumptionReport = (props) => {
                 <CusTableCell1 align="center">NO</CusTableCell1>
                 <CusTableCell1 align="center">ITEM NO</CusTableCell1>
                 <CusTableCell1 align="center">ITEM NAME</CusTableCell1>
-                <CusTableCell1 align="center">UOM</CusTableCell1>
+                {/* <CusTableCell1 align="center">UOM</CusTableCell1> */}
                 <CusTableCell1 align="center">SOD INV.</CusTableCell1>
                 <CusTableCell1 align="center">DAILY INV.</CusTableCell1>
                 <CusTableCell1 align="center">WASTAGE</CusTableCell1>
@@ -323,16 +323,16 @@ export const RecipeConsumptionReport = (props) => {
                 <CusTableCell1 align="center">EOD INV.</CusTableCell1>
                 <CusTableCell1 align="center">VARIANCE</CusTableCell1>
                 <CusTableCell1 align="center">AMOUNT</CusTableCell1>
-                <CusTableCell1 align="center">
+                {/* <CusTableCell1 align="center">
                   COMMENTS FOR VARIANCE
-                </CusTableCell1>
+                </CusTableCell1> */}
                 <CusTableCell1 align="center">STATUS</CusTableCell1>
                 {/* <CusTableCell1 align="center">ACTION</CusTableCell1> */}
               </TableRow>
             </TableHead>
             <TableBody>
               <TableRow>
-                <CusTableCell align="center" colSpan={4}>
+                <CusTableCell align="center" colSpan={3}>
                   <Typography
                     sx={{ fontSize: "0.75rem", color: "red" }}
                   ></Typography>
@@ -384,7 +384,7 @@ export const RecipeConsumptionReport = (props) => {
                 </CusTableCell>
               </TableRow>
               <TableRow>
-                <CusTableCell align="center" colSpan={4}>
+                <CusTableCell align="center" colSpan={3}>
                   <Typography
                     sx={{ fontSize: "0.75rem", color: "red" }}
                   ></Typography>
@@ -424,7 +424,7 @@ export const RecipeConsumptionReport = (props) => {
                     VARIANCE = (E + D) - T
                   </Typography>
                 </CusTableCell>
-                <CusTableCell align="center" colSpan={4}>
+                <CusTableCell align="center" colSpan={3}>
                   <Typography
                     sx={{ fontSize: "0.75rem", color: "red" }}
                   ></Typography>
@@ -467,11 +467,11 @@ export const RecipeConsumptionReport = (props) => {
                                   {item.itemName}
                                 </Typography>
                               </CusTableCell>
-                              <CusTableCell align="center">
+                              {/* <CusTableCell align="center">
                                 <Typography sx={{ fontSize: "0.75rem" }}>
                                   {item.itemUom}
                                 </Typography>
-                              </CusTableCell>
+                              </CusTableCell> */}
                               <CusTableCell align="center">
                                 <Typography sx={{ fontSize: "0.75rem" }}>
                                   {item.opngQty}
@@ -532,9 +532,9 @@ export const RecipeConsumptionReport = (props) => {
                                   Rs. {item.itemAmount}
                                 </Typography>
                               </CusTableCell>
-                              <CusTableCell align="center">
+                              {/* <CusTableCell align="center">
                                 <Typography sx={{ fontSize: "0.75rem" }}>
-                                  {/* <CusTextField
+                                  <CusTextField
                                     defaultValue={item.remarks}
                                     value={currentRemarks[item.id]}
                                     onChange={(event) => {
@@ -550,10 +550,10 @@ export const RecipeConsumptionReport = (props) => {
                                     InputProps={{
                                       disableUnderline: true, // <== added this
                                     }}
-                                  /> */}
+                                  />
                                   {item.remarks}
                                 </Typography>
-                              </CusTableCell>
+                              </CusTableCell> */}
                               <CusTableCell
                                 align="center"
                                 sx={{
