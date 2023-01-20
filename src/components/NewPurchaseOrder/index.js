@@ -138,6 +138,9 @@ const CusTextField = styled(TextField)`
 & input{
   font-size: 0.75rem;
   padding: 0.25rem;
+  text-align: center;
+  font-family: 'Roboto';
+  color: #000;
 }
  }
 
@@ -146,11 +149,16 @@ const CusTextField = styled(TextField)`
   }
 `;
 
+// const CusTableCell = styled(TableCell)`
+//   padding: 0;
+//   font-size: 14px;
+//   border: 1px solid #000;
+// `;
 const CusTableCell = styled(TableCell)`
   padding: 0;
   font-size: 14px;
-  border: 1px solid #000;
 `;
+
 
 export const NewPurchaseOrder = () => {
   const stores = useSelector((state) => state.store.stores);
@@ -611,10 +619,10 @@ export const NewPurchaseOrder = () => {
                   DISCOUNT
                 </CusTableCell1>
                 <CusTableCell1 align="center" sx={{ maxWidth: "115px" }}>
-                  FINAL PURCHASE PRICE
+                  FINAL PRICE
                 </CusTableCell1>
                 <CusTableCell1 align="center" sx={{ maxWidth: "60px" }}>
-                  TOTAL STOCK
+                  STOCK
                 </CusTableCell1>
                 <CusTableCell1 align="center" sx={{ maxWidth: "80px" }}>
                   GST%
@@ -846,6 +854,7 @@ export const NewPurchaseOrder = () => {
                         <CusTableCell align="center" sx={{ maxWidth: "80px" }}>
                           <FormControl fullWidth sx={{ marginTop: "7px" }}>
                             <NativeSelect
+                            disableUnderline
                               defaultValue={item.itemCategory}
                               disabled={!isSave[item.itemId]}
                               inputProps={{

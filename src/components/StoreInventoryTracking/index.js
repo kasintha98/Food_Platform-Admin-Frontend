@@ -69,6 +69,9 @@ const CusTextField = styled(TextField)`
 & input{
   font-size: 0.75rem;
   padding: 0.25rem;
+  text-align: center;
+  font-family: 'Roboto';
+  color: #000;
 }
  }
 
@@ -86,10 +89,15 @@ const CusTableCell1 = styled(TableCell)`
   padding-bottom: 0;
 `;
 
+// const CusTableCell = styled(TableCell)`
+//   padding: 0;
+//   font-size: 14px;
+//   border: 1px solid #000;
+// `;
+
 const CusTableCell = styled(TableCell)`
   padding: 0;
   font-size: 14px;
-  border: 1px solid #000;
 `;
 
 const SaveButton = styled(Button)`
