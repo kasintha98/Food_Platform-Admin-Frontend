@@ -141,7 +141,7 @@ const MyPaginate = styled(ReactPaginate)`
 export const RecipeConsumptionReport = (props) => {
   const stores = useSelector((state) => state.store.stores);
   const user = useSelector((state) => state.auth.user);
-  const itemConsumptionSummary = useSelector((state) => state.report.allReports? state.report.allReports.reportItemConsumptionSummary : []);
+  const itemConsumptionSummary = useSelector((state) => state.report.allReports && state.report.allReports.reportItemConsumptionSummary ? state.report.allReports.reportItemConsumptionSummary : []);
   const itemConsumptionSummaryLoading = useSelector((state) => state.report.loading);
   /* const itemConsumptionSummaryLoading = useSelector(
     (state) => state.inventory.itemConsumptionSummaryLoading
@@ -448,7 +448,7 @@ export const RecipeConsumptionReport = (props) => {
                 <>
                   {props.selectedStoreObj ? (
                     <>
-                      {itemConsumptionSummary.length > 0 ? (
+                      {itemConsumptionSummary && itemConsumptionSummary.length > 0 ? (
                         <>
                           {itemConsumptionSummary.map((item, index) => (
                             <TableRow key={item.id}>
