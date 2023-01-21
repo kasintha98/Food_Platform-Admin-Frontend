@@ -19,6 +19,8 @@ const initState = {
   allDishesFromMaster: [],
   masterProducts: [],
   pageLoading: false,
+  allOffersLoading: false,
+  allOffers: []
 };
 
 export default (state = initState, action) => {
@@ -264,6 +266,30 @@ export default (state = initState, action) => {
       state = {
         ...state,
         masterProducts: action.payload,
+      };
+      break;
+
+
+
+
+      case productConstants.GET_ALL_OFFERS_REQUEST:
+      state = {
+        ...state,
+        allOffersLoading: true
+      };
+      break;
+    case productConstants.GET_ALL_OFFERS_SUCCESS:
+      state = {
+        ...state,
+        allOffers: action.payload,
+        allOffersLoading: false
+      };
+      break;
+    case productConstants.GET_ALL_OFFERS_FAILURE:
+      state = {
+        ...state,
+        allOffers: [],
+        allOffersLoading: false
       };
       break;
   }

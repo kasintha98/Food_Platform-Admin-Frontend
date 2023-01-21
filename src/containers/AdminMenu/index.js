@@ -10,6 +10,7 @@ import { ToppingMaster } from "../../components/ToppingMaster";
 import { AddToppingToDish } from "../../components/AddToppingToDish";
 import { MenuMasterNew } from "../../components/MenuMasterNew";
 import { ProductMappingMaster } from "../../components/ProductMappingMaster";
+import { Offers } from "../../components/Offers";
 
 export const AdminMenu = () => {
   const [tabValue, setTabValue] = React.useState("1");
@@ -29,6 +30,7 @@ export const AdminMenu = () => {
             <Tab label="TOPPING MASTER" value="2" />
             <Tab label="ADD TOPPINGS TO DISH" value="3" />
             <Tab label="PRODUCT MAPPING MASTER" value="4" />
+            <Tab label="OFFERS" value="5" />
           </TabList>
         </Box>
         <TabPanel value="1">
@@ -42,6 +44,9 @@ export const AdminMenu = () => {
         </TabPanel>
         <TabPanel value="4">
           <ProductMappingMaster></ProductMappingMaster>
+        </TabPanel>
+        <TabPanel value="5">
+          <Offers></Offers>
         </TabPanel>
       </TabContext>
     </Layout>
