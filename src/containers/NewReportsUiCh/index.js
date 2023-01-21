@@ -308,22 +308,6 @@ export const NewReports = () => {
                           <span>{type.configCriteriaDesc}</span>
                         </CusMenuItem>
                       ))}
-                      <CusMenuItem
-                          value={"ITEM_CONSUMPTION_SUMMARY_RECIPE"}
-                          onClick={() => {
-                            /* handleReportTyeObj(type); */
-                          }}
-                        >
-                          <span>Recipe Consumption Report</span>
-                        </CusMenuItem>
-                        <CusMenuItem
-                          value={"ITEM_CONSUMPTION_SUMMARY_NONRECIPE"}
-                          onClick={() => {
-                            /* handleReportTyeObj(type); */
-                          }}
-                        >
-                          <span>Non-Recipe Consumption Report</span>
-                        </CusMenuItem>
                     </CusSelect>
                   </FormControl>
                 </Col>
