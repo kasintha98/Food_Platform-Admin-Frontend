@@ -37,6 +37,7 @@ const MyPaginate = styled(ReactPaginate)`
   flex-direction: row;
   justify-content: space-between;
   list-style-type: none;
+  width: 70%;
   padding: 0 5rem;
   li a {
     border-radius: 7px;
@@ -83,10 +84,15 @@ const SaveButton = styled(Button)`
   }
 `;
 
+// const CusTableCell = styled(TableCell)`
+//   padding: 0;
+//   font-size: 14px;
+//   border: 1px solid #000;
+// `;
+
 const CusTableCell = styled(TableCell)`
   padding: 0;
   font-size: 14px;
-  border: 1px solid #000;
 `;
 
 const CusTextField = styled(TextField)`
@@ -110,12 +116,42 @@ const CusTextField = styled(TextField)`
 & input{
   font-size: 0.75rem;
   padding: 0.25rem;
+  text-align: center;
+  font-family: 'Roboto';
+  color: #000;
 }
  }
 
  & .MuiInputBase-input.Mui-disabled {
     -webkit-text-fill-color:  #404040;
   }
+`;
+
+const CusTextFieldSearch = styled(TextField)`
+ & label {
+  font-size: 0.75rem;
+  top: -11px;
+}
+
+& .Mui-focused{
+  top: 0px !important;
+}
+
+& fieldset{
+  font-size: 0.75rem;
+}
+
+& .MuiFormLabel-filled{
+  top: 0px !important;
+}
+
+& input{
+  font-size: 0.75rem;
+  padding: 0.25rem;
+  font-family: 'Roboto';
+  color: #000;
+}
+ }
 `;
 
 const CuTypography = styled(Typography)`
@@ -169,9 +205,9 @@ export const InventoryItemMaster = () => {
   const [pagination, setPagination] = useState({
     data: activeInventory,
     offset: 0,
-    numberPerPage: 10,
+    numberPerPage: 20,
     pageCount: 0,
-    currentData: activeInventory.slice(0, 10),
+    currentData: activeInventory.slice(0, 20),
   });
   const [searchedAllActiveInventory, setSearchedAllActiveInventory] = useState([]);
 
@@ -311,6 +347,19 @@ export const InventoryItemMaster = () => {
     setNewTrackingFlag("");
   };
 
+  const columns = [
+    { id: 'no', label: '#', minWidth: 30, align: 'center' },
+    { id: 'item_no', label: 'ITEM NO', minWidth:30, align: 'center'},
+    { id: 'item_name', label: 'ITEM NAME', minWidth: 200, align: 'center'},
+    { id: 'category', label: 'CATEGORY', minWidth: 100, align: 'center'},
+    { id: 'sub_category', label: 'SUB CATEGORY', minWidth: 100, align: 'center'},
+    { id: 'uom', label: 'UOM', minWidth: 80, align: 'center' },
+    { id: 'gst', label: 'GST', minWidth: 80, align: 'center' },
+    { id: 'cost', label: 'COST', minWidth: 80, align: 'center' },
+    { id: 'track', label: 'TRACK', minWidth: 100, align: 'center' },
+    { id: 'action', label: 'ACTION', minWidth: 50, align: 'center'},
+  ];
+
   return (
     <div>
        <Row>
@@ -320,7 +369,7 @@ export const InventoryItemMaster = () => {
                 <CuTypography>Search By Name :</CuTypography>
               </div>
               <div style={{ width: "100%" }}>
-                <CusTextField
+                <CusTextFieldSearch
                   value={keywords}
                   onChange={(event) => {
                     setKeywords(event.target.value);
@@ -333,7 +382,7 @@ export const InventoryItemMaster = () => {
         </Col>
       </Row>
       <TableContainer component={Paper} sx={{ maxHeight: 480 }}>
-        <Table sx={{ minWidth: 800 }} aria-label="simple table">
+        {/* <Table sx={{ minWidth: 800 }} aria-label="simple table">
           <TableHead>
             <TableRow>
               <CusTableCell1 align="center">NO</CusTableCell1>
@@ -345,11 +394,28 @@ export const InventoryItemMaster = () => {
               <CusTableCell1 align="center">GST</CusTableCell1>
               <CusTableCell1 align="center">COST</CusTableCell1>
               <CusTableCell1 align="center" sx={{ width: "20px" }}>
-                TRACK<br></br>(YES /NO)
+                TRACK
               </CusTableCell1>
               <CusTableCell1 align="center">ACTION</CusTableCell1>
             </TableRow>
+          </TableHead> */}
+
+        <Table stickyHeader aria-label="sticky table">
+          <TableHead>
+              <TableRow>
+                {columns.map((column) => (
+                  <CusTableCell1
+                    key={column.id}
+                    align={column.align}
+                    style={{ minWidth: column.minWidth,
+                    lineHeight:"1.4rem" }}
+                  >
+                    {column.label}
+                  </CusTableCell1>
+                ))}
+              </TableRow>
           </TableHead>
+
           <TableBody>
             {activeInventoryLoading ? (
               <TableRow>
@@ -420,6 +486,7 @@ export const InventoryItemMaster = () => {
                           <CusTableCell align="center">
                             <FormControl fullWidth sx={{ marginTop: "5px" }}>
                               <NativeSelect
+                               disableUnderline
                                 key={item.itemId}
                                 defaultValue={item.itemCategory}
                                 inputProps={{
@@ -453,6 +520,7 @@ export const InventoryItemMaster = () => {
                           <CusTableCell align="center">
                             <FormControl fullWidth sx={{ marginTop: "5px" }}>
                               <NativeSelect
+                                disableUnderline
                                 key={item.itemId}
                                 defaultValue={item.itemSubCategory}
                                 inputProps={{
@@ -486,6 +554,7 @@ export const InventoryItemMaster = () => {
                           <CusTableCell align="center">
                             <FormControl fullWidth sx={{ marginTop: "5px" }}>
                               <NativeSelect
+                              disableUnderline
                                 key={item.itemId}
                                 defaultValue={item.itemUom}
                                 inputProps={{
@@ -562,6 +631,7 @@ export const InventoryItemMaster = () => {
                           <CusTableCell align="center">
                             <FormControl fullWidth sx={{ marginTop: "5px" }}>
                               <NativeSelect
+                              disableUnderline
                                 key={item.itemId}
                                 defaultValue={item.itemTrackingFlag}
                                 inputProps={{
@@ -864,7 +934,10 @@ export const InventoryItemMaster = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <SaveButton
+      <div style={{ display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between'}}>
+      <SaveButton style={{height: '62%'}}
         className="mt-4"
         onClick={
           /* handleShowAdd */ () => {
@@ -886,6 +959,7 @@ export const InventoryItemMaster = () => {
         containerClassName={"pagination"}
         activeClassName={"active"}
       />
+      </div>
     </div>
   );
 };

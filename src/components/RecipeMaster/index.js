@@ -111,10 +111,15 @@ const SaveButton = styled(Button)`
   }
 `;
 
+// const CusTableCell = styled(TableCell)`
+//   padding: 0;
+//   font-size: 14px;
+//   border: 1px solid #000;
+// `;
+
 const CusTableCell = styled(TableCell)`
   padding: 0;
-  font-size: 14px;
-  border: 1px solid #000;
+  font-size: 0.75rem;
 `;
 
 const CusTextField = styled(TextField)`
@@ -183,9 +188,9 @@ export const RecipeMaster = () => {
   const [pagination, setPagination] = useState({
     data: productListMaster,
     offset: 0,
-    numberPerPage: 10,
+    numberPerPage: 20,
     pageCount: 0,
-    currentData: productListMaster.slice(0, 10),
+    currentData: productListMaster.slice(0, 20),
   });
   const [showAdd, setShowAdd] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
@@ -839,19 +844,45 @@ export const RecipeMaster = () => {
     );
   };
 
+
+  const columns = [
+    { id: 'restro', label: 'RESTAURANT', minWidth:80, align: 'center'},
+    { id: 'prod_id', label: 'PRODUCT ID', minWidth: 120, align: 'center'},
+    { id: 'dish', label: 'DISH NAME', minWidth: 150, align: 'center'},
+    { id: 'cost', label: 'COST', minWidth: 150, align: 'center' },
+    { id: 'recipe', label: 'RECIPE', minWidth: 500, align: 'center' },
+    { id: 'action', label: 'ACTION', minWidth: 50, align: 'center'},
+  ];
+
   return (
     <div>
       <TableContainer component={Paper} sx={{ maxHeight: 430 }}>
-        <Table sx={{ minWidth: 800 }} aria-label="simple table">
+        {/* <Table sx={{ minWidth: 800 }} aria-label="simple table">
           <TableHead>
             <TableRow>
               <CusTableCell1 align="center">RESTAURANT</CusTableCell1>
-              <CusTableCell1 align="center">PRODUCT ID</CusTableCell1>
+              <CusTableCell1 align="center" sx={{ width: "150px" }}>PRODUCT ID</CusTableCell1>
               <CusTableCell1 align="center">DISH NAME</CusTableCell1>
-              <CusTableCell1 align="center">MENU COST</CusTableCell1>
+              <CusTableCell1 align="center"  sx={{ width: "150px" }}>COST</CusTableCell1>
               <CusTableCell1 align="center">RECIPE</CusTableCell1>
               <CusTableCell1 align="center">ACTION</CusTableCell1>
             </TableRow>
+          </TableHead> */}
+
+    <Table sx={{ minWidth: 800 }} stickyHeader aria-label="sticky table">
+          <TableHead>
+              <TableRow>
+                {columns.map((column) => (
+                  <CusTableCell1
+                    key={column.id}
+                    align={column.align}
+                    style={{ minWidth: column.minWidth,
+                    lineHeight:"1.4rem" }}
+                  >
+                    {column.label}
+                  </CusTableCell1>
+                ))}
+              </TableRow>
           </TableHead>
           <TableBody>
             {productListLoading ||

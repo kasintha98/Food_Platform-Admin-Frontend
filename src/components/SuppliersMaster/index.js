@@ -33,6 +33,11 @@ import {
 import ReactPaginate from "react-paginate";
 import { useSelector, useDispatch } from "react-redux";
 
+//---Import added-----
+import TextareaAutosize from '@mui/material/TextareaAutosize';
+
+//----------
+
 const CusSelect = styled(Select)`
   & .MuiSelect-select {
     padding-top: 5px;
@@ -69,10 +74,15 @@ const SaveButton = styled(Button)`
   }
 `;
 
+// const CusTableCell = styled(TableCell)`
+//   padding: 0;
+//   font-size: 14px;
+//   border: 1px solid #000;
+// `;
+
 const CusTableCell = styled(TableCell)`
   padding: 0;
   font-size: 14px;
-  border: 1px solid #000;
 `;
 
 const CusTextField = styled(TextField)`
@@ -87,6 +97,7 @@ const CusTextField = styled(TextField)`
 
 & fieldset{
   font-size: 0.75rem;
+  color: #000;
 }
 
 & .MuiFormLabel-filled{
@@ -96,13 +107,58 @@ const CusTextField = styled(TextField)`
 & input{
   font-size: 0.75rem;
   padding: 0.25rem;
+  text-align: center;
+  font-family: 'Roboto';
+  color: #000;
 }
  }
 
  & .MuiInputBase-input.Mui-disabled {
-    -webkit-text-fill-color:  #404040;
+    -webkit-text-fill-color:  #000;
   }
 `;
+
+//-----Added Custom -------
+const CusTextFieldSearch = styled(TextField)`
+ & label {
+  font-size: 0.75rem;
+  top: -11px;
+}
+
+& .Mui-focused{
+  top: 0px !important;
+}
+
+& fieldset{
+  font-size: 0.75rem;
+  color: #000;
+}
+
+& .MuiFormLabel-filled{
+  top: 0px !important;
+}
+
+& input{
+  font-size: 0.75rem;
+  padding: 0.25rem;
+  font-family: 'Roboto';
+  color: #000;
+}
+ }
+`;
+
+const CusTextareaAutosize = styled(TextareaAutosize)`
+  border: none;
+  background-color: transparent;
+  resize: none;
+  outline: none;
+  text-align: center;
+  font-family: 'Roboto';
+  font-size: 0.75rem;
+  color: #000;
+`;
+
+//----------------
 
 const CuTypography = styled(Typography)`
   color: #7f7f7f;
@@ -118,6 +174,7 @@ const MyPaginate = styled(ReactPaginate)`
   flex-direction: row;
   justify-content: space-between;
   list-style-type: none;
+  width: 70%;
   padding: 0 5rem;
   li a {
     border-radius: 7px;
@@ -188,9 +245,9 @@ export const SuppliersMaster = () => {
   const [pagination, setPagination] = useState({
     data: allSuppliers,
     offset: 0,
-    numberPerPage: 10,
+    numberPerPage: 20,
     pageCount: 0,
-    currentData: allSuppliers.slice(0, 10),
+    currentData: allSuppliers.slice(0, 20),
   });
 
   const dispatch = useDispatch();
@@ -570,6 +627,21 @@ export const SuppliersMaster = () => {
     );
   };
 
+  const columns = [
+    { id: 'no', label: '#', minWidth: 30, align: 'center' },
+    { id: 'category', label: 'CATEGORY', minWidth: 100, align: 'center'},
+    { id: 'storename', label: 'STORE NAME', minWidth: 110, align: 'center'},
+    { id: 'name', label: 'NAME', minWidth: 160, align: 'center'},
+    { id: 'address', label: 'ADDRESS', minWidth: 160, align: 'center'},
+    { id: 'city', label: 'CITY', minWidth: 150, align: 'center' },
+    { id: 'state', label: 'STATE', minWidth: 150, align: 'center' },
+    { id: 'pin', label: 'PIN', minWidth: 100, align: 'center' },
+    { id: 'contact', label: 'PHONE', minWidth: 100, align: 'center' },
+    { id: 'email', label: 'EMAIL', minWidth: 200, align: 'center' },
+    { id: 'gst', label: 'GST#', minWidth: 100, align: 'center' },
+    { id: 'action', label: 'ACTION', minWidth: 50, align: 'center'},
+  ];
+
   return (
     <div>
       <Row>
@@ -579,7 +651,7 @@ export const SuppliersMaster = () => {
                 <CuTypography>Search By Name :</CuTypography>
               </div>
               <div style={{ width: "100%" }}>
-                <CusTextField
+                <CusTextFieldSearch 
                   value={keywords}
                   onChange={(event) => {
                     setKeywords(event.target.value);
@@ -591,7 +663,7 @@ export const SuppliersMaster = () => {
             </div>
         </Col>
       </Row>
-      <TableContainer component={Paper} sx={{ maxHeight: 430 }}>
+      {/* <TableContainer component={Paper} sx={{ maxHeight: 470 }}>
         <Table sx={{ minWidth: 800 }} aria-label="simple table">
           <TableHead>
             <TableRow>
@@ -604,14 +676,32 @@ export const SuppliersMaster = () => {
               <CusTableCell1 align="center">STATE</CusTableCell1>
               <CusTableCell1 align="center">PIN CODE</CusTableCell1>
               <CusTableCell1 align="center">PHONE NO</CusTableCell1>
-              <CusTableCell1 align="center">E-MAIL</CusTableCell1>
-              {/*  <CusTableCell1 align="center">FAX NO</CusTableCell1> */}
-              <CusTableCell1 align="center">GST NO</CusTableCell1>
-              {/*  <CusTableCell1 align="center">TAX NO</CusTableCell1> */}
-              {/* <CusTableCell1 align="center">STATUS</CusTableCell1> */}
-              <CusTableCell1 align="center">ACTION</CusTableCell1>
+              <CusTableCell1 align="center">E-MAIL</CusTableCell1> */}
+              {/*  <CusTableCell1 align="center">FAX NO</CusTableCell1> ----- */}
+              {/* <CusTableCell1 align="center">GST NO</CusTableCell1> */}
+              {/*  <CusTableCell1 align="center">TAX NO</CusTableCell1> -----*/}
+              {/* <CusTableCell1 align="center">STATUS</CusTableCell1> ----- */}
+              {/* <CusTableCell1 align="center">ACTION</CusTableCell1>
+            </TableRow>
+          </TableHead> */}
+
+        <TableContainer component={Paper} sx={{ maxHeight: 480 }}>
+        <Table sx={{ minWidth: 800 }} stickyHeader aria-label="sticky table">
+        <TableHead>
+            <TableRow>
+              {columns.map((column) => (
+                <CusTableCell1
+                  key={column.id}
+                  align={column.align}
+                  style={{ minWidth: column.minWidth,
+                  lineHeight:"1.4rem" }}
+                >
+                  {column.label}
+                </CusTableCell1>
+              ))}
             </TableRow>
           </TableHead>
+
           <TableBody>
             {allSuppliersLoading ? (
               <TableRow>
@@ -637,13 +727,14 @@ export const SuppliersMaster = () => {
                         pagination.offset + pagination.numberPerPage
                       )
                       .map((item, index) => (
-                        <TableRow key={item.supplierId}>
+                        <TableRow  key={item.supplierId}>
                           <CusTableCell align="center">
                             {index + 1 + pagination.offset}
                           </CusTableCell>
                           <CusTableCell align="center">
                             <FormControl fullWidth sx={{ marginTop: "5px" }}>
                               <NativeSelect
+                                disableUnderline
                                 key={item.supplierId}
                                 defaultValue={item.supplierCategory}
                                 inputProps={{
@@ -659,6 +750,7 @@ export const SuppliersMaster = () => {
                                 }}
                                 sx={{
                                   fontSize: "0.75rem",
+                                  fontFamily:"Roboto"
                                 }}
                                 disabled={!isSave[item.supplierId]}
                               >
@@ -680,6 +772,7 @@ export const SuppliersMaster = () => {
                           <CusTableCell align="center">
                             <FormControl fullWidth sx={{ marginTop: "5px" }}>
                               <NativeSelect
+                                disableUnderline
                                 defaultValue={item.storeId}
                                 inputProps={{
                                   name: "status",
@@ -722,7 +815,14 @@ export const SuppliersMaster = () => {
                             </FormControl>
                           </CusTableCell>
                           <CusTableCell align="center">
-                            <CusTextField
+                            {/* <CusTextField */}
+                            <CusTextareaAutosize
+                              maxRows={7}
+                              aria-label="maximum height" 
+                              InputProps={{ disableUnderline: true,
+                              inputProps: {style: { textAlign: "center" },},
+                              style: { fontWeight: 900,
+                              fontFamily: "Roboto, sans-serif" }  }}
                               key={item.supplierId}
                               defaultValue={item.supplierName}
                               value={currentSupplierName[item.supplierId]}
@@ -736,31 +836,53 @@ export const SuppliersMaster = () => {
                               fullWidth
                               variant="standard"
                               disabled={!isSave[item.supplierId]}
-                              InputProps={{
-                                disableUnderline: true, // <== added this
-                              }}
                             />
                           </CusTableCell>
-                          <CusTableCell align="center">
+                          {/* <CusTableCell align="center">
                             <CusTextField
-                              key={item.supplierId}
-                              defaultValue={item.supplierAddress}
-                              value={currentSupplierAddress[item.supplierId]}
-                              onChange={(event) => {
+                                key={item.supplierId}
+                                defaultValue={item.supplierAddress}
+                                value={currentSupplierAddress[item.supplierId]}
+                                onChange={(event) => {
+                                  const names = {
+                                    ...currentSupplierAddress,
+                                    [item.supplierId]: event.target.value,
+                                  };
+                                  setCurrentSupplierAddress(names);
+                                }}
+                                fullWidth
+                                variant="standard"
+                                disabled={!isSave[item.supplierId]}
+                                InputProps={{
+                                  disableUnderline: true, // <== added this
+                                }}
+                            />
+                          </CusTableCell> */}
+
+                        <CusTableCell align="center">
+                          <CusTextareaAutosize 
+                            maxRows={7}
+                            aria-label="maximum height" 
+                            InputProps={{ disableUnderline: true,
+                              inputProps: {style: { textAlign: "center" },},
+                              style: { fontWeight: 400,
+                              fontFamily: "Roboto" } }}
+                            key={item.supplierId}
+                            defaultValue={item.supplierAddress}
+                            value={currentSupplierAddress[item.supplierId]}
+                            onChange={(event) => {
                                 const names = {
                                   ...currentSupplierAddress,
                                   [item.supplierId]: event.target.value,
-                                };
+                              };
                                 setCurrentSupplierAddress(names);
-                              }}
-                              fullWidth
-                              variant="standard"
-                              disabled={!isSave[item.supplierId]}
-                              InputProps={{
-                                disableUnderline: true, // <== added this
-                              }}
-                            />
-                          </CusTableCell>
+                             }}
+                            fullWidth
+                            variant="standard"
+                            disabled={!isSave[item.supplierId]}
+                          />
+                        </CusTableCell>
+
                           <CusTableCell align="center">
                             <CusTextField
                               key={item.supplierId}
@@ -1286,7 +1408,10 @@ export const SuppliersMaster = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <SaveButton
+      <div style={{ display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between'}}>
+      <SaveButton style={{height: '62%'}}
         className="mt-4"
         onClick={
           /* handleShowAdd */ () => {
@@ -1296,7 +1421,7 @@ export const SuppliersMaster = () => {
       >
         ADD ANOTHER
       </SaveButton>
-      <MyPaginate
+      <MyPaginate sx={{width:'50%'}}
         previousLabel={"Previous"}
         nextLabel={"Next"}
         breakLabel={"..."}
@@ -1307,6 +1432,7 @@ export const SuppliersMaster = () => {
         containerClassName={"pagination"}
         activeClassName={"active"}
       />
+      </div>
       {renderAddModal()}
     </div>
   );

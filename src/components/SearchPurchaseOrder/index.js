@@ -106,10 +106,17 @@ const CusTableCell1 = styled(TableCell)`
   padding-right: 3px;
 `;
 
+// const CusTableCell = styled(TableCell)`
+//   padding: 0;
+//   font-size: 14px;
+//   border: 1px solid #000;
+//   border-left: none;
+//   border-right: none;
+// `;
+
 const CusTableCell = styled(TableCell)`
   padding: 0;
   font-size: 14px;
-  border: 1px solid #000;
   border-left: none;
   border-right: none;
 `;
@@ -661,6 +668,7 @@ export const SearchPurchaseOrder = () => {
                 inputProps={{
                   ...params.inputProps,
                   autoComplete: "new-password", // disable autocomplete and autofill
+                  disableUnderline: true
                 }}
               />
             )}
@@ -808,6 +816,7 @@ export const SearchPurchaseOrder = () => {
         <CusTableCell align="center">
                 <FormControl fullWidth sx={{ marginTop: "7px" }}>
                   <NativeSelect
+                  disableUnderline
                     defaultValue={item.purchaseCategory}
                     disabled={!isSave[item.purchaseOrderId+item.itemId]}
                     inputProps={{
@@ -846,6 +855,7 @@ export const SearchPurchaseOrder = () => {
             <CusTableCell align="center" sx={{backgroundColor: item.purchaseOrderStatus === "SUBMITTED" ? "yellow": "lightGreen"}}>
               <FormControl fullWidth sx={{ marginTop: "5px"}}>
                 <NativeSelect
+                disableUnderline
                   disabled={!isSave[item.purchaseOrderId+item.itemId]}
                   defaultValue={item.purchaseOrderStatus}
                   inputProps={{
