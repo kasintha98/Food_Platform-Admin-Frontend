@@ -223,7 +223,7 @@ export const StoreInventoryTracking = () => {
     setIsSave(edits);
   };
 
-  const updateItemHandle = (item, consumption, remarks) => {
+  const updateItemHandle = (item, consumption, remarks, vari) => {
     let l = updatedItemList;
 
     l =  l.filter(function(el) { return el.itemId !== item.itemId; }); 
@@ -233,6 +233,7 @@ export const StoreInventoryTracking = () => {
       itemEodConsumptionQty: consumption && consumption[item.id]
         ? consumption[item.id]
         : item.itemEodConsumptionQty,
+      itemConsumptionVarianceQty: getVariance2(vari, item),
       remarks: remarks && remarks[item.id] ? remarks[item.id] : item.remarks,
       updatedBy: user.loginId,
       updatedDate: new Date(),
@@ -243,6 +244,16 @@ export const StoreInventoryTracking = () => {
     setUpdatedItemList(l);
 
     onSaveClickHandle(item.id);
+  };
+
+  const getVariance2 = (vari, item) => {
+    let e = vari
+      ? Number(vari)
+      : Number(item.itemEodConsumptionQty);
+
+    return (
+      Number(Number(e) + Number(item.itemCurrConsumptionQty) - Number(item.poNetQty)).toFixed(2)
+    );
   };
 
   const getVariance = (item) => {
@@ -572,7 +583,7 @@ export const StoreInventoryTracking = () => {
                                         [item.id]: event.target.value,
                                       };
                                       setCurrentItemEodConsumptionQty(itemsEod);
-                                      updateItemHandle(item,itemsEod,null)
+                                      updateItemHandle(item,itemsEod,null,event.target.value)
                                     }}
                                     fullWidth
                                     variant="standard"
@@ -587,8 +598,8 @@ export const StoreInventoryTracking = () => {
                               <CusTableCell align="center">
                                 <Typography sx={{ fontSize: "0.75rem" }}>
                                   {/* {item.itemConsumptionVarianceQty} */}
-
-                                  {getVariance(item)}
+                                  {currentItemEodConsumptionQty[item.id] ? getVariance(item) : item.itemConsumptionVarianceQty}
+                                  {/* {getVariance(item)} */}
                                 </Typography>
                               </CusTableCell>
                               <CusTableCell align="center">

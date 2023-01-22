@@ -223,7 +223,7 @@ export const NonRecipeInventory = () => {
     setIsSave(edits);
   };
 
-  const updateItemHandle = (item, consumption, remarks) => {
+  const updateItemHandle = (item, consumption, remarks, vari) => {
     let l = updatedItemList;
 
     l =  l.filter(function(el) { return el.itemId !== item.itemId; }); 
@@ -234,6 +234,7 @@ export const NonRecipeInventory = () => {
         ? consumption[item.id]
         : item.itemEodConsumptionQty,
       remarks: remarks && remarks[item.id] ? remarks[item.id] : item.remarks,
+      itemConsumptionVarianceQty: getVariance2(vari, item),
       updatedBy: user.loginId,
       updatedDate: new Date(),
     };
@@ -243,6 +244,17 @@ export const NonRecipeInventory = () => {
     setUpdatedItemList(l);
 
     onSaveClickHandle(item.id);
+    console.log(l)
+  };
+
+  const getVariance2 = (vari, item) => {
+    let e = vari
+      ? Number(vari)
+      : Number(item.itemEodConsumptionQty);
+
+    return (
+      Number(Number(e) + Number(item.itemCurrConsumptionQty) - Number(item.poNetQty)).toFixed(2)
+    );
   };
 
   const getVariance = (item) => {
@@ -260,6 +272,7 @@ export const NonRecipeInventory = () => {
       dispatch(saveAllItemConsumptionSummery(updatedItemList)).then((res) => {
         if (res) {
           setUpdatedItemList([]);
+          setCurrentItemEodConsumptionQty({})
           handleRefresh();
         }
       });
@@ -572,7 +585,7 @@ export const NonRecipeInventory = () => {
                                         [item.id]: event.target.value,
                                       };
                                       setCurrentItemEodConsumptionQty(itemsEod);
-                                      updateItemHandle(item,itemsEod,null)
+                                      updateItemHandle(item,itemsEod,null,event.target.value)
                                     }}
                                     fullWidth
                                     variant="standard"
@@ -587,8 +600,8 @@ export const NonRecipeInventory = () => {
                               <CusTableCell align="center">
                                 <Typography sx={{ fontSize: "0.75rem" }}>
                                   {/* {item.itemConsumptionVarianceQty} */}
-
-                                  {getVariance(item)}
+                                  {currentItemEodConsumptionQty[item.id] ? getVariance(item) : item.itemConsumptionVarianceQty}
+                                  {/* {getVariance(item)} */}
                                 </Typography>
                               </CusTableCell>
                               <CusTableCell align="center">
