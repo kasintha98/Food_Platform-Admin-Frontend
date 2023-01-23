@@ -488,7 +488,21 @@ export const ProductMappingMaster = () => {
     dispatch(saveProduct(newProduct)).then((res) => {
       if (res) {
         handleCloseAdd();
-        dispatch(uploadImage(formDataImage));
+        dispatch(uploadImage(formDataImage)).then((res)=>{
+          if(res){
+            console.log("Uploaded");
+            dispatch(getAllProduct());
+            if (selectedStoreObj) {
+              dispatch(
+                getProductsNew(selectedStoreObj.restaurantId, selectedStoreObj.storeId)
+              ).then((res) => {
+                if (res) {
+                  setFirstProductList(res);
+                }
+              });
+            }
+          }
+        })
       }
     });
   };
