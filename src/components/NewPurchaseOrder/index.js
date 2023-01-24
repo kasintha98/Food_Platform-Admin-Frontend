@@ -241,6 +241,19 @@ export const NewPurchaseOrder = () => {
     setIsSave(edits);
   };
 
+  const renderDate = (date) => {
+    const dateObj = new Date(date);
+    const month = dateObj.toLocaleString("default", { month: "short" });
+    const day = dateObj.getDate();
+    const year = dateObj.getFullYear();
+    return (
+      <span>
+        {day}/{month.toUpperCase()}/{year}
+      </span>
+    );
+  };
+
+
   const addItemToList = () => {
     if (!selectedItem) {
       toast.error("Please select an ingredient!");
@@ -493,7 +506,7 @@ export const NewPurchaseOrder = () => {
               <CuTypography>Purchase Date</CuTypography>
             </div>
             <div>
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
+              {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <CusDesktopDatePicker
                   fullWidth
                   label="Select date"
@@ -514,7 +527,8 @@ export const NewPurchaseOrder = () => {
                     />
                   )}
                 />
-              </LocalizationProvider>
+              </LocalizationProvider> */}
+              <CuTypography>{renderDate(billDate)}</CuTypography>
             </div>
           </Col>
         </Row>
