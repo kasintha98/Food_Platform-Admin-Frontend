@@ -101,7 +101,7 @@ export const NewHeader = (props) => {
   const version = useSelector((state) => state.auth.version);
   const modulesForUser = useSelector((state) => state.user.modulesForUser);
   const dispatch = useDispatch();
-  const isMobile = useMediaQuery({ query: `(max-width: 1400px)` });
+  const isMobile = useMediaQuery({ query: `(max-width: 1000)` });
 
   const [showEOD, setShowEOD] = useState(false);
   const [businessDate, setBusinessDate] = useState(null);
@@ -283,7 +283,8 @@ export const NewHeader = (props) => {
                   flexWrap: 'wrap',
                   fontSize: '0.6125em',
                   color: '#fff',
-                  width: 75,
+                  minWidth: 66,
+                  maxWidth:70
                 }} component={Link} to="/dine-in">
                   <FastfoodOutlinedIcon />
                   DINE-IN
@@ -307,7 +308,8 @@ export const NewHeader = (props) => {
                   fontSize: '0.6125em',
                   // backgroundColor:'#555555',
                   color: '#fff',
-                  width: 75,
+                  minWidth: 66,
+                  maxWidth:70
                 }} component={Link} to="/dashboard">
                   <SpeedOutlinedIcon />
                   DASHBOARD
@@ -330,7 +332,8 @@ export const NewHeader = (props) => {
                   flexWrap: 'wrap',
                   fontSize: '0.6125em',
                   color: '#fff',
-                  width: 75,
+                  minWidth: 66,
+                  maxWidth:70
                 }} component={Link} to="/order-source">
                   <MultipleStopOutlinedIcon />
                   ORDER SOURCE
@@ -353,7 +356,8 @@ export const NewHeader = (props) => {
                   flexWrap: 'wrap',
                   fontSize: '0.6125em',
                   color: '#fff',
-                  width: 75,
+                  minWidth: 66,
+                  maxWidth:70
                 }} component={Link} to="/orders">
                   <ContentPasteOutlinedIcon />
                   ORDERS
@@ -375,7 +379,8 @@ export const NewHeader = (props) => {
                   flexWrap: 'wrap',
                   fontSize: '0.6125em',
                   color: '#fff',
-                  width: 75,
+                  minWidth: 66,
+                  maxWidth:70
                 }} component={Link} to="/kds">
                   <SoupKitchenOutlinedIcon />
                   KDS
@@ -398,7 +403,8 @@ export const NewHeader = (props) => {
                   flexWrap: 'wrap',
                   fontSize: '0.6125em',
                   color: '#fff',
-                  width: 75,
+                  minWidth: 66,
+                  maxWidth:70
                 }} component={Link} to="/delivery-management">
                   <AccountTreeOutlinedIcon />
                   ORDER MGMT
@@ -421,7 +427,8 @@ export const NewHeader = (props) => {
                   flexWrap: 'wrap',
                   fontSize: '0.6125em',
                   color: '#fff',
-                  width: 75,
+                  minWidth: 66,
+                  maxWidth:70
                 }} component={Link} to="/delivery-boy">
                   <LocalShippingOutlinedIcon />
                   DELIVERY BOY
@@ -444,7 +451,8 @@ export const NewHeader = (props) => {
                   flexWrap: 'wrap',
                   fontSize: '0.6125em',
                   color: '#fff',
-                  width: 75,
+                  minWidth: 66,
+                  maxWidth:70
                 }} component={Link} to="/delivery-tracking">
                   <AvTimerOutlinedIcon />
                   TRACKING
@@ -467,7 +475,8 @@ export const NewHeader = (props) => {
                   flexWrap: 'wrap',
                   fontSize: '0.6125em',
                   color: '#fff',
-                  width: 75,
+                  minWidth: 66,
+                  maxWidth:70
                 }} component={Link} to="/reports">
                   <SummarizeOutlinedIcon />
                   REPORTS
@@ -492,7 +501,8 @@ export const NewHeader = (props) => {
                   flexWrap: 'wrap',
                   fontSize: '0.6125em',
                   color: '#fff',
-                  width: 75,
+                  minWidth: 66,
+                  maxWidth:70
                 }}
                     ref={anchorRef}
                     id="composition-button"
@@ -565,7 +575,8 @@ export const NewHeader = (props) => {
                   flexWrap: 'wrap',
                   fontSize: '0.6125em',
                   color: '#fff',
-                  width: 75,
+                  minWidth: 66,
+                  maxWidth:70
                 }} component={Link} to="/inventory">
                   <Inventory2OutlinedIcon />
                   INVENTORY MGMT
@@ -586,7 +597,8 @@ export const NewHeader = (props) => {
                 flexWrap: 'wrap',
                 fontSize: '0.6125em',
                 color: '#fff',
-                width: 75,
+                minWidth: 66,
+                maxWidth:70
               }} onClick={handleOpenEOD}>
                 <NightlightRoundOutlinedIcon />
                 EOD
@@ -604,7 +616,8 @@ export const NewHeader = (props) => {
           flexWrap: 'wrap',
           fontSize: '0.6125em',
           color: '#fff',
-          width: 75,
+          minWidth: 66,
+          maxWidth:70
         }} onClick={logout}>
           <SettingsPowerOutlinedIcon/>
           Logout
@@ -737,7 +750,7 @@ export const NewHeader = (props) => {
         </span>
         &nbsp;&nbsp;
         {businessDate ? (
-          <div style={{ backgroundColor: '#ffdb4f', marginLeft: 50, color: '#35455E', borderRadius: 15 }}>
+          <div style={{ backgroundColor: '#ffdb4f', marginLeft: 25, color: '#35455E', borderRadius: 15 }}>
             <span>
               <span className="businessDate">Business Date</span>
               <br></br>
