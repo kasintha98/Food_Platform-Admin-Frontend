@@ -52,11 +52,11 @@ export const Inventory = () => {
           >
             <TabList onChange={handleChangeTab} variant="scrollable">
               <Tab label="SUPPLIERS MASTER" value="SUPPLIERS MASTER" />
-              <Tab
+              {/* <Tab
                 label="INVENTORY ITEM MASTER"
                 value="INVENTORY ITEM MASTER"
               />
-              <Tab label="RECIPE MASTER" value="RECIPE MASTER" />
+              <Tab label="RECIPE MASTER" value="RECIPE MASTER" /> */}
               <Tab label="NEW PURCHASE ORDER" value="NEW PURCHASE ORDER" />
               <Tab
                 label="SEARCH PURCHASE ORDER"
@@ -78,14 +78,14 @@ export const Inventory = () => {
               <SuppliersMaster></SuppliersMaster>
             </div>
           </TabPanel>
-          <TabPanel value="INVENTORY ITEM MASTER">
+          {/* <TabPanel value="INVENTORY ITEM MASTER">
             <div>
               <InventoryItemMaster></InventoryItemMaster>
             </div>
           </TabPanel>
           <TabPanel value="RECIPE MASTER">
             <RecipeMaster></RecipeMaster>
-          </TabPanel>
+          </TabPanel> */}
           <TabPanel value="NEW PURCHASE ORDER">
             <div>
               <NewPurchaseOrder></NewPurchaseOrder>

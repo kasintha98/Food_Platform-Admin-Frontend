@@ -29,6 +29,7 @@ import {
 } from "../../actions";
 import { useSelector, useDispatch } from "react-redux";
 import ReactPaginate from "react-paginate";
+import Layout from "../../containers/NewLayout"
 
 const MyPaginate = styled(ReactPaginate)`
   margin-top: 2rem;
@@ -361,7 +362,7 @@ export const InventoryItemMaster = () => {
   ];
 
   return (
-    <div>
+    <Layout sidebar headerTitle="INVENTORY ITEM MASTER">
        <Row>
         <Col sm={6}>
         <div style={{ display: "flex" }} className="align-items-center mb-3">
@@ -960,6 +961,6 @@ export const InventoryItemMaster = () => {
         activeClassName={"active"}
       />
       </div>
-    </div>
+    </Layout>
   );
 };

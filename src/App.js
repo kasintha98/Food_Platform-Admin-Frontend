@@ -55,6 +55,8 @@ import { EOD } from "./containers/EOD";
 import { ForgotPasswordAdmin } from "./containers/ForgotPasswordAdmin";
 import { OrderSource } from "./containers/OrderSource";
 import "./fonts/billfont.ttf";
+import { InventoryItemMaster } from "./components/InventoryItemMaster";
+import { RecipeMaster } from "./components/RecipeMaster";
 
 function App() {
   const dispatch = useDispatch();
@@ -154,6 +156,24 @@ function App() {
           <PrivateRoute
             path="/restaurants"
             component={Restaurants}
+          ></PrivateRoute>
+        )}
+
+        {modulesForUser.some(
+          (module) => module.moduleName === "ADMIN FUNCTIONS"
+        ) && (
+          <PrivateRoute
+            path="/item-master"
+            component={InventoryItemMaster}
+          ></PrivateRoute>
+        )}
+
+        {modulesForUser.some(
+          (module) => module.moduleName === "ADMIN FUNCTIONS"
+        ) && (
+          <PrivateRoute
+            path="/recipe-master"
+            component={RecipeMaster}
           ></PrivateRoute>
         )}
 

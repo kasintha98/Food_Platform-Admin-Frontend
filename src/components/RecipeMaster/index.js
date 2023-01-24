@@ -34,6 +34,7 @@ import {
 } from "../../actions";
 import { useSelector, useDispatch } from "react-redux";
 import ReactPaginate from "react-paginate";
+import Layout from "../../containers/NewLayout"
 
 const MyPaginate = styled(ReactPaginate)`
   margin-top: 2rem;
@@ -855,7 +856,7 @@ export const RecipeMaster = () => {
   ];
 
   return (
-    <div>
+    <Layout sidebar headerTitle="RECIPE MASTER">
       <TableContainer component={Paper} sx={{ maxHeight: 430 }}>
         {/* <Table sx={{ minWidth: 800 }} aria-label="simple table">
           <TableHead>
@@ -971,6 +972,6 @@ export const RecipeMaster = () => {
         activeClassName={"active"}
       />
       {renderAddModal()}
-    </div>
+    </Layout>
   );
 };
