@@ -101,7 +101,7 @@ export const NewHeader = (props) => {
   const version = useSelector((state) => state.auth.version);
   const modulesForUser = useSelector((state) => state.user.modulesForUser);
   const dispatch = useDispatch();
-  const isMobile = useMediaQuery({ query: `(max-width: 1000)` });
+  const isMobile = useMediaQuery({ query: `(max-width: 1000px)` });
 
   const [showEOD, setShowEOD] = useState(false);
   const [businessDate, setBusinessDate] = useState(null);
