@@ -30,7 +30,8 @@ import {
   getActiveInventory,
   saveUpdateRecipeItem,
   deleteRecipeItem,
-  getCustomerDetails,
+  getAllProduct,
+  getInventoryUOM
 } from "../../actions";
 import { useSelector, useDispatch } from "react-redux";
 import ReactPaginate from "react-paginate";
@@ -215,6 +216,8 @@ export const RecipeMaster = () => {
   useEffect(() => {
     dispatch(getActiveRecipes());
     dispatch(getActiveInventory());
+    dispatch(getInventoryUOM());
+    dispatch(getAllProduct());
   }, []);
 
   useEffect(() => {
@@ -504,6 +507,7 @@ export const RecipeMaster = () => {
                   </FormControl> */}
 
                   <CusAutocomplete
+                    key={item.itemId}
                     onChange={(event, newValue) => {
                       let ing = {
                         ...itemIngredient,

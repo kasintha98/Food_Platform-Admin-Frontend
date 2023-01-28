@@ -32,6 +32,7 @@ import { SalesSummeryByOrderSourceReport } from "../../components/SalesSummeryBy
 import { SalesSummeryByPaymentMode } from "../../components/SalesSummeryByPaymentMode";
 import { RecipeConsumptionReport } from "../../components/RecipeConsumptionReport";
 import { NonRecipeConsumptionReport } from "../../components/NonRecipeConsumptionReport";
+import { CashierSalesByDishReport } from "../../components/CashierSalesByDishReport";
 
 const CusDDT = styled(Dropdown.Toggle)`
   font-weight: 500;
@@ -334,6 +335,16 @@ export const NewReports = () => {
               restaurantId={selectedStoreObj.restaurantId}
               selectedReport={selectedReport}
             ></SalesByDishReportTable>
+          )}
+
+          {selectedReport === "CASHIER_SALES_BY_DISH" && (
+            <CashierSalesByDishReport
+              startDate={dateState[0].startDate}
+              endDate={dateState[0].endDate}
+              storeId={selectedStoreObj.storeId}
+              restaurantId={selectedStoreObj.restaurantId}
+              selectedReport={selectedReport}
+            ></CashierSalesByDishReport>
           )}
 
           {selectedReport === "MENU_REPORT" && (
