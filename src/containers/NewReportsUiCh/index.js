@@ -30,6 +30,8 @@ import { SalesSummeryByDateListReport } from "../../components/SalesSummeryByDat
 import { SalesSummeryByDishType } from "../../components/SalesSummeryByDishType";
 import { SalesSummeryByOrderSourceReport } from "../../components/SalesSummeryByOrderSourceReport";
 import { SalesSummeryByPaymentMode } from "../../components/SalesSummeryByPaymentMode";
+import { RecipeConsumptionReport } from "../../components/RecipeConsumptionReport";
+import { NonRecipeConsumptionReport } from "../../components/NonRecipeConsumptionReport";
 
 const CusDDT = styled(Dropdown.Toggle)`
   font-weight: 500;
@@ -402,6 +404,28 @@ export const NewReports = () => {
               restaurantId={selectedStoreObj.restaurantId}
               selectedReport={selectedReport}
             ></SalesSummeryByPaymentMode>
+          )}
+
+          {selectedReport === "ITEM_CONSUMPTION_SUMMARY_RECIPE" && (
+            <RecipeConsumptionReport
+              startDate={dateState[0].startDate}
+              endDate={dateState[0].endDate}
+              storeId={selectedStoreObj.storeId}
+              restaurantId={selectedStoreObj.restaurantId}
+              selectedReport={selectedReport}
+              selectedStoreObj={selectedStoreObj}
+            ></RecipeConsumptionReport>
+          )}
+
+          {selectedReport === "ITEM_CONSUMPTION_SUMMARY_NONRECIPE" && (
+            <NonRecipeConsumptionReport
+              startDate={dateState[0].startDate}
+              endDate={dateState[0].endDate}
+              storeId={selectedStoreObj.storeId}
+              restaurantId={selectedStoreObj.restaurantId}
+              selectedReport={selectedReport}
+              selectedStoreObj={selectedStoreObj}
+            ></NonRecipeConsumptionReport>
           )}
 
           {selectedReport === "CONSUMPTION REPORT" && (

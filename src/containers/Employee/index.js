@@ -22,6 +22,7 @@ import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { toast } from "react-toastify";
+import "./style.css";
 
 const CusMenuItem = styled(MenuItem)``;
 
@@ -292,14 +293,27 @@ export default function Employee(props) {
   };
 
   return (
-    <Layout sidebar headerTitle="Employee" bgColor="#F2F2F2">
+    <Layout sidebar headerTitle="Employee" bgColor="#F2F2F2" >
       <div>
         <div>
-          <Row>
+        <Row>
             <div
-              className="w-100 text-center p-3 mb-3"
+              className="w-100 text-center "
               style={{
                 color: "#2E75B6",
+                backgroundColor: "#F2F2F2",
+              }}
+            >
+              <Typography className="topTxtStyle">
+                Employee Details
+              </Typography>
+            </div>
+          </Row>
+          <Row>
+            <div
+              className="w-100 text-center mb-4"
+              style={{
+                color: "#408697",
                 backgroundColor: "#F2F2F2",
               }}
             >
@@ -312,7 +326,7 @@ export default function Employee(props) {
         <Row>
           <Col sm={6}>
             <Row className="align-items-center">
-              <Col className="col-4">
+              {/* <Col className="col-4">
                 <Typography
                   sx={{
                     color: "#7F7F7F",
@@ -322,10 +336,10 @@ export default function Employee(props) {
                 >
                   Select Store
                 </Typography>
-              </Col>
-              <Col className="col-6">
+              </Col> */}
+              <Col className="col-6" style={{marginLeft:'35%'}}>
                 <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-label">
+                  <InputLabel className="inputlabeltxt" id="demo-simple-select-label">
                     Please select the store
                   </InputLabel>
                   <Select
@@ -386,7 +400,7 @@ export default function Employee(props) {
           </Col>
           <Col sm={6}>
             <Row className="align-items-center">
-              <Col className="col-3">
+              {/* <Col className="col-3">
                 <Typography
                   sx={{
                     color: "#7F7F7F",
@@ -396,10 +410,10 @@ export default function Employee(props) {
                 >
                   Select Employee
                 </Typography>
-              </Col>
-              <Col className="col-6">
+              </Col> */}
+              <Col className="col-6" style={{marginLeft:'15%'}}>
                 <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-label2">
+                  <InputLabel className="inputlabeltxt" id="demo-simple-select-label2">
                     Employee
                   </InputLabel>
                   <Select
@@ -437,17 +451,24 @@ export default function Employee(props) {
           </Col>
         </Row>
         <Row className="align-items-center mt-3">
-          <Col className="col-2">
+        <Typography className="textheader"
+              sx={{ color: "#7F7F7F", fontWeight: "bold", textAlign: "left",marginLeft:'14.5%',backgroundColor:'' }}
+            >
+              Personal Details:
+            </Typography>
+        </Row>
+        <Row className="align-items-center mt-3" style={{marginLeft:'13.5%'}}>
+          {/* <Col className="col-2">
             <Typography
               sx={{ color: "#7F7F7F", fontWeight: "bold", textAlign: "right" }}
             >
               Employee Details
             </Typography>
-          </Col>
+          </Col> */}
           <Col
             className="col-10"
             style={{
-              backgroundColor: "#fff",
+              backgroundColor: "#FFF",
               padding: "25px",
               borderRadius: "15px",
             }}
@@ -455,6 +476,7 @@ export default function Employee(props) {
             <Row>
               <Col sm={4}>
                 <TextField
+                  size="small"
                   label="First Name"
                   value={firstName}
                   onChange={(e) => {
@@ -462,26 +484,34 @@ export default function Employee(props) {
                   }}
                   fullWidth
                   required
+                  InputProps={{style: {fontSize: 14, fontFamily: 'Roboto, sans-serif'}}} 
+                  InputLabelProps={{style: {fontSize: 12, fontFamily: 'Roboto Condensed, sans-serif'}}}
                 />
               </Col>
               <Col sm={4}>
                 <TextField
+                 size="small"
                   label="Middle Name"
                   value={middleName}
                   onChange={(e) => {
                     setMiddleName(e.target.value);
                   }}
                   fullWidth
+                 InputProps={{style: {fontSize: 14, fontFamily: 'Roboto, sans-serif'}}} 
+                  InputLabelProps={{style: {fontSize: 12, fontFamily: 'Roboto Condensed, sans-serif'}}}
                 />
               </Col>
               <Col sm={4}>
                 <TextField
+                 size="small"
                   label="Last Name"
                   value={lastName}
                   onChange={(e) => {
                     setLastName(e.target.value);
                   }}
                   fullWidth
+                 InputProps={{style: {fontSize: 14, fontFamily: 'Roboto, sans-serif'}}} 
+                  InputLabelProps={{style: {fontSize: 12, fontFamily: 'Roboto Condensed, sans-serif'}}}
                 />
               </Col>
             </Row>
@@ -494,13 +524,16 @@ export default function Employee(props) {
                     value={dob}
                     onChange={handleChangeDob}
                     renderInput={(params) => (
-                      <TextField {...params} fullWidth required />
+                      <TextField size="small" {...params} fullWidth required
+                     InputProps={{style: {fontSize: 14, fontFamily: 'Roboto, sans-serif'}}} 
+                  InputLabelProps={{style: {fontSize: 12, fontFamily: 'Roboto Condensed, sans-serif'}}} />
                     )}
                   />
                 </LocalizationProvider>
               </Col>
               <Col sm={4}>
                 <TextField
+                 size="small"
                   label="Login ID"
                   value={loginId}
                   onChange={(e) => {
@@ -508,55 +541,73 @@ export default function Employee(props) {
                   }}
                   fullWidth
                   required
+                 InputProps={{style: {fontSize: 14, fontFamily: 'Roboto, sans-serif'}}} 
+                  InputLabelProps={{style: {fontSize: 12, fontFamily: 'Roboto Condensed, sans-serif'}}}
                 />
               </Col>
             </Row>
             <Row className="mt-3">
               <Col sm={4}>
                 <TextField
+                 size="small"
                   label="Aadhar Id"
                   value={aId}
                   onChange={(e) => {
                     setAId(e.target.value);
                   }}
                   fullWidth
+                 InputProps={{style: {fontSize: 14, fontFamily: 'Roboto, sans-serif'}}} 
+                  InputLabelProps={{style: {fontSize: 12, fontFamily: 'Roboto Condensed, sans-serif'}}}
                 />
               </Col>
               <Col sm={4}>
                 <TextField
+                 size="small"
                   label="Pan ID"
                   value={pId}
                   onChange={(e) => {
                     setPId(e.target.value);
                   }}
                   fullWidth
+                 InputProps={{style: {fontSize: 14, fontFamily: 'Roboto, sans-serif'}}} 
+                  InputLabelProps={{style: {fontSize: 12, fontFamily: 'Roboto Condensed, sans-serif'}}}
                 />
               </Col>
               <Col sm={4}>
                 <TextField
+                 size="small"
                   label="Driving License No"
                   value={licenseNo}
                   onChange={(e) => {
                     setLicenseNo(e.target.value);
                   }}
                   fullWidth
+                 InputProps={{style: {fontSize: 14, fontFamily: 'Roboto, sans-serif'}}} 
+                  InputLabelProps={{style: {fontSize: 12, fontFamily: 'Roboto Condensed, sans-serif'}}}
                 />
               </Col>
             </Row>
           </Col>
         </Row>
         <Row className="align-items-center mt-3">
-          <Col className="col-2">
+        <Typography className="textheader"
+              sx={{ color: "#7F7F7F", fontWeight: "bold", textAlign: "left",marginLeft:'14.5%',backgroundColor:'' }}
+            >
+            Contact Details:
+            </Typography>
+        </Row>
+        <Row className="align-items-center mt-3" style={{marginLeft:'13.5%'}}>
+          {/* <Col className="col-2">
             <Typography
               sx={{ color: "#7F7F7F", fontWeight: "bold", textAlign: "right" }}
             >
               Address and Contact Details
             </Typography>
-          </Col>
+          </Col> */}
           <Col
             className="col-10"
             style={{
-              backgroundColor: "#fff",
+              backgroundColor: "#FFF",
               padding: "25px",
               borderRadius: "15px",
             }}
@@ -564,113 +615,147 @@ export default function Employee(props) {
             <Row>
               <Col sm={4}>
                 <TextField
+                size="small"
                   label="Address 1"
                   value={address1}
                   onChange={(e) => {
                     setAddress1(e.target.value);
                   }}
                   fullWidth
+                 InputProps={{style: {fontSize: 14, fontFamily: 'Roboto, sans-serif'}}} 
+                  InputLabelProps={{style: {fontSize: 12, fontFamily: 'Roboto Condensed, sans-serif'}}}
                 />
               </Col>
               <Col sm={4}>
                 <TextField
+                size="small"
                   label="Address 2"
                   value={address2}
                   onChange={(e) => {
                     setAddress2(e.target.value);
                   }}
                   fullWidth
+                 InputProps={{style: {fontSize: 14, fontFamily: 'Roboto, sans-serif'}}} 
+                  InputLabelProps={{style: {fontSize: 12, fontFamily: 'Roboto Condensed, sans-serif'}}}
                 />
               </Col>
               <Col sm={4}>
                 <TextField
+                size="small"
                   label="City"
                   value={city}
                   onChange={(e) => {
                     setCity(e.target.value);
                   }}
                   fullWidth
+                 InputProps={{style: {fontSize: 14, fontFamily: 'Roboto, sans-serif'}}} 
+                  InputLabelProps={{style: {fontSize: 12, fontFamily: 'Roboto Condensed, sans-serif'}}}
                 />
               </Col>
             </Row>
             <Row className="mt-3">
               <Col sm={4}>
                 <TextField
+                size="small"
                   label="State"
                   value={state}
                   onChange={(e) => {
                     setState(e.target.value);
                   }}
                   fullWidth
+                 InputProps={{style: {fontSize: 14, fontFamily: 'Roboto, sans-serif'}}} 
+                  InputLabelProps={{style: {fontSize: 12, fontFamily: 'Roboto Condensed, sans-serif'}}}
                 />
               </Col>
               <Col sm={4}>
                 <TextField
+                size="small"
                   label="Zip Code"
                   value={zip}
                   onChange={(e) => {
                     setZip(e.target.value);
                   }}
                   fullWidth
+                 InputProps={{style: {fontSize: 14, fontFamily: 'Roboto, sans-serif'}}} 
+                  InputLabelProps={{style: {fontSize: 12, fontFamily: 'Roboto Condensed, sans-serif'}}}
                 />
               </Col>
               <Col sm={4}>
                 <TextField
+                size="small"
                   label="Country"
                   value={country}
                   onChange={(e) => {
                     setCountry(e.target.value);
                   }}
                   fullWidth
+                 InputProps={{style: {fontSize: 14, fontFamily: 'Roboto, sans-serif'}}} 
+                  InputLabelProps={{style: {fontSize: 12, fontFamily: 'Roboto Condensed, sans-serif'}}}
                 />
               </Col>
             </Row>
             <Row className="mt-3">
               <Col sm={4}>
                 <TextField
+                size="small"
                   label="Phone No (Mobile)"
                   value={mobile}
                   onChange={(e) => {
                     setMobile(e.target.value);
                   }}
                   fullWidth
+                 InputProps={{style: {fontSize: 14, fontFamily: 'Roboto, sans-serif'}}} 
+                  InputLabelProps={{style: {fontSize: 12, fontFamily: 'Roboto Condensed, sans-serif'}}}
                 />
               </Col>
               <Col sm={4}>
                 <TextField
+                size="small"
                   label="Emergency Contact No"
                   value={emergency}
                   onChange={(e) => {
                     setEmergency(e.target.value);
                   }}
                   fullWidth
+                 InputProps={{style: {fontSize: 14, fontFamily: 'Roboto, sans-serif'}}} 
+                  InputLabelProps={{style: {fontSize: 12, fontFamily: 'Roboto Condensed, sans-serif'}}}
                 />
               </Col>
               <Col sm={4}>
                 <TextField
+                size="small"
                   label="E-Mail Id"
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value);
                   }}
                   fullWidth
+                 InputProps={{style: {fontSize: 14, fontFamily: 'Roboto, sans-serif'}}} 
+                  InputLabelProps={{style: {fontSize: 12, fontFamily: 'Roboto Condensed, sans-serif'}}}
                 />
               </Col>
             </Row>
           </Col>
         </Row>
         <Row className="align-items-center mt-3">
-          <Col className="col-2">
+        <Typography className="textheader"
+              sx={{ color: "#7F7F7F", fontWeight: "bold", textAlign: "left",marginLeft:'14.5%',backgroundColor:'' }}
+            >
+            Duration and Role:
+            </Typography>
+        </Row>
+        <Row className="align-items-center mt-3" style={{marginLeft:'13.5%'}}>
+          {/* <Col className="col-2">
             <Typography
               sx={{ color: "#7F7F7F", fontWeight: "bold", textAlign: "right" }}
             >
               Duration and Role
             </Typography>
-          </Col>
+          </Col> */}
           <Col
             className="col-10"
             style={{
-              backgroundColor: "#fff",
+              backgroundColor: "#FFF",
               padding: "25px",
               borderRadius: "15px",
             }}
@@ -684,7 +769,9 @@ export default function Employee(props) {
                     value={startDate}
                     onChange={handleChangeStart}
                     renderInput={(params) => (
-                      <TextField {...params} fullWidth />
+                      <TextField size="small" {...params} fullWidth 
+                     InputProps={{style: {fontSize: 14, fontFamily: 'Roboto, sans-serif'}}} 
+                  InputLabelProps={{style: {fontSize: 12, fontFamily: 'Roboto Condensed, sans-serif'}}}/>
                     )}
                   />
                 </LocalizationProvider>
@@ -697,14 +784,16 @@ export default function Employee(props) {
                     value={endDate}
                     onChange={handleChangeEnd}
                     renderInput={(params) => (
-                      <TextField {...params} fullWidth />
+                      <TextField size="small" {...params} fullWidth 
+                     InputProps={{style: {fontSize: 14, fontFamily: 'Roboto, sans-serif'}}} 
+                  InputLabelProps={{style: {fontSize: 12, fontFamily: 'Roboto Condensed, sans-serif'}}}/>
                     )}
                   />
                 </LocalizationProvider>
               </Col>
               <Col sm={4}>
-                <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-label2">
+                <FormControl size="small" fullWidth>
+                  <InputLabel className="inputlabeltxt" id="demo-simple-select-label2">
                     Select Role *
                   </InputLabel>
                   <Select
@@ -727,6 +816,38 @@ export default function Employee(props) {
           </Col>
         </Row>
         <div className="text-center mt-4">
+          <Row>
+            <Col sm={4}>
+              <SaveButton
+                disabled={selectedEmployee !== "ADD NEW EMPLOYEE"}
+                onClick={addEmployee}
+              >
+                SAVE
+              </SaveButton>
+            </Col>
+            <Col sm={4}>
+              <SaveButton
+                disabled={selectedEmployeeObj === null}
+                onClick={() => {
+                  updateEmployee(false);
+                }}
+              >
+                UPDATE
+              </SaveButton>
+            </Col>
+            <Col sm={4}>
+              <SaveButton
+                disabled={selectedEmployeeObj === null}
+                onClick={() => {
+                  updateEmployee(true);
+                }}
+              >
+                DELETE
+              </SaveButton>
+            </Col>
+          </Row>
+        </div>
+        {/* <div className="text-center mt-4">
           <Row>
             <Col sm={4}>
               <SaveButton
@@ -757,7 +878,7 @@ export default function Employee(props) {
               </SaveButton>
             </Col>
           </Row>
-        </div>
+        </div> */}
       </div>
     </Layout>
   );

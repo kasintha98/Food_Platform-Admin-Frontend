@@ -1032,3 +1032,34 @@ export const getAllSubProduct = () => {
     }
   };
 };
+
+export const getAllOffers = () => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: productConstants.GET_ALL_OFFERS_REQUEST,
+      });
+
+      const res = await axios.get(`/getAllOffers`);
+
+      if (res && res.status === 200) {
+        dispatch({
+          type: productConstants.GET_ALL_OFFERS_SUCCESS,
+          payload: res.data,
+        });
+
+        return res.data;
+      } else {
+        console.log("error");
+        dispatch({
+          type: productConstants.GET_ALL_OFFERS_FAILURE,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch({
+        type: productConstants.GET_ALL_OFFERS_FAILURE,
+      });
+    }
+  };
+};

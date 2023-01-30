@@ -23,7 +23,7 @@ import {
 import {
   getItemConsumptionSummery,
   saveAllItemConsumptionSummery,
-  performInventoryUpdateEOD,
+  getAllReports
 } from "../../actions";
 import SaveIcon from "@mui/icons-material/Save";
 import EditIcon from "@mui/icons-material/Edit";
@@ -69,9 +69,6 @@ const CusTextField = styled(TextField)`
 & input{
   font-size: 0.75rem;
   padding: 0.25rem;
-  text-align: center;
-  font-family: 'Roboto';
-  color: #000;
 }
  }
 
@@ -89,15 +86,10 @@ const CusTableCell1 = styled(TableCell)`
   padding-bottom: 0;
 `;
 
-// const CusTableCell = styled(TableCell)`
-//   padding: 0;
-//   font-size: 14px;
-//   border: 1px solid #000;
-// `;
-
 const CusTableCell = styled(TableCell)`
   padding: 0;
   font-size: 14px;
+  border: 1px solid #000;
 `;
 
 const SaveButton = styled(Button)`
@@ -146,17 +138,19 @@ const MyPaginate = styled(ReactPaginate)`
   }
 `;
 
-export const StoreInventoryTracking = () => {
+export const RecipeConsumptionReport = (props) => {
   const stores = useSelector((state) => state.store.stores);
   const user = useSelector((state) => state.auth.user);
-  const itemConsumptionSummaryLoading = useSelector(
+  const itemConsumptionSummary = useSelector((state) => state.report.allReports && state.report.allReports.reportItemConsumptionSummary ? state.report.allReports.reportItemConsumptionSummary : []);
+  const itemConsumptionSummaryLoading = useSelector((state) => state.report.loading);
+  /* const itemConsumptionSummaryLoading = useSelector(
     (state) => state.inventory.itemConsumptionSummaryLoading
-  );
-  const itemConsumptionSummary = useSelector(
+  ); */
+  /* const itemConsumptionSummary = useSelector(
     (state) => state.inventory.itemConsumptionSummary
-  );
-  const [selectedStore, setSelectedStore] = useState("");
-  const [selectedStoreObj, setSelectedStoreObj] = useState(null);
+  ); */
+  /* const [selectedStore, setSelectedStore] = useState("");
+  const [selectedStoreObj, setSelectedStoreObj] = useState(null); */
   /* const [itemsByStore, setItemsByStore] = useState([]); */
   const [isSave, setIsSave] = useState({});
   const [isRefresh, setIsRefresh] = useState(false);
@@ -168,23 +162,39 @@ export const StoreInventoryTracking = () => {
     offset: 0,
     numberPerPage: 10,
     pageCount: 0,
-    currentData: itemConsumptionSummary.slice(0, 10),
+    currentData: itemConsumptionSummary ? itemConsumptionSummary.slice(0, 10) : [],
   });
   const [updatedItemList, setUpdatedItemList] = useState([]);
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (user.roleCategory !== "SUPER_ADMIN") {
-      setSelectedStoreObj(getSelectableStores(stores)[0])
+  /* useEffect(() => {
+    if (props.selectedStoreObj) {
+      dispatch(getItemConsumptionSummery(props.selectedStoreObj, "NON-RECIPE"));
     }
-  }, []);
+  }, [props.selectedStoreObj, isRefresh]); */
 
   useEffect(() => {
-    if (selectedStoreObj) {
-      dispatch(getItemConsumptionSummery(selectedStoreObj, "RECIPE"));
-    }
-  }, [selectedStoreObj, isRefresh]);
+    dispatch(
+      getAllReports(
+        props.restaurantId ? props.restaurantId : "ALL",
+        props.storeId ? props.storeId : "ALL",
+        `${props.startDate.getFullYear()}-${
+          props.startDate.getMonth() + 1
+        }-${props.startDate.getDate()}`,
+        `${props.endDate.getFullYear()}-${
+          props.endDate.getMonth() + 1
+        }-${props.endDate.getDate()}`,
+        props.selectedReport
+      )
+    );
+  }, [
+    props.restaurantId,
+    props.storeId,
+    props.startDate,
+    props.endDate,
+    props.selectedReport,
+  ]);
 
   useEffect(() => {
     setPagination((prevState) => ({
@@ -196,14 +206,6 @@ export const StoreInventoryTracking = () => {
       ),
     }));
   }, [pagination.numberPerPage, pagination.offset, itemConsumptionSummary]);
-
-  const handleChangeStore = (event) => {
-    setSelectedStore(event.target.value);
-  };
-
-  const handleSelectedStore = (store) => {
-    setSelectedStoreObj(store);
-  };
 
   const handleRefresh = () => {
     if (isRefresh) {
@@ -223,7 +225,7 @@ export const StoreInventoryTracking = () => {
     setIsSave(edits);
   };
 
-  const updateItemHandle = (item, consumption, remarks, vari) => {
+  const updateItemHandle = (item, consumption, remarks) => {
     let l = updatedItemList;
 
     l =  l.filter(function(el) { return el.itemId !== item.itemId; }); 
@@ -233,7 +235,6 @@ export const StoreInventoryTracking = () => {
       itemEodConsumptionQty: consumption && consumption[item.id]
         ? consumption[item.id]
         : item.itemEodConsumptionQty,
-      itemConsumptionVarianceQty: getVariance2(vari, item),
       remarks: remarks && remarks[item.id] ? remarks[item.id] : item.remarks,
       updatedBy: user.loginId,
       updatedDate: new Date(),
@@ -244,16 +245,6 @@ export const StoreInventoryTracking = () => {
     setUpdatedItemList(l);
 
     onSaveClickHandle(item.id);
-  };
-
-  const getVariance2 = (vari, item) => {
-    let e = vari
-      ? Number(vari)
-      : Number(item.itemEodConsumptionQty);
-
-    return (
-      Number(Number(e) + Number(item.itemCurrConsumptionQty) - Number(item.poNetQty)).toFixed(2)
-    );
   };
 
   const getVariance = (item) => {
@@ -297,25 +288,6 @@ export const StoreInventoryTracking = () => {
     setPagination({ ...pagination, offset });
   };
 
-  const handleEODBtn = () => {
-    if (!selectedStoreObj) {
-      toast.error("Please select a store first!");
-      return;
-    }
-
-    dispatch(
-      performInventoryUpdateEOD(
-        selectedStoreObj.storeId,
-        selectedStoreObj.restaurantId
-      )
-    ).then((res) => {
-      if (res) {
-        //window.location.reload();
-        handleRefresh();
-      }
-    });
-  };
-
   const getSelectableStores = (list) =>{
     if(user.roleCategory === "SUPER_ADMIN"){
       return list;
@@ -330,51 +302,6 @@ export const StoreInventoryTracking = () => {
 
   return (
     <div>
-      <div>
-        <Row>
-          <Col sm={3}></Col>
-          <Col sm={6}>
-            <div style={{ display: "flex" }} className="align-items-center">
-              <div style={{ width: "125px" }}>
-                <CuTypography>Select Store:</CuTypography>
-              </div>
-              {user.roleCategory === "SUPER_ADMIN" ? 
-              <FormControl fullWidth>
-              <InputLabel
-                shrink={true}
-                sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
-                id="demo-simple-select-label"
-              >
-                Please select the store
-              </InputLabel>
-              <CusSelect
-                sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={selectedStore}
-                label="Please select the store"
-                onChange={handleChangeStore}
-                notched={true}
-              >
-                {stores.map((store) => (
-                  <MenuItem
-                    onClick={() => {
-                      handleSelectedStore(store);
-                    }}
-                    value={store.resturantName}
-                  >
-                    <span>{store.resturantName}</span>
-                  </MenuItem>
-                ))}
-              </CusSelect>
-            </FormControl>:
-             <CuTypography>{getSelectableStores(stores)[0].resturantName}</CuTypography>
-              }
-            </div>
-          </Col>
-          <Col sm={3}></Col>
-        </Row>
-      </div>
       <div className="mt-3">
         <TableContainer
           className="mt-3"
@@ -387,7 +314,7 @@ export const StoreInventoryTracking = () => {
                 <CusTableCell1 align="center">NO</CusTableCell1>
                 <CusTableCell1 align="center">ITEM NO</CusTableCell1>
                 <CusTableCell1 align="center">ITEM NAME</CusTableCell1>
-                <CusTableCell1 align="center">UOM</CusTableCell1>
+                {/* <CusTableCell1 align="center">UOM</CusTableCell1> */}
                 <CusTableCell1 align="center">SOD INV.</CusTableCell1>
                 <CusTableCell1 align="center">DAILY INV.</CusTableCell1>
                 <CusTableCell1 align="center">WASTAGE</CusTableCell1>
@@ -396,16 +323,16 @@ export const StoreInventoryTracking = () => {
                 <CusTableCell1 align="center">EOD INV.</CusTableCell1>
                 <CusTableCell1 align="center">VARIANCE</CusTableCell1>
                 <CusTableCell1 align="center">AMOUNT</CusTableCell1>
-                <CusTableCell1 align="center">
+                {/* <CusTableCell1 align="center">
                   COMMENTS FOR VARIANCE
-                </CusTableCell1>
+                </CusTableCell1> */}
                 <CusTableCell1 align="center">STATUS</CusTableCell1>
                 {/* <CusTableCell1 align="center">ACTION</CusTableCell1> */}
               </TableRow>
             </TableHead>
             <TableBody>
               <TableRow>
-                <CusTableCell align="center" colSpan={4}>
+                <CusTableCell align="center" colSpan={3}>
                   <Typography
                     sx={{ fontSize: "0.75rem", color: "red" }}
                   ></Typography>
@@ -457,7 +384,7 @@ export const StoreInventoryTracking = () => {
                 </CusTableCell>
               </TableRow>
               <TableRow>
-                <CusTableCell align="center" colSpan={4}>
+                <CusTableCell align="center" colSpan={3}>
                   <Typography
                     sx={{ fontSize: "0.75rem", color: "red" }}
                   ></Typography>
@@ -497,7 +424,7 @@ export const StoreInventoryTracking = () => {
                     VARIANCE = (E + D) - T
                   </Typography>
                 </CusTableCell>
-                <CusTableCell align="center" colSpan={4}>
+                <CusTableCell align="center" colSpan={3}>
                   <Typography
                     sx={{ fontSize: "0.75rem", color: "red" }}
                   ></Typography>
@@ -519,9 +446,9 @@ export const StoreInventoryTracking = () => {
                 </TableRow>
               ) : (
                 <>
-                  {selectedStoreObj ? (
+                  {props.selectedStoreObj ? (
                     <>
-                      {itemConsumptionSummary.length > 0 ? (
+                      {itemConsumptionSummary && itemConsumptionSummary.length > 0 ? (
                         <>
                           {itemConsumptionSummary.map((item, index) => (
                             <TableRow key={item.id}>
@@ -540,39 +467,39 @@ export const StoreInventoryTracking = () => {
                                   {item.itemName}
                                 </Typography>
                               </CusTableCell>
-                              <CusTableCell align="center">
+                              {/* <CusTableCell align="center">
                                 <Typography sx={{ fontSize: "0.75rem" }}>
                                   {item.itemUom}
                                 </Typography>
-                              </CusTableCell>
+                              </CusTableCell> */}
                               <CusTableCell align="center">
                                 <Typography sx={{ fontSize: "0.75rem" }}>
-                                  {item.poOpngQty}
+                                  {item.opngQty}
                                 </Typography>
                               </CusTableCell>
                               <CusTableCell align="center">
                                 <Typography sx={{ fontSize: "0.75rem" }}>
-                                  {item.poTodayQty}
+                                  {item.itemOrdered}
                                 </Typography>
                               </CusTableCell>
                               <CusTableCell align="center">
                                 <Typography sx={{ fontSize: "0.75rem" }}>
-                                  {item.poWastageQty}
+                                  {item.itemWasted}
                                 </Typography>
                               </CusTableCell>
                               <CusTableCell align="center">
                                 <Typography sx={{ fontSize: "0.75rem" }}>
-                                  {item.poNetQty}
+                                  {}
                                 </Typography>
                               </CusTableCell>
                               <CusTableCell align="center">
                                 <Typography sx={{ fontSize: "0.75rem" }}>
-                                  {item.itemCurrConsumptionQty}
+                                  {item.itemConsumed}
                                 </Typography>
                               </CusTableCell>
                               <CusTableCell align="center">
                                 <Typography sx={{ fontSize: "0.75rem" }}>
-                                  <CusTextField
+                                  {/* <CusTextField
                                     defaultValue={item.itemEodConsumptionQty}
                                     value={
                                       currentItemEodConsumptionQty[item.id]
@@ -583,31 +510,29 @@ export const StoreInventoryTracking = () => {
                                         [item.id]: event.target.value,
                                       };
                                       setCurrentItemEodConsumptionQty(itemsEod);
-                                      updateItemHandle(item,itemsEod,null,event.target.value)
+                                      updateItemHandle(item,itemsEod,null)
                                     }}
                                     fullWidth
                                     variant="standard"
-                                    /* disabled={!isSave[item.id]} */
                                     InputProps={{
                                       disableUnderline: true, // <== added this
                                     }}
-                                  />
-                                  {/* {item.itemEodConsumptionQty} */}
+                                  /> */}
+                                  {item.eodQty}
                                 </Typography>
                               </CusTableCell>
                               <CusTableCell align="center">
                                 <Typography sx={{ fontSize: "0.75rem" }}>
-                                  {/* {item.itemConsumptionVarianceQty} */}
-                                  {currentItemEodConsumptionQty[item.id] ? getVariance(item) : item.itemConsumptionVarianceQty}
+                                  {item.itemVariance}
                                   {/* {getVariance(item)} */}
                                 </Typography>
                               </CusTableCell>
                               <CusTableCell align="center">
                                 <Typography sx={{ fontSize: "0.75rem" }}>
-                                  Rs. {item.itemConsumptionAmount}
+                                  Rs. {item.itemAmount}
                                 </Typography>
                               </CusTableCell>
-                              <CusTableCell align="center">
+                              {/* <CusTableCell align="center">
                                 <Typography sx={{ fontSize: "0.75rem" }}>
                                   <CusTextField
                                     defaultValue={item.remarks}
@@ -622,14 +547,13 @@ export const StoreInventoryTracking = () => {
                                     }}
                                     fullWidth
                                     variant="standard"
-                                    /* disabled={!isSave[item.id]} */
                                     InputProps={{
                                       disableUnderline: true, // <== added this
                                     }}
                                   />
-                                  {/* {item.remarks} */}
+                                  {item.remarks}
                                 </Typography>
-                              </CusTableCell>
+                              </CusTableCell> */}
                               <CusTableCell
                                 align="center"
                                 sx={{
@@ -730,7 +654,7 @@ export const StoreInventoryTracking = () => {
       </div>
       <div className="text-center mt-4">
         <Row>
-          <Col sm={2} style={{ textAlign: "end" }}>
+          <Col sm={4} style={{ textAlign: "end" }}>
             {/* <SaveButton
               onClick={() => {
                 handleEODBtn();
@@ -739,7 +663,7 @@ export const StoreInventoryTracking = () => {
               INVENTORY EOD
             </SaveButton> */}
           </Col>
-          <Col sm={4} style={{ textAlign: "end" }}>
+          <Col sm={4} style={{ textAlign: "center" }}>
             <ExcelFile
               element={<SaveButton>DOWNLOAD</SaveButton>}
               filename="Item Consumption Summary"
@@ -784,10 +708,10 @@ export const StoreInventoryTracking = () => {
               </ExcelSheet>
             </ExcelFile>
           </Col>
-          <Col sm={4} style={{ textAlign: "start" }}>
+          {/* <Col sm={4} style={{ textAlign: "start" }}>
             <SaveButton onClick={saveAllChangedList}>SAVE</SaveButton>
-          </Col>
-          <Col sm={2} style={{ textAlign: "end" }}>
+          </Col> */}
+          <Col sm={4} style={{ textAlign: "end" }}>
           </Col>
         </Row>
       </div>
