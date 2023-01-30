@@ -1,6 +1,12 @@
 import axios from "../helpers/axios";
 import { reportConstants } from "./constants";
 
+const user = localStorage.getItem("user");
+let userObj = {};
+if(user){
+  userObj = JSON.parse(user)
+}
+
 export const getAllReports = (
   restaurantId,
   storeId,
@@ -18,6 +24,7 @@ export const getAllReports = (
         fromDate,
         toDate,
         reportName,
+        userLoginId: userObj.loginId,
       };
 
       console.log(reqBody);
@@ -98,6 +105,7 @@ export const getReportByType = (
         fromDate,
         toDate,
         reportName,
+        userLoginId: userObj.loginId
       };
 
       console.log(reqBody);
@@ -143,6 +151,7 @@ export const getSalesSummeryByDateListReports = (
         fromDate,
         toDate,
         reportName: "SALES_SUMMARY_BY_DATE_LIST",
+        userLoginId: userObj.loginId
       };
 
       console.log(reqBody);
@@ -190,6 +199,7 @@ export const getSalesSummeryByOrderSourceReports = (
         fromDate,
         toDate,
         reportName: "SALES_SUMMARY_BY_ORDER_SOURCE",
+        userLoginId: userObj.loginId
       };
 
       console.log(reqBody);
@@ -237,6 +247,7 @@ export const getSalesSummeryByPaymentModeReports = (
         fromDate,
         toDate,
         reportName: "SALES_SUMMARY_BY_PAYMENT_MODE",
+        userLoginId: userObj.loginId
       };
 
       console.log(reqBody);
@@ -285,6 +296,7 @@ export const getDashboardSummary = (
         fromDate,
         toDate,
         reportName: "DASHBOARD_SUMMARY",
+        userLoginId: userObj.loginId
       };
 
       console.log(reqBody);

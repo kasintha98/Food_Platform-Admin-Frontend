@@ -30,10 +30,12 @@ import {
   getActiveInventory,
   saveUpdateRecipeItem,
   deleteRecipeItem,
-  getCustomerDetails,
+  getAllProduct,
+  getInventoryUOM
 } from "../../actions";
 import { useSelector, useDispatch } from "react-redux";
 import ReactPaginate from "react-paginate";
+import Layout from "../../containers/NewLayout"
 
 const MyPaginate = styled(ReactPaginate)`
   margin-top: 2rem;
@@ -214,6 +216,8 @@ export const RecipeMaster = () => {
   useEffect(() => {
     dispatch(getActiveRecipes());
     dispatch(getActiveInventory());
+    dispatch(getInventoryUOM());
+    dispatch(getAllProduct());
   }, []);
 
   useEffect(() => {
@@ -503,6 +507,7 @@ export const RecipeMaster = () => {
                   </FormControl> */}
 
                   <CusAutocomplete
+                    key={item.itemId}
                     onChange={(event, newValue) => {
                       let ing = {
                         ...itemIngredient,
@@ -855,7 +860,7 @@ export const RecipeMaster = () => {
   ];
 
   return (
-    <div>
+    <Layout sidebar headerTitle="RECIPE MASTER">
       <TableContainer component={Paper} sx={{ maxHeight: 430 }}>
         {/* <Table sx={{ minWidth: 800 }} aria-label="simple table">
           <TableHead>
@@ -971,6 +976,6 @@ export const RecipeMaster = () => {
         activeClassName={"active"}
       />
       {renderAddModal()}
-    </div>
+    </Layout>
   );
 };

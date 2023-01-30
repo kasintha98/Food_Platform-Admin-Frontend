@@ -230,6 +230,29 @@ function NewLayout(props) {
           </ListItem>
         )}
 
+      {modulesForUser.some(
+          (module) => module.moduleName === "ADMIN FUNCTIONS"
+        ) && (
+          <ListItem>
+            <NavLink to={"/item-master"}>
+              <i className="fa fa-suitcase"></i>
+              &nbsp; Inventory Item Master
+            </NavLink>
+          </ListItem>
+        )}
+
+        {modulesForUser.some(
+          (module) => module.moduleName === "ADMIN FUNCTIONS"
+        ) && (
+          <ListItem>
+            <NavLink to={"/recipe-master"}>
+              <i className="fa fa-suitcase"></i>
+              &nbsp; Recipe Master
+            </NavLink>
+          </ListItem>
+        )}
+
+
         {modulesForUser.some(
           (module) => module.moduleName === "ADMIN FUNCTIONS"
         ) && (

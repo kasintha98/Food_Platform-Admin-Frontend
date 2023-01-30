@@ -617,6 +617,11 @@ export const SearchPurchaseOrder = () => {
             {renderDate(item.purchaseDate)}
           </Typography>
         </CusTableCell>
+        <CusTableCell align="center">
+          <Typography sx={{ fontSize: "0.75rem", marginLeft: "10px !important" }}>
+            {renderDate(item.updatedDate)}
+          </Typography>
+        </CusTableCell>
 
 
         <CusTableCell align="center">
@@ -1164,7 +1169,8 @@ export const SearchPurchaseOrder = () => {
                 <CusTableCell1 align="center">BILL#</CusTableCell1>
                 <CusTableCell1 align="center">SUPPLIER</CusTableCell1>
                 <CusTableCell1 align="center">RECIEVING STORE</CusTableCell1>
-                <CusTableCell1 align="center">BILL DATE</CusTableCell1>
+                <CusTableCell1 align="center">PO DATE</CusTableCell1>
+                <CusTableCell1 align="center" sx={{marginLeft: "10px !important"}}>UPDATED DATE</CusTableCell1>
                 <CusTableCell1 align="center">ITEM#</CusTableCell1>
                 <CusTableCell1 align="center" sx={{minWidth: 170}}>INGREDIENT NAME</CusTableCell1>
                 <CusTableCell1 align="center">UOM</CusTableCell1>
@@ -1184,7 +1190,7 @@ export const SearchPurchaseOrder = () => {
             <TableBody>
               {allSuppliersLoading || closedPurchaseOrderLoading || purchaseOrderCategoryLoading || activeInventoryLoading ? (
                 <TableRow>
-                  <TableCell colSpan={14}>
+                  <TableCell colSpan={15}>
                     <div className="d-flex justify-content-center">
                       <div
                         className="spinner-border text-primary"

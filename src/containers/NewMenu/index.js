@@ -100,6 +100,7 @@ export default function NewMenu(props) {
         dispatch(getDishesBySection(res[0], props.restaurantId, props.storeId));
       }
     });
+    console.log(productList);
   }, [props.restaurantId, props.storeId]);
 
   const handleSubTotal = (total) => {

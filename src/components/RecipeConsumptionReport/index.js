@@ -672,27 +672,19 @@ export const RecipeConsumptionReport = (props) => {
                 data={itemConsumptionSummary}
                 name="Item Consumption Summary"
               >
-                <ExcelColumn label="ID" value="id" />
                 <ExcelColumn label="ITEM NO" value="itemId" />
                 <ExcelColumn label="ITEM NAME" value="itemName" />
+                <ExcelColumn label="ITEM CATEGORY" value="itemCategory" />
                 <ExcelColumn label="RESTAURANT ID" value="restaurantId" />
                 <ExcelColumn label="STORE ID" value="storeId" />
-                <ExcelColumn label="BUSINESS DATE" value="businessDate" />
-                <ExcelColumn label="SOD INV." value="poOpngQty" />
-                <ExcelColumn label="DAILY INV." value="poTodayQty" />
-                <ExcelColumn label="WASTAGE" value="poWastageQty" />
-                <ExcelColumn label="TOTAL" value="poNetQty" />
-                <ExcelColumn
-                  label="CONSUMPTION"
-                  value="itemCurrConsumptionQty"
-                />
-                <ExcelColumn label="EOD INV." value="itemEodConsumptionQty" />
-                <ExcelColumn
-                  label="VARIANCE"
-                  value="itemConsumptionVarianceQty"
-                />
-                <ExcelColumn label="AMOUNT" value="itemConsumptionAmount" />
-                <ExcelColumn label="COMMENTS FOR VARIANCE" value="remarks" />
+                <ExcelColumn label="STORE NAME" value="storeName" />
+                <ExcelColumn label="SOD INV." value="opngQty" />
+                <ExcelColumn label="DAILY INV." value="itemOrdered" />
+                <ExcelColumn label="WASTAGE" value="itemWasted" />
+                <ExcelColumn label="CONSUMPTION" value="itemConsumed" />
+                <ExcelColumn label="EOD INV." value="eodQty" />
+                <ExcelColumn label="VARIANCE" value="itemVariance" />
+                <ExcelColumn label="AMOUNT" value="itemAmount" />
                 <ExcelColumn
                   label="STATUS"
                   value={(col) =>
@@ -701,10 +693,6 @@ export const RecipeConsumptionReport = (props) => {
                       : "Complete"
                   }
                 />
-                <ExcelColumn label="createdBy" value="createdBy" />
-                <ExcelColumn label="createdDate" value="createdDate" />
-                <ExcelColumn label="updatedBy" value="updatedBy" />
-                <ExcelColumn label="updatedDate" value="updatedDate" />
               </ExcelSheet>
             </ExcelFile>
           </Col>

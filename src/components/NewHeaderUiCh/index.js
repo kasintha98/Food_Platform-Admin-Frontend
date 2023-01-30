@@ -228,6 +228,26 @@ export const NewHeader = (props) => {
     setOpen(false);
   };
 
+  const itemMasterClicked = (event) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+    let path = `/item-master`; 
+    history.push(path);
+
+    setOpen(false);
+  };
+
+  const recipeClicked = (event) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+    let path = `/recipe-master`; 
+    history.push(path);
+
+    setOpen(false);
+  };
+
 
   const eodClicked = (event) => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
@@ -546,6 +566,8 @@ export const NewHeader = (props) => {
                               <MenuItem className="menuItemFormatter" onClick={restaurantsClicked}>Restaurants</MenuItem>
                               <MenuItem className="menuItemFormatter" onClick={inventoryManagementClicked}> Inventory Mgmt</MenuItem>
                               <MenuItem className="menuItemFormatter" onClick={couponCodeClicked}>Coupon Code</MenuItem>
+                              <MenuItem className="menuItemFormatter" onClick={itemMasterClicked}>Inventory Item Master</MenuItem>
+                              <MenuItem className="menuItemFormatter" onClick={recipeClicked}>Recipe Master</MenuItem>
                               <MenuItem className="menuItemFormatter" onClick={eodClicked}> End Of Day</MenuItem>
                             </MenuList>
                           </ClickAwayListener>
