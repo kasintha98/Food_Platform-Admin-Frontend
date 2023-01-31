@@ -113,16 +113,24 @@ const CusTextField2 = styled(TextField)`
  }
 `;
 
+const CusTableCell11 = styled(TableCell)`
+  padding: 0;
+  font-size: 0.75rem;
+  background-color: #837E7C;
+  font-weight: 900;
+  color: #fff;
+  margin-left: 10px;
+  margin-right: 10px;
+`;
+
 const CusTableCell = styled(TableCell)`
   padding: 0;
   font-size: 14px;
-  border: 1px solid #000;
 `;
 
 const CusTableCell2 = styled(TableCell)`
   padding: 0;
   font-size: 14px;
-  border: 1px solid #000;
   padding-top: 8px;
   padding-bottom: 8px;
 `;
@@ -1418,13 +1426,20 @@ export const MenuMaster = () => {
     );
   };
 
+  const CuTypography = styled(Typography)`
+  color: #7f7f7f;
+  font-weight: bold;
+  font-size: 0.75rem;
+  line-height: 1rem;
+`;
+
   return (
     <div>
       <Row className="align-items-center">
-        <div style={{ minWidth: "180px" }}>
-          <Typography sx={{ color: "#7F7F7F", fontWeight: "bold" }}>
-            Select Store
-          </Typography>
+        <div style={{ minWidth: "150px" }}>
+          <CuTypography sx={{fontFamily: "Roboto, sans-serif", marginLeft:"10%"}}>
+            Select store
+          </CuTypography>
         </div>
         <Col sm={2}>
           <FormControl fullWidth>
@@ -1535,34 +1550,39 @@ export const MenuMaster = () => {
           <Table sx={{ minWidth: 1700 }} aria-label="simple table" stickyHeader>
             <TableHead>
               <TableRow>
-                <CusTableCell align="center">No</CusTableCell>
-                <CusTableCell align="center">Store Name</CusTableCell>
-                <CusTableCell2 align="center">
+                <CusTableCell11 sx={{width:"100px"}} align="center">No</CusTableCell11>
+                <CusTableCell11 align="center">Store Name</CusTableCell11>
+                <CusTableCell11 align="center">
                   <div
                     style={{
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
+                      flexDirection:"column"
                     }}
                   >
                     Dish Section &nbsp;
-                    <CusTextField2
+                    <CusTextField2 
                       value={sectionKeyword}
                       onChange={(event) => {
                         setIsSearched(true);
                         setSectionKeyword(event.target.value);
                       }}
-                      sx={{ width: "150px" }}
+                      sx={{ width: "150px", marginRight:"5px", marginLeft:"5px", marginBottom:"5px"}}
                       label="Search"
+                      InputLabelProps={{
+                        style: { fontWeight: 600,fontSize:'12px',color:"#fff",
+                        fontFamily: "Roboto Condensed, sans-serif" } }}
                     />
                   </div>
-                </CusTableCell2>
-                <CusTableCell align="center">
+                </CusTableCell11>
+                <CusTableCell11 align="center">
                   <div
                     style={{
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
+                      flexDirection:"column"
                     }}
                   >
                     Dish Category &nbsp;
@@ -1572,17 +1592,23 @@ export const MenuMaster = () => {
                         setIsSearched(true);
                         setCategoryKeyword(event.target.value);
                       }}
-                      sx={{ width: "150px" }}
+                      sx={{ width: "150px",marginRight:"5px", marginLeft:"5px", marginBottom:"5px", borderColor:"#fff" }}
                       label="Search"
+                      InputLabelProps={{
+                        style: { fontWeight: 600,fontSize:'12px',color:"#fff",
+                        fontFamily: "Roboto Condensed, sans-serif" } }}
+                      // InputProps={{style: { borderColor: "#fff",
+                      //   borderWidth: "2px"}}}
                     />
                   </div>
-                </CusTableCell>
-                <CusTableCell align="center">
+                </CusTableCell11>
+                <CusTableCell11 align="center">
                   <div
                     style={{
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
+                      flexDirection:"column"
                     }}
                   >
                     Dish Name &nbsp;
@@ -1592,23 +1618,26 @@ export const MenuMaster = () => {
                         setIsSearched(true);
                         setNameKeyword(event.target.value);
                       }}
-                      sx={{ width: "150px" }}
+                      sx={{ width: "150px",marginRight:"5px", marginLeft:"5px", marginBottom:"5px" }}
                       label="Search"
+                      InputLabelProps={{
+                        style: { fontWeight: 600,fontSize:'12px',color:"#fff",
+                        fontFamily: "Roboto Condensed, sans-serif" } }}
                     />
                   </div>
-                </CusTableCell>
-                <CusTableCell align="center">Veg (Y/N)</CusTableCell>
-                <CusTableCell align="center">Spicy Indicator</CusTableCell>
-                <CusTableCell align="center">Dish Description</CusTableCell>
-                <CusTableCell align="center">Size</CusTableCell>
-                <CusTableCell align="center">Price</CusTableCell>
-                <CusTableCell align="center">Image Name</CusTableCell>
-                <CusTableCell align="center">Dish Visible (Y/N)</CusTableCell>
-                <CusTableCell align="center">KDS Counter Name</CusTableCell>
-                <CusTableCell align="center">Topping (Y/N)</CusTableCell>
-                <CusTableCell align="center">Online Applicable (Y/N)</CusTableCell>
-                <CusTableCell align="center">Add Toppings</CusTableCell>
-                <CusTableCell align="center">Action</CusTableCell>
+                </CusTableCell11>
+                <CusTableCell11 sx={{width:"150px"}} align="center">Veg</CusTableCell11>
+                <CusTableCell11 align="center">Spicy Indicator</CusTableCell11>
+                <CusTableCell11 align="center">Dish Description</CusTableCell11>
+                <CusTableCell11 align="center">Size</CusTableCell11>
+                <CusTableCell11 align="center">Price</CusTableCell11>
+                <CusTableCell11 align="center">Image Name</CusTableCell11>
+                <CusTableCell11 sx={{width:"150px"}} align="center">Dish Visible</CusTableCell11>
+                <CusTableCell11 sx={{width:"150px"}} align="center">KDS Counter</CusTableCell11>
+                <CusTableCell11 sx={{width:"150px"}} align="center">Topping</CusTableCell11>
+                <CusTableCell11 sx={{width:"150px"}} align="center">Online Applicable</CusTableCell11>
+                <CusTableCell11 align="center">Add Toppings</CusTableCell11>
+                <CusTableCell11 align="center">Action</CusTableCell11>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -1637,7 +1666,7 @@ export const MenuMaster = () => {
                       {productsOfPageRed.map((product, index) => (
                         <TableRow key={product.id}>
                           <CusTableCell align="center">
-                            {index + 1 + (page - 1) * itemsPerPage}
+                            <span style={{marginLeft:"10px"}}>{index + 1 + (page - 1) * itemsPerPage}</span>
                           </CusTableCell>
                           <CusTableCell
                             align="center"
@@ -1684,6 +1713,7 @@ export const MenuMaster = () => {
                           >
                             <FormControl fullWidth>
                               <NativeSelect
+                              disableUnderline
                                 defaultValue={product.section}
                                 inputProps={{
                                   name: "status",
@@ -1718,6 +1748,7 @@ export const MenuMaster = () => {
                           >
                             <FormControl fullWidth>
                               <NativeSelect
+                              disableUnderline
                                 defaultValue={product.dish}
                                 inputProps={{
                                   name: "status",
@@ -1828,6 +1859,9 @@ export const MenuMaster = () => {
                               }}
                               fullWidth
                               variant="standard"
+                              InputProps={{
+                                disableUnderline: true, // <== added this
+                              }}
                             />
                           </CusTableCell>
                           <CusTableCell
@@ -1836,6 +1870,7 @@ export const MenuMaster = () => {
                           >
                             <FormControl fullWidth>
                               <NativeSelect
+                              disableUnderline
                                 defaultValue={product.dishCategory}
                                 inputProps={{
                                   name: "status",
@@ -1873,6 +1908,7 @@ export const MenuMaster = () => {
                           >
                             <FormControl fullWidth>
                               <NativeSelect
+                              disableUnderline
                                 disabled={!isSave[product.id]}
                                 defaultValue={product.dishSpiceIndicatory}
                                 inputProps={{
@@ -1942,6 +1978,9 @@ export const MenuMaster = () => {
                                 },
                               }}
                               variant="standard"
+                              InputProps={{
+                                disableUnderline: true, // <== added this
+                              }}
                             />
                           </CusTableCell>
                           <CusTableCell
@@ -1949,6 +1988,7 @@ export const MenuMaster = () => {
                             style={{ minWidth: "80px" }}
                           >
                             <NativeSelect
+                            disableUnderline
                               disabled={!isSave[product.id]}
                               defaultValue={product.productSize}
                               inputProps={{
@@ -2030,6 +2070,9 @@ export const MenuMaster = () => {
                                 }}
                                 fullWidth
                                 variant="standard"
+                                InputProps={{
+                                  disableUnderline: true, // <== added this
+                                }}
                               />
                             </div>
                           </CusTableCell>
@@ -2096,6 +2139,7 @@ export const MenuMaster = () => {
                             style={{ minWidth: "50px" }}
                           >
                             <NativeSelect
+                            disableUnderline
                               disabled={!isSave[product.id]}
                               defaultValue={product.menuAvailableFlag}
                               inputProps={{
@@ -2128,6 +2172,7 @@ export const MenuMaster = () => {
                           </CusTableCell>
                           <CusTableCell align="center">
                             <NativeSelect
+                            disableUnderline
                               disabled={!isSave[product.id]}
                               defaultValue={product.kdsRoutingName}
                               inputProps={{
@@ -2159,6 +2204,7 @@ export const MenuMaster = () => {
                             style={{ minWidth: "50px" }}
                           >
                             <NativeSelect
+                            disableUnderline
                               disabled={!isSave[product.id]}
                               defaultValue={product.ingredientExistsFalg}
                               inputProps={{
@@ -2194,6 +2240,7 @@ export const MenuMaster = () => {
                             style={{ minWidth: "50px" }}
                           >
                             <NativeSelect
+                            disableUnderline
                               disabled={!isSave[product.id]}
                               defaultValue={product.onlineApplicableFlag}
                               inputProps={{

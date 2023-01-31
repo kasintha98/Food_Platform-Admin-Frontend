@@ -1,0 +1,18 @@
+.textheader {
+    font-family: 'Roboto Condensed', sans-serif !important;
+    font-size: 13px; 
+    font-weight: bold; 
+  }
+
+  .inputlabeltxt {
+    font-family: 'Roboto Condensed', sans-serif !important;
+    font-size: 12px; 
+  }
+
+  .topTxtStyle {
+    font-family: 'Niconne', cursive !important;
+    font-size: 45px !important;
+    font-weight: bold !important;
+    color: #ff944e;
+    text-align: center !important;
+  }
