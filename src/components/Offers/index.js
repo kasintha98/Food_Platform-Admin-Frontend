@@ -943,10 +943,8 @@ export const Offers = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <div style={{ display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between'}}>
-      {/* <SaveButton style={{height: '62%'}}
+
+      <SaveButton
         className="mt-4"
         onClick={
           () => {
@@ -955,8 +953,11 @@ export const Offers = () => {
         }
       >
         ADD ANOTHER
-      </SaveButton> */}
-
+      </SaveButton>
+      
+      <div style={{ display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between'}}>
       <MyPaginate
         previousLabel={"Previous"}
         nextLabel={"Next"}

@@ -1063,3 +1063,179 @@ export const getAllOffers = () => {
     }
   };
 };
+
+export const saveOffer = (offer) => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: productConstants.SAVE_OFFER_REQUEST,
+      });
+
+      const res = await axios.post(`/saveOffer`, offer);
+
+      if (res.status === 200) {
+        dispatch({
+          type: productConstants.SAVE_OFFER_SUCCESS,
+          payload: res.data,
+        });
+        toast.success("Offer added successfully!");
+
+        return res.data;
+      } else {
+        dispatch({
+          type: productConstants.SAVE_OFFER_FAILURE,
+        });
+        console.log("error");
+        toast.error("Error when adding offer, please try again!");
+      }
+    } catch (error) {
+      dispatch({
+        type: productConstants.SAVE_OFFER_FAILURE,
+      });
+      toast.error("Error when adding offer, please try again!");
+      console.log(error);
+    }
+  };
+};
+
+export const getOffersByStatus = (status) => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: productConstants.GET_ALL_OFFERS_BY_STATUS_REQUEST,
+      });
+
+      const res = await axios.get(`/getOffersByStatus?status=${status}`);
+
+      if (res && res.status === 200) {
+        dispatch({
+          type: productConstants.GET_ALL_OFFERS_BY_STATUS_SUCCESS,
+          payload: res.data,
+        });
+
+        return res.data;
+      } else {
+        console.log("error");
+        dispatch({
+          type: productConstants.GET_ALL_OFFERS_BY_STATUS_FAILURE,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch({
+        type: productConstants.GET_ALL_OFFERS_BY_STATUS_FAILURE,
+      });
+    }
+  };
+};
+
+export const getConfigOffersAppFlag = (restaurantId) => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: productConstants.GET_OFFERS_APP_FLAG_CONFIG_REQUEST,
+      });
+
+      const res = await axios.get(`/getConfigDetailsByCriteria`, {
+        params: {
+          restaurantId: "R001",
+          storeId: "ALL",
+          criteria: "OFFERS_APPLICABLE_FLAG",
+        },
+      });
+
+      if (res.status === 200) {
+        dispatch({
+          type: productConstants.GET_OFFERS_APP_FLAG_CONFIG_SUCCESS,
+          payload: res.data,
+        });
+        return res.data;
+      } else {
+        dispatch({
+          type: productConstants.GET_OFFERS_APP_FLAG_CONFIG_FAILURE,
+          payload: { error: "Error fetching data!" },
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch({
+        type: productConstants.GET_OFFERS_APP_FLAG_CONFIG_FAILURE,
+        payload: { error: "Error fetching data!" },
+      });
+    }
+  };
+};
+
+export const getConfigOffersCriteria = (restaurantId) => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: productConstants.GET_OFFERS_CRITERIA_CONFIG_REQUEST,
+      });
+
+      const res = await axios.get(`/getConfigDetailsByCriteria`, {
+        params: {
+          restaurantId: "R001",
+          storeId: "ALL",
+          criteria: "OFFERS_CRITERIA",
+        },
+      });
+
+      if (res.status === 200) {
+        dispatch({
+          type: productConstants.GET_OFFERS_CRITERIA_CONFIG_SUCCESS,
+          payload: res.data,
+        });
+        return res.data;
+      } else {
+        dispatch({
+          type: productConstants.GET_OFFERS_CRITERIA_CONFIG_FAILURE,
+          payload: { error: "Error fetching data!" },
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch({
+        type: productConstants.GET_OFFERS_CRITERIA_CONFIG_FAILURE,
+        payload: { error: "Error fetching data!" },
+      });
+    }
+  };
+};
+
+export const getConfigOffersFunction = (restaurantId) => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: productConstants.GET_OFFERS_FUNCTION_CONFIG_REQUEST,
+      });
+
+      const res = await axios.get(`/getConfigDetailsByCriteria`, {
+        params: {
+          restaurantId: "R001",
+          storeId: "ALL",
+          criteria: "OFFERS_FUNCTION",
+        },
+      });
+
+      if (res.status === 200) {
+        dispatch({
+          type: productConstants.GET_OFFERS_FUNCTION_CONFIG_SUCCESS,
+          payload: res.data,
+        });
+        return res.data;
+      } else {
+        dispatch({
+          type: productConstants.GET_OFFERS_FUNCTION_CONFIG_FAILURE,
+          payload: { error: "Error fetching data!" },
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch({
+        type: productConstants.GET_OFFERS_FUNCTION_CONFIG_FAILURE,
+        payload: { error: "Error fetching data!" },
+      });
+    }
+  };
+};

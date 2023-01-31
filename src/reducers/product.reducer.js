@@ -20,7 +20,12 @@ const initState = {
   masterProducts: [],
   pageLoading: false,
   allOffersLoading: false,
-  allOffers: []
+  allOffers: [],
+  offersByStatus: [],
+  offersByStatusLoading: false,
+  offersAppFlagConfig: [],
+  offersCriteriaConfig: [],
+  offersFunctionConfig: []
 };
 
 export default (state = initState, action) => {
@@ -292,6 +297,84 @@ export default (state = initState, action) => {
         allOffersLoading: false
       };
       break;
+
+      case productConstants.GET_ALL_OFFERS_BY_STATUS_REQUEST:
+        state = {
+          ...state,
+          offersByStatusLoading: true
+        };
+        break;
+      case productConstants.GET_ALL_OFFERS_BY_STATUS_SUCCESS:
+        state = {
+          ...state,
+          offersByStatus: action.payload,
+          offersByStatusLoading: false
+        };
+        break;
+      case productConstants.GET_ALL_OFFERS_BY_STATUS_FAILURE:
+        state = {
+          ...state,
+          offersByStatus: [],
+          offersByStatusLoading: false
+        };
+        break;
+
+
+        case productConstants.GET_OFFERS_APP_FLAG_CONFIG_REQUEST:
+          state = {
+            ...state,
+          };
+          break;
+        case productConstants.GET_OFFERS_APP_FLAG_CONFIG_SUCCESS:
+          state = {
+            ...state,
+            offersAppFlagConfig: action.payload,
+          };
+          break;
+        case productConstants.GET_OFFERS_APP_FLAG_CONFIG_FAILURE:
+          state = {
+            ...state,
+            offersAppFlagConfig: [],
+          };
+          break;
+
+
+          case productConstants.GET_OFFERS_CRITERIA_CONFIG_REQUEST:
+            state = {
+              ...state,
+            };
+            break;
+          case productConstants.GET_OFFERS_CRITERIA_CONFIG_SUCCESS:
+            state = {
+              ...state,
+              offersCriteriaConfig: action.payload,
+            };
+            break;
+          case productConstants.GET_OFFERS_CRITERIA_CONFIG_FAILURE:
+            state = {
+              ...state,
+              offersCriteriaConfig: [],
+            };
+            break;
+
+
+            case productConstants.GET_OFFERS_FUNCTION_CONFIG_REQUEST:
+              state = {
+                ...state,
+              };
+              break;
+            case productConstants.GET_OFFERS_FUNCTION_CONFIG_SUCCESS:
+              state = {
+                ...state,
+                offersFunctionConfig: action.payload,
+              };
+              break;
+            case productConstants.GET_OFFERS_FUNCTION_CONFIG_FAILURE:
+              state = {
+                ...state,
+                offersFunctionConfig: [],
+              };
+              break;
   }
   return state;
 };
