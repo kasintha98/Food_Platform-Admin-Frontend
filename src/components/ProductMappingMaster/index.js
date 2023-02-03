@@ -92,18 +92,32 @@ const CusTextField = styled(TextField)`
  }
 `;
 
+// const CusTableCell = styled(TableCell)`
+//   padding: 0;
+//   font-size: 14px;
+//   border: 1px solid #000;
+// `;
+
 const CusTableCell = styled(TableCell)`
   padding: 0;
   font-size: 14px;
-  border: 1px solid #000;
 `;
+
+// const CusTableCell1 = styled(TableCell)`
+//   padding: 0;
+//   font-size: 14px;
+//   border: 1px solid #000;
+//   background-color: #ffc000;
+//   color: #fff;
+// `;
 
 const CusTableCell1 = styled(TableCell)`
   padding: 0;
   font-size: 14px;
-  border: 1px solid #000;
-  background-color: #ffc000;
+  border: 1px solid #837E7C;
+  background-color: #837E7C;
   color: #fff;
+  height: 40px;
 `;
 
 const CusMenuItem = styled(MenuItem)``;
