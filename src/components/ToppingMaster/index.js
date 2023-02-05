@@ -29,7 +29,7 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 
-const itemsPerPage = 10;
+const itemsPerPage = 20;
 
 const CusSelect = styled(Select)`
   & .MuiSelect-select {
@@ -48,10 +48,27 @@ const CusInputLabel = styled(InputLabel)`
   }
 `;
 
+// const CusTableCell = styled(TableCell)`
+//   padding: 0;
+//   font-size: 14px;
+//   border: 1px solid #000;
+// `;
+
 const CusTableCell = styled(TableCell)`
   padding: 0;
   font-size: 14px;
-  border: 1px solid #000;
+`;
+
+const CusTableCellHeader = styled(TableCell)`
+  padding: 0;
+  font-size: 0.75rem;
+  background-color: #837E7C;
+  font-weight: 900;
+  color: #fff;
+  margin-left: 10px;
+  margin-right: 10px;
+  height: 40px;
+  border: 1px solid #837E7C;
 `;
 
 const CusTextField = styled(TextField)`
@@ -431,15 +448,15 @@ export const ToppingMaster = () => {
           <Table sx={{ minWidth: 800 }} stickyHeader>
             <TableHead>
               <TableRow>
-                <CusTableCell align="center">Store Name</CusTableCell>
-                <CusTableCell align="center">Topping Type</CusTableCell>
-                <CusTableCell align="center">Topping Name</CusTableCell>
-                <CusTableCell align="center">Size</CusTableCell>
-                <CusTableCell align="center">Price</CusTableCell>
+                <CusTableCellHeader align="center">Store Name</CusTableCellHeader>
+                <CusTableCellHeader align="center">Topping Type</CusTableCellHeader>
+                <CusTableCellHeader align="center">Topping Name</CusTableCellHeader>
+                <CusTableCellHeader align="center">Size</CusTableCellHeader>
+                <CusTableCellHeader sx={{width: 100}} align="center">Price</CusTableCellHeader>
                 {/* <CusTableCell align="center">
                   Topping Available(Y/N)
                 </CusTableCell> */}
-                <CusTableCell align="center">Action</CusTableCell>
+                <CusTableCellHeader align="center">Action</CusTableCellHeader>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -466,6 +483,7 @@ export const ToppingMaster = () => {
                           <CusTableCell align="center">
                             <FormControl fullWidth>
                               <NativeSelect
+                              disableUnderline
                                 key={item.id}
                                 defaultValue={`${
                                   item.restaurantId - item.storeId
@@ -495,6 +513,7 @@ export const ToppingMaster = () => {
                           <CusTableCell align="center">
                             <FormControl fullWidth>
                               <NativeSelect
+                              disableUnderline
                                 key={item.id}
                                 defaultValue={item.category}
                                 inputProps={{
@@ -535,10 +554,14 @@ export const ToppingMaster = () => {
                               fullWidth
                               variant="standard"
                               disabled={!isSave[item.id]}
+                              InputProps={{
+                                disableUnderline: true,
+                              }}
                             />
                           </CusTableCell>
                           <CusTableCell align="center">
                             <NativeSelect
+                            disableUnderline
                               key={item.id}
                               defaultValue={item.size}
                               inputProps={{
@@ -590,6 +613,10 @@ export const ToppingMaster = () => {
                               fullWidth
                               variant="standard"
                               disabled={!isSave[item.id]}
+                              InputProps={{
+                                disableUnderline: true, 
+                              }}
+                              inputProps={{style: { textAlign: 'center' }}}
                             />
                           </CusTableCell>
                           {/* <CusTableCell align="center">
@@ -626,7 +653,7 @@ export const ToppingMaster = () => {
                                 color="success"
                                 sx={{
                                   fontSize: "0.75rem",
-                                  lineHeight: "1rem",
+                                  lineHeight: "0.60rem",
                                   padding: "5px 16px",
                                 }}
                                 onClick={() => {
@@ -643,7 +670,7 @@ export const ToppingMaster = () => {
                                 color="warning"
                                 sx={{
                                   fontSize: "0.75rem",
-                                  lineHeight: "1rem",
+                                  lineHeight: "0.60rem",
                                   padding: "5px 16px",
                                 }}
                                 onClick={() => {
