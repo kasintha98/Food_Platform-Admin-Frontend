@@ -1064,7 +1064,7 @@ export const getAllOffers = () => {
   };
 };
 
-export const saveOffer = (offer) => {
+export const saveOffer = (offer, isDelete) => {
   return async (dispatch) => {
     try {
       dispatch({
@@ -1078,8 +1078,12 @@ export const saveOffer = (offer) => {
           type: productConstants.SAVE_OFFER_SUCCESS,
           payload: res.data,
         });
-        toast.success("Offer added successfully!");
 
+        isDelete
+          ? toast.success("Offer deleted successfully!")
+          : toast.success("Offer added successfully!");
+
+        dispatch(getOffersByStatus("ACTIVE"));
         return res.data;
       } else {
         dispatch({

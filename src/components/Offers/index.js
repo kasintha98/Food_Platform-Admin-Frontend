@@ -23,10 +23,14 @@ import CloseIcon from "@mui/icons-material/Close";
 import SaveIcon from "@mui/icons-material/Save";
 import EditIcon from "@mui/icons-material/Edit";
 import {
-  getActiveInventory,
-  saveUpdateInventoryItem,
+  saveOffer,
   deleteInventoryItem,
-  getAllOffers
+  getOffersByStatus,
+  getConfigOffersFunction,
+  getConfigOffersCriteria,
+  getConfigOffersAppFlag,
+  getAllSections,
+  getProductsNew,
 } from "../../actions";
 import { useSelector, useDispatch } from "react-redux";
 import ReactPaginate from "react-paginate";
@@ -162,77 +166,92 @@ const CuTypography = styled(Typography)`
   line-height: 1rem;
 `;
 
-
 export const Offers = () => {
-    /* const activeInventory = useSelector(
-        (state) => state.inventory.activeInventory
-      ); */
-      const allOffers = useSelector((state) => state.product.allOffers);
-      const allOffersLoading = useSelector((state) => state.product.allOffersLoading);
-      /* const activeInventoryLoading = useSelector(
-        (state) => state.inventory.activeInventoryLoading
-      ); */
-      const uomList = useSelector((state) => state.inventory.uomList);
-      const categoryList = useSelector((state) => state.inventory.categoryList);
-      const categorySubList = useSelector((state) => state.inventory.categorySubList);
-      const user = useSelector((state) => state.auth.user);
-    
-      const [isSave, setIsSave] = useState({});
-      const [isAddNew, setIsAddNew] = useState(false);
-      const [itemCategory, setItemCategory] = useState("");
-      const [itemSubCategory, setItemSubCategory] = useState("");
-      const [itemUom, setItemUOM] = useState("");
-      const [currentItemName, setCurrentItemName] = useState({});
-      const [currentItemNo, setCurrentItemNo] = useState({});
-      const [currentItemGst, setCurrentItemGst] = useState({});
-      const [currentItemUnitCost, setCurrentItemUnitCost] = useState({});
-      const [itemTrackingFlag, setItemTrackingFlag] = useState("");
-    
-      const [newItemCategory, setNewItemCategory] = useState(
-        categoryList && categoryList.length > 0
-          ? categoryList[0].configCriteriaValue
-          : ""
-      );
-      /* const [newItemSubCategory, setNewItemSubCategory] = useState(
-        categorySubList ? categorySubList[0].configCriteriaValue : ""
-      ); */
-      /* const [newItemUOM, setNewItemUOM] = useState(
-        uomList ? uomList[0].configCriteriaValue : ""
-      ); */
-      const [newItemName, setNewItemName] = useState("");
-      const [newItemNo, setNewItemNo] = useState("");
-      const [newItemGst, setNewItemGst] = useState("");
-      const [newItemUnitCost, setNewItemUnitCost] = useState("");
-      const [keywords, setKeywords] = useState("");
-      const [newTrackingFlag, setNewTrackingFlag] = useState("Y");
-      const [pagination, setPagination] = useState({
-        data: allOffers,
-        offset: 0,
-        numberPerPage: 20,
-        pageCount: 0,
-        currentData: allOffers.slice(0, 20),
-      });
-      const [searchedAllActiveInventory, setSearchedAllActiveInventory] = useState([]);
-    
-      const dispatch = useDispatch();
-    
-      useEffect(() => {
-        dispatch(getActiveInventory());
-        dispatch(getAllOffers())
-      }, []);
-    
-      useEffect(() => {
-        setPagination((prevState) => ({
-          ...prevState,
-          pageCount: allOffers.length / prevState.numberPerPage,
-          currentData: allOffers.slice(
-            pagination.offset,
-            pagination.offset + pagination.numberPerPage
-          ),
-        }));
-      }, [pagination.numberPerPage, pagination.offset, allOffers]);
-    
-      /* useEffect(() => {
+  const allOffers = useSelector((state) => state.product.offersByStatus);
+  const sections = useSelector((state) => state.product.sections);
+  const products = useSelector((state) => state.product.products);
+  const offersAppFlagConfig = useSelector(
+    (state) => state.product.offersAppFlagConfig
+  );
+  const offersCriteriaConfig = useSelector(
+    (state) => state.product.offersCriteriaConfig
+  );
+  const offersFunctionConfig = useSelector(
+    (state) => state.product.offersFunctionConfig
+  );
+  const allOffersLoading = useSelector(
+    (state) => state.product.allOffersLoading
+  );
+  const user = useSelector((state) => state.auth.user);
+
+  const [isSave, setIsSave] = useState({});
+  const [isAddNew, setIsAddNew] = useState(false);
+  const [currentOfferFunctionType, setCurrentOfferFunctionType] = useState("");
+  const [offerSection, setOfferSection] = useState("");
+  const [offerDish, setOfferDish] = useState("");
+  const [currentOfferCode, setCurrentOfferCode] = useState({});
+  const [currentOfferDescription, setCurrentOfferDescription] = useState({});
+  const [currentOfferProductList, setCurrentOfferProductList] = useState({});
+  const [currentOfferPrice, setCurrentOfferPrice] = useState({});
+  const [currentOfferDiscount, setCurrentOfferDiscount] = useState({});
+  const [offerApplicability, setOfferApplicability] = useState("");
+  const [offerCriteria, setOfferCriteria] = useState("");
+  const [daySunday, setDaySunday] = useState("");
+  const [dayMonday, setDayMonday] = useState("");
+  const [dayTuesday, setDayTuesday] = useState("");
+  const [dayWednesday, setDayWednesday] = useState("");
+  const [dayThursday, setDayThursday] = useState("");
+  const [dayFriday, setDayFriday] = useState("");
+  const [daySaturday, setDaySaturday] = useState("");
+
+  const [newOfferFunctionType, setNewOfferFunctionType] = useState("");
+  const [newOfferCode, setNewOfferCode] = useState("");
+  const [newOfferDescription, setNewOfferDescription] = useState("");
+  const [newOfferCriteria, setNewOfferCriteria] = useState("");
+  const [newOfferSection, setNewOfferSection] = useState("");
+  const [newOfferProductList, setNewOfferProductList] = useState("");
+  const [newOfferPrice, setNewOfferPrice] = useState("");
+  const [newOfferDiscount, setNewOfferDiscount] = useState("");
+  const [newOfferApplicability, setNewOfferApplicability] = useState("O");
+  const [newDaySunday, setNewDaySunday] = useState("Y");
+  const [newDaySaturday, setNewDaySaturday] = useState("Y");
+  const [newDayMonday, setNewDayMonday] = useState("Y");
+  const [newDayTuesday, setNewDayTuesday] = useState("Y");
+  const [newDayWednesday, setNewDayWednesday] = useState("Y");
+  const [newDayFriday, setNewDayFriday] = useState("Y");
+  const [newDayThursday, setNewDayThursday] = useState("Y");
+  const [newOfferDish, setNewOfferDish] = useState("");
+  const [pagination, setPagination] = useState({
+    data: allOffers,
+    offset: 0,
+    numberPerPage: 20,
+    pageCount: 0,
+    currentData: allOffers.slice(0, 20),
+  });
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getOffersByStatus("ACTIVE"));
+    dispatch(getConfigOffersFunction());
+    dispatch(getConfigOffersCriteria());
+    dispatch(getConfigOffersAppFlag());
+    dispatch(getAllSections(user.restaurantId, user.storeId));
+    dispatch(getProductsNew(user.restaurantId, user.storeId));
+  }, []);
+
+  useEffect(() => {
+    setPagination((prevState) => ({
+      ...prevState,
+      pageCount: allOffers.length / prevState.numberPerPage,
+      currentData: allOffers.slice(
+        pagination.offset,
+        pagination.offset + pagination.numberPerPage
+      ),
+    }));
+  }, [pagination.numberPerPage, pagination.offset, allOffers]);
+
+  /* useEffect(() => {
         if(keywords && activeInventory && activeInventory.length > 0){
             setSearchedAllActiveInventory(activeInventory.filter(function (el) {
               return el.itemName.toLowerCase().includes(keywords.toLowerCase());
@@ -241,144 +260,188 @@ export const Offers = () => {
           setSearchedAllActiveInventory(activeInventory)
         }
       }, [keywords, activeInventory]); */
-    
-      const handlePageClick = (event) => {
-        const selected = event.selected;
-        const offset = selected * pagination.numberPerPage;
-        setPagination({ ...pagination, offset });
-      };
-    
-      const onEditClickHandle = (id) => {
-        let edits = { ...isSave, [id]: true };
-        setIsSave(edits);
-      };
-    
-      const onSaveClickHandle = (id) => {
-        let edits = { ...isSave, [id]: false };
-        setIsSave(edits);
-      };
-    
-      const updateItemHandle = (oldItem) => {
-        const newItem = {
-          ...oldItem,
-          itemId: currentItemNo[oldItem.itemId]
-            ? currentItemNo[oldItem.itemId]
-            : oldItem.itemId,
-          itemName: currentItemName[oldItem.itemId]
-            ? currentItemName[oldItem.itemId]
-            : oldItem.itemName,
-          itemCategory: itemCategory ? itemCategory : oldItem.itemCategory,
-          itemSubCategory: itemSubCategory ? itemSubCategory : oldItem.itemSubCategory,
-          itemUom: itemUom ? itemUom : oldItem.itemUom,
-          itemGstPercentage: currentItemGst[oldItem.itemId]
-            ? currentItemGst[oldItem.itemId]
-            : oldItem.itemGstPercentage,
-            itemUnitCost: currentItemUnitCost[oldItem.itemId]
-            ? currentItemUnitCost[oldItem.itemId]
-            : oldItem.itemUnitCost,
-          itemTrackingFlag: itemTrackingFlag
-            ? itemTrackingFlag
-            : oldItem.itemTrackingFlag,
-          itemStatus: "ACTIVE",
-          updatedBy: user.loginId,
-          updatedDate: new Date(),
-        };
-    
-        dispatch(saveUpdateInventoryItem(newItem)).then((res) => {
-          if (res) {
-            onSaveClickHandle(oldItem.itemId);
-            //clearStates();
-          }
-        });
-      };
-    
-      const saveNewItem = () => {
-        if (!newItemName) {
-          toast.error("Item name is mandatory!");
-          return;
-        }
-    
-        /* if (!newItemNo) {
-          toast.error("Item No is mandatory!");
-          return;
-        } */
-    
-        const newItem = {
-          // itemId: newItemNo,
-          itemName: newItemName,
-          itemCategory: newItemCategory,
-          /* itemSubCategory: newItemSubCategory, */
-          /* itemUom: newItemUOM, */
-          itemUnitCost:newItemUnitCost,
-          itemGstPercentage: newItemGst,
-          itemTrackingFlag: newTrackingFlag ? newTrackingFlag : "Y",
-          itemStatus: "ACTIVE",
-          createdBy: user.loginId,
-          createdDate: new Date(),
-          updatedBy: user.loginId,
-          updatedDate: new Date(),
-        };
-    
-        dispatch(saveUpdateInventoryItem(newItem)).then((res) => {
-          if (res) {
-            clearStates();
-            setIsAddNew(false);
-          }
-        });
-      };
-    
-      const softDeleteItem = (id) => {
-        dispatch(deleteInventoryItem(id, user.loginId));
-      };
-    
-      const clearStates = () => {
-        setItemCategory("");
-        setItemSubCategory("");
-        setItemUOM("");
-        setCurrentItemName({});
-        setCurrentItemNo({});
-        setCurrentItemGst({});
-        setCurrentItemUnitCost({});
-        setItemTrackingFlag("");
-    
-        setNewItemCategory("");
-        /* setNewItemSubCategory(""); */
-        /* setNewItemUOM(""); */
-        setNewItemName("");
-        setNewItemNo("");
-        setNewItemGst("");
-        setNewItemUnitCost("");
-        setNewTrackingFlag("");
-      };
-    
-      const columns = [
-        { id: '1', label: '#', minWidth: 30, align: 'center' },
-        { id: '2', label: 'FUNCTION', minWidth:30, align: 'center'},
-        { id: '22', label: 'OFFER CODE', minWidth:30, align: 'center'},
-        { id: '3', label: 'ORDER DETAILS (REMARKS)', minWidth: 200, align: 'center'},
-        { id: '4', label: 'CRITERIA', minWidth: 80, align: 'center'},
-        { id: '5', label: 'SECTION', minWidth: 80, align: 'center'},
-        { id: '6', label: 'DISH', minWidth: 80, align: 'center' },
-        { id: '7', label: 'PRODUCT ID', minWidth: 80, align: 'center' },
-        { id: '8', label: 'ACTION', minWidth: 80, align: 'center' },
-        { id: '9', label: 'PRICE', minWidth: 50, align: 'center' },
-        { id: '10', label: 'DISCOUNT', minWidth: 50, align: 'center'},
-        { id: '11', label: 'ONLINE', minWidth: 10, align: 'center'},
-        { id: '12', label: 'S', minWidth: 10, align: 'center'},
-        { id: '13', label: 'M', minWidth: 10, align: 'center'},
-        { id: '14', label: 'T', minWidth: 10, align: 'center'},
-        { id: '15', label: 'W', minWidth: 10, align: 'center'},
-        { id: '16', label: 'T', minWidth: 10, align: 'center'},
-        { id: '17', label: 'F', minWidth: 10, align: 'center'},
-        { id: '18', label: 'S', minWidth: 10, align: 'center'},
-        { id: '19', label: 'ACTION', minWidth: 50, align: 'center'},
-      ];
 
+  const handlePageClick = (event) => {
+    const selected = event.selected;
+    const offset = selected * pagination.numberPerPage;
+    setPagination({ ...pagination, offset });
+  };
 
+  const onEditClickHandle = (id) => {
+    let edits = { ...isSave, [id]: true };
+    setIsSave(edits);
+  };
+
+  const onSaveClickHandle = (id) => {
+    let edits = { ...isSave, [id]: false };
+    setIsSave(edits);
+  };
+
+  const updateItemHandle = (oldItem) => {
+    const newOffer = {
+      ...oldItem,
+      offerFunctionType: currentOfferFunctionType
+        ? currentOfferFunctionType
+        : oldItem.offerFunctionType,
+      offerCode: currentOfferCode[oldItem.offerId]
+        ? currentOfferCode[oldItem.offerId]
+        : oldItem.offerCode,
+      offerDescription: currentOfferDescription[oldItem.offerId]
+        ? currentOfferDescription[oldItem.offerId]
+        : oldItem.offerDescription,
+      daySunday: daySunday ? daySunday : oldItem.daySunday,
+      dayMonday: dayMonday ? dayMonday : oldItem.dayMonday,
+      dayTuesday: dayTuesday ? dayTuesday : oldItem.dayTuesday,
+      dayWednesday: dayWednesday ? dayWednesday : oldItem.dayWednesday,
+      dayThursday: dayThursday ? dayThursday : oldItem.dayThursday,
+      dayFriday: dayFriday ? dayFriday : oldItem.dayFriday,
+      daySaturday: daySaturday ? daySaturday : oldItem.daySaturday,
+      offerApplicability: offerApplicability
+        ? offerApplicability
+        : oldItem.offerApplicability,
+      offerPrice: currentOfferPrice[oldItem.offerId]
+        ? currentOfferPrice[oldItem.offerId]
+        : oldItem.offerPrice,
+      offerCriteria: offerCriteria ? offerCriteria : oldItem.offerCriteria,
+      offerSection: offerSection ? offerSection : oldItem.offerSection,
+      offerDish: offerDish ? offerDish : oldItem.offerDish,
+      offerProductList: currentOfferProductList[oldItem.offerId]
+        ? currentOfferProductList[oldItem.offerId]
+        : oldItem.offerProductList,
+      offerDiscount: currentOfferDiscount[oldItem.offerId]
+        ? currentOfferDiscount[oldItem.offerId]
+        : oldItem.offerDiscount,
+      updatedBy: user.loginId,
+      updatedDate: new Date(),
+    };
+
+    dispatch(saveOffer(newOffer)).then((res) => {
+      if (res) {
+        onSaveClickHandle(oldItem.offerId);
+        clearStates();
+      }
+    });
+  };
+
+  const saveNewItem = () => {
+    if (!newOfferCode) {
+      toast.error("Offer code is mandatory!");
+      return;
+    }
+
+    const newItem = {
+      restaurantId: user.restaurantId,
+      storeId: user.storeId,
+      offerFunctionType: newOfferFunctionType,
+      offerCode: newOfferCode,
+      offerDescription: newOfferDescription,
+      daySunday: newDaySunday,
+      dayMonday: newDayMonday,
+      dayTuesday: newDayTuesday,
+      dayWednesday: newDayWednesday,
+      dayThursday: newDayThursday,
+      dayFriday: newDayFriday,
+      daySaturday: newDaySaturday,
+      offerApplicability: newOfferApplicability,
+      offerPrice: newOfferPrice,
+      offerStatus: "ACTIVE",
+      offerCriteria: newOfferCriteria,
+      offerSection: newOfferSection,
+      offerDish: newOfferDish,
+      offerProductList: newOfferProductList,
+      offerDiscount: newOfferDiscount,
+      createdBy: user.loginId,
+      createdDate: new Date(),
+      updatedBy: user.loginId,
+      updatedDate: new Date(),
+    };
+
+    console.log(newItem);
+
+    dispatch(saveOffer(newItem)).then((res) => {
+      if (res) {
+        clearStates();
+        setIsAddNew(false);
+      }
+    });
+  };
+
+  const softDeleteItem = (oldItem) => {
+    const deleteItem = {
+      ...oldItem,
+      offerStatus: "IN-ACTIVE",
+    };
+    dispatch(saveOffer(deleteItem, true));
+  };
+
+  const clearStates = () => {
+    setCurrentOfferFunctionType("");
+    setOfferCriteria("");
+    setOfferSection("");
+    setOfferDish("");
+    setCurrentOfferCode({});
+    setCurrentOfferDescription({});
+    setCurrentOfferProductList({});
+    setCurrentOfferPrice({});
+    setCurrentOfferDiscount({});
+    setOfferApplicability("");
+    setDaySunday("");
+    setDayMonday("");
+    setDayTuesday("");
+    setDayWednesday("");
+    setDayThursday("");
+    setDayFriday("");
+    setDaySaturday("");
+
+    setNewOfferFunctionType("");
+    setNewOfferCode("");
+    setNewOfferDescription("");
+    setNewOfferCriteria("");
+    setNewOfferSection("");
+    setNewOfferProductList("");
+    setNewOfferPrice("");
+    setNewOfferDiscount("");
+    setNewOfferApplicability("");
+    setNewDaySunday("");
+    setNewDaySaturday("");
+    setNewDayMonday("");
+    setNewDayTuesday("");
+    setNewDayWednesday("");
+    setNewOfferDish("");
+    setNewDayThursday("");
+  };
+
+  const columns = [
+    { id: "1", label: "#", minWidth: 30, align: "center" },
+    { id: "2", label: "FUNCTION", minWidth: 30, align: "center" },
+    { id: "22", label: "OFFER CODE", minWidth: 30, align: "center" },
+    {
+      id: "3",
+      label: "ORDER DETAILS (REMARKS)",
+      minWidth: 300,
+      align: "center",
+    },
+    { id: "4", label: "CRITERIA", minWidth: 100, align: "center" },
+    { id: "5", label: "SECTION", minWidth: 80, align: "center" },
+    { id: "6", label: "DISH", minWidth: 120, align: "center" },
+    { id: "7", label: "PRODUCT ID", minWidth: 350, align: "center" },
+    { id: "8", label: "ACTION", minWidth: 80, align: "center" },
+    { id: "9", label: "PRICE", minWidth: 50, align: "center" },
+    { id: "10", label: "DISCOUNT", minWidth: 50, align: "center" },
+    { id: "11", label: "ONLINE", minWidth: 60, align: "center" },
+    { id: "12", label: "S", minWidth: 60, align: "center" },
+    { id: "13", label: "M", minWidth: 60, align: "center" },
+    { id: "14", label: "T", minWidth: 60, align: "center" },
+    { id: "15", label: "W", minWidth: 60, align: "center" },
+    { id: "16", label: "T", minWidth: 60, align: "center" },
+    { id: "17", label: "F", minWidth: 60, align: "center" },
+    { id: "18", label: "S", minWidth: 60, align: "center" },
+    { id: "19", label: "ACTION", minWidth: 50, align: "center" },
+  ];
 
   return (
     <div>
-       {/* <Row>
+      {/* <Row>
         <Col sm={6}>
         <div style={{ display: "flex" }} className="align-items-center mb-3">
               <div style={{ width: "150px" }}>
@@ -397,24 +460,42 @@ export const Offers = () => {
             </div>
         </Col>
       </Row> */}
-      <TableContainer component={Paper} sx={{ maxHeight: 480, maxWidth: "91vw" }}>
+      <TableContainer
+        component={Paper}
+        sx={{ maxHeight: 480, maxWidth: "91vw" }}
+      >
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
-              <TableRow>
-                {columns.map((column) => (
-                  <CusTableCell1
-                    key={column.id}
-                    align={column.align}
-                    style={{ minWidth: column.minWidth,
-                    lineHeight:"1.4rem",
-                    backgroundColor: column.label === "CRITERIA" || column.label === "SECTION" || column.label === "DISH" || column.label === "PRODUCT ID" || column.label === "ACTION"  ? "green" : "#35455e",
-                    border: column.label === "CRITERIA" || column.label === "SECTION" || column.label === "DISH" || column.label === "PRODUCT ID" || column.label === "ACTION"  ? "1px solid #35455e" : "none"
-                    }}
-                  >
-                    {column.label}
-                  </CusTableCell1>
-                ))}
-              </TableRow>
+            <TableRow>
+              {columns.map((column) => (
+                <CusTableCell1
+                  key={column.id}
+                  align={column.align}
+                  style={{
+                    minWidth: column.minWidth,
+                    lineHeight: "1.4rem",
+                    backgroundColor:
+                      column.label === "CRITERIA" ||
+                      column.label === "SECTION" ||
+                      column.label === "DISH" ||
+                      column.label === "PRODUCT ID" ||
+                      column.label === "ACTION"
+                        ? "green"
+                        : "#35455e",
+                    border:
+                      column.label === "CRITERIA" ||
+                      column.label === "SECTION" ||
+                      column.label === "DISH" ||
+                      column.label === "PRODUCT ID" ||
+                      column.label === "ACTION"
+                        ? "1px solid #35455e"
+                        : "none",
+                  }}
+                >
+                  {column.label}
+                </CusTableCell1>
+              ))}
+            </TableRow>
           </TableHead>
 
           <TableBody>
@@ -442,198 +523,191 @@ export const Offers = () => {
                         pagination.offset + pagination.numberPerPage
                       )
                       .map((item, index) => (
-                        <TableRow key={item.itemId}>
+                        <TableRow key={item.offerId}>
                           <CusTableCell align="center">
                             {index + 1 + pagination.offset}
                           </CusTableCell>
                           <CusTableCell align="center">
-                            {/* <CusTextField
-                              defaultValue={item.itemId}
-                              value={currentItemNo[item.itemId]}
-                              onChange={(event) => {
-                                const nos = {
-                                  ...currentItemNo,
-                                  [item.itemId]: event.target.value,
-                                };
-                                setCurrentItemNo(nos);
-                              }}
-                              fullWidth
-                              variant="standard"
-                              disabled={!isSave[item.itemId] }
-                              InputProps={{
-                                disableUnderline: true,
-                              }}
-                            /> */}
-                            {item.offerFunctionType}
-                          </CusTableCell>
-                          <CusTableCell align="center">
-                            {/* <CusTextField
-                              defaultValue={item.itemName}
-                              value={currentItemName[item.itemId]}
-                              onChange={(event) => {
-                                const names = {
-                                  ...currentItemName,
-                                  [item.itemId]: event.target.value,
-                                };
-                                setCurrentItemName(names);
-                              }}
-                              fullWidth
-                              variant="standard"
-                              disabled={!isSave[item.itemId]}
-                              InputProps={{
-                                disableUnderline: true,
-                              }}
-                            /> */}
-                            {item.offerCode}
-                          </CusTableCell>
-                          <CusTableCell align="center">
-                            {/* <FormControl fullWidth sx={{ marginTop: "5px" }}>
-                              <NativeSelect
-                               disableUnderline
-                                key={item.itemId}
-                                defaultValue={item.itemCategory}
-                                inputProps={{
-                                  name: "status",
-                                  id: "uncontrolled-native",
-                                }}
-                                onChange={(event) => {
-                                  setItemCategory(event.target.value);
-                                }}
-                                sx={{ fontSize: "0.75rem", paddingLeft: "5px" }}
-                                disabled={!isSave[item.itemId]}
-                              >
-                                {categoryList &&
-                                  categoryList.map((item) => (
-                                    <option
-                                      value={item.configCriteriaValue}
-                                      style={{ fontSize: "0.75rem" }}
-                                    >
-                                      {item.configCriteriaDesc}
-                                    </option>
-                                  ))}
-                                <option
-                                  value={""}
-                                  style={{ fontSize: "0.75rem" }}
-                                >
-                                  Select Category
-                                </option>
-                              </NativeSelect>
-                            </FormControl> */}
-                               {item.offerDescription}
-                          </CusTableCell>
-                          <CusTableCell align="center">
-                            {/* <FormControl fullWidth sx={{ marginTop: "5px" }}>
+                            <FormControl fullWidth sx={{ marginTop: "5px" }}>
                               <NativeSelect
                                 disableUnderline
-                                key={item.itemId}
-                                defaultValue={item.itemSubCategory}
+                                key={item.offerId}
+                                defaultValue={item.offerFunctionType}
                                 inputProps={{
                                   name: "status",
                                   id: "uncontrolled-native",
                                 }}
                                 onChange={(event) => {
-                                  setItemSubCategory(event.target.value);
+                                  setCurrentOfferFunctionType(
+                                    event.target.value
+                                  );
                                 }}
                                 sx={{ fontSize: "0.75rem", paddingLeft: "5px" }}
-                                disabled={!isSave[item.itemId]}
+                                disabled={!isSave[item.offerId]}
                               >
-                                {categorySubList &&
-                                  categorySubList.map((item) => (
-                                    <option
-                                      value={item.configCriteriaValue}
-                                      style={{ fontSize: "0.75rem" }}
-                                    >
-                                      {item.configCriteriaDesc}
-                                    </option>
-                                  ))}
-                                <option
-                                  value={""}
-                                  style={{ fontSize: "0.75rem" }}
-                                >
-                                  Select Sub Category
-                                </option>
+                                {offersFunctionConfig.map((item) => (
+                                  <option
+                                    value={item.configCriteriaValue}
+                                    style={{ fontSize: "0.75rem" }}
+                                  >
+                                    {item.configCriteriaValue}
+                                  </option>
+                                ))}
                               </NativeSelect>
-                            </FormControl> */}
-                             {item.offerCriteria}
+                            </FormControl>
                           </CusTableCell>
                           <CusTableCell align="center">
-                            {/* <FormControl fullWidth sx={{ marginTop: "5px" }}>
-                              <NativeSelect
-                              disableUnderline
-                                key={item.itemId}
-                                defaultValue={item.itemUom}
-                                inputProps={{
-                                  name: "status",
-                                  id: "uncontrolled-native",
-                                }}
-                                onChange={(event) => {
-                                  setItemUOM(event.target.value);
-                                }}
-                                sx={{ fontSize: "0.75rem", paddingLeft: "5px" }}
-                                disabled={!isSave[item.itemId]}
-                              >
-                                {uomList &&
-                                  uomList.map((item) => (
-                                    <option
-                                      value={item.configCriteriaValue}
-                                      style={{ fontSize: "0.75rem" }}
-                                    >
-                                      {item.configCriteriaDesc}
-                                    </option>
-                                  ))}
-                                <option
-                                  value={""}
-                                  style={{ fontSize: "0.75rem" }}
-                                >
-                                  Select UOM
-                                </option>
-                              </NativeSelect>
-                            </FormControl> */}
-                            {item.offerSection}
-                          </CusTableCell>
-
-                          <CusTableCell align="center" sx={{ width: "20px" }}>
-                            {/* <CusTextField
-                              key={item.itemId}
-                              defaultValue={item.itemGstPercentage}
-                              value={currentItemGst[item.itemId]}
+                            <CusTextField
+                              defaultValue={item.offerCode}
+                              value={currentOfferCode[item.offerId]}
                               onChange={(event) => {
-                                const gst = {
-                                  ...currentItemGst,
-                                  [item.itemId]: event.target.value,
+                                const names = {
+                                  ...currentOfferCode,
+                                  [item.offerId]: event.target.value,
                                 };
-                                setCurrentItemGst(gst);
+                                setCurrentOfferCode(names);
                               }}
                               fullWidth
                               variant="standard"
-                              disabled={!isSave[item.itemId]}
-                              InputProps={{
-                                disableUnderline: true, // <== added this
-                              }}
-                            /> */}
-                            {item.offerDish}
-                          </CusTableCell>
-
-                          <CusTableCell align="center" sx={{ width: "20px" }}>
-                            {/* <CusTextField
-                              key={item.itemId}
-                              defaultValue={item.itemUnitCost}
-                              value={currentItemUnitCost[item.itemId]}
-                              onChange={(event) => {
-                                const unitCost = {
-                                  ...currentItemUnitCost,
-                                  [item.itemId]: event.target.value,
-                                };
-                                setCurrentItemUnitCost(unitCost);
-                              }}
-                              fullWidth
-                              variant="standard"
-                              disabled={!isSave[item.itemId]}
+                              disabled={!isSave[item.offerId]}
                               InputProps={{
                                 disableUnderline: true,
                               }}
-                            /> */}
-                            {item.offerProductList}
+                            />
+                          </CusTableCell>
+                          <CusTableCell align="center">
+                            <CusTextField
+                              defaultValue={item.offerDescription}
+                              value={currentOfferDescription[item.offerId]}
+                              onChange={(event) => {
+                                const names = {
+                                  ...currentOfferDescription,
+                                  [item.offerId]: event.target.value,
+                                };
+                                setCurrentOfferDescription(names);
+                              }}
+                              fullWidth
+                              variant="standard"
+                              disabled={!isSave[item.offerId]}
+                              InputProps={{
+                                disableUnderline: true,
+                              }}
+                            />
+                          </CusTableCell>
+                          <CusTableCell align="center">
+                            <FormControl fullWidth sx={{ marginTop: "5px" }}>
+                              <NativeSelect
+                                disableUnderline
+                                key={item.offerId}
+                                defaultValue={item.offerCriteria}
+                                inputProps={{
+                                  name: "status",
+                                  id: "uncontrolled-native",
+                                }}
+                                onChange={(event) => {
+                                  setOfferCriteria(event.target.value);
+                                }}
+                                sx={{ fontSize: "0.75rem", paddingLeft: "5px" }}
+                                disabled={!isSave[item.offerId]}
+                              >
+                                {offersCriteriaConfig.map((item) => (
+                                  <option
+                                    value={item.configCriteriaValue}
+                                    style={{ fontSize: "0.75rem" }}
+                                  >
+                                    {item.configCriteriaValue}
+                                  </option>
+                                ))}
+                              </NativeSelect>
+                            </FormControl>
+                          </CusTableCell>
+                          <CusTableCell align="center">
+                            <FormControl fullWidth sx={{ marginTop: "5px" }}>
+                              <NativeSelect
+                                disableUnderline
+                                key={item.offerId}
+                                defaultValue={item.offerSection}
+                                inputProps={{
+                                  name: "status",
+                                  id: "uncontrolled-native",
+                                }}
+                                onChange={(event) => {
+                                  setOfferSection(event.target.value);
+                                }}
+                                sx={{ fontSize: "0.75rem", paddingLeft: "5px" }}
+                                disabled={!isSave[item.offerId]}
+                              >
+                                <option
+                                  value={""}
+                                  style={{ fontSize: "0.75rem" }}
+                                >
+                                  Select Section
+                                </option>
+                                {sections.map((item) => (
+                                  <option
+                                    value={item}
+                                    style={{ fontSize: "0.75rem" }}
+                                  >
+                                    {item}
+                                  </option>
+                                ))}
+                              </NativeSelect>
+                            </FormControl>
+                          </CusTableCell>
+
+                          <CusTableCell align="center" sx={{ width: "20px" }}>
+                            <FormControl fullWidth sx={{ marginTop: "5px" }}>
+                              <NativeSelect
+                                disableUnderline
+                                key={item.offerId}
+                                defaultValue={item.offerDish}
+                                inputProps={{
+                                  name: "status",
+                                  id: "uncontrolled-native",
+                                }}
+                                onChange={(event) => {
+                                  setOfferDish(event.target.value);
+                                }}
+                                sx={{ fontSize: "0.75rem", paddingLeft: "5px" }}
+                                disabled={!isSave[item.offerId]}
+                              >
+                                <option
+                                  value={""}
+                                  style={{ fontSize: "0.75rem" }}
+                                >
+                                  Select Dish
+                                </option>
+                                {products.map((item) => (
+                                  <option
+                                    value={item.productId}
+                                    style={{ fontSize: "0.75rem" }}
+                                  >
+                                    {item.dishType}
+                                  </option>
+                                ))}
+                              </NativeSelect>
+                            </FormControl>
+                          </CusTableCell>
+
+                          <CusTableCell align="center" sx={{ width: "20px" }}>
+                            <CusTextField
+                              key={item.offerId}
+                              defaultValue={item.offerProductList}
+                              value={currentOfferProductList[item.offerId]}
+                              onChange={(event) => {
+                                const unitCost = {
+                                  ...currentOfferProductList,
+                                  [item.offerId]: event.target.value,
+                                };
+                                setCurrentOfferProductList(unitCost);
+                              }}
+                              fullWidth
+                              variant="standard"
+                              disabled={!isSave[item.offerId]}
+                              InputProps={{
+                                disableUnderline: true,
+                              }}
+                            />
                           </CusTableCell>
 
                           <CusTableCell align="center">
@@ -641,43 +715,297 @@ export const Offers = () => {
                           </CusTableCell>
 
                           <CusTableCell align="center">
-                            {item.offerPrice}
+                            <CusTextField
+                              key={item.offerId}
+                              defaultValue={item.offerPrice}
+                              value={currentOfferPrice[item.offerId]}
+                              onChange={(event) => {
+                                const unitCost = {
+                                  ...currentOfferPrice,
+                                  [item.offerId]: event.target.value,
+                                };
+                                setCurrentOfferPrice(unitCost);
+                              }}
+                              fullWidth
+                              variant="standard"
+                              disabled={!isSave[item.offerId]}
+                              InputProps={{
+                                disableUnderline: true,
+                              }}
+                            />
                           </CusTableCell>
 
                           <CusTableCell align="center">
-                            {item.offerDiscount}
+                            <CusTextField
+                              key={item.offerId}
+                              defaultValue={item.offerDiscount}
+                              value={currentOfferDiscount[item.offerId]}
+                              onChange={(event) => {
+                                const unitCost = {
+                                  ...currentOfferDiscount,
+                                  [item.offerId]: event.target.value,
+                                };
+                                setCurrentOfferDiscount(unitCost);
+                              }}
+                              fullWidth
+                              variant="standard"
+                              disabled={!isSave[item.offerId]}
+                              InputProps={{
+                                disableUnderline: true,
+                              }}
+                            />
                           </CusTableCell>
 
                           <CusTableCell align="center">
-                            {item.offerApplicability}
+                            <FormControl fullWidth sx={{ marginTop: "5px" }}>
+                              <NativeSelect
+                                disableUnderline
+                                key={item.offerId}
+                                defaultValue={item.offerApplicability}
+                                inputProps={{
+                                  name: "status",
+                                  id: "uncontrolled-native",
+                                }}
+                                onChange={(event) => {
+                                  setOfferApplicability(event.target.value);
+                                }}
+                                sx={{ fontSize: "0.75rem", paddingLeft: "5px" }}
+                                disabled={!isSave[item.offerId]}
+                              >
+                                {offersAppFlagConfig.map((item) => (
+                                  <option
+                                    value={item.configCriteriaValue}
+                                    style={{ fontSize: "0.75rem" }}
+                                  >
+                                    {item.configCriteriaValue}
+                                  </option>
+                                ))}
+                              </NativeSelect>
+                            </FormControl>
                           </CusTableCell>
 
                           <CusTableCell align="center">
-                            {item.daySunday}
+                            <FormControl fullWidth sx={{ marginTop: "5px" }}>
+                              <NativeSelect
+                                disableUnderline
+                                key={item.offerId}
+                                defaultValue={item.daySunday}
+                                inputProps={{
+                                  name: "status",
+                                  id: "uncontrolled-native",
+                                }}
+                                onChange={(event) => {
+                                  setDaySunday(event.target.value);
+                                }}
+                                sx={{ fontSize: "0.75rem", paddingLeft: "5px" }}
+                                disabled={!isSave[item.offerId]}
+                              >
+                                <option
+                                  value={"Y"}
+                                  style={{ fontSize: "0.75rem" }}
+                                >
+                                  Y
+                                </option>
+                                <option
+                                  value={"N"}
+                                  style={{ fontSize: "0.75rem" }}
+                                >
+                                  N
+                                </option>
+                              </NativeSelect>
+                            </FormControl>
                           </CusTableCell>
 
                           <CusTableCell align="center">
-                            {item.dayMonday}
+                            <FormControl fullWidth sx={{ marginTop: "5px" }}>
+                              <NativeSelect
+                                disableUnderline
+                                key={item.offerId}
+                                defaultValue={item.dayMonday}
+                                inputProps={{
+                                  name: "status",
+                                  id: "uncontrolled-native",
+                                }}
+                                onChange={(event) => {
+                                  setDayMonday(event.target.value);
+                                }}
+                                sx={{ fontSize: "0.75rem", paddingLeft: "5px" }}
+                                disabled={!isSave[item.offerId]}
+                              >
+                                <option
+                                  value={"Y"}
+                                  style={{ fontSize: "0.75rem" }}
+                                >
+                                  Y
+                                </option>
+                                <option
+                                  value={"N"}
+                                  style={{ fontSize: "0.75rem" }}
+                                >
+                                  N
+                                </option>
+                              </NativeSelect>
+                            </FormControl>
                           </CusTableCell>
 
                           <CusTableCell align="center">
-                            {item.dayTuesday}
+                            <FormControl fullWidth sx={{ marginTop: "5px" }}>
+                              <NativeSelect
+                                disableUnderline
+                                key={item.offerId}
+                                defaultValue={item.dayTuesday}
+                                inputProps={{
+                                  name: "status",
+                                  id: "uncontrolled-native",
+                                }}
+                                onChange={(event) => {
+                                  setDayTuesday(event.target.value);
+                                }}
+                                sx={{ fontSize: "0.75rem", paddingLeft: "5px" }}
+                                disabled={!isSave[item.offerId]}
+                              >
+                                <option
+                                  value={"Y"}
+                                  style={{ fontSize: "0.75rem" }}
+                                >
+                                  Y
+                                </option>
+                                <option
+                                  value={"N"}
+                                  style={{ fontSize: "0.75rem" }}
+                                >
+                                  N
+                                </option>
+                              </NativeSelect>
+                            </FormControl>
                           </CusTableCell>
 
                           <CusTableCell align="center">
-                            {item.dayWednesday}
+                            <FormControl fullWidth sx={{ marginTop: "5px" }}>
+                              <NativeSelect
+                                disableUnderline
+                                key={item.offerId}
+                                defaultValue={item.dayWednesday}
+                                inputProps={{
+                                  name: "status",
+                                  id: "uncontrolled-native",
+                                }}
+                                onChange={(event) => {
+                                  setDayWednesday(event.target.value);
+                                }}
+                                sx={{ fontSize: "0.75rem", paddingLeft: "5px" }}
+                                disabled={!isSave[item.offerId]}
+                              >
+                                <option
+                                  value={"Y"}
+                                  style={{ fontSize: "0.75rem" }}
+                                >
+                                  Y
+                                </option>
+                                <option
+                                  value={"N"}
+                                  style={{ fontSize: "0.75rem" }}
+                                >
+                                  N
+                                </option>
+                              </NativeSelect>
+                            </FormControl>
                           </CusTableCell>
 
                           <CusTableCell align="center">
-                            {item.dayThursday}
+                            <FormControl fullWidth sx={{ marginTop: "5px" }}>
+                              <NativeSelect
+                                disableUnderline
+                                key={item.offerId}
+                                defaultValue={item.dayThursday}
+                                inputProps={{
+                                  name: "status",
+                                  id: "uncontrolled-native",
+                                }}
+                                onChange={(event) => {
+                                  setDayThursday(event.target.value);
+                                }}
+                                sx={{ fontSize: "0.75rem", paddingLeft: "5px" }}
+                                disabled={!isSave[item.offerId]}
+                              >
+                                <option
+                                  value={"Y"}
+                                  style={{ fontSize: "0.75rem" }}
+                                >
+                                  Y
+                                </option>
+                                <option
+                                  value={"N"}
+                                  style={{ fontSize: "0.75rem" }}
+                                >
+                                  N
+                                </option>
+                              </NativeSelect>
+                            </FormControl>
                           </CusTableCell>
 
                           <CusTableCell align="center">
-                            {item.dayFriday}
+                            <FormControl fullWidth sx={{ marginTop: "5px" }}>
+                              <NativeSelect
+                                disableUnderline
+                                key={item.offerId}
+                                defaultValue={item.dayFriday}
+                                inputProps={{
+                                  name: "status",
+                                  id: "uncontrolled-native",
+                                }}
+                                onChange={(event) => {
+                                  setDayFriday(event.target.value);
+                                }}
+                                sx={{ fontSize: "0.75rem", paddingLeft: "5px" }}
+                                disabled={!isSave[item.offerId]}
+                              >
+                                <option
+                                  value={"Y"}
+                                  style={{ fontSize: "0.75rem" }}
+                                >
+                                  Y
+                                </option>
+                                <option
+                                  value={"N"}
+                                  style={{ fontSize: "0.75rem" }}
+                                >
+                                  N
+                                </option>
+                              </NativeSelect>
+                            </FormControl>
                           </CusTableCell>
 
                           <CusTableCell align="center">
-                            {item.daySaturday}
+                            <FormControl fullWidth sx={{ marginTop: "5px" }}>
+                              <NativeSelect
+                                disableUnderline
+                                key={item.offerId}
+                                defaultValue={item.daySaturday}
+                                inputProps={{
+                                  name: "status",
+                                  id: "uncontrolled-native",
+                                }}
+                                onChange={(event) => {
+                                  setDaySaturday(event.target.value);
+                                }}
+                                sx={{ fontSize: "0.75rem", paddingLeft: "5px" }}
+                                disabled={!isSave[item.offerId]}
+                              >
+                                <option
+                                  value={"Y"}
+                                  style={{ fontSize: "0.75rem" }}
+                                >
+                                  Y
+                                </option>
+                                <option
+                                  value={"N"}
+                                  style={{ fontSize: "0.75rem" }}
+                                >
+                                  N
+                                </option>
+                              </NativeSelect>
+                            </FormControl>
                           </CusTableCell>
 
                           <CusTableCell align="center">
@@ -689,7 +1017,8 @@ export const Offers = () => {
                                   color: "#92D050",
                                 }}
                                 onClick={() => {
-                                  /* updateItemHandle(item); */
+                                  updateItemHandle(item);
+                                  onSaveClickHandle(item.offerId);
                                 }}
                               >
                                 <SaveIcon
@@ -704,7 +1033,7 @@ export const Offers = () => {
                                   color: "#FFC000",
                                 }}
                                 onClick={() => {
-                                  /* onEditClickHandle(item.offerId); */
+                                  onEditClickHandle(item.offerId);
                                 }}
                               >
                                 <EditIcon
@@ -720,7 +1049,7 @@ export const Offers = () => {
                                 color: "red",
                               }}
                               onClick={() => {
-                                /* softDeleteItem(item.offerId); */
+                                softDeleteItem(item);
                               }}
                             >
                               <DeleteIcon
@@ -732,20 +1061,52 @@ export const Offers = () => {
                       ))}
 
                     {isAddNew ? (
-                      {/* <TableRow>
+                      <TableRow key={"newoffer"}>
                         <CusTableCell align="center">
-                          {activeInventory ? activeInventory.length + 1 : "#"}
+                          {allOffers.length + 1}
                         </CusTableCell>
                         <CusTableCell align="center">
-                          <Typography sx={{ fontSize: "0.75rem" }}>
-                            N/A
-                          </Typography>
+                          <FormControl fullWidth sx={{ marginTop: "5px" }}>
+                            <NativeSelect
+                              disableUnderline
+                              inputProps={{
+                                name: "status",
+                                id: "uncontrolled-native",
+                              }}
+                              onChange={(event) => {
+                                setNewOfferFunctionType(event.target.value);
+                              }}
+                              sx={{ fontSize: "0.75rem", paddingLeft: "5px" }}
+                            >
+                              {offersFunctionConfig.map((item) => (
+                                <option
+                                  value={item.configCriteriaValue}
+                                  style={{ fontSize: "0.75rem" }}
+                                >
+                                  {item.configCriteriaValue}
+                                </option>
+                              ))}
+                            </NativeSelect>
+                          </FormControl>
                         </CusTableCell>
                         <CusTableCell align="center">
                           <CusTextField
-                            value={newItemName}
+                            value={newOfferCode}
                             onChange={(event) => {
-                              setNewItemName(event.target.value);
+                              setNewOfferCode(event.target.value);
+                            }}
+                            fullWidth
+                            variant="standard"
+                            InputProps={{
+                              disableUnderline: true,
+                            }}
+                          />
+                        </CusTableCell>
+                        <CusTableCell align="center">
+                          <CusTextField
+                            value={newOfferDescription}
+                            onChange={(event) => {
+                              setNewOfferDescription(event.target.value);
                             }}
                             fullWidth
                             variant="standard"
@@ -757,118 +1118,131 @@ export const Offers = () => {
                         <CusTableCell align="center">
                           <FormControl fullWidth sx={{ marginTop: "5px" }}>
                             <NativeSelect
+                              disableUnderline
                               inputProps={{
                                 name: "status",
                                 id: "uncontrolled-native",
                               }}
                               onChange={(event) => {
-                                setNewItemCategory(event.target.value);
+                                setNewOfferCriteria(event.target.value);
                               }}
-                              sx={{ fontSize: "0.75rem" }}
+                              sx={{ fontSize: "0.75rem", paddingLeft: "5px" }}
                             >
-                              <option
-                                value={""}
-                                style={{ fontSize: "0.75rem" }}
-                              >
-                                Select Category
-                              </option>
-                              {categoryList &&
-                                categoryList.map((item) => (
-                                  <option
-                                    value={item.configCriteriaValue}
-                                    style={{ fontSize: "0.75rem" }}
-                                  >
-                                    {item.configCriteriaDesc}
-                                  </option>
-                                ))}
+                              {offersCriteriaConfig.map((item) => (
+                                <option
+                                  value={item.configCriteriaValue}
+                                  style={{ fontSize: "0.75rem" }}
+                                >
+                                  {item.configCriteriaValue}
+                                </option>
+                              ))}
                             </NativeSelect>
                           </FormControl>
                         </CusTableCell>
                         <CusTableCell align="center">
                           <FormControl fullWidth sx={{ marginTop: "5px" }}>
                             <NativeSelect
+                              disableUnderline
                               inputProps={{
                                 name: "status",
                                 id: "uncontrolled-native",
                               }}
                               onChange={(event) => {
-                                setNewItemSubCategory(event.target.value);
+                                setNewOfferSection(event.target.value);
                               }}
-                              sx={{ fontSize: "0.75rem" }}
+                              sx={{ fontSize: "0.75rem", paddingLeft: "5px" }}
                             >
                               <option
                                 value={""}
                                 style={{ fontSize: "0.75rem" }}
                               >
-                                Select Sub Category
+                                Select Section
                               </option>
-                              {categorySubList &&
-                                categorySubList.map((item) => (
-                                  <option
-                                    value={item.configCriteriaValue}
-                                    style={{ fontSize: "0.75rem" }}
-                                  >
-                                    {item.configCriteriaDesc}
-                                  </option>
-                                ))}
-                            </NativeSelect>
-                          </FormControl>
-                        </CusTableCell>
-                        <CusTableCell align="center">
-                          <FormControl fullWidth sx={{ marginTop: "5px" }}>
-                            <NativeSelect
-                              inputProps={{
-                                name: "status",
-                                id: "uncontrolled-native",
-                              }}
-                              onChange={(event) => {
-                                setNewItemUOM(event.target.value);
-                              }}
-                              sx={{ fontSize: "0.75rem" }}
-                            >
-                              <option
-                                value={""}
-                                style={{ fontSize: "0.75rem" }}
-                              >
-                                Select UOM
-                              </option>
-                              {uomList &&
-                                uomList.map((item) => (
-                                  <option
-                                    value={item.configCriteriaValue}
-                                    style={{ fontSize: "0.75rem" }}
-                                  >
-                                    {item.configCriteriaDesc}
-                                  </option>
-                                ))}
+                              {sections.map((item) => (
+                                <option
+                                  value={item}
+                                  style={{ fontSize: "0.75rem" }}
+                                >
+                                  {item}
+                                </option>
+                              ))}
                             </NativeSelect>
                           </FormControl>
                         </CusTableCell>
 
-                        <CusTableCell align="center">
+                        <CusTableCell align="center" sx={{ width: "20px" }}>
+                          <FormControl fullWidth sx={{ marginTop: "5px" }}>
+                            <NativeSelect
+                              disableUnderline
+                              inputProps={{
+                                name: "status",
+                                id: "uncontrolled-native",
+                              }}
+                              onChange={(event) => {
+                                setNewOfferDish(event.target.value);
+                              }}
+                              sx={{ fontSize: "0.75rem", paddingLeft: "5px" }}
+                            >
+                              <option
+                                value={""}
+                                style={{ fontSize: "0.75rem" }}
+                              >
+                                Select Dish
+                              </option>
+                              {products.map((item) => (
+                                <option
+                                  value={item.productId}
+                                  style={{ fontSize: "0.75rem" }}
+                                >
+                                  {item.dishType}
+                                </option>
+                              ))}
+                            </NativeSelect>
+                          </FormControl>
+                        </CusTableCell>
+
+                        <CusTableCell align="center" sx={{ width: "20px" }}>
                           <CusTextField
-                            value={newItemGst}
+                            value={newOfferProductList}
                             onChange={(event) => {
-                              setNewItemGst(event.target.value);
+                              setNewOfferProductList(event.target.value);
                             }}
                             fullWidth
                             variant="standard"
                             InputProps={{
-                              disableUnderline: true, 
+                              disableUnderline: true,
+                            }}
+                          />
+                        </CusTableCell>
+
+                        <CusTableCell align="center">
+                          <Button>Action</Button>
+                        </CusTableCell>
+
+                        <CusTableCell align="center">
+                          <CusTextField
+                            value={newOfferPrice}
+                            onChange={(event) => {
+                              setNewOfferPrice(event.target.value);
+                            }}
+                            fullWidth
+                            variant="standard"
+                            InputProps={{
+                              disableUnderline: true,
                             }}
                           />
                         </CusTableCell>
 
                         <CusTableCell align="center">
                           <CusTextField
-                            value={newItemUnitCost}
+                            value={newOfferDiscount}
                             onChange={(event) => {
-                              setNewItemUnitCost(event.target.value);
+                              setNewOfferDiscount(event.target.value);
                             }}
                             fullWidth
                             variant="standard"
                             InputProps={{
-                              disableUnderline: true, 
+                              disableUnderline: true,
                             }}
                           />
                         </CusTableCell>
@@ -876,14 +1250,40 @@ export const Offers = () => {
                         <CusTableCell align="center">
                           <FormControl fullWidth sx={{ marginTop: "5px" }}>
                             <NativeSelect
+                              disableUnderline
                               inputProps={{
                                 name: "status",
                                 id: "uncontrolled-native",
                               }}
                               onChange={(event) => {
-                                setNewTrackingFlag(event.target.value);
+                                setNewOfferApplicability(event.target.value);
                               }}
-                              sx={{ fontSize: "0.75rem" }}
+                              sx={{ fontSize: "0.75rem", paddingLeft: "5px" }}
+                            >
+                              {offersAppFlagConfig.map((item) => (
+                                <option
+                                  value={item.configCriteriaValue}
+                                  style={{ fontSize: "0.75rem" }}
+                                >
+                                  {item.configCriteriaValue}
+                                </option>
+                              ))}
+                            </NativeSelect>
+                          </FormControl>
+                        </CusTableCell>
+
+                        <CusTableCell align="center">
+                          <FormControl fullWidth sx={{ marginTop: "5px" }}>
+                            <NativeSelect
+                              disableUnderline
+                              inputProps={{
+                                name: "status",
+                                id: "uncontrolled-native",
+                              }}
+                              onChange={(event) => {
+                                setNewDaySunday(event.target.value);
+                              }}
+                              sx={{ fontSize: "0.75rem", paddingLeft: "5px" }}
                             >
                               <option
                                 value={"Y"}
@@ -900,11 +1300,186 @@ export const Offers = () => {
                             </NativeSelect>
                           </FormControl>
                         </CusTableCell>
+
+                        <CusTableCell align="center">
+                          <FormControl fullWidth sx={{ marginTop: "5px" }}>
+                            <NativeSelect
+                              disableUnderline
+                              inputProps={{
+                                name: "status",
+                                id: "uncontrolled-native",
+                              }}
+                              onChange={(event) => {
+                                setNewDayMonday(event.target.value);
+                              }}
+                              sx={{ fontSize: "0.75rem", paddingLeft: "5px" }}
+                            >
+                              <option
+                                value={"Y"}
+                                style={{ fontSize: "0.75rem" }}
+                              >
+                                Y
+                              </option>
+                              <option
+                                value={"N"}
+                                style={{ fontSize: "0.75rem" }}
+                              >
+                                N
+                              </option>
+                            </NativeSelect>
+                          </FormControl>
+                        </CusTableCell>
+
+                        <CusTableCell align="center">
+                          <FormControl fullWidth sx={{ marginTop: "5px" }}>
+                            <NativeSelect
+                              disableUnderline
+                              inputProps={{
+                                name: "status",
+                                id: "uncontrolled-native",
+                              }}
+                              onChange={(event) => {
+                                setNewDayTuesday(event.target.value);
+                              }}
+                              sx={{ fontSize: "0.75rem", paddingLeft: "5px" }}
+                            >
+                              <option
+                                value={"Y"}
+                                style={{ fontSize: "0.75rem" }}
+                              >
+                                Y
+                              </option>
+                              <option
+                                value={"N"}
+                                style={{ fontSize: "0.75rem" }}
+                              >
+                                N
+                              </option>
+                            </NativeSelect>
+                          </FormControl>
+                        </CusTableCell>
+
+                        <CusTableCell align="center">
+                          <FormControl fullWidth sx={{ marginTop: "5px" }}>
+                            <NativeSelect
+                              disableUnderline
+                              inputProps={{
+                                name: "status",
+                                id: "uncontrolled-native",
+                              }}
+                              onChange={(event) => {
+                                setNewDayWednesday(event.target.value);
+                              }}
+                              sx={{ fontSize: "0.75rem", paddingLeft: "5px" }}
+                            >
+                              <option
+                                value={"Y"}
+                                style={{ fontSize: "0.75rem" }}
+                              >
+                                Y
+                              </option>
+                              <option
+                                value={"N"}
+                                style={{ fontSize: "0.75rem" }}
+                              >
+                                N
+                              </option>
+                            </NativeSelect>
+                          </FormControl>
+                        </CusTableCell>
+
+                        <CusTableCell align="center">
+                          <FormControl fullWidth sx={{ marginTop: "5px" }}>
+                            <NativeSelect
+                              disableUnderline
+                              inputProps={{
+                                name: "status",
+                                id: "uncontrolled-native",
+                              }}
+                              onChange={(event) => {
+                                setNewDayThursday(event.target.value);
+                              }}
+                              sx={{ fontSize: "0.75rem", paddingLeft: "5px" }}
+                            >
+                              <option
+                                value={"Y"}
+                                style={{ fontSize: "0.75rem" }}
+                              >
+                                Y
+                              </option>
+                              <option
+                                value={"N"}
+                                style={{ fontSize: "0.75rem" }}
+                              >
+                                N
+                              </option>
+                            </NativeSelect>
+                          </FormControl>
+                        </CusTableCell>
+
+                        <CusTableCell align="center">
+                          <FormControl fullWidth sx={{ marginTop: "5px" }}>
+                            <NativeSelect
+                              disableUnderline
+                              inputProps={{
+                                name: "status",
+                                id: "uncontrolled-native",
+                              }}
+                              onChange={(event) => {
+                                setNewDayFriday(event.target.value);
+                              }}
+                              sx={{ fontSize: "0.75rem", paddingLeft: "5px" }}
+                            >
+                              <option
+                                value={"Y"}
+                                style={{ fontSize: "0.75rem" }}
+                              >
+                                Y
+                              </option>
+                              <option
+                                value={"N"}
+                                style={{ fontSize: "0.75rem" }}
+                              >
+                                N
+                              </option>
+                            </NativeSelect>
+                          </FormControl>
+                        </CusTableCell>
+
+                        <CusTableCell align="center">
+                          <FormControl fullWidth sx={{ marginTop: "5px" }}>
+                            <NativeSelect
+                              disableUnderline
+                              inputProps={{
+                                name: "status",
+                                id: "uncontrolled-native",
+                              }}
+                              onChange={(event) => {
+                                setNewDaySaturday(event.target.value);
+                              }}
+                              sx={{ fontSize: "0.75rem", paddingLeft: "5px" }}
+                            >
+                              <option
+                                value={"Y"}
+                                style={{ fontSize: "0.75rem" }}
+                              >
+                                Y
+                              </option>
+                              <option
+                                value={"N"}
+                                style={{ fontSize: "0.75rem" }}
+                              >
+                                N
+                              </option>
+                            </NativeSelect>
+                          </FormControl>
+                        </CusTableCell>
+
                         <CusTableCell align="center">
                           <IconButton
                             sx={{
                               fontSize: "0.75rem",
-                              color: "#92D050", 
+                              color: "#92D050",
                             }}
                             onClick={() => {
                               saveNewItem();
@@ -914,6 +1489,7 @@ export const Offers = () => {
                               sx={{ height: "0.95rem", width: "0.95rem" }}
                             ></SaveIcon>
                           </IconButton>
+
                           <IconButton
                             sx={{
                               fontSize: "0.75rem",
@@ -928,7 +1504,7 @@ export const Offers = () => {
                             ></CloseIcon>
                           </IconButton>
                         </CusTableCell>
-                      </TableRow> */}
+                      </TableRow>
                     ) : null}
                   </>
                 ) : (
@@ -946,30 +1522,32 @@ export const Offers = () => {
 
       <SaveButton
         className="mt-4"
-        onClick={
-          () => {
-            setIsAddNew(true);
-          }
-        }
+        onClick={() => {
+          setIsAddNew(true);
+        }}
       >
         ADD ANOTHER
       </SaveButton>
-      
-      <div style={{ display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between'}}>
-      <MyPaginate
-        previousLabel={"Previous"}
-        nextLabel={"Next"}
-        breakLabel={"..."}
-        pageCount={pagination.pageCount}
-        marginPagesDisplayed={2}
-        pageRangeDisplayed={5}
-        onPageChange={handlePageClick}
-        containerClassName={"pagination"}
-        activeClassName={"active"}
-      />
+
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <MyPaginate
+          previousLabel={"Previous"}
+          nextLabel={"Next"}
+          breakLabel={"..."}
+          pageCount={pagination.pageCount}
+          marginPagesDisplayed={2}
+          pageRangeDisplayed={5}
+          onPageChange={handlePageClick}
+          containerClassName={"pagination"}
+          activeClassName={"active"}
+        />
       </div>
     </div>
-  )
-}
+  );
+};
