@@ -253,8 +253,13 @@ export const SuppliersMaster = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getActiveSuppliers());
+    dispatch(getActiveSuppliers( user.restaurantId,
+      user.storeId));
   }, []);
+
+  // useEffect(() => {
+  //   dispatch(getActiveSuppliers());
+  // }, []);
 
   useEffect(() => {
     setPagination((prevState) => ({

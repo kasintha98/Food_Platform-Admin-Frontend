@@ -443,12 +443,12 @@ export const deleteInventoryItem = (id, updatedBy) => {
   };
 };
 
-export const getActiveSuppliers = () => {
+export const getActiveSuppliers = (restaurantId,storeId) => {
   return async (dispatch) => {
     try {
       dispatch({ type: inventoryConstants.GET_ALL_SUPPLIERS_REQUEST });
 
-      const res = await axios.get("/getAllActiveSuppliers");
+      const res = await axios.get("/getAllActiveSuppliers?restaurantId="+restaurantId+"&storeId="+storeId);
       if (res.status === 200) {
         dispatch({
           type: inventoryConstants.GET_ALL_SUPPLIERS_SUCCESS,
