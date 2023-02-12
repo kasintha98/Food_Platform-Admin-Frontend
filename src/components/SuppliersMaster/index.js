@@ -254,7 +254,7 @@ export const SuppliersMaster = () => {
 
   useEffect(() => {
     dispatch(getActiveSuppliers( user.restaurantId,
-      user.storeId));
+      "ALL"));
   }, []);
 
   // useEffect(() => {
