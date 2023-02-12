@@ -122,7 +122,7 @@ export const newLogin = (user) => {
               )
             );
 
-            dispatch(getVersion());
+            dispatch(getVersion(userObj.restaurantId));
 
             dispatch(getBusinessDate(userObj.restaurantId, userObj.storeId));
             //show success notification
@@ -284,12 +284,12 @@ export const resetPassword = (loginId, loginPassword) => {
   };
 };
 
-export const getVersion = () => {
+export const getVersion = (restaurantId) => {
   return async (dispatch) => {
     try {
       dispatch({ type: authConstants.GET_VERSION_REQUEST });
 
-      const res = await axios.get(`/getAppDetails`);
+      const res = await axios.get("/getAppDetails?restaurantId="+restaurantId+"&storeId=ALL");
 
       if (res.status === 200 && res.data) {
         dispatch({
@@ -307,3 +307,27 @@ export const getVersion = () => {
     }
   };
 };
+
+// export const getVersion = () => {
+//   return async (dispatch) => {
+//     try {
+//       dispatch({ type: authConstants.GET_VERSION_REQUEST });
+
+//       const res = await axios.get(`/getAppDetails`);
+
+//       if (res.status === 200 && res.data) {
+//         dispatch({
+//           type: authConstants.GET_VERSION_SUCCESS,
+//           payload: res.data[0],
+//         });
+//       } else {
+//         dispatch({
+//           type: authConstants.GET_VERSION_FAILURE,
+//           payload: null,
+//         });
+//       }
+//     } catch (error) {
+//       console.log(error);
+//     }
+//   };
+// };
