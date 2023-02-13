@@ -347,7 +347,7 @@ export const SuppliersMaster = () => {
       updatedDate: new Date(),
     };
 
-    dispatch(saveUpdateSupplier(newSupplier)).then((res) => {
+    dispatch(saveUpdateSupplier(newSupplier,user.restaurantId)).then((res) => {
       if (res) {
         onSaveClickHandle(oldSupplier.supplierId);
         clearStates();
@@ -367,12 +367,29 @@ export const SuppliersMaster = () => {
       return;
     }
 
-    /* if (!newsupplierCategory) {
-      toast.error("Supplier category is mandatory!");
-      return;
-    } */
+    // const newSupplier = {
+    //   supplierName: newSupplierName,
+    //   supplierAddress: newSupplierAddress,
+    //   supplierCity: newSupplierCity,
+    //   supplierState: newSupplierState,
+    //   supplierZipCode: newSupplierPinCode,
+    //   supplierMobileNumber: newSupplierPhone,
+    //   supplierEmailId: newSupplierEmail,
+    //   supplierFaxNumber: newSupplierFax,
+    //   supplierGstNumber: newSupplierGst,
+    //   supplierTANNumber: newSupplierTan,
+    //   supplierCategory: newsupplierCategory ? newsupplierCategory : "EXTERNAL",
+    //   supplierStatus: newSupplierStatus ? newSupplierStatus : "ACTIVE",
+    //   createdBy: user.loginId,
+    //   storeId: newSupplierStore,
+    //   createdDate: new Date(),
+    //   updatedBy: user.loginId,
+    //   updatedDate: new Date(),
+    // };
 
     const newSupplier = {
+      receivingRestaurantId: user.restaurantId,
+      receivingStoreId: "ALL",
       supplierName: newSupplierName,
       supplierAddress: newSupplierAddress,
       supplierCity: newSupplierCity,
@@ -386,19 +403,27 @@ export const SuppliersMaster = () => {
       supplierCategory: newsupplierCategory ? newsupplierCategory : "EXTERNAL",
       supplierStatus: newSupplierStatus ? newSupplierStatus : "ACTIVE",
       createdBy: user.loginId,
-      storeId: newSupplierStore,
+      sourcingStoreId: newSupplierStore,
       createdDate: new Date(),
       updatedBy: user.loginId,
       updatedDate: new Date(),
     };
 
-    dispatch(saveUpdateSupplier(newSupplier)).then((res) => {
+    dispatch(saveUpdateSupplier(newSupplier,user.restaurantId)).then((res) => {
       if (res) {
         handleCloseAdd();
         clearStates();
         setIsAddNew(false);
       }
     });
+
+    // dispatch(saveUpdateSupplier(newSupplier)).then((res) => {
+    //   if (res) {
+    //     handleCloseAdd();
+    //     clearStates();
+    //     setIsAddNew(false);
+    //   }
+    // });
   };
 
   const softDeleteSupplier = (id) => {
