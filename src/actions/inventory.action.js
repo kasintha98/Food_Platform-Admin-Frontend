@@ -145,7 +145,7 @@ export const getAllSuppliers = () => {
   };
 };
 
-export const saveUpdateSupplier = (supplier) => {
+export const saveUpdateSupplier = (supplier, restaurantId) => {
   return async (dispatch) => {
     dispatch({ type: inventoryConstants.SAVE_UPDATE_SUPPLIERS_REQUEST });
 
@@ -157,7 +157,7 @@ export const saveUpdateSupplier = (supplier) => {
           type: inventoryConstants.SAVE_UPDATE_SUPPLIERS_SUCCESS,
           payload: res.data,
         });
-        dispatch(getActiveSuppliers());
+        dispatch(getActiveSuppliers(restaurantId,"ALL"));
         toast.success("Supplier Saved Successfully!");
         return res.data;
       } else {
@@ -174,6 +174,36 @@ export const saveUpdateSupplier = (supplier) => {
     }
   };
 };
+
+// export const saveUpdateSupplier = (supplier) => {
+//   return async (dispatch) => {
+//     dispatch({ type: inventoryConstants.SAVE_UPDATE_SUPPLIERS_REQUEST });
+
+//     try {
+//       const res = await axios.post("/saveSupplier", supplier);
+
+//       if (res.status === 200) {
+//         dispatch({
+//           type: inventoryConstants.SAVE_UPDATE_SUPPLIERS_SUCCESS,
+//           payload: res.data,
+//         });
+//         dispatch(getActiveSuppliers());
+//         toast.success("Supplier Saved Successfully!");
+//         return res.data;
+//       } else {
+//         dispatch({
+//           type: inventoryConstants.SAVE_UPDATE_SUPPLIERS_FAILURE,
+//           payload: null,
+//         });
+//         toast.error("Error when saving! Please try again!");
+//       }
+//       console.log(res);
+//     } catch (error) {
+//       console.log(error);
+//       toast.error("Error when saving! Please try again!");
+//     }
+//   };
+// };
 
 export const deleteSupplier = (id, updatedBy) => {
   return async (dispatch) => {

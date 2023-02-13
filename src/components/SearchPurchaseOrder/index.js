@@ -220,7 +220,9 @@ export const SearchPurchaseOrder = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getActiveSuppliers());
+    // dispatch(getActiveSuppliers());
+    dispatch(getActiveSuppliers( user.restaurantId,
+      "ALL"));
     dispatch(getActiveInventory());
     dispatch(getInventoryPurchaseCategory());
     /* dispatch(getClosedPurchaseOrders()).then((res) => {

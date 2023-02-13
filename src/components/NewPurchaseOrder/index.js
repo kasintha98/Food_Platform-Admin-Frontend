@@ -210,7 +210,9 @@ export const NewPurchaseOrder = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getActiveSuppliers());
+    // dispatch(getActiveSuppliers());
+    dispatch(getActiveSuppliers( user.restaurantId,
+      "ALL"));
     dispatch(getActiveInventory());
     dispatch(getInventoryPurchaseCategory());
   }, []);
