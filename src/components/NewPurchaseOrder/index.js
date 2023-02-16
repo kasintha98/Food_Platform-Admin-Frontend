@@ -29,6 +29,7 @@ import {
   getActiveInventory,
   getInventoryPurchaseCategory,
   saveUpdatePurchaseOrder,
+  getBusinessDate,
 } from "../../actions";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -215,7 +216,10 @@ export const NewPurchaseOrder = () => {
       "ALL"));
     dispatch(getActiveInventory());
     dispatch(getInventoryPurchaseCategory());
+    // dispatch(getBusinessDate(user.restaurantId, user.storeId)); -- If needed can call for fetching Purchase Date
   }, []);
+
+  const businessDateAll = useSelector((state) => state.user.businessDate);
 
   const handleChangeStore = (event) => {
     setSelectedStore(event.target.value);
@@ -243,8 +247,20 @@ export const NewPurchaseOrder = () => {
     setIsSave(edits);
   };
 
-  const renderDate = (date) => {
-    const dateObj = new Date(date);
+  // const renderDate = (date) => {
+  //   const dateObj = new Date(date);
+  //   const month = dateObj.toLocaleString("default", { month: "short" });
+  //   const day = dateObj.getDate();
+  //   const year = dateObj.getFullYear();
+  //   return (
+  //     <span>
+  //       {day}/{month.toUpperCase()}/{year}
+  //     </span>
+  //   );
+  // };
+
+  const renderDate = () => {
+    const dateObj = new Date(businessDateAll.businessDate);
     const month = dateObj.toLocaleString("default", { month: "short" });
     const day = dateObj.getDate();
     const year = dateObj.getFullYear();
@@ -530,7 +546,8 @@ export const NewPurchaseOrder = () => {
                   )}
                 />
               </LocalizationProvider> */}
-              <CuTypography>{renderDate(billDate)}</CuTypography>
+              {/* <CuTypography>{renderDate(billDate)}</CuTypography> */}
+              <CuTypography>{renderDate()}</CuTypography> 
             </div>
           </Col>
         </Row>
