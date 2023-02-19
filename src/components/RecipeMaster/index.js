@@ -214,8 +214,10 @@ export const RecipeMaster = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getActiveRecipes());
-    dispatch(getActiveInventory());
+    // dispatch(getActiveRecipes());
+    dispatch(getActiveRecipes(user.restaurantId,"ALL"));
+    // dispatch(getActiveInventory());
+    dispatch(getActiveInventory(user.restaurantId));
     dispatch(getInventoryUOM());
     dispatch(getAllProduct());
   }, []);
@@ -299,6 +301,7 @@ export const RecipeMaster = () => {
     for (let i = 0; i < allList.length; i++) {
       const newItem = {
         restaurantId: allList[i].restaurantId,
+        storeId: "ALL",
         productId: allList[i].productId,
         itemId: itemIngredient[allList[i].itemId]
           ? itemIngredient[allList[i].itemId]
@@ -334,7 +337,7 @@ export const RecipeMaster = () => {
           updatedDate: new Date(),
         };
         setChanged(true);
-        dispatch(saveUpdateRecipeItem(newObj));
+        dispatch(saveUpdateRecipeItem(newObj,user.restaurantId));
       }
     }
 
@@ -356,7 +359,8 @@ export const RecipeMaster = () => {
     }
 
     const newItem = {
-      restaurantId: "R001",
+      restaurantId: user.restaurantId,
+      storeId: "ALL",
       productId: currentProduct.productId,
       itemId: newItemIngredientObj.itemId,
       itemQty: newItemQty,
@@ -373,7 +377,7 @@ export const RecipeMaster = () => {
 
     // console.log("------------");
     // console.log(newItem)
-    dispatch(saveUpdateRecipeItem(newItem)).then((res)=>{
+    dispatch(saveUpdateRecipeItem(newItem,user.restaurantId)).then((res)=>{
       if(res){
         clearData()
         setIsAddNew(false);
@@ -389,7 +393,9 @@ export const RecipeMaster = () => {
   };
 
   const deleteIngredient = (id) => {
-    dispatch(deleteRecipeItem(id, user.loginId));
+    // dispatch(deleteRecipeItem(id, user.loginId));
+    dispatch(deleteRecipeItem(id, user.loginId,user.restaurantId));
+
   };
 
   // console.log("******* activeInventory ********");

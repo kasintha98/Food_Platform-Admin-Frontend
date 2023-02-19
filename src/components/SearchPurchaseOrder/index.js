@@ -223,7 +223,7 @@ export const SearchPurchaseOrder = () => {
     // dispatch(getActiveSuppliers());
     dispatch(getActiveSuppliers( user.restaurantId,
       "ALL"));
-    dispatch(getActiveInventory());
+    dispatch(getActiveInventory(user.restaurantId));
     dispatch(getInventoryPurchaseCategory());
     /* dispatch(getClosedPurchaseOrders()).then((res) => {
       if (res) {
