@@ -215,7 +215,8 @@ export const InventoryItemMaster = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getActiveInventory());
+    // dispatch(getActiveInventory());
+    dispatch(getActiveInventory(user.restaurantId));
   }, []);
 
   useEffect(() => {
@@ -279,9 +280,11 @@ export const InventoryItemMaster = () => {
       itemStatus: "ACTIVE",
       updatedBy: user.loginId,
       updatedDate: new Date(),
+      restaurantId: user.restaurantId,
+      storeId: "ALL",
     };
 
-    dispatch(saveUpdateInventoryItem(newItem)).then((res) => {
+    dispatch(saveUpdateInventoryItem(newItem,user.restaurantId)).then((res) => {
       if (res) {
         onSaveClickHandle(oldItem.itemId);
         //clearStates();
@@ -302,6 +305,8 @@ export const InventoryItemMaster = () => {
 
     const newItem = {
       // itemId: newItemNo,
+      restaurantId: user.restaurantId,
+      storeId: "ALL",
       itemName: newItemName,
       itemCategory: newItemCategory,
       itemSubCategory: newItemSubCategory,
@@ -316,7 +321,7 @@ export const InventoryItemMaster = () => {
       updatedDate: new Date(),
     };
 
-    dispatch(saveUpdateInventoryItem(newItem)).then((res) => {
+    dispatch(saveUpdateInventoryItem(newItem,user.restaurantId)).then((res) => {
       if (res) {
         clearStates();
         setIsAddNew(false);
@@ -325,7 +330,7 @@ export const InventoryItemMaster = () => {
   };
 
   const softDeleteItem = (id) => {
-    dispatch(deleteInventoryItem(id, user.loginId));
+    dispatch(deleteInventoryItem(id, user.loginId,user.restaurantId));
   };
 
   const clearStates = () => {
