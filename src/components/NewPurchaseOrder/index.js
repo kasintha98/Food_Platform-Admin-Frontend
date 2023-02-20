@@ -394,7 +394,8 @@ export const NewPurchaseOrder = () => {
         restaurantId: selectedStoreObj.restaurantId,
         storeId: selectedStoreObj.storeId,
         supplierId: selectedSupplierObj.supplierId,
-        purchaseDate: billDate,
+        // purchaseDate: billDate, //MINOR CHANGE FOR BUSINESS DATE
+        purchaseDate: new Date(businessDateAll.businessDate),
         billNumber: billNo,
         itemId: Object.values(addedList)[i].itemId,
         purchaseQty: Object.values(addedList)[i].itemQuantity,
