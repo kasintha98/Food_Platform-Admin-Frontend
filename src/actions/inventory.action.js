@@ -252,7 +252,7 @@ export const getAllInventory = () => {
     try {
       dispatch({ type: inventoryConstants.GET_ALL_INVENTORY_ITEMS_REQUEST });
 
-      const res = await axios.get("/getAllItems", { params: { restaurantId: userObj.restaurantId, storeId: userObj.storeId } });
+      const res = await axios.get("/getAllItems", { params: { restaurantId: userObj.restaurantId, storeId: "ALL" } });
       if (res.status === 200) {
         dispatch({
           type: inventoryConstants.GET_ALL_INVENTORY_ITEMS_SUCCESS,
@@ -276,12 +276,12 @@ export const getAllInventory = () => {
   };
 };
 
-export const getActiveInventory = (restaurantId) => {
+export const getActiveInventory = () => {
   return async (dispatch) => {
     try {
       dispatch({ type: inventoryConstants.GET_ACTIVE_INVENTORY_ITEMS_REQUEST });
 
-      const res = await axios.get("/getItemsByStatus?restaurantId=" + restaurantId + "&storeId=ALL&status=ACTIVE");
+      const res = await axios.get("/getItemsByStatus", { params: { status: "ACTIVE", restaurantId: userObj.restaurantId, storeId: "ALL" } });
       if (res.status === 200) {
         dispatch({
           type: inventoryConstants.GET_ACTIVE_INVENTORY_ITEMS_SUCCESS,
