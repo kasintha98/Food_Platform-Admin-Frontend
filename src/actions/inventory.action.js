@@ -2,6 +2,12 @@ import axios from "../helpers/axios";
 import { inventoryConstants } from "./constants";
 import { toast } from "react-toastify";
 
+const user = localStorage.getItem("user");
+let userObj = {};
+if (user) {
+  userObj = JSON.parse(user)
+}
+
 //get inventory from database
 export const getInventory = () => {
   return async (dispatch) => {
@@ -121,7 +127,7 @@ export const getAllSuppliers = () => {
     try {
       dispatch({ type: inventoryConstants.GET_ALL_SUPPLIERS_REQUEST });
 
-      const res = await axios.get("/getAllSuppliers");
+      const res = await axios.get("/getAllSuppliers", { params: { restaurantId: userObj.restaurantId, storeId: userObj.storeId } });
       if (res.status === 200) {
         dispatch({
           type: inventoryConstants.GET_ALL_SUPPLIERS_SUCCESS,
@@ -157,7 +163,7 @@ export const saveUpdateSupplier = (supplier, restaurantId) => {
           type: inventoryConstants.SAVE_UPDATE_SUPPLIERS_SUCCESS,
           payload: res.data,
         });
-        dispatch(getActiveSuppliers(restaurantId,"ALL"));
+        dispatch(getActiveSuppliers(restaurantId, "ALL"));
         toast.success("Supplier Saved Successfully!");
         return res.data;
       } else {
@@ -246,7 +252,7 @@ export const getAllInventory = () => {
     try {
       dispatch({ type: inventoryConstants.GET_ALL_INVENTORY_ITEMS_REQUEST });
 
-      const res = await axios.get("/getAllItems");
+      const res = await axios.get("/getAllItems", { params: { restaurantId: userObj.restaurantId, storeId: userObj.storeId } });
       if (res.status === 200) {
         dispatch({
           type: inventoryConstants.GET_ALL_INVENTORY_ITEMS_SUCCESS,
@@ -275,7 +281,7 @@ export const getActiveInventory = () => {
     try {
       dispatch({ type: inventoryConstants.GET_ACTIVE_INVENTORY_ITEMS_REQUEST });
 
-      const res = await axios.get("/getItemsByStatus?status=ACTIVE");
+      const res = await axios.get("/getItemsByStatus", { params: { status: "ACTIVE", restaurantId: userObj.restaurantId, storeId: userObj.storeId } });
       if (res.status === 200) {
         dispatch({
           type: inventoryConstants.GET_ACTIVE_INVENTORY_ITEMS_SUCCESS,
@@ -473,12 +479,12 @@ export const deleteInventoryItem = (id, updatedBy) => {
   };
 };
 
-export const getActiveSuppliers = (restaurantId,storeId) => {
+export const getActiveSuppliers = (restaurantId, storeId) => {
   return async (dispatch) => {
     try {
       dispatch({ type: inventoryConstants.GET_ALL_SUPPLIERS_REQUEST });
 
-      const res = await axios.get("/getAllActiveSuppliers?restaurantId="+restaurantId+"&storeId="+storeId);
+      const res = await axios.get("/getAllActiveSuppliers?restaurantId=" + restaurantId + "&storeId=" + storeId);
       if (res.status === 200) {
         dispatch({
           type: inventoryConstants.GET_ALL_SUPPLIERS_SUCCESS,
@@ -507,7 +513,7 @@ export const getActiveRecipes = () => {
     try {
       dispatch({ type: inventoryConstants.GET_ACTIVE_RECIPES_REQUEST });
 
-      const res = await axios.get("/getAllActiveRecipes");
+      const res = await axios.get("/getAllActiveRecipes", { params: { restaurantId: userObj.restaurantId, storeId: userObj.storeId } });
       if (res.status === 200) {
         dispatch({
           type: inventoryConstants.GET_ACTIVE_RECIPES_SUCCESS,
@@ -651,9 +657,9 @@ export const saveUpdatePurchaseOrder = (item, isPullPo) => {
           : "";
         toast.success(
           "PO NO: " +
-            res.data.purchaseOrderId +
-            billStr +
-            " Saved Successfully!"
+          res.data.purchaseOrderId +
+          billStr +
+          " Saved Successfully!"
         );
         if (isPullPo) {
           dispatch(getSubmittedRecievedPurchaseOrders());
@@ -712,7 +718,7 @@ export const getItemConsumptionSummery = (store, type) => {
         type: inventoryConstants.GET_ITEM_CONSUMPTION_SUMMARY_REQUEST,
       });
 
-      const res = await axios.get("/getItemConsumptionSummery",null,{params:{type: type}});
+      const res = await axios.get("/getItemConsumptionSummery", null, { params: { type: type } });
       if (res.status === 200) {
         let filteredData = res.data.filter(function (el) {
           return (
@@ -935,7 +941,7 @@ export const returnSearchedList = (list, closedPurchaseOrders, selectedStoreObj,
       let list = mList ? mList : closedPurchaseOrders;
       let searched = [];
       if (list) {
-        
+
         if (selectedStoreObj) {
           searched = list.filter(function (el) {
             return (
@@ -944,8 +950,8 @@ export const returnSearchedList = (list, closedPurchaseOrders, selectedStoreObj,
             );
           });
         }
-  
-        if(user.roleCategory !== "SUPER_ADMIN"){
+
+        if (user.roleCategory !== "SUPER_ADMIN") {
           searched = list.filter(function (el) {
             return (
               user.restaurantId === el.restaurantId &&
@@ -953,37 +959,37 @@ export const returnSearchedList = (list, closedPurchaseOrders, selectedStoreObj,
             );
           });
         }
-  
+
         if (billNo) {
           searched = list.filter(function (el) {
             return el.billNumber.toLowerCase().includes(billNo.toLowerCase());
           });
         }
-  
+
         if (selectedSupplierObj) {
           searched = list.filter(function (el) {
             return selectedSupplierObj.supplierId === el.supplierId;
           });
         }
-  
+
         if (dateState[0]) {
           searched = list.filter(function (el) {
             return (
               dateState[0].startDate.getTime() <=
-                new Date(el.purchaseDate).getTime() &&
+              new Date(el.purchaseDate).getTime() &&
               dateState[0].endDate.getTime() >=
-                new Date(el.purchaseDate).getTime()
+              new Date(el.purchaseDate).getTime()
             );
           });
         }
-  
-        if(selectedSearchPOstatus){
+
+        if (selectedSearchPOstatus) {
           searched = list.filter(function (el) {
             return el.purchaseOrderStatus.toLowerCase() === selectedSearchPOstatus.toLowerCase();
           });
         }
-  
-     
+
+
         //groupBypurchaseOrderId(searched);
       }
       return searched;

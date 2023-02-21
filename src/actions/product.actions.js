@@ -11,6 +11,12 @@ const pizzaSort = [
   "Combo",
 ];
 
+const user = localStorage.getItem("user");
+let userObj = {};
+if(user){
+  userObj = JSON.parse(user)
+}
+
 export const getProductsNew = (restaurantId, storeId) => {
   return async (dispatch) => {
     try {
@@ -1040,7 +1046,7 @@ export const getAllOffers = () => {
         type: productConstants.GET_ALL_OFFERS_REQUEST,
       });
 
-      const res = await axios.get(`/getAllOffers`);
+      const res = await axios.get(`/getAllOffers`, {params: {restaurantId:userObj.restaurantId, storeId:userObj.storeId}});
 
       if (res && res.status === 200) {
         dispatch({
@@ -1109,7 +1115,7 @@ export const getOffersByStatus = (status) => {
         type: productConstants.GET_ALL_OFFERS_BY_STATUS_REQUEST,
       });
 
-      const res = await axios.get(`/getOffersByStatus?status=${status}`);
+      const res = await axios.get(`/getOffersByStatus`, {params: {status:status, restaurantId:userObj.restaurantId, storeId:userObj.storeId}});
 
       if (res && res.status === 200) {
         dispatch({

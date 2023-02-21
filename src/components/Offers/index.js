@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
-import { Row, Col } from "react-bootstrap";
+import { Row, Col, Modal } from "react-bootstrap";
 import { toast } from "react-toastify";
 import {
   TableContainer,
@@ -17,11 +17,15 @@ import {
   NativeSelect,
   TextField,
   IconButton,
+  Autocomplete,
+  Box
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CloseIcon from "@mui/icons-material/Close";
 import SaveIcon from "@mui/icons-material/Save";
 import EditIcon from "@mui/icons-material/Edit";
+import DoneIcon from "@mui/icons-material/Done";
+
 import {
   saveOffer,
   deleteInventoryItem,
@@ -31,6 +35,7 @@ import {
   getConfigOffersAppFlag,
   getAllSections,
   getProductsNew,
+  getAllProduct
 } from "../../actions";
 import { useSelector, useDispatch } from "react-redux";
 import ReactPaginate from "react-paginate";
@@ -166,10 +171,38 @@ const CuTypography = styled(Typography)`
   line-height: 1rem;
 `;
 
+const CusTypo = styled(Typography)`
+  color: #fff;
+  font-weight: bold;
+`;
+
+const CusAutocomplete = styled(Autocomplete)`
+  & input {
+    font-size: 0.75rem;
+    padding: 2px !important;
+    height: 0.75rem !important;
+  }
+
+  & legend {
+    font-size: 0.75rem !important;
+    padding: 0;
+  }
+
+  & label {
+    font-size: 0.75rem !important;
+    padding: 0 !important;
+    top: -15px;
+  }
+
+  & .MuiAutocomplete-root label {
+    top: 0px !important;
+  }
+`;
+
 export const Offers = () => {
   const allOffers = useSelector((state) => state.product.offersByStatus);
   const sections = useSelector((state) => state.product.sections);
-  const products = useSelector((state) => state.product.products);
+  const products = useSelector((state) => state.product.masterProducts);
   const offersAppFlagConfig = useSelector(
     (state) => state.product.offersAppFlagConfig
   );
@@ -186,6 +219,7 @@ export const Offers = () => {
 
   const [isSave, setIsSave] = useState({});
   const [isAddNew, setIsAddNew] = useState(false);
+  const [isAddNewRuleProduct, setIsAddNewRuleProduct] = useState(false);
   const [currentOfferFunctionType, setCurrentOfferFunctionType] = useState("");
   const [offerSection, setOfferSection] = useState("");
   const [offerDish, setOfferDish] = useState("");
@@ -203,7 +237,7 @@ export const Offers = () => {
   const [dayThursday, setDayThursday] = useState("");
   const [dayFriday, setDayFriday] = useState("");
   const [daySaturday, setDaySaturday] = useState("");
-
+  const [showRuleModal, setShowRuleModal] = useState(false);
   const [newOfferFunctionType, setNewOfferFunctionType] = useState("");
   const [newOfferCode, setNewOfferCode] = useState("");
   const [newOfferDescription, setNewOfferDescription] = useState("");
@@ -228,6 +262,93 @@ export const Offers = () => {
     pageCount: 0,
     currentData: allOffers.slice(0, 20),
   });
+  const [currentRuleCondition, setCurrentRuleCondition] = useState("AND");
+  const [ruleProducts, setRuleProducts] = useState([]);
+  const [selectedRule, setSelectedRule] = useState("1");
+  const [allRules, setAllRules] = useState({
+    "1": {
+      ruleNo: 1,
+      operator: "OR",
+      products: [{
+        product: {
+          "productId": "P001",
+          "id": 1,
+          "section": "Fast Food",
+          "dish": "Burger",
+          "dishCategory": "Veg",
+          "dishSpiceIndicator": "",
+          "dishType": "Aloo Tikki Burger",
+          "dishDescriptionId": "This is our famous Aloo Tikki Burger",
+          "productSize": "Regular",
+          "imagePath": "20210923072451_IMG_0432",
+          "commonImage": "N",
+          "price": 40,
+          "menuAvailableFlag": "Y",
+          "ingredientExistFlag": "N",
+          "kdsRoutingName": "FAST FOOD",
+          "productStatus": "ACTIVE",
+          "createdBy": "SYSTEM",
+          "createdDate": "2022-08-29T15:22:08.000+00:00",
+          "updatedBy": "SYSTEM",
+          "updatedDate": "2022-08-29T15:22:08.000+00:00"
+        }, operator: "AND"
+      }, {
+        product: {
+          "productId": "P006",
+          "id": 6,
+          "section": "Fast Food",
+          "dish": "Burger",
+          "dishCategory": "Veg",
+          "dishSpiceIndicator": "Medium Spicy",
+          "dishType": "Maharaja Burger",
+          "dishDescriptionId": "This is our famous Double Tikki Burger",
+          "productSize": "Regular",
+          "imagePath": "20210923080442_IMG_0445",
+          "commonImage": "N",
+          "price": 99,
+          "menuAvailableFlag": "Y",
+          "ingredientExistFlag": "N",
+          "kdsRoutingName": "FAST FOOD",
+          "productStatus": "ACTIVE",
+          "createdBy": "Gurmeet",
+          "createdDate": "2022-04-24T01:09:58.000+00:00",
+          "updatedBy": "Gurmeet",
+          "updatedDate": "2022-04-24T01:09:58.000+00:00"
+        }, operator: "OR"
+      }]
+    },
+    "2": {
+      ruleNo: 2,
+      operator: "OR",
+      products: [{
+        product: {
+          "productId": "P006",
+          "id": 6,
+          "section": "Fast Food",
+          "dish": "Burger",
+          "dishCategory": "Veg",
+          "dishSpiceIndicator": "Medium Spicy",
+          "dishType": "Maharaja Burger",
+          "dishDescriptionId": "This is our famous Double Tikki Burger",
+          "productSize": "Regular",
+          "imagePath": "20210923080442_IMG_0445",
+          "commonImage": "N",
+          "price": 99,
+          "menuAvailableFlag": "Y",
+          "ingredientExistFlag": "N",
+          "kdsRoutingName": "FAST FOOD",
+          "productStatus": "ACTIVE",
+          "createdBy": "Gurmeet",
+          "createdDate": "2022-04-24T01:09:58.000+00:00",
+          "updatedBy": "Gurmeet",
+          "updatedDate": "2022-04-24T01:09:58.000+00:00"
+        }, operator: "AND"
+      }]
+    }
+  });
+  const [ruleNewProducts, setRuleNewProducts] = useState([]);
+  const [newRuleProductCondition, setNewRuleProductCondition] = useState("");
+
 
   const dispatch = useDispatch();
 
@@ -236,8 +357,9 @@ export const Offers = () => {
     dispatch(getConfigOffersFunction());
     dispatch(getConfigOffersCriteria());
     dispatch(getConfigOffersAppFlag());
+    dispatch(getAllProduct())
     dispatch(getAllSections(user.restaurantId, user.storeId));
-    dispatch(getProductsNew(user.restaurantId, user.storeId));
+    /* dispatch(getProductsNew(user.restaurantId, user.storeId)); */
   }, []);
 
   useEffect(() => {
@@ -276,6 +398,9 @@ export const Offers = () => {
     let edits = { ...isSave, [id]: false };
     setIsSave(edits);
   };
+
+  const handleCloseRuleModal = () => setShowRuleModal(false);
+  const handleShowRuleModal = () => setShowRuleModal(true);
 
   const updateItemHandle = (oldItem) => {
     const newOffer = {
@@ -411,6 +536,332 @@ export const Offers = () => {
     setNewDayThursday("");
   };
 
+  const renderRuleModal = () => {
+    return (
+      <Modal
+        show={showRuleModal}
+        onHide={handleCloseRuleModal}
+        close
+        style={{
+          marginTop: "65px",
+          zIndex: 1100,
+          paddingBottom: "60px",
+        }}
+        size="lg"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>EDIT PRODUCTS | DISH ITEMS</Modal.Title>
+        </Modal.Header>
+        <Modal.Body style={{ paddingTop: 0, paddingBottom: 0 }}>
+          <Row>
+            <Col sm={4} style={{ backgroundColor: "#EDEDED", paddingTop: "3rem" }}>
+              <div style={{ display: "flex" }}>
+                <Button variant="contained" color="warning" sx={{ minWidth: "111px", padding: 0 }}>OFFER RULE 1</Button>
+                <FormControl fullWidth sx={{ marginTop: "5px" }}>
+                  <NativeSelect
+                    disableUnderline
+                    key={selectedRule}
+                    inputProps={{
+                      name: "status",
+                      id: "uncontrolled-native",
+                    }}
+                    onChange={(event) => {
+                      setCurrentRuleCondition(
+                        event.target.value
+                      );
+                    }}
+                    sx={{ fontSize: "0.75rem", paddingLeft: "5px" }}
+                  >
+                    <option
+                      value={"AND"}
+                      style={{ fontSize: "0.75rem" }}
+                    >
+                      AND
+                    </option>
+                    <option
+                      value={"OR"}
+                      style={{ fontSize: "0.75rem" }}
+                    >
+                      OR
+                    </option>
+                  </NativeSelect>
+                </FormControl>
+              </div>
+            </Col>
+            <Col sm={8} style={{ backgroundColor: "#595959", paddingTop: "1rem", paddingBottom: "1rem" }}>
+              <Row style={{ marginBottom: '10px' }}>
+                <Col xs={5} align="center">
+                  <CusTypo style={{ fontFamily: 'Roboto, sans-serif', fontSize: 14 }}>SELECT PRODUCT NAME</CusTypo>
+                </Col>
+                <Col xs={2} align="center">
+                  <CusTypo style={{ fontFamily: 'Roboto, sans-serif', fontSize: 14 }}>SIZE</CusTypo>
+                </Col>
+                <Col xs={2} align="center">
+                  <CusTypo style={{ fontFamily: 'Roboto, sans-serif', fontSize: 14 }}>PRODUCT ID</CusTypo>
+                </Col>
+                <Col xs={2} align="center">
+                  <CusTypo style={{ fontFamily: 'Roboto, sans-serif', fontSize: 14 }}>OPERATOR</CusTypo>
+                </Col>
+                <Col xs={1} align="center"></Col>
+              </Row>
+
+              {allRules[selectedRule] && allRules[selectedRule].products ?
+                <>
+                  {allRules[selectedRule].products.map((item) => (<Row className="align-items-center">
+                    <Col xs={5} align="center">
+                      <CusAutocomplete
+                        key={selectedRule}
+                        onChange={(event, newValue) => {
+                          /* let ing = {
+                            ...ruleProducts,
+                            "1": ruleProducts["1"] ? { ...ruleProducts["1"], product: newValue } : { product: newValue },
+                          }; */
+                          let ing = [...ruleProducts, { product: newValue, operator: "AND" }]
+                          let rule = { ruleNo: selectedRule, operator: "OR", products: ing }
+                          let allRules = { [selectedRule]: rule }
+                          setRuleProducts(ing);
+                          console.log(ing);
+                          console.log(rule);
+                          console.log("allRules", allRules);
+                        }}
+                        defaultValue={item.product}
+                        sx={{
+                          fontSize: "0.75rem",
+                          marginTop: "9px",
+                          ".MuiFormControl-root": { marginTop: "4px" },
+                          ".MuiInput-input": { color: "#fff" },
+                        }}
+                        options={products}
+                        autoHighlight
+                        getOptionLabel={(option) => option.dishType}
+                        renderOption={(props, option) => (
+                          <Box
+                            component="li"
+                            sx={{
+                              "& > img": { mr: 2, flexShrink: 0 },
+                              fontSize: "0.75rem",
+                            }}
+                            {...props}
+                          >
+                            {option.dishType}
+                          </Box>
+                        )}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            sx={{ fontSize: "0.75rem" }}
+                            variant="standard"
+                            inputProps={{
+                              ...params.inputProps,
+                              autoComplete: "new-password", // disable autocomplete and autofill
+                            }}
+                          />
+                        )}
+                      />
+                    </Col>
+                    <Col xs={2} align="center">
+                      <Typography sx={{ fontSize: "0.75rem", color: "#fff" }}>
+                        {item.product.productSize}
+                      </Typography>
+                    </Col>
+                    <Col xs={2} align="center">
+                      <Typography sx={{ fontSize: "0.75rem", color: "#fff" }}>
+                        {item.product.productId}
+                      </Typography>
+                    </Col>
+                    <Col xs={2} align="center">
+                      <FormControl fullWidth sx={{ marginTop: "5px" }}>
+                        <NativeSelect
+                          disableUnderline
+                          key={1}
+                          inputProps={{
+                            name: "status",
+                            id: "uncontrolled-native",
+                          }}
+                          defaultValue={item.operator}
+                          onChange={(event) => {
+                            /* setCurrentRuleCondition(
+                              event.target.value
+                            ); */
+                          }}
+                          sx={{ fontSize: "0.75rem", paddingLeft: "5px", paddingRight: 0, color: "#fff" }}
+                        >
+                          <option
+                            value={"AND"}
+                            style={{ fontSize: "0.75rem" }}
+                          >
+                            AND
+                          </option>
+                          <option
+                            value={"OR"}
+                            style={{ fontSize: "0.75rem" }}
+                          >
+                            OR
+                          </option>
+                        </NativeSelect>
+                      </FormControl>
+                    </Col>
+                    <Col xs={1} align="center">
+                      <IconButton
+                        key={1}
+                        sx={{
+                          fontSize: "0.75rem",
+                          color: "red",
+                        }}
+                        onClick={() => {
+                          /* deleteIngredient(item.id); */
+                        }}
+                      >
+                        <DeleteIcon
+                          sx={{ height: "0.95rem", width: "0.95rem" }}
+                        ></DeleteIcon>
+                      </IconButton>
+                    </Col>
+                  </Row>))}
+                </> : null}
+
+
+              {isAddNewRuleProduct ? <Row className="align-items-center">
+                <Col xs={5} align="center">
+                  <CusAutocomplete
+                    key={selectedRule}
+                    onChange={(event, newValue) => {
+                      /* let ing = [...ruleProducts, { product: newValue, operator: "AND" }]
+                      let rule = { ruleNo: selectedRule, operator: "OR", products: ing }
+                      let allRules = { [selectedRule]: rule } */
+                      setRuleNewProducts([...ruleNewProducts, newValue]);
+                    }}
+                    /* defaultValue={item} */
+                    sx={{
+                      fontSize: "0.75rem",
+                      marginTop: "9px",
+                      ".MuiFormControl-root": { marginTop: "4px" },
+                      ".MuiInput-input": { color: "#fff" },
+                    }}
+                    options={products}
+                    autoHighlight
+                    getOptionLabel={(option) => option.dishType}
+                    renderOption={(props, option) => (
+                      <Box
+                        component="li"
+                        sx={{
+                          "& > img": { mr: 2, flexShrink: 0 },
+                          fontSize: "0.75rem",
+                        }}
+                        {...props}
+                      >
+                        {option.dishType}
+                      </Box>
+                    )}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        sx={{ fontSize: "0.75rem" }}
+                        variant="standard"
+                        inputProps={{
+                          ...params.inputProps,
+                          autoComplete: "new-password", // disable autocomplete and autofill
+                        }}
+                      />
+                    )}
+                  />
+                </Col>
+                <Col xs={2} align="center">
+                  <Typography sx={{ fontSize: "0.75rem", color: "#fff" }}>
+                    test
+                  </Typography>
+                </Col>
+                <Col xs={2} align="center">
+                  <Typography sx={{ fontSize: "0.75rem", color: "#fff" }}>
+                    test
+                  </Typography>
+                </Col>
+                <Col xs={2} align="center">
+                  <FormControl fullWidth sx={{ marginTop: "5px" }}>
+                    <NativeSelect
+                      disableUnderline
+                      key={1}
+                      inputProps={{
+                        name: "status",
+                        id: "uncontrolled-native",
+                      }}
+                      onChange={(event) => {
+                        setNewRuleProductCondition(
+                          event.target.value
+                        );
+                      }}
+                      sx={{ fontSize: "0.75rem", paddingLeft: "5px", paddingRight: 0, color: "#fff" }}
+                    >
+                      <option
+                        value={"AND"}
+                        style={{ fontSize: "0.75rem" }}
+                      >
+                        AND
+                      </option>
+                      <option
+                        value={"OR"}
+                        style={{ fontSize: "0.75rem" }}
+                      >
+                        OR
+                      </option>
+                    </NativeSelect>
+                  </FormControl>
+                </Col>
+                <Col xs={1} align="center">
+                  <IconButton
+                    key={1}
+                    sx={{
+                      fontSize: "0.75rem",
+                      color: "green",
+                    }}
+                    onClick={() => {
+                      setIsAddNewRuleProduct(false)
+                    }}
+                  >
+                    <DoneIcon
+                      sx={{ height: "0.95rem", width: "0.95rem" }}
+                    ></DoneIcon>
+                  </IconButton>
+                  <IconButton
+                    key={1}
+                    sx={{
+                      fontSize: "0.75rem",
+                      color: "red",
+                    }}
+                    onClick={() => {
+                      setIsAddNewRuleProduct(false)
+                    }}
+                  >
+                    <CloseIcon
+                      sx={{ height: "0.95rem", width: "0.95rem" }}
+                    ></CloseIcon>
+                  </IconButton>
+                </Col>
+              </Row> : null}
+
+              <div className="mt-4">
+                <SaveButton
+                  className="mt-4"
+                  onClick={() => {
+                    setIsAddNewRuleProduct(true);
+                    //cleanBeforeAddNew();
+                  }}
+                >
+                  ADD ANOTHER
+                </SaveButton>
+              </div>
+            </Col>
+          </Row>
+
+
+
+
+
+        </Modal.Body>
+      </Modal>
+    );
+  };
+
   const columns = [
     { id: "1", label: "#", minWidth: 30, align: "center" },
     { id: "2", label: "FUNCTION", minWidth: 30, align: "center" },
@@ -476,18 +927,18 @@ export const Offers = () => {
                     lineHeight: "1.4rem",
                     backgroundColor:
                       column.label === "CRITERIA" ||
-                      column.label === "SECTION" ||
-                      column.label === "DISH" ||
-                      column.label === "PRODUCT ID" ||
-                      column.label === "ACTION"
+                        column.label === "SECTION" ||
+                        column.label === "DISH" ||
+                        column.label === "PRODUCT ID" ||
+                        column.label === "ACTION"
                         ? "green"
                         : "#35455e",
                     border:
                       column.label === "CRITERIA" ||
-                      column.label === "SECTION" ||
-                      column.label === "DISH" ||
-                      column.label === "PRODUCT ID" ||
-                      column.label === "ACTION"
+                        column.label === "SECTION" ||
+                        column.label === "DISH" ||
+                        column.label === "PRODUCT ID" ||
+                        column.label === "ACTION"
                         ? "1px solid #35455e"
                         : "none",
                   }}
@@ -711,7 +1162,7 @@ export const Offers = () => {
                           </CusTableCell>
 
                           <CusTableCell align="center">
-                            <Button>Action</Button>
+                            <Button onClick={handleShowRuleModal}>Action</Button>
                           </CusTableCell>
 
                           <CusTableCell align="center">
@@ -1548,6 +1999,7 @@ export const Offers = () => {
           activeClassName={"active"}
         />
       </div>
+      {renderRuleModal()}
     </div>
   );
 };
