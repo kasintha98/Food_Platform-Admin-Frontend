@@ -276,12 +276,12 @@ export const getAllInventory = () => {
   };
 };
 
-export const getActiveInventory = () => {
+export const getActiveInventory = (restaurantId) => {
   return async (dispatch) => {
     try {
       dispatch({ type: inventoryConstants.GET_ACTIVE_INVENTORY_ITEMS_REQUEST });
 
-      const res = await axios.get("/getItemsByStatus", { params: { status: "ACTIVE", restaurantId: userObj.restaurantId, storeId: userObj.storeId } });
+      const res = await axios.get("/getItemsByStatus?restaurantId=" + restaurantId + "&storeId=ALL&status=ACTIVE");
       if (res.status === 200) {
         dispatch({
           type: inventoryConstants.GET_ACTIVE_INVENTORY_ITEMS_SUCCESS,
@@ -305,6 +305,36 @@ export const getActiveInventory = () => {
     }
   };
 };
+
+// export const getActiveInventory = () => {
+//   return async (dispatch) => {
+//     try {
+//       dispatch({ type: inventoryConstants.GET_ACTIVE_INVENTORY_ITEMS_REQUEST });
+
+//       const res = await axios.get("/getItemsByStatus?status=ACTIVE");
+//       if (res.status === 200) {
+//         dispatch({
+//           type: inventoryConstants.GET_ACTIVE_INVENTORY_ITEMS_SUCCESS,
+//           payload: res.data,
+//         });
+//         return res.data;
+//       } else {
+//         toast.error("Error getting inventory data!");
+//         dispatch({
+//           type: inventoryConstants.GET_ACTIVE_INVENTORY_ITEMS_FAILURE,
+//           payload: [],
+//         });
+//       }
+//     } catch (error) {
+//       console.log(error);
+//       toast.error("Error getting inventory data!");
+//       dispatch({
+//         type: inventoryConstants.GET_ACTIVE_INVENTORY_ITEMS_FAILURE,
+//         payload: [],
+//       });
+//     }
+//   };
+// };
 
 export const getInventoryUOM = () => {
   return async (dispatch) => {
@@ -378,6 +408,35 @@ export const getInventoryCategories = () => {
   };
 };
 
+// export const getInventorySubCategories = () => { //TODO: This need to check
+//   return async (dispatch) => {
+//     try {
+//       dispatch({ type: inventoryConstants.GET_INVENTORY_SUB_CATEGORIES_REQUEST });
+
+//       const res = await axios.get("/getConfigDetailsByCriteria?restaurantId=R001&storeId=ALL&criteria=ITEM_SUB_CATEGORY");
+
+//       if (res.status === 200 && res.data) {
+//         dispatch({
+//           type: inventoryConstants.GET_INVENTORY_SUB_CATEGORIES_SUCCESS,
+//           payload: res.data,
+//         });
+//         return res.data;
+//       } else {
+//         dispatch({
+//           type: inventoryConstants.GET_INVENTORY_SUB_CATEGORIES_FAILURE,
+//           payload: { error: "Error fetching categories config data!" },
+//         });
+//       }
+//     } catch (error) {
+//       console.log(error);
+//       dispatch({
+//         type: inventoryConstants.GET_INVENTORY_SUB_CATEGORIES_FAILURE,
+//         payload: { error: "Error fetching categories config data!" },
+//       });
+//     }
+//   };
+// };
+
 export const getInventorySubCategories = () => {
   return async (dispatch) => {
     try {
@@ -413,7 +472,7 @@ export const getInventorySubCategories = () => {
   };
 };
 
-export const saveUpdateInventoryItem = (item) => {
+export const saveUpdateInventoryItem = (item, restaurantId) => {
   return async (dispatch) => {
     dispatch({ type: inventoryConstants.SAVE_UPDATE_INVENYORY_ITEM_REQUEST });
 
@@ -425,7 +484,7 @@ export const saveUpdateInventoryItem = (item) => {
           type: inventoryConstants.SAVE_UPDATE_INVENYORY_ITEM_SUCCESS,
           payload: res.data,
         });
-        dispatch(getActiveInventory());
+        dispatch(getActiveInventory(restaurantId));
         toast.success("Item Saved Successfully!");
         return res.data;
       } else {
@@ -443,7 +502,7 @@ export const saveUpdateInventoryItem = (item) => {
   };
 };
 
-export const deleteInventoryItem = (id, updatedBy) => {
+export const deleteInventoryItem = (id, updatedBy, restaurantId) => {
   return async (dispatch) => {
     dispatch({ type: inventoryConstants.DELETE_INVENTORY_ITEM_REQUEST });
 
@@ -461,7 +520,7 @@ export const deleteInventoryItem = (id, updatedBy) => {
           type: inventoryConstants.DELETE_INVENTORY_ITEM_SUCCESS,
           payload: res.data,
         });
-        dispatch(getActiveInventory());
+        dispatch(getActiveInventory(restaurantId));
         toast.success("Item Soft Deleted Successfully!");
         return res.data;
       } else {
@@ -508,12 +567,12 @@ export const getActiveSuppliers = (restaurantId, storeId) => {
   };
 };
 
-export const getActiveRecipes = () => {
+export const getActiveRecipes = (restaurantId, storeId) => {
   return async (dispatch) => {
     try {
       dispatch({ type: inventoryConstants.GET_ACTIVE_RECIPES_REQUEST });
 
-      const res = await axios.get("/getAllActiveRecipes", { params: { restaurantId: userObj.restaurantId, storeId: userObj.storeId } });
+      const res = await axios.get("/getAllActiveRecipes");
       if (res.status === 200) {
         dispatch({
           type: inventoryConstants.GET_ACTIVE_RECIPES_SUCCESS,
@@ -537,7 +596,36 @@ export const getActiveRecipes = () => {
   };
 };
 
-export const saveUpdateRecipeItem = (item) => {
+// export const getActiveRecipes = () => {
+//   return async (dispatch) => {
+//     try {
+//       dispatch({ type: inventoryConstants.GET_ACTIVE_RECIPES_REQUEST });
+
+//       const res = await axios.get("/getAllActiveRecipes");
+//       if (res.status === 200) {
+//         dispatch({
+//           type: inventoryConstants.GET_ACTIVE_RECIPES_SUCCESS,
+//           payload: res.data,
+//         });
+//       } else {
+//         toast.error("Error getting recipe data!");
+//         dispatch({
+//           type: inventoryConstants.GET_ACTIVE_RECIPES_FAILURE,
+//           payload: [],
+//         });
+//       }
+//     } catch (error) {
+//       console.log(error);
+//       toast.error("Error getting recipe data!");
+//       dispatch({
+//         type: inventoryConstants.GET_ACTIVE_RECIPES_FAILURE,
+//         payload: [],
+//       });
+//     }
+//   };
+// };
+
+export const saveUpdateRecipeItem = (item, restaurantId) => {
   return async (dispatch) => {
     dispatch({ type: inventoryConstants.SAVE_UPDATE_RECIPE_ITEM_REQUEST });
 
@@ -549,7 +637,7 @@ export const saveUpdateRecipeItem = (item) => {
           type: inventoryConstants.SAVE_UPDATE_RECIPE_ITEM_SUCCESS,
           payload: res.data,
         });
-        dispatch(getActiveRecipes());
+        dispatch(getActiveRecipes(restaurantId, "ALL"));
         toast.success("Recipe saved Successfully!");
         return res.data;
       } else {
@@ -567,7 +655,37 @@ export const saveUpdateRecipeItem = (item) => {
   };
 };
 
-export const deleteRecipeItem = (id, updatedBy) => {
+// export const saveUpdateRecipeItem = (item) => {
+//   return async (dispatch) => {
+//     dispatch({ type: inventoryConstants.SAVE_UPDATE_RECIPE_ITEM_REQUEST });
+
+//     try {
+//       const res = await axios.post("/saveRecipe", item);
+
+//       if (res.status === 200) {
+//         dispatch({
+//           type: inventoryConstants.SAVE_UPDATE_RECIPE_ITEM_SUCCESS,
+//           payload: res.data,
+//         });
+//         dispatch(getActiveRecipes());
+//         toast.success("Recipe saved Successfully!");
+//         return res.data;
+//       } else {
+//         dispatch({
+//           type: inventoryConstants.SAVE_UPDATE_RECIPE_ITEM_FAILURE,
+//           payload: null,
+//         });
+//         toast.error("Error when saving! Please try again!");
+//       }
+//       console.log(res);
+//     } catch (error) {
+//       console.log(error);
+//       toast.error("Error when saving! Please try again!");
+//     }
+//   };
+// };
+
+export const deleteRecipeItem = (id, updatedBy, restaurantId) => {
   return async (dispatch) => {
     dispatch({ type: inventoryConstants.DELETE_RECIPE_ITEM_REQUEST });
 
@@ -585,7 +703,7 @@ export const deleteRecipeItem = (id, updatedBy) => {
           type: inventoryConstants.DELETE_RECIPE_ITEM_SUCCESS,
           payload: res.data,
         });
-        dispatch(getActiveRecipes());
+        dispatch(getActiveRecipes(restaurantId, "ALL"));
         toast.success("Item Soft Deleted Successfully!");
         return res.data;
       } else {
@@ -602,6 +720,42 @@ export const deleteRecipeItem = (id, updatedBy) => {
     }
   };
 };
+
+// export const deleteRecipeItem = (id, updatedBy) => {
+//   return async (dispatch) => {
+//     dispatch({ type: inventoryConstants.DELETE_RECIPE_ITEM_REQUEST });
+
+//     try {
+//       const item = {
+//         id: id,
+//         itemStatus: "INACTIVE",
+//         updatedBy: updatedBy,
+//       };
+
+//       const res = await axios.post("/saveRecipeStatus", item);
+
+//       if (res.status === 200) {
+//         dispatch({
+//           type: inventoryConstants.DELETE_RECIPE_ITEM_SUCCESS,
+//           payload: res.data,
+//         });
+//         dispatch(getActiveRecipes());
+//         toast.success("Item Soft Deleted Successfully!");
+//         return res.data;
+//       } else {
+//         dispatch({
+//           type: inventoryConstants.DELETE_RECIPE_ITEM_FAILURE,
+//           payload: null,
+//         });
+//         toast.error("Error when deleting! Please try again!");
+//       }
+//       console.log(res);
+//     } catch (error) {
+//       console.log(error);
+//       toast.error("Error when deleting! Please try again!");
+//     }
+//   };
+// };
 
 export const getInventoryPurchaseCategory = () => {
   return async (dispatch) => {
