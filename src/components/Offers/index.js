@@ -346,8 +346,8 @@ export const Offers = () => {
       }]
     }
   });
-  const [ruleNewProducts, setRuleNewProducts] = useState([]);
-  const [newRuleProductCondition, setNewRuleProductCondition] = useState("");
+  const [ruleNewProduct, setRuleNewProduct] = useState(null);
+  const [newRuleProductCondition, setNewRuleProductCondition] = useState("AND");
 
 
   const dispatch = useDispatch();
@@ -536,6 +536,42 @@ export const Offers = () => {
     setNewDayThursday("");
   };
 
+  const enterProductToRuleProducts = (ruleNo, newProduct, currentItem) => {
+    let a = allRules[ruleNo].products;
+    a.push({ product: newProduct, operator: currentItem.operator });
+    let changedProducts = a.filter(function (obj) {
+      return obj.product.productId !== currentItem.product.productId;
+    });
+    let c = { ...allRules, [ruleNo]: { ...allRules[ruleNo], products: changedProducts } }
+    setAllRules(c)
+    console.log(c);
+  }
+
+  const enterOperatorToRuleProducts = (ruleNo, currentProduct, newOperator, prevOperator) => {
+    let a = allRules[ruleNo].products;
+    let changedProducts = a.filter(function (obj) {
+      return obj.product.productId !== currentProduct.productId;
+    });
+    changedProducts.push({ product: currentProduct, operator: newOperator });
+    console.log(changedProducts);
+    let c = { ...allRules, [ruleNo]: { ...allRules[ruleNo], products: changedProducts } }
+    setAllRules(c)
+    console.log(c);
+  }
+
+  const addToAllRuleProductList = (ruleNo) => {
+    if (ruleNewProduct) {
+      let a = allRules[ruleNo].products;
+      a.push({ product: ruleNewProduct, operator: newRuleProductCondition });
+      let c = { ...allRules, [ruleNo]: { ...allRules[ruleNo], products: a } }
+      setAllRules(c)
+      console.log(c);
+    }
+    setIsAddNewRuleProduct(false);
+    setRuleNewProduct(null);
+    setNewRuleProductCondition("AND")
+  }
+
   const renderRuleModal = () => {
     return (
       <Modal
@@ -612,17 +648,7 @@ export const Offers = () => {
                       <CusAutocomplete
                         key={selectedRule}
                         onChange={(event, newValue) => {
-                          /* let ing = {
-                            ...ruleProducts,
-                            "1": ruleProducts["1"] ? { ...ruleProducts["1"], product: newValue } : { product: newValue },
-                          }; */
-                          let ing = [...ruleProducts, { product: newValue, operator: "AND" }]
-                          let rule = { ruleNo: selectedRule, operator: "OR", products: ing }
-                          let allRules = { [selectedRule]: rule }
-                          setRuleProducts(ing);
-                          console.log(ing);
-                          console.log(rule);
-                          console.log("allRules", allRules);
+                          enterProductToRuleProducts(selectedRule, newValue, item)
                         }}
                         defaultValue={item.product}
                         sx={{
@@ -680,9 +706,7 @@ export const Offers = () => {
                           }}
                           defaultValue={item.operator}
                           onChange={(event) => {
-                            /* setCurrentRuleCondition(
-                              event.target.value
-                            ); */
+                            enterOperatorToRuleProducts(selectedRule, item.product, event.target.value, item.operator)
                           }}
                           sx={{ fontSize: "0.75rem", paddingLeft: "5px", paddingRight: 0, color: "#fff" }}
                         >
@@ -726,10 +750,7 @@ export const Offers = () => {
                   <CusAutocomplete
                     key={selectedRule}
                     onChange={(event, newValue) => {
-                      /* let ing = [...ruleProducts, { product: newValue, operator: "AND" }]
-                      let rule = { ruleNo: selectedRule, operator: "OR", products: ing }
-                      let allRules = { [selectedRule]: rule } */
-                      setRuleNewProducts([...ruleNewProducts, newValue]);
+                      setRuleNewProduct(newValue);
                     }}
                     /* defaultValue={item} */
                     sx={{
@@ -815,7 +836,7 @@ export const Offers = () => {
                       color: "green",
                     }}
                     onClick={() => {
-                      setIsAddNewRuleProduct(false)
+                      addToAllRuleProductList(selectedRule)
                     }}
                   >
                     <DoneIcon
@@ -829,7 +850,9 @@ export const Offers = () => {
                       color: "red",
                     }}
                     onClick={() => {
-                      setIsAddNewRuleProduct(false)
+                      setIsAddNewRuleProduct(false);
+                      setRuleNewProduct(null);
+                      setNewRuleProductCondition("AND")
                     }}
                   >
                     <CloseIcon
