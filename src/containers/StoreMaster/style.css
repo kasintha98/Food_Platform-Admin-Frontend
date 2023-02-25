@@ -1,0 +1,83 @@
+.store-leftpanel {
+  text-align: center;
+}
+
+.store-leftpanel-label {
+  font-size: 1.5rem;
+  font-weight: bold;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.store-leftpanel-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 25px;
+  background-color: white;
+  color: white;
+  font-size: 12px;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  width: 80%;
+  color: darkgreen;
+  margin-bottom: 15px;
+  position: relative;
+}
+
+.store-leftpanel-btn-icon1 {
+  font-size: small !important;
+  color: goldenrod;
+  margin-right: 25px;
+}
+
+.store-leftpanel-btn-icon2 {
+  font-size: small !important;
+  position: absolute;
+  right: 20px;
+}
+
+.button-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.mui-btn {
+  display: inline-block;
+  border: none;
+  border-radius: 3px;
+  padding: 10px 20px;
+  margin: 0 10px;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.mui-btn--yellow {
+  background-color: #e3f522;
+  color: #000;
+}
+
+.mui-btn--red {
+  background-color: #d9534f;
+  color: #fff;
+}
+
+/* .store-leftpanel-btn {
+  text-align: center;
+  background-color: beige;
+  width: 90%;
+  margin-bottom: 1.5rem;
+} */

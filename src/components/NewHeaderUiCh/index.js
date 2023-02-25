@@ -248,6 +248,16 @@ export const NewHeader = (props) => {
     setOpen(false);
   };
 
+  const storeClicked = (event) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+    let path = `/store-master`; 
+    history.push(path);
+
+    setOpen(false);
+  };
+
 
   const eodClicked = (event) => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
@@ -568,6 +578,7 @@ export const NewHeader = (props) => {
                               <MenuItem className="menuItemFormatter" onClick={couponCodeClicked}>Coupon Code</MenuItem>
                               <MenuItem className="menuItemFormatter" onClick={itemMasterClicked}>Inventory Item Master</MenuItem>
                               <MenuItem className="menuItemFormatter" onClick={recipeClicked}>Recipe Master</MenuItem>
+                              <MenuItem className="menuItemFormatter" onClick={storeClicked}>Store Master</MenuItem>
                               <MenuItem className="menuItemFormatter" onClick={eodClicked}> End Of Day</MenuItem>
                             </MenuList>
                           </ClickAwayListener>
