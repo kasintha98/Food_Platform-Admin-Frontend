@@ -23,6 +23,7 @@ import Signin from "./containers/signinUiCh";
 import Signup from "./containers/Signup";
 import Products from "./containers/Products";
 import Employee from "./containers/Employee";
+import StoreMaster from "./containers/StoreMaster"
 import { Inventory } from "./containers/Inventory";
 import Purchases from "./containers/Purchases";
 import PrivateRoute from "./HOC/PrivateRoute";
@@ -203,6 +204,15 @@ function App() {
           <PrivateRoute
             path="/user-entitle"
             component={UserEntitlement}
+          ></PrivateRoute>
+        )}
+
+        {modulesForUser.some(
+          (module) => module.moduleName === "ADMIN FUNCTIONS"
+        ) && (
+          <PrivateRoute
+            path="/store-master"
+            component={StoreMaster}
           ></PrivateRoute>
         )}
 
