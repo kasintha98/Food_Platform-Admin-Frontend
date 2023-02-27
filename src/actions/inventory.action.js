@@ -567,12 +567,12 @@ export const getActiveSuppliers = (restaurantId, storeId) => {
   };
 };
 
-export const getActiveRecipes = (restaurantId, storeId) => {
+export const getActiveRecipes = (restaurantId,storeId) => {
   return async (dispatch) => {
     try {
       dispatch({ type: inventoryConstants.GET_ACTIVE_RECIPES_REQUEST });
 
-      const res = await axios.get("/getAllActiveRecipes");
+      const res = await axios.get("/getAllActiveRecipes?restaurantId="+restaurantId+"&storeId="+storeId);
       if (res.status === 200) {
         dispatch({
           type: inventoryConstants.GET_ACTIVE_RECIPES_SUCCESS,
