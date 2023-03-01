@@ -71,7 +71,7 @@ export const CashierSalesByDishReport = (props) => {
     ) {
       let total = 0;
       for (let i = 0; i < allReports.reportCashierSalesByDish.length; i++) {
-        total = total + allReports.reportCashierSalesByDish[i].totalQty;
+        total = total + allReports.reportCashierSalesByDish[i].total_qty;
       }
       return total;
     } else {
@@ -87,9 +87,9 @@ export const CashierSalesByDishReport = (props) => {
     ) {
       let total = 0;
       for (let i = 0; i < allReports.reportCashierSalesByDish.length; i++) {
-        total = total + allReports.reportCashierSalesByDish[i].totalPrice;
+        total = total + allReports.reportCashierSalesByDish[i].total_price;
       }
-      return total;
+      return Number(total).toFixed(2);
     } else {
       return 0;
     }
@@ -110,21 +110,21 @@ export const CashierSalesByDishReport = (props) => {
             >
             <ExcelColumn
                 label="CASHIER NAME"
-                value="cashierName"
+                value="user_name"
               />
               <ExcelColumn
                 label="RESTAURANT &amp; STORE"
-                value="restaurantName"
+                value="store_name"
               />
-              <ExcelColumn label="SYSTEM ID" value="dishId" />
-              <ExcelColumn label="DISH NAME" value="dishName" />
+              <ExcelColumn label="SYSTEM ID" value="product_id" />
+              <ExcelColumn label="DISH NAME" value="dish_name" />
               <ExcelColumn label="DISH SIZE" value="size" />
               <ExcelColumn
                 label="DISH UNIT PRICE"
-                value={(col) => Number(col.totalPrice) / Number(col.totalQty)}
+                value={(col) => Number(Number(col.total_price) / Number(col.total_qty)).toFixed(2)}
               />
-              <ExcelColumn label="ITEM SOLD" value="totalQty" />
-              <ExcelColumn label="TOTAL SALES REVENUE" value="totalPrice" />
+              <ExcelColumn label="ITEM SOLD" value="total_qty" />
+              <ExcelColumn label="TOTAL SALES REVENUE" value={(col) => Number(col.total_price).toFixed(2)} />
             </ExcelSheet>
           </ExcelFile>
           <TableContainer component={Paper}>
@@ -149,28 +149,28 @@ export const CashierSalesByDishReport = (props) => {
                 {allReports.reportCashierSalesByDish.map((row, index) => (
                   <TableRow key={row.orderId}>
                     <CusTableCell2 align="center">
-                      {row.cashierName}
+                      {row.user_name}
                     </CusTableCell2>
                     <CusTableCell2 align="center">
-                      {row.restaurantName}
+                      {row.store_name}
                     </CusTableCell2>
-                    <CusTableCell2 align="center"> {row.dishId}</CusTableCell2>
-                    <CusTableCell2 align="center">{row.dishName}</CusTableCell2>
+                    <CusTableCell2 align="center"> {row.product_id}</CusTableCell2>
+                    <CusTableCell2 align="center">{row.dish_name}</CusTableCell2>
                     <CusTableCell2 align="center">{row.size}</CusTableCell2>
                     <CusTableCell2 align="center">
                       Rs.{" "}
                       {Number(
-                        Number(row.totalPrice) / Number(row.totalQty)
+                        Number(row.total_price) / Number(row.total_qty)
                       ).toFixed(2)}
                     </CusTableCell2>
-                    <CusTableCell2 align="center">{row.totalQty}</CusTableCell2>
+                    <CusTableCell2 align="center">{row.total_qty}</CusTableCell2>
                     <CusTableCell2 align="center">
-                      Rs. {row.totalPrice}
+                      Rs. {Number(row.total_price).toFixed(2)}
                     </CusTableCell2>
                   </TableRow>
                 ))}
                 <TableRow>
-                  <CusTableCell5 colSpan={5} align="center">
+                  <CusTableCell5 colSpan={6} align="center">
                     TOTAL
                   </CusTableCell5>
                   <CusTableCell5 align="center">
