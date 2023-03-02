@@ -96,6 +96,7 @@ const CusButton = styled(Button)`
 `;
 
 export const NewHeader = (props) => {
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const auth = useSelector((state) => state.auth);
   const businessDateAll = useSelector((state) => state.user.businessDate);
   const version = useSelector((state) => state.auth.version);
@@ -713,7 +714,9 @@ export const NewHeader = (props) => {
             <Col className="col-6">
               <Button
                 color="success"
+                disabled={isButtonDisabled}
                 onClick={() => {
+                  setIsButtonDisabled(true);
                   dispatch(
                     performEOD(auth.user.restaurantId, auth.user.storeId)
                   ).then((res) => {
@@ -724,6 +727,7 @@ export const NewHeader = (props) => {
                           auth.user.storeId
                         )
                       );
+                      setIsButtonDisabled(false);
                       handleCloseEOD();
                     }
                   });
