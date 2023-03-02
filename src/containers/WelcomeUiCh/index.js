@@ -1,15 +1,30 @@
-import React from "react";
+import React, { useEffect }  from "react";
 import { useSelector } from "react-redux";
 import { Row, Col } from "react-bootstrap";
 import { Typography } from "@mui/material";
 import Layout from "../NewLayout";
 import { Redirect } from "react-router-dom";
 import "./style.css";
+import { useDispatch } from "react-redux";
 
 import chef from "../../img/Chef_Landing.png";
 import hangries_Landing_Page from "../../img/hangries_Landing_Page.png";
 
+import {
+  getInventoryUOM,
+  getInventoryCategories,
+  getInventorySubCategories,
+} from "../../actions";
+
 export const Welcome = () => {
+  const dispatch = useDispatch();
+  
+  useEffect(() => {
+    dispatch(getInventoryUOM());
+    dispatch(getInventoryCategories());
+    dispatch(getInventorySubCategories());
+  }, []);
+
   const user = useSelector((state) => state.auth.user);
   const auth = useSelector((state) => state.auth);
 

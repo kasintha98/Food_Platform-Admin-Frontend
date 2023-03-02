@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
 import styled from "@emotion/styled";
 import Layout from "../NewLayout";
@@ -52,6 +52,54 @@ export const KDS = () => {
   const handleSelectedStore = (store) => {
     setSelectedStoreObj(store);
   };
+
+  //--------------START---------------
+/*
+  useEffect(() => {
+
+    if (typeof (EventSource) !== "undefined") {
+      var sse = new EventSource('https://hangariesapp-uumgqhekpa-el.a.run.app/api/subscribe?storeId=S001');
+
+      // function getRealtimeData(data) {
+      //   // process the data here,
+      //   // then pass it to state to be rendered
+      //   console.log("real time");
+      // }
+
+      sse.onopen = function () {
+        console.log("Fired the connection");
+      }
+
+      // sse.addEventListener("message", ({data}) => {
+      //   console.log("event listeneer");
+      //   // console.log(data);
+      // });
+
+      // sse.onmessage = e => getRealtimeData(JSON.parse(e.data));
+      sse.onmessage = function (event) {
+        // console.log(JSON.parse(event.data));
+        console.log(event.data);
+        refreshRef.current.handleRefresh();
+
+      };
+
+      // sse.onmessage = e => getRealtimeData(JSON.parse(e.data));
+
+      sse.onerror = () => {
+        // error log here 
+        console.log("Error Occured");
+        // sse.close();
+      }
+      return () => {
+        // sse.close();
+      };
+    } else {
+      console.log("Sorry, your browser does not support server-sent events...");
+    }
+  }, [])
+  
+*/
+  //-------------------END ---------------
 
   return (
     <Layout sidebar headerTitle="KDS">
