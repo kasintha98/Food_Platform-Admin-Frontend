@@ -22,6 +22,20 @@ export default (state = initState, action) => {
         loading: false,
       };
       break;
+    case storeConstants.ADD_STORES_SUCCESS:
+      state = {
+        ...state,
+        store: action.payload,
+        loading: false,
+      };
+      break;
+    case storeConstants.ADD_STORES_FAILURE:
+      state = {
+        ...state,
+        store: action.payload.error,
+        loading: false,
+      };
+      break;
   }
   return state;
 };

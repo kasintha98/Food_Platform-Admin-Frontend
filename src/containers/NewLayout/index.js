@@ -252,6 +252,17 @@ function NewLayout(props) {
           </ListItem>
         )}
 
+        {modulesForUser.some(
+          (module) => module.moduleName === "ADMIN FUNCTIONS"
+        ) && (
+          <ListItem>
+            <NavLink to={"/store-master"}>
+              <i className="fa fa-suitcase"></i>
+              &nbsp; Store Master
+            </NavLink>
+          </ListItem>
+        )}
+
 
         {modulesForUser.some(
           (module) => module.moduleName === "ADMIN FUNCTIONS"

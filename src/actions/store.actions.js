@@ -1,5 +1,6 @@
 import axios from "../helpers/axios";
 import { storeConstants } from "./constants";
+import { toast } from "react-toastify";
 
 export const getAllStores = () => {
   return async (dispatch) => {
@@ -20,6 +21,32 @@ export const getAllStores = () => {
           type: storeConstants.GET_ALL_STORES_FAILURE,
           payload: [],
         });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+export const saveStore = (newstore) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: storeConstants.ADD_STORES_REQUEST });
+
+      const res = await axios.post(`/saveStore`, newstore);
+      console.log("aaa res", res);
+      if (res.status === 200) {
+        dispatch({
+          type: storeConstants.ADD_STORES_SUCCESS,
+          payload: res.data,
+        });
+        toast.success("Store Update Successfully!");
+      } else {
+        dispatch({
+          type: storeConstants.ADD_STORES_FAILURE,
+          payload: [],
+        });
+        toast.error("Error when adding store! Please try again!");
       }
     } catch (error) {
       console.log(error);
