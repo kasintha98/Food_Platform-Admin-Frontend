@@ -13,6 +13,7 @@ import { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { toast } from "react-toastify";
 import { saveStore } from "../../actions";
+import { getAllStores } from "../../actions";
 
 const useStyles = makeStyles((theme) => ({
   inputLabel: {
@@ -88,7 +89,7 @@ const YellowSwitch = withStyles((theme) => ({
 
 const StoreMaster = () => {
   const stores = useSelector((state) => state.store.stores);
-  console.log("aaa stores", stores);
+  console.log("aaa str", stores);
 
   const [storeId, setStoreId] = useState("");
   const [resturantId, setResturantId] = useState("");
@@ -99,7 +100,7 @@ const StoreMaster = () => {
   const [state, setState] = useState("");
   const [country, setCountry] = useState("");
   const [city, setCity] = useState("");
-  const [zipcode, setZipcode] = useState("");
+  const [zipcode, setZipcode] = useState(null);
   const [gstno, setGstno] = useState("");
   const [starttime, setStarttime] = useState("");
   const [endtime, setEndtime] = useState("");
@@ -110,6 +111,9 @@ const StoreMaster = () => {
   const [storeActiveFlag, setStoreActiveFlag] = useState("");
   const [onlineAvailableFlag, setOnlineAvailableFlag] = useState("");
   const [dineinAvailableFlag, setDineinAvailableFlag] = useState("");
+  const [storeGstNumber, setStoreGstNumber] = useState("");
+  console.log("aaa mid", weraMerchantId);
+
 
   const dispatch = useDispatch();
 
@@ -125,7 +129,7 @@ const StoreMaster = () => {
     setState(store.state);
     setCountry(store.country);
     setCity(store.city);
-    setZipcode(store.zipCode == null ? "" : store.zipCode);
+    setZipcode(store.zipCode);
     setGstno(store.gstno);
     setStarttime(store.storeStartTime);
     setEndtime(store.storeEndTime);
@@ -144,6 +148,7 @@ const StoreMaster = () => {
     setDineinAvailableFlag(
       store.dineinAvailableFlag == null ? "N" : store.dineinAvailableFlag
     );
+    setStoreGstNumber(store.storeGstNumber)
   };
 
   const addStore = () => {
@@ -168,9 +173,10 @@ const StoreMaster = () => {
     setStoreActiveFlag("N");
     setOnlineAvailableFlag("N");
     setDineinAvailableFlag("N");
+    setStoreGstNumber("")
   };
 
-  const saveNewStore = () => {
+  const saveNewStore = async () => {
     const newStore = {
       storeId: storeId,
       restaurantId: resturantId,
@@ -188,7 +194,7 @@ const StoreMaster = () => {
       address3: "",
       storeAvailableForPickup: "",
       storeAvailableForDelivery: "",
-      weraMerchantId: weraMerchantId,
+      weraMerchantId: weraMerchantId=="" ? null : weraMerchantId,
       weraAPIKey: weraAPIKey,
       weraAPIValue: weraAPIValue,
       menuCloneFlag: "",
@@ -200,8 +206,10 @@ const StoreMaster = () => {
       createdDate: "2022-11-12T07:19:27.000+00:00",
       updatedBy: "SYSTEM",
       updatedDate: "2022-11-12T07:19:27.000+00:00",
+      storeGstNumber : storeGstNumber
     };
-    dispatch(saveStore(newStore));
+    await dispatch(saveStore(newStore));
+    dispatch(getAllStores());
   };
 
   const classes = useStyles();
@@ -682,7 +690,7 @@ const StoreMaster = () => {
                 <Row className="button-row">
                   <div className="button-group">
                     <button
-                      className="mui-btn mui-btn--yellow"
+                      className={"mui-btn mui-btn--yellow"}
                       onClick={saveNewStore}
                     >
                       SAVE

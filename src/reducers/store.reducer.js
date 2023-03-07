@@ -25,6 +25,7 @@ export default (state = initState, action) => {
     case storeConstants.ADD_STORES_SUCCESS:
       state = {
         ...state,
+        // stores: [...state.stores, action.payload],
         store: action.payload,
         loading: false,
       };
