@@ -12,9 +12,12 @@ import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { Row, Col } from "react-bootstrap";
-import { Typography, IconButton } from "@mui/material";
+import { Typography, IconButton, Alert } from "@mui/material";
 import { KDSTable } from "../../components/KDSTable";
 import RefreshIcon from "@mui/icons-material/Refresh";
+
+import { api } from "../../urlConfig";
+
 
 const CusMenuItem = styled(MenuItem)``;
 
@@ -54,51 +57,41 @@ export const KDS = () => {
   };
 
   //--------------START---------------
-/*
+
   useEffect(() => {
 
     if (typeof (EventSource) !== "undefined") {
-      var sse = new EventSource('https://hangariesapp-uumgqhekpa-el.a.run.app/api/subscribe?storeId=S001');
-
-      // function getRealtimeData(data) {
-      //   // process the data here,
-      //   // then pass it to state to be rendered
-      //   console.log("real time");
-      // }
+      // var sse = new EventSource('https://hangariesapp-uumgqhekpa-el.a.run.app/api/subscribe?storeId=S001');
+      // var sse = new EventSource('https://hangariesapp-uumgqhekpa-el.a.run.app/api/subscribe?userLoginId=devgurmeet');
+      var sse = new EventSource(api+'/subscribe?userLoginId='+user.loginId);
 
       sse.onopen = function () {
         console.log("Fired the connection");
+        console.log(api);
       }
 
-      // sse.addEventListener("message", ({data}) => {
-      //   console.log("event listeneer");
-      //   // console.log(data);
-      // });
-
-      // sse.onmessage = e => getRealtimeData(JSON.parse(e.data));
       sse.onmessage = function (event) {
-        // console.log(JSON.parse(event.data));
-        console.log(event.data);
+        //This method get called as soon as the event got fired from the server.
+        // console.log(event.data);
         refreshRef.current.handleRefresh();
-
       };
-
-      // sse.onmessage = e => getRealtimeData(JSON.parse(e.data));
 
       sse.onerror = () => {
         // error log here 
         console.log("Error Occured");
-        // sse.close();
       }
+
       return () => {
-        // sse.close();
+        // console.log("Unmounted");
+        // This method called when KDS page closed or navigated to other page from KDS
+        //sse connection closed at this point to save or optimised memory
+        sse.close();
       };
     } else {
-      console.log("Sorry, your browser does not support server-sent events...");
+      alert("Sorry, your browser does not support server-sent events...");
     }
   }, [])
   
-*/
   //-------------------END ---------------
 
   return (
