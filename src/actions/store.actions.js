@@ -40,7 +40,8 @@ export const saveStore = (newstore) => {
           type: storeConstants.ADD_STORES_SUCCESS,
           payload: res.data,
         });
-        toast.success("Store Update Successfully!");
+        dispatch(getAllStores());
+        toast.success("Store Add/Update Successfully!");
       } else {
         dispatch({
           type: storeConstants.ADD_STORES_FAILURE,

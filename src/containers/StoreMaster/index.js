@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Layout from "../NewLayout";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import { TextField } from "@mui/material";
 import DeliveryDiningIcon from "@mui/icons-material/DeliveryDining";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -14,6 +14,33 @@ import { makeStyles } from "@material-ui/core/styles";
 import { toast } from "react-toastify";
 import { saveStore } from "../../actions";
 import { getAllStores } from "../../actions";
+import Drawer from "@mui/material/Drawer";
+import Box from "@mui/material/Box";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import InputLabel from "@mui/material/InputLabel";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import Button from "@mui/material/Button";
+
+function createData(name, calories, fat, carbs, protein) {
+  return { name, calories, fat, carbs, protein };
+}
+
+const rows = [
+  createData("01", 159, 6.0, 24, 4.0),
+  createData("02", 237, 9.0, 37, 4.3),
+  createData("03", 262, 16.0, 24, 6.0),
+  createData("04", 305, 3.7, 67, 4.3),
+  createData("05", 356, 16.0, 49, 3.9),
+];
 
 const useStyles = makeStyles((theme) => ({
   inputLabel: {
@@ -91,8 +118,11 @@ const StoreMaster = () => {
   const stores = useSelector((state) => state.store.stores);
   console.log("aaa str", stores);
 
+  const now = new Date();
+  const dateString = now.toISOString();
+
   const [storeId, setStoreId] = useState("");
-  const [resturantId, setResturantId] = useState("");
+  const [resturantId, setResturantId] = useState("R001");
   const [storeName, setStoreName] = useState("");
   const [address1, setAddress1] = useState("");
   const [address2, setAddress2] = useState("");
@@ -112,8 +142,9 @@ const StoreMaster = () => {
   const [onlineAvailableFlag, setOnlineAvailableFlag] = useState("");
   const [dineinAvailableFlag, setDineinAvailableFlag] = useState("");
   const [storeGstNumber, setStoreGstNumber] = useState("");
-  console.log("aaa mid", weraMerchantId);
-
+  const [createdDate, setCreatedDate] = useState("");
+  const [updatedDate, setUpdatedDate] = useState("");
+  const [right, setRight] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -121,7 +152,7 @@ const StoreMaster = () => {
 
   const handleStoreClick = (store) => {
     setStoreId(store.storeId);
-    setResturantId(store.restaurantId)
+    setResturantId(store.restaurantId);
     setStoreName(store.resturantName);
     setAddress1(store.address1);
     setAddress2(store.address2);
@@ -148,13 +179,15 @@ const StoreMaster = () => {
     setDineinAvailableFlag(
       store.dineinAvailableFlag == null ? "N" : store.dineinAvailableFlag
     );
-    setStoreGstNumber(store.storeGstNumber)
+    setStoreGstNumber(store.storeGstNumber);
+    setCreatedDate(store.createdDate);
+    setUpdatedDate(store.updatedDate);
   };
 
   const addStore = () => {
     toast.info("Fill Store Information!");
     setStoreId("");
-    setResturantId("");
+    setResturantId("R001");
     setStoreName("");
     setAddress1("");
     setAddress2("");
@@ -162,7 +195,7 @@ const StoreMaster = () => {
     setState("");
     setCountry("");
     setCity("");
-    setZipcode("");
+    setZipcode(null);
     setGstno("");
     setStarttime("");
     setEndtime("");
@@ -173,7 +206,9 @@ const StoreMaster = () => {
     setStoreActiveFlag("N");
     setOnlineAvailableFlag("N");
     setDineinAvailableFlag("N");
-    setStoreGstNumber("")
+    setStoreGstNumber("");
+    setCreatedDate("");
+    setUpdatedDate("");
   };
 
   const saveNewStore = async () => {
@@ -194,7 +229,7 @@ const StoreMaster = () => {
       address3: "",
       storeAvailableForPickup: "",
       storeAvailableForDelivery: "",
-      weraMerchantId: weraMerchantId=="" ? null : weraMerchantId,
+      weraMerchantId: weraMerchantId == "" ? null : weraMerchantId,
       weraAPIKey: weraAPIKey,
       weraAPIValue: weraAPIValue,
       menuCloneFlag: "",
@@ -203,16 +238,25 @@ const StoreMaster = () => {
       longitude: "",
       latitude: "",
       createdBy: user.createdBy,
-      createdDate: "2022-11-12T07:19:27.000+00:00",
+      createdDate: storeId ? createdDate : dateString,
       updatedBy: "SYSTEM",
-      updatedDate: "2022-11-12T07:19:27.000+00:00",
-      storeGstNumber : storeGstNumber
+      updatedDate: dateString,
+      storeGstNumber: storeGstNumber,
     };
     await dispatch(saveStore(newStore));
-    dispatch(getAllStores());
   };
 
   const classes = useStyles();
+
+  const toggleDrawer = (open) => (event) => {
+    if (
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    ) {
+      return;
+    }
+    setRight(open);
+  };
 
   return (
     <Layout sidebar headerTitle="Store Master" classes={{}}>
@@ -617,10 +661,143 @@ const StoreMaster = () => {
                 >
                   <Col xs={7}>
                     <div className="mb-3">
-                      <DeliveryDiningIcon fontSize="large" />
-                      <span className="ml-3" style={{ fontSize: "12px" }}>
+                      <DeliveryDiningIcon
+                        fontSize="large"
+                        style={{ color: "#e3f522" }}
+                      />
+                      <span
+                        className="ml-3"
+                        style={{ fontSize: "12px", cursor: "pointer" }}
+                        onClick={toggleDrawer(true)}
+                      >
                         Deliver Chargers Set-up
                       </span>
+                      <Drawer
+                        anchor={"right"}
+                        open={right}
+                        onClose={toggleDrawer(false)}
+                        sx={{ width: "400px" }}
+                      >
+                        <Box
+                          sx={{
+                            width: 450,
+                            height: "100%",
+                          }}
+                          role="presentation"
+                          onClick={toggleDrawer(false)}
+                          onKeyDown={toggleDrawer(false)}
+                          style={{ backgroundColor: "#e6e6e6" }}
+                        >
+                          <div
+                            style={{
+                              textAlign: "center",
+                              backgroundColor: "#a19f9f",
+                              padding: "13px",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            Deliver Chargers Set-up{" "}
+                            <HighlightOffIcon
+                              onClick={toggleDrawer(true)}
+                              fontSize="large"
+                              style={{
+                                position: "absolute",
+                                right: "2px",
+                                top: "6px",
+                                cursor: "pointer",
+                              }}
+                            />
+                          </div>
+                          <div>
+                            <FormControl
+                              style={{
+                                display: "flex",
+                                margin: "auto",
+                                marginTop: "10px",
+                                marginBottom: "10px",
+                                width: "75%",
+                              }}
+                            >
+                              <InputLabel id="demo-simple-select-label">
+                                Delivery Criteria
+                              </InputLabel>
+                              <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                // value={age}
+                                label="Age"
+                                // onChange={handleChange}
+                              >
+                                <MenuItem value={10}>Ten</MenuItem>
+                                <MenuItem value={20}>Twenty</MenuItem>
+                                <MenuItem value={30}>Thirty</MenuItem>
+                              </Select>
+                            </FormControl>
+                          </div>
+                          <TableContainer component={Paper}>
+                            <Table
+                              sx={{ minWidth: 400 }}
+                              aria-label="simple table"
+                            >
+                              <TableHead>
+                                <TableRow>
+                                  <TableCell width="10%">No</TableCell>
+                                  <TableCell align="center" width="20%">
+                                    Min Amt.
+                                  </TableCell>
+                                  <TableCell align="center" width="20%">
+                                    Max Amt.
+                                  </TableCell>
+                                  <TableCell align="center" width="20%">
+                                    Charges
+                                  </TableCell>
+                                  <TableCell align="center" width="30%">
+                                    Actions
+                                  </TableCell>
+                                </TableRow>
+                              </TableHead>
+                              <TableBody>
+                                {rows.map((row) => (
+                                  <TableRow
+                                    key={row.name}
+                                    sx={{
+                                      "&:last-child td, &:last-child th": {
+                                        border: 0,
+                                      },
+                                    }}
+                                  >
+                                    <TableCell
+                                      component="th"
+                                      scope="row"
+                                      width="10%"
+                                    >
+                                      {row.name}
+                                    </TableCell>
+                                    <TableCell align="center" width="20%">
+                                      {row.calories}
+                                    </TableCell>
+                                    <TableCell align="center" width="20%">
+                                      {row.fat}
+                                    </TableCell>
+                                    <TableCell align="center" width="20%">
+                                      {row.carbs}
+                                    </TableCell>
+                                    <TableCell align="center" width="30%">
+                                      {row.protein}
+                                    </TableCell>
+                                  </TableRow>
+                                ))}
+                              </TableBody>
+                            </Table>
+                          </TableContainer>
+                          <button
+                            className="mui-btn mui-btn--red"
+                            style={{ marginTop: "20px" }}
+                          >
+                            Add New Rule
+                          </button>
+                        </Box>
+                      </Drawer>
                     </div>
                     <div style={{ marginTop: "10px" }}>
                       <span style={{ marginRight: "76px" }}>KOT Flag</span>
@@ -690,8 +867,13 @@ const StoreMaster = () => {
                 <Row className="button-row">
                   <div className="button-group">
                     <button
-                      className={"mui-btn mui-btn--yellow"}
+                      className={`mui-btn ${
+                        !storeName || !city || !country
+                          ? "mui-btn--disabled"
+                          : "mui-btn--yellow"
+                      }`}
                       onClick={saveNewStore}
+                      disabled={!storeName || !city || !country}
                     >
                       SAVE
                     </button>
