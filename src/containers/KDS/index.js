@@ -61,6 +61,10 @@ export const KDS = () => {
   useEffect(() => {
 
     if (typeof (EventSource) !== "undefined") {
+      if(user.roleCategory != "KDS_CHEF"){
+        // console.log(user.roleCategory);
+        return;
+      }
       // var sse = new EventSource('https://hangariesapp-uumgqhekpa-el.a.run.app/api/subscribe?storeId=S001');
       // var sse = new EventSource('https://hangariesapp-uumgqhekpa-el.a.run.app/api/subscribe?userLoginId=devgurmeet');
       var sse = new EventSource(api+'/subscribe?userLoginId='+user.loginId);
@@ -88,7 +92,7 @@ export const KDS = () => {
         sse.close();
       };
     } else {
-      alert("Sorry, your browser does not support server-sent events...");
+      alert("Sorry, your browser does not support KDS screen autoload feature...");
     }
   }, [])
   
