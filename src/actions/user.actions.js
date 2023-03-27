@@ -938,6 +938,36 @@ export const GetDeliveryPrice = (restaurantId, storeId) => {
   };
 };
 
+export const SaveDeliveryPrice = (newdelivery) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: userConstants.UPDATE_DELIVERY_PRICE_REQUEST });
+
+      const res = await axios.post(
+        `/saveDeliveryConfigByCriteria`,
+        newdelivery
+      );
+      console.log("aaa res", res);
+      if (res.status === 200) {
+        dispatch({
+          type: userConstants.UPDATE_DELIVERY_PRICE_SUCCESS,
+          payload: res.data,
+        });
+        // dispatch(getAllStores());
+        // toast.success("Delivery Chargers Update Successfully!");
+      } else {
+        dispatch({
+          type: userConstants.UPDATE_DELIVERY_PRICE_FAILURE,
+          payload: [],
+        });
+        toast.error("Error when updating delivery Chargers! Please try again!");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
 export const getPaymentModes = () => {
   return async (dispatch) => {
     try {

@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import styled from "@emotion/styled";
 import Layout from "../NewLayout";
 import { Container, Row, Col } from "react-bootstrap";
 import { TextField } from "@mui/material";
@@ -13,7 +14,9 @@ import { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { toast } from "react-toastify";
 import { saveStore } from "../../actions";
-import { getAllStores } from "../../actions";
+import { SaveDeliveryPrice } from "../../actions";
+import { GetDeliveryPrice } from "../../actions";
+// import { getAllStores } from "../../actions";
 import Drawer from "@mui/material/Drawer";
 import Box from "@mui/material/Box";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
@@ -28,19 +31,10 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import Button from "@mui/material/Button";
-
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-  createData("01", 159, 6.0, 24, 4.0),
-  createData("02", 237, 9.0, 37, 4.3),
-  createData("03", 262, 16.0, 24, 6.0),
-  createData("04", 305, 3.7, 67, 4.3),
-  createData("05", 356, 16.0, 49, 3.9),
-];
+import IconButton from "@mui/material/IconButton";
+import SaveIcon from "@mui/icons-material/Save";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const useStyles = makeStyles((theme) => ({
   inputLabel: {
@@ -52,6 +46,8 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     fontSize: "10px",
     transform: "translate(0, 0px)",
+    width: "200px",
+    textAlign: "left",
   },
 }));
 
@@ -114,9 +110,43 @@ const YellowSwitch = withStyles((theme) => ({
   checked: {},
 }))(Switch);
 
+const CusTextField = styled(TextField)`
+ & label {
+  font-size: 0.75rem;
+  top: -11px;
+}
+
+& .Mui-focused{
+  top: 0px !important;
+}
+
+& fieldset{
+  font-size: 0.75rem;
+  color: #000;
+}
+
+& .MuiFormLabel-filled{
+  top: 0px !important;
+}
+
+& input{
+  font-size: 0.75rem;
+  padding: 0.25rem;
+  text-align: center;
+  font-family: 'Roboto';
+  color: #000;
+}
+ }
+
+ & .MuiInputBase-input.Mui-disabled {
+    -webkit-text-fill-color:  #000;
+  }
+`;
+
 const StoreMaster = () => {
   const stores = useSelector((state) => state.store.stores);
-  console.log("aaa str", stores);
+
+  // console.log("aaa str", stores);
 
   const now = new Date();
   const dateString = now.toISOString();
@@ -145,8 +175,21 @@ const StoreMaster = () => {
   const [createdDate, setCreatedDate] = useState("");
   const [updatedDate, setUpdatedDate] = useState("");
   const [right, setRight] = useState(false);
+  const [newrule, setNewrule] = useState(false);
+  const [currentminAmount, setCurrentminAmount] = useState(0);
+  const [currentmaxAmount, setCurrentmaxAmount] = useState(0);
+  const [currentdeliveryfee, setCurrentdeliveryfee] = useState(0);
+  const [deliveryEdit, setdeliveryEdit] = useState("");
+  // console.log("aaa currentdeliveryfee", currentdeliveryfee);
+  // console.log("aaa currentmaxAmount", currentmaxAmount);
+  // console.log("aaa currentdeliveryfee", currentdeliveryfee);
 
   const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(GetDeliveryPrice(resturantId, storeId));
+  }, [storeId]);
+  const deliveryCharges = useSelector((state) => state.user.deliveryPrice);
+  console.log("aaa deliveryCharges", deliveryCharges);
 
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -258,6 +301,52 @@ const StoreMaster = () => {
     setRight(open);
   };
 
+  const handleNewRuleSave = async () => {
+    const newdelivery = {
+      restaurantId: resturantId,
+      storeId: storeId,
+      criteria: "AMOUNT",
+      minDistanceKms: 0,
+      maxDistanceKms: 0,
+      minAmount: currentminAmount,
+      maxAmount: currentmaxAmount,
+      deliveryTimeMins: 0,
+      deliveryFeeCurrency: "INR",
+      deliveryFee: currentdeliveryfee,
+      ruleStatus: "ACTIVE",
+      effectiveStartDate: "2022-04-21T16:00:00.000+00:00",
+      effectiveEndDate: "9999-12-30T16:00:00.000+00:00",
+      defaultCriteriaFlag: "Y",
+    };
+    await dispatch(SaveDeliveryPrice(newdelivery));
+    setNewrule(false);
+    setCurrentminAmount(0);
+    setCurrentmaxAmount(0);
+    setCurrentdeliveryfee(0);
+    dispatch(GetDeliveryPrice(resturantId, storeId));
+    toast.success("Delivery Chargers Added Successfully!");
+  };
+
+  const handledeliveryDelete = async (delivery) => {
+    const newdelivery = { ...delivery, ruleStatus: "INACTIVE" };
+    await dispatch(SaveDeliveryPrice(newdelivery));
+    dispatch(GetDeliveryPrice(resturantId, storeId));
+    toast.success("Delivery Chargers Deleted Successfully!");
+  };
+
+  const handledeliveryUpdate = async (delivery) => {
+    const newdelivery = {
+      ...delivery,
+      minAmount: currentminAmount,
+      maxAmount: currentmaxAmount,
+      deliveryFee: currentdeliveryfee,
+    };
+    setdeliveryEdit(0);
+    await dispatch(SaveDeliveryPrice(newdelivery));
+    dispatch(GetDeliveryPrice(resturantId, storeId));
+    toast.success("Delivery Chargers Updated Successfully!");
+  };
+
   return (
     <Layout sidebar headerTitle="Store Master" classes={{}}>
       <div>
@@ -268,7 +357,14 @@ const StoreMaster = () => {
                 <label className="store-leftpanel-label">
                   STORE INFORMATION
                 </label>
-                <div>
+                <div
+                  style={{
+                    height: "70vh",
+                    overflowY: "scroll",
+                    scrollbarWidth: "thin",
+                    scrollbarColor: "#888 #f1f1f1",
+                  }}
+                >
                   {stores?.map((store) => (
                     <div
                       className={
@@ -285,15 +381,15 @@ const StoreMaster = () => {
                       <ArrowForwardIosIcon className="store-leftpanel-btn-icon2" />
                     </div>
                   ))}
-                  <button
-                    className="mui-btn mui-btn--red mt-2 mb-4"
-                    onClick={() => {
-                      addStore();
-                    }}
-                  >
-                    Add New Store
-                  </button>
                 </div>
+                <button
+                  className="mui-btn mui-btn--red mt-2 mb-4"
+                  onClick={() => {
+                    addStore();
+                  }}
+                >
+                  Add New Store
+                </button>
               </div>
             </Col>
             <Col style={{ backgroundColor: "#4d4d4d", color: "white" }} sm={8}>
@@ -470,7 +566,7 @@ const StoreMaster = () => {
                       label="Zip Code *"
                       variant="standard"
                       InputLabelProps={{
-                        shrink: zipcode !== "",
+                        shrink: zipcode !== null,
                         classes: {
                           root: classes.inputLabel,
                           shrink: classes.inputLabelShrink,
@@ -670,22 +766,22 @@ const StoreMaster = () => {
                         style={{ fontSize: "12px", cursor: "pointer" }}
                         onClick={toggleDrawer(true)}
                       >
-                        Deliver Chargers Set-up
+                        Delivery Chargers Set-up
                       </span>
                       <Drawer
                         anchor={"right"}
                         open={right}
-                        onClose={toggleDrawer(false)}
+                        // onClose={toggleDrawer(false)}
                         sx={{ width: "400px" }}
                       >
                         <Box
                           sx={{
-                            width: 450,
+                            width: 500,
                             height: "100%",
                           }}
                           role="presentation"
-                          onClick={toggleDrawer(false)}
-                          onKeyDown={toggleDrawer(false)}
+                          // onClick={toggleDrawer(false)}
+                          // onKeyDown={toggleDrawer(false)}
                           style={{ backgroundColor: "#e6e6e6" }}
                         >
                           <div
@@ -696,9 +792,9 @@ const StoreMaster = () => {
                               fontWeight: "bold",
                             }}
                           >
-                            Deliver Chargers Set-up{" "}
+                            Delivery Chargers Set-up{" "}
                             <HighlightOffIcon
-                              onClick={toggleDrawer(true)}
+                              onClick={toggleDrawer(false)}
                               fontSize="large"
                               style={{
                                 position: "absolute",
@@ -725,18 +821,17 @@ const StoreMaster = () => {
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
                                 // value={age}
-                                label="Age"
+                                label="Delivery Criteria"
+                                defaultValue={1}
                                 // onChange={handleChange}
                               >
-                                <MenuItem value={10}>Ten</MenuItem>
-                                <MenuItem value={20}>Twenty</MenuItem>
-                                <MenuItem value={30}>Thirty</MenuItem>
+                                <MenuItem value={1}>Amount</MenuItem>
                               </Select>
                             </FormControl>
                           </div>
                           <TableContainer component={Paper}>
                             <Table
-                              sx={{ minWidth: 400 }}
+                              sx={{ minWidth: 500 }}
                               aria-label="simple table"
                             >
                               <TableHead>
@@ -757,42 +852,246 @@ const StoreMaster = () => {
                                 </TableRow>
                               </TableHead>
                               <TableBody>
-                                {rows.map((row) => (
-                                  <TableRow
-                                    key={row.name}
-                                    sx={{
-                                      "&:last-child td, &:last-child th": {
-                                        border: 0,
-                                      },
-                                    }}
-                                  >
+                                {deliveryCharges &&
+                                deliveryCharges.filter(
+                                  (delivery) => delivery.ruleStatus === "ACTIVE"
+                                )?.length > 0 ? (
+                                  deliveryCharges
+                                    .filter(
+                                      (delivery) =>
+                                        delivery.ruleStatus === "ACTIVE"
+                                    )
+                                    .map((delivery, id) => (
+                                      <TableRow
+                                        key={id}
+                                        sx={{
+                                          "&:last-child td, &:last-child th": {
+                                            border: 0,
+                                          },
+                                        }}
+                                      >
+                                        <TableCell
+                                          component="th"
+                                          scope="row"
+                                          width="5%"
+                                        >
+                                          {id + 1}
+                                        </TableCell>
+                                        <TableCell align="center" width="15%">
+                                          <CusTextField
+                                            defaultValue={delivery.minAmount}
+                                            value={
+                                              currentminAmount[
+                                                delivery.minAmount
+                                              ]
+                                            }
+                                            // onChange={(e) => {
+                                            //   setCurrentminAmount(
+                                            //     e.target.value
+                                            //   );
+                                            // }}
+                                            onChange={(e) => {
+                                              const value = parseFloat(
+                                                e.target.value
+                                              );
+                                              setCurrentminAmount(value);
+                                            }}
+                                            fullWidth
+                                            variant="standard"
+                                            disabled={
+                                              delivery.delivery_rule_Id !=
+                                              deliveryEdit
+                                            }
+                                            InputProps={{
+                                              disableUnderline: true,
+                                            }}
+                                          />
+                                        </TableCell>
+                                        <TableCell align="center" width="15%">
+                                          <CusTextField
+                                            defaultValue={delivery.maxAmount}
+                                            value={
+                                              currentmaxAmount[
+                                                delivery.maxAmount
+                                              ]
+                                            }
+                                            // onChange={(e) => {
+                                            //   setCurrentmaxAmount(
+                                            //     e.target.value
+                                            //   );
+                                            // }}
+                                            onChange={(e) => {
+                                              const value = parseFloat(
+                                                e.target.value
+                                              );
+                                              setCurrentmaxAmount(value);
+                                            }}
+                                            fullWidth
+                                            variant="standard"
+                                            disabled={
+                                              delivery.delivery_rule_Id !=
+                                              deliveryEdit
+                                            }
+                                            InputProps={{
+                                              disableUnderline: true,
+                                            }}
+                                          />
+                                        </TableCell>
+                                        <TableCell align="center" width="15%">
+                                          <CusTextField
+                                            defaultValue={delivery.deliveryFee}
+                                            value={
+                                              currentdeliveryfee[
+                                                delivery.deliveryFee
+                                              ]
+                                            }
+                                            // onChange={(e) => {
+                                            //   setCurrentdeliveryfee(
+                                            //     e.target.value
+                                            //   );
+                                            // }}
+                                            onChange={(e) => {
+                                              const value = parseFloat(
+                                                e.target.value
+                                              );
+                                              setCurrentdeliveryfee(value);
+                                            }}
+                                            fullWidth
+                                            variant="standard"
+                                            disabled={
+                                              delivery.delivery_rule_Id !=
+                                              deliveryEdit
+                                            }
+                                            InputProps={{
+                                              disableUnderline: true,
+                                            }}
+                                          />
+                                        </TableCell>
+                                        <TableCell align="center" width="50%">
+                                          {delivery.delivery_rule_Id !=
+                                          deliveryEdit ? (
+                                            <IconButton aria-label="edit">
+                                              <EditIcon
+                                                style={{
+                                                  fontSize: "17px",
+                                                  color: "#bdba02",
+                                                }}
+                                                onClick={() =>
+                                                  setdeliveryEdit(
+                                                    delivery.delivery_rule_Id
+                                                  )
+                                                }
+                                              />
+                                            </IconButton>
+                                          ) : (
+                                            <IconButton aria-label="save">
+                                              <SaveIcon
+                                                style={{
+                                                  fontSize: "17px",
+                                                  color: "green",
+                                                }}
+                                                onClick={() =>
+                                                  handledeliveryUpdate(delivery)
+                                                }
+                                              />
+                                            </IconButton>
+                                          )}
+                                          <IconButton aria-label="delete">
+                                            <DeleteIcon
+                                              style={{
+                                                fontSize: "17px",
+                                                color: "red",
+                                              }}
+                                              onClick={() =>
+                                                handledeliveryDelete(delivery)
+                                              }
+                                            />
+                                          </IconButton>
+                                        </TableCell>
+                                      </TableRow>
+                                    ))
+                                ) : (
+                                  <TableRow>
+                                    <TableCell colSpan={5} align="center">
+                                      No records found
+                                    </TableCell>
+                                  </TableRow>
+                                )}
+                                {newrule ? (
+                                  <TableRow>
                                     <TableCell
                                       component="th"
                                       scope="row"
-                                      width="10%"
+                                      width="5%"
                                     >
-                                      {row.name}
+                                      {deliveryCharges.filter(
+                                        (delivery) =>
+                                          delivery.ruleStatus === "ACTIVE"
+                                      )?.length + 1}
                                     </TableCell>
-                                    <TableCell align="center" width="20%">
-                                      {row.calories}
+                                    <TableCell align="center" width="68px">
+                                      <CusTextField
+                                        value={currentminAmount}
+                                        onChange={(e) => {
+                                          setCurrentminAmount(e.target.value);
+                                        }}
+                                        fullWidth
+                                        variant="standard"
+                                      />
                                     </TableCell>
-                                    <TableCell align="center" width="20%">
-                                      {row.fat}
+                                    <TableCell width="68px">
+                                      <CusTextField
+                                        value={currentmaxAmount}
+                                        onChange={(e) => {
+                                          setCurrentmaxAmount(e.target.value);
+                                        }}
+                                        fullWidth
+                                        variant="standard"
+                                      />
                                     </TableCell>
-                                    <TableCell align="center" width="20%">
-                                      {row.carbs}
+                                    <TableCell width="68px">
+                                      <CusTextField
+                                        value={currentdeliveryfee}
+                                        onChange={(e) => {
+                                          setCurrentdeliveryfee(e.target.value);
+                                        }}
+                                        fullWidth
+                                        variant="standard"
+                                      />
                                     </TableCell>
-                                    <TableCell align="center" width="30%">
-                                      {row.protein}
+                                    <TableCell align="center">
+                                      <IconButton
+                                        aria-label="save"
+                                        onClick={handleNewRuleSave}
+                                      >
+                                        <SaveIcon
+                                          style={{
+                                            fontSize: "17px",
+                                            color: "green",
+                                          }}
+                                        />
+                                      </IconButton>
+                                      <IconButton
+                                        aria-label="delete"
+                                        onClick={() => setNewrule(!newrule)}
+                                      >
+                                        <DeleteIcon
+                                          style={{
+                                            fontSize: "17px",
+                                            color: "red",
+                                          }}
+                                        />
+                                      </IconButton>
                                     </TableCell>
                                   </TableRow>
-                                ))}
+                                ) : null}
                               </TableBody>
                             </Table>
                           </TableContainer>
                           <button
                             className="mui-btn mui-btn--red"
                             style={{ marginTop: "20px" }}
+                            onClick={() => setNewrule(!newrule)}
                           >
                             Add New Rule
                           </button>
