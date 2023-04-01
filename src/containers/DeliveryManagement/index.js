@@ -79,13 +79,26 @@ export const DeliveryManagement = () => {
   const [selectedDeliBoy, setSelectedDeliBoy] = useState("");
   const [isReset, setIsReset] = useState(false);
   const [height, setHeight] = useState(0);
+ 
+ 
+  // const [selectedStore, setSelectedStore] = useState(
+  //   user.roleCategory === "SUPER_ADMIN" ? "ALL" : user.restaurantId
+  // );
+  // const [selectedStoreObj, setSelectedStoreObj] = useState({
+  //   restaurantId:
+  //     user.roleCategory === "SUPER_ADMIN" ? null : user.restaurantId,
+  //   storeId: user.roleCategory === "SUPER_ADMIN" ? null : user.storeId,
+  // });
+
   const [selectedStore, setSelectedStore] = useState(
-    user.roleCategory === "SUPER_ADMIN" ? "ALL" : user.restaurantId
+    stores?.find(
+      (el) =>
+        el.restaurantId === user.restaurantId && el.storeId === user.storeId
+    )?.resturantName
   );
   const [selectedStoreObj, setSelectedStoreObj] = useState({
-    restaurantId:
-      user.roleCategory === "SUPER_ADMIN" ? null : user.restaurantId,
-    storeId: user.roleCategory === "SUPER_ADMIN" ? null : user.storeId,
+    restaurantId: user.restaurantId,
+    storeId: user.storeId,
   });
 
   const options = {
@@ -473,7 +486,7 @@ export const DeliveryManagement = () => {
                   onChange={handleChangeStore}
                   disabled={user.roleCategory !== "SUPER_ADMIN"}
                 >
-                  <CusMenuItem
+                  {/* <CusMenuItem
                     onClick={() => {
                       handleSelectedStore({
                         restaurantId: null,
@@ -483,7 +496,7 @@ export const DeliveryManagement = () => {
                     value={"ALL"}
                   >
                     All Stores
-                  </CusMenuItem>
+                  </CusMenuItem> */}
                   {stores.map((store) => (
                     <CusMenuItem
                       onClick={() => {

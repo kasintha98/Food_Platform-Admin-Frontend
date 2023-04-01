@@ -94,18 +94,30 @@ export const DeliveryTracking = () => {
   const usersByRole = useSelector((state) => state.user.usersByRole);
   const userRoleLoading = useSelector((state) => state.user.userRoleLoading);
   const [tabValue, setTabValue] = useState(5);
+  
+  // const [selectedStore, setSelectedStore] = useState(
+  //   user.roleCategory === "SUPER_ADMIN"
+  //     ? "ALL"
+  //     : stores?.find(
+  //         (el) =>
+  //           el.restaurantId === user.restaurantId && el.storeId === user.storeId
+  //       )?.resturantName
+  // );
+  // const [selectedStoreObj, setSelectedStoreObj] = useState({
+  //   restaurantId:
+  //     user.roleCategory === "SUPER_ADMIN" ? null : user.restaurantId,
+  //   storeId: user.roleCategory === "SUPER_ADMIN" ? null : user.storeId,
+  // });
+
   const [selectedStore, setSelectedStore] = useState(
-    user.roleCategory === "SUPER_ADMIN"
-      ? "ALL"
-      : stores?.find(
+    stores?.find(
           (el) =>
             el.restaurantId === user.restaurantId && el.storeId === user.storeId
         )?.resturantName
   );
   const [selectedStoreObj, setSelectedStoreObj] = useState({
-    restaurantId:
-      user.roleCategory === "SUPER_ADMIN" ? null : user.restaurantId,
-    storeId: user.roleCategory === "SUPER_ADMIN" ? null : user.storeId,
+    restaurantId: user.restaurantId,
+    storeId: user.storeId,
   });
 
   const dispatch = useDispatch();
@@ -183,7 +195,7 @@ export const DeliveryTracking = () => {
                 onChange={handleChangeStore}
                 disabled={user.roleCategory !== "SUPER_ADMIN"}
               >
-                <CusMenuItem
+                {/* <CusMenuItem
                   onClick={() => {
                     handleSelectedStore({
                       restaurantId: null,
@@ -193,7 +205,7 @@ export const DeliveryTracking = () => {
                   value={"ALL"}
                 >
                   All Stores
-                </CusMenuItem>
+                </CusMenuItem> */}
                 {stores.map((store) => (
                   <CusMenuItem
                     onClick={() => {

@@ -106,24 +106,37 @@ export const NewReports = () => {
     },
   ]);
   const [isOpen, setIsOpen] = useState(false);
+  // const [selectedStore, setSelectedStore] = useState(
+  //   user.roleCategory === "SUPER_ADMIN"
+  //     ? "ALL"
+  //     : stores?.find(
+  //         (el) =>
+  //           el.restaurantId === user.restaurantId && el.storeId === user.storeId
+  //       )?.resturantName
+  // );
+
   const [selectedStore, setSelectedStore] = useState(
-    user.roleCategory === "SUPER_ADMIN"
-      ? "ALL"
-      : stores?.find(
+     stores?.find(
           (el) =>
             el.restaurantId === user.restaurantId && el.storeId === user.storeId
         )?.resturantName
   );
+
   const [selectedReport, setSelectedReport] = useState(
     /* reportTypes[0] ? reportTypes[0].configCriteriaValue : null */ ""
   );
   const [selectedReportObj, setSelectedReportObj] = useState(
     reportTypes[0] ? reportTypes[0] : null
   );
+  // const [selectedStoreObj, setSelectedStoreObj] = useState({
+  //   restaurantId:
+  //     user.roleCategory === "SUPER_ADMIN" ? null : user.restaurantId,
+  //   storeId: user.roleCategory === "SUPER_ADMIN" ? null : user.storeId,
+  // });
+
   const [selectedStoreObj, setSelectedStoreObj] = useState({
-    restaurantId:
-      user.roleCategory === "SUPER_ADMIN" ? null : user.restaurantId,
-    storeId: user.roleCategory === "SUPER_ADMIN" ? null : user.storeId,
+    restaurantId: user.restaurantId,
+    storeId: user.storeId,
   });
 
 
@@ -246,7 +259,7 @@ export const NewReports = () => {
                         user.roleCategory === "SUPER_ADMIN" ? false : true
                       }
                     >
-                      <CusMenuItem
+                      {/* <CusMenuItem
                         onClick={() => {
                           handleSelectedStore({
                             restaurantId: null,
@@ -256,7 +269,7 @@ export const NewReports = () => {
                         value={"ALL"}
                       >
                         All Stores
-                      </CusMenuItem>
+                      </CusMenuItem> */}
                       {stores.map((store) => (
                         <CusMenuItem
                           onClick={() => {
