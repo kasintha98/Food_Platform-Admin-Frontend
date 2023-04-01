@@ -60,18 +60,31 @@ export const NewOrders = () => {
   const user = useSelector((state) => state.auth.user);
   const [tabValue, setTabValue] = useState("ALL");
   const [keywords, setKeywords] = useState("");
+  // const [selectedStore, setSelectedStore] = useState(
+  //   user.roleCategory === "SUPER_ADMIN"
+  //     ? "ALL"
+  //     : stores?.find(
+  //         (el) =>
+  //           el.restaurantId === user.restaurantId && el.storeId === user.storeId
+  //       )?.resturantName
+  // );
+
   const [selectedStore, setSelectedStore] = useState(
-    user.roleCategory === "SUPER_ADMIN"
-      ? "ALL"
-      : stores?.find(
+    stores?.find(
           (el) =>
             el.restaurantId === user.restaurantId && el.storeId === user.storeId
         )?.resturantName
   );
+
+  // const [selectedStoreObj, setSelectedStoreObj] = useState({
+  //   restaurantId:
+  //     user.roleCategory === "SUPER_ADMIN" ? null : user.restaurantId,
+  //   storeId: user.roleCategory === "SUPER_ADMIN" ? null : user.storeId,
+  // });
+
   const [selectedStoreObj, setSelectedStoreObj] = useState({
-    restaurantId:
-      user.roleCategory === "SUPER_ADMIN" ? null : user.restaurantId,
-    storeId: user.roleCategory === "SUPER_ADMIN" ? null : user.storeId,
+    restaurantId: user.restaurantId,
+    storeId: user.storeId,
   });
   const [isReset, setIsReset] = useState(false);
 
@@ -316,7 +329,7 @@ export const NewOrders = () => {
                     onChange={handleChangeStore}
                     disabled={user.roleCategory !== "SUPER_ADMIN"}
                   >
-                    <CusMenuItem
+                    {/* <CusMenuItem
                       onClick={() => {
                         handleSelectedStore({
                           restaurantId: null,
@@ -326,7 +339,7 @@ export const NewOrders = () => {
                       value={"ALL"}
                     >
                       All Stores
-                    </CusMenuItem>
+                    </CusMenuItem> */}
                     {stores.map((store) => (
                       <CusMenuItem
                         onClick={() => {

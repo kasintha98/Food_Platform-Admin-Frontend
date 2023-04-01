@@ -34,13 +34,25 @@ export const KDS = () => {
   const refreshRef = useRef();
 
   const [tabValue, setTabValue] = React.useState("ORDER ROUTING SCREEN");
+
+  // const [selectedStore, setSelectedStore] = useState(
+  //   user.roleCategory === "SUPER_ADMIN" ? "ALL" : user.restaurantId
+  // );
+  // const [selectedStoreObj, setSelectedStoreObj] = useState({
+  //   restaurantId:
+  //     user.roleCategory === "SUPER_ADMIN" ? null : user.restaurantId,
+  //   storeId: user.roleCategory === "SUPER_ADMIN" ? null : user.storeId,
+  // });
+
   const [selectedStore, setSelectedStore] = useState(
-    user.roleCategory === "SUPER_ADMIN" ? "ALL" : user.restaurantId
+    stores?.find(
+      (el) =>
+        el.restaurantId === user.restaurantId && el.storeId === user.storeId
+    )?.resturantName
   );
   const [selectedStoreObj, setSelectedStoreObj] = useState({
-    restaurantId:
-      user.roleCategory === "SUPER_ADMIN" ? null : user.restaurantId,
-    storeId: user.roleCategory === "SUPER_ADMIN" ? null : user.storeId,
+    restaurantId: user.restaurantId,
+    storeId: user.storeId,
   });
 
   const handleChangeTab = (event, newValue) => {
@@ -151,7 +163,7 @@ export const KDS = () => {
                         label="Please select the store"
                         onChange={handleChangeStore}
                       >
-                        <CusMenuItem
+                        {/* <CusMenuItem
                           onClick={() => {
                             handleSelectedStore({
                               restaurantId: null,
@@ -161,7 +173,7 @@ export const KDS = () => {
                           value={"ALL"}
                         >
                           All Stores
-                        </CusMenuItem>
+                        </CusMenuItem> */}
                         {stores.map((store) => (
                           <CusMenuItem
                             onClick={() => {

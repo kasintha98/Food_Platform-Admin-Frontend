@@ -89,18 +89,30 @@ export const OrderTable = (props) => {
   const [keywords, setKeywords] = useState("");
   const [isReset, setIsReset] = useState(false);
   const [height, setHeight] = useState(0);
+
+  // const [selectedStore, setSelectedStore] = useState(
+  //   user.roleCategory === "SUPER_ADMIN"
+  //     ? "ALL"
+  //     : stores?.find(
+  //         (el) =>
+  //           el.restaurantId === user.restaurantId && el.storeId === user.storeId
+  //       )?.resturantName
+  // );
+  // const [selectedStoreObj, setSelectedStoreObj] = useState({
+  //   restaurantId:
+  //     user.roleCategory === "SUPER_ADMIN" ? null : user.restaurantId,
+  //   storeId: user.roleCategory === "SUPER_ADMIN" ? null : user.storeId,
+  // });
+
   const [selectedStore, setSelectedStore] = useState(
-    user.roleCategory === "SUPER_ADMIN"
-      ? "ALL"
-      : stores?.find(
+    stores?.find(
           (el) =>
             el.restaurantId === user.restaurantId && el.storeId === user.storeId
         )?.resturantName
   );
   const [selectedStoreObj, setSelectedStoreObj] = useState({
-    restaurantId:
-      user.roleCategory === "SUPER_ADMIN" ? null : user.restaurantId,
-    storeId: user.roleCategory === "SUPER_ADMIN" ? null : user.storeId,
+    restaurantId: user.restaurantId,
+    storeId: user.storeId,
   });
 
   const handleCloseDetailsModal = () => setShowDetailsModal(false);
@@ -469,7 +481,7 @@ export const OrderTable = (props) => {
                     onChange={handleChangeStore}
                     disabled={user.roleCategory !== "SUPER_ADMIN"}
                   >
-                    <CusMenuItem
+                    {/* <CusMenuItem
                       onClick={() => {
                         handleSelectedStore({
                           restaurantId: null,
@@ -479,7 +491,7 @@ export const OrderTable = (props) => {
                       value={"ALL"}
                     >
                       All Stores
-                    </CusMenuItem>
+                    </CusMenuItem> */}
                     {stores.map((store) => (
                       <CusMenuItem
                         onClick={() => {
