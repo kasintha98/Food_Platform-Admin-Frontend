@@ -23,7 +23,8 @@ import Signin from "./containers/signinUiCh";
 import Signup from "./containers/Signup";
 import Products from "./containers/Products";
 import Employee from "./containers/Employee";
-import StoreMaster from "./containers/StoreMaster"
+import StoreMaster from "./containers/StoreMaster";
+import QRgenerator from "./containers/QRgenerator";
 import { Inventory } from "./containers/Inventory";
 import Purchases from "./containers/Purchases";
 import PrivateRoute from "./HOC/PrivateRoute";
@@ -111,7 +112,9 @@ function App() {
           ></PrivateRoute>
         )}
 
-        {modulesForUser.some((module) => module.moduleName === "INVENTORY MGMT") && (
+        {modulesForUser.some(
+          (module) => module.moduleName === "INVENTORY MGMT"
+        ) && (
           <PrivateRoute
             path="/inventory"
             exact
@@ -213,6 +216,15 @@ function App() {
           <PrivateRoute
             path="/store-master"
             component={StoreMaster}
+          ></PrivateRoute>
+        )}
+
+        {modulesForUser.some(
+          (module) => module.moduleName === "ADMIN FUNCTIONS"
+        ) && (
+          <PrivateRoute
+            path="/qr-generator"
+            component={QRgenerator}
           ></PrivateRoute>
         )}
 
