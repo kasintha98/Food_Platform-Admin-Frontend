@@ -14,33 +14,30 @@ import styled from "@emotion/styled";
 import { useMediaQuery } from "react-responsive";
 import { Typography, Button } from "@mui/material";
 
-import FastfoodOutlinedIcon from '@mui/icons-material/FastfoodOutlined'; // DineIn
-import SpeedOutlinedIcon from '@mui/icons-material/SpeedOutlined'; //Dash
-import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined'; //Delivery
-import SummarizeOutlinedIcon from '@mui/icons-material/SummarizeOutlined'; //Reports
-import Inventory2OutlinedIcon from '@mui/icons-material/Inventory2Outlined';
-import AvTimerOutlinedIcon from '@mui/icons-material/AvTimerOutlined'; // Tracking
-import ConstructionOutlinedIcon from '@mui/icons-material/ConstructionOutlined'; //Admin
-import NightlightRoundOutlinedIcon from '@mui/icons-material/NightlightRoundOutlined'; //EOD
-import InventoryOutlinedIcon from '@mui/icons-material/InventoryOutlined'; //Orders
-import ContentPasteOutlinedIcon from '@mui/icons-material/ContentPasteOutlined';//Orders
-import SoupKitchenOutlinedIcon from '@mui/icons-material/SoupKitchenOutlined'; //KDS
-import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined'; //Order Mana
-import MultipleStopOutlinedIcon from '@mui/icons-material/MultipleStopOutlined'; // Order Source
-import SettingsPowerOutlinedIcon from '@mui/icons-material/SettingsPowerOutlined'; //Sign out
+import FastfoodOutlinedIcon from "@mui/icons-material/FastfoodOutlined"; // DineIn
+import SpeedOutlinedIcon from "@mui/icons-material/SpeedOutlined"; //Dash
+import LocalShippingOutlinedIcon from "@mui/icons-material/LocalShippingOutlined"; //Delivery
+import SummarizeOutlinedIcon from "@mui/icons-material/SummarizeOutlined"; //Reports
+import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined";
+import AvTimerOutlinedIcon from "@mui/icons-material/AvTimerOutlined"; // Tracking
+import ConstructionOutlinedIcon from "@mui/icons-material/ConstructionOutlined"; //Admin
+import NightlightRoundOutlinedIcon from "@mui/icons-material/NightlightRoundOutlined"; //EOD
+import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined"; //Orders
+import ContentPasteOutlinedIcon from "@mui/icons-material/ContentPasteOutlined"; //Orders
+import SoupKitchenOutlinedIcon from "@mui/icons-material/SoupKitchenOutlined"; //KDS
+import AccountTreeOutlinedIcon from "@mui/icons-material/AccountTreeOutlined"; //Order Mana
+import MultipleStopOutlinedIcon from "@mui/icons-material/MultipleStopOutlined"; // Order Source
+import SettingsPowerOutlinedIcon from "@mui/icons-material/SettingsPowerOutlined"; //Sign out
 import { red } from "@mui/material/colors";
 
-
-import ClickAwayListener from '@mui/material/ClickAwayListener';
-import Grow from '@mui/material/Grow';
-import Paper from '@mui/material/Paper';
-import Popper from '@mui/material/Popper';
-import MenuItem from '@mui/material/MenuItem';
-import MenuList from '@mui/material/MenuList';
-import Stack from '@mui/material/Stack';
+import ClickAwayListener from "@mui/material/ClickAwayListener";
+import Grow from "@mui/material/Grow";
+import Paper from "@mui/material/Paper";
+import Popper from "@mui/material/Popper";
+import MenuItem from "@mui/material/MenuItem";
+import MenuList from "@mui/material/MenuList";
+import Stack from "@mui/material/Stack";
 import { useHistory } from "react-router-dom";
-
-
 
 const CusDropdownButton = styled(DropdownButton)`
   & button {
@@ -109,7 +106,6 @@ export const NewHeader = (props) => {
 
   const drawerWidth = props.drawerWidth;
 
-
   //---------------------START DROPDOWN
 
   const history = useHistory();
@@ -121,10 +117,10 @@ export const NewHeader = (props) => {
   };
 
   function handleListKeyDown(event) {
-    if (event.key === 'Tab') {
+    if (event.key === "Tab") {
       event.preventDefault();
       setOpen(false);
-    } else if (event.key === 'Escape') {
+    } else if (event.key === "Escape") {
       setOpen(false);
     }
   }
@@ -143,7 +139,7 @@ export const NewHeader = (props) => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
     }
-    let path = `/employee`; 
+    let path = `/employee`;
     history.push(path);
 
     setOpen(false);
@@ -153,7 +149,7 @@ export const NewHeader = (props) => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
     }
-    let path = `/products`; 
+    let path = `/products`;
     history.push(path);
 
     setOpen(false);
@@ -163,7 +159,7 @@ export const NewHeader = (props) => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
     }
-    let path = `/order-auto`; 
+    let path = `/order-auto`;
     history.push(path);
 
     setOpen(false);
@@ -173,7 +169,7 @@ export const NewHeader = (props) => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
     }
-    let path = `/delivery-charges`; 
+    let path = `/delivery-charges`;
     history.push(path);
 
     setOpen(false);
@@ -183,7 +179,7 @@ export const NewHeader = (props) => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
     }
-    let path = `/user-entitle`; 
+    let path = `/user-entitle`;
     history.push(path);
 
     setOpen(false);
@@ -193,7 +189,7 @@ export const NewHeader = (props) => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
     }
-    let path = `/Customer`; 
+    let path = `/Customer`;
     history.push(path);
 
     setOpen(false);
@@ -203,7 +199,7 @@ export const NewHeader = (props) => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
     }
-    let path = `/restaurants`; 
+    let path = `/restaurants`;
     history.push(path);
 
     setOpen(false);
@@ -213,7 +209,7 @@ export const NewHeader = (props) => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
     }
-    let path = `/inventory`; 
+    let path = `/inventory`;
     history.push(path);
 
     setOpen(false);
@@ -223,7 +219,7 @@ export const NewHeader = (props) => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
     }
-    let path = `/coupons`; 
+    let path = `/coupons`;
     history.push(path);
 
     setOpen(false);
@@ -233,7 +229,7 @@ export const NewHeader = (props) => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
     }
-    let path = `/item-master`; 
+    let path = `/item-master`;
     history.push(path);
 
     setOpen(false);
@@ -243,7 +239,7 @@ export const NewHeader = (props) => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
     }
-    let path = `/recipe-master`; 
+    let path = `/recipe-master`;
     history.push(path);
 
     setOpen(false);
@@ -253,18 +249,27 @@ export const NewHeader = (props) => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
     }
-    let path = `/store-master`; 
+    let path = `/store-master`;
     history.push(path);
 
     setOpen(false);
   };
 
+  const qrClicked = (event) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+    let path = `/qr-generator`;
+    history.push(path);
+
+    setOpen(false);
+  };
 
   const eodClicked = (event) => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
     }
-    let path = `/eod`; 
+    let path = `/eod`;
     history.push(path);
 
     setOpen(false);
@@ -277,7 +282,7 @@ export const NewHeader = (props) => {
 
     setOpen(false);
   };
- 
+
   //---------------------- END DROPDOWN
 
   useEffect(() => {
@@ -300,250 +305,277 @@ export const NewHeader = (props) => {
           <>
             {modulesForUser.some(
               (module) => module.moduleName === "DINE-IN"
-            ) && (
-                <div className="nav-item top-module_partition"> </div>
-            )}
+            ) && <div className="nav-item top-module_partition"> </div>}
 
             {modulesForUser.some(
               (module) => module.moduleName === "DINE-IN"
             ) && (
-                <IconButton className="mainTopButton" style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  flexDirection: 'column',
-                  flexWrap: 'wrap',
-                  fontSize: '0.6125em',
-                  color: '#fff',
+              <IconButton
+                className="mainTopButton"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  flexDirection: "column",
+                  flexWrap: "wrap",
+                  fontSize: "0.6125em",
+                  color: "#fff",
                   minWidth: 66,
-                  maxWidth:70
-                }} component={Link} to="/dine-in">
-                  <FastfoodOutlinedIcon />
-                  DINE-IN
-                </IconButton>
-              )}
-
-            {modulesForUser.some(
-              (module) => module.moduleName === "DASHBOARD"
-            ) && (
-                <div className="nav-item top-module_partition"> </div>
-            )}
-
-            {modulesForUser.some(
-              (module) => module.moduleName === "DASHBOARD"
-            ) && (
-                <IconButton className="mainTopButton" style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  flexDirection: 'column',
-                  flexWrap: 'wrap',
-                  fontSize: '0.6125em',
-                  // backgroundColor:'#555555',
-                  color: '#fff',
-                  minWidth: 66,
-                  maxWidth:70
-                }} component={Link} to="/dashboard">
-                  <SpeedOutlinedIcon />
-                  DASHBOARD
-                </IconButton>
-              )}
-
-            {modulesForUser.some(
-              (module) => module.moduleName === "ORDER BY SOURCE"
-            ) && (
-                <div className="nav-item top-module_partition"> </div>
-            )}
-
-            {modulesForUser.some(
-              (module) => module.moduleName === "ORDER BY SOURCE"
-            ) && (
-                <IconButton className="mainTopButton" style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  flexDirection: 'column',
-                  flexWrap: 'wrap',
-                  fontSize: '0.6125em',
-                  color: '#fff',
-                  minWidth: 66,
-                  maxWidth:70
-                }} component={Link} to="/order-source">
-                  <MultipleStopOutlinedIcon />
-                  ORDER SOURCE
-                </IconButton>
-              )}
-
-            {modulesForUser.some(
-              (module) => module.moduleName === "ORDERS"
-            ) && (
-                <div className="nav-item top-module_partition"> </div>
-            )}
-
-            {modulesForUser.some(
-              (module) => module.moduleName === "ORDERS"
-            ) && (
-                <IconButton className="mainTopButton" style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  flexDirection: 'column',
-                  flexWrap: 'wrap',
-                  fontSize: '0.6125em',
-                  color: '#fff',
-                  minWidth: 66,
-                  maxWidth:70
-                }} component={Link} to="/orders">
-                  <ContentPasteOutlinedIcon />
-                  ORDERS
-                </IconButton>
-              )}
-
-            {modulesForUser.some(
-              (module) => module.moduleName === "KDS"
-            ) && (
-                <div className="nav-item top-module_partition"> </div>
-            )}
-
-            {modulesForUser.some((module) => module.moduleName === "KDS"
-            ) && (
-                <IconButton className="mainTopButton" style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  flexDirection: 'column',
-                  flexWrap: 'wrap',
-                  fontSize: '0.6125em',
-                  color: '#fff',
-                  minWidth: 66,
-                  maxWidth:70
-                }} component={Link} to="/kds">
-                  <SoupKitchenOutlinedIcon />
-                  KDS
-                </IconButton>
-              )}
-
-            {modulesForUser.some(
-              (module) => module.moduleName === "DELIVERY MGMT"
-            ) && (
-                <div className="nav-item top-module_partition"> </div>
-              )}
-
-            {modulesForUser.some(
-              (module) => module.moduleName === "DELIVERY MGMT"
-            ) && (
-                <IconButton className="mainTopButton" style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  flexDirection: 'column',
-                  flexWrap: 'wrap',
-                  fontSize: '0.6125em',
-                  color: '#fff',
-                  minWidth: 66,
-                  maxWidth:70
-                }} component={Link} to="/delivery-management">
-                  <AccountTreeOutlinedIcon />
-                  ORDER MGMT
-                </IconButton>
-              )}
-
-            {modulesForUser.some(
-              (module) => module.moduleName === "DELIVERY BOY"
-            ) && (
-                <div className="nav-item top-module_partition"> </div>
-            )}
-
-            {modulesForUser.some(
-              (module) => module.moduleName === "DELIVERY BOY"
-            ) && (
-                <IconButton className="mainTopButton" style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  flexDirection: 'column',
-                  flexWrap: 'wrap',
-                  fontSize: '0.6125em',
-                  color: '#fff',
-                  minWidth: 66,
-                  maxWidth:70
-                }} component={Link} to="/delivery-boy">
-                  <LocalShippingOutlinedIcon />
-                  DELIVERY BOY
-                </IconButton>
-              )}
-
-            {modulesForUser.some(
-              (module) => module.moduleName === "DELIVERY TRACKING"
-            ) && (
-                <div className="nav-item top-module_partition"> </div>
-            )}
-
-            {modulesForUser.some(
-              (module) => module.moduleName === "DELIVERY TRACKING"
-            ) && (
-                <IconButton className="mainTopButton" style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  flexDirection: 'column',
-                  flexWrap: 'wrap',
-                  fontSize: '0.6125em',
-                  color: '#fff',
-                  minWidth: 66,
-                  maxWidth:70
-                }} component={Link} to="/delivery-tracking">
-                  <AvTimerOutlinedIcon />
-                  TRACKING
-                </IconButton>
-              )}
-
-            {modulesForUser.some(
-              (module) => module.moduleName === "REPORTS"
-            ) && (
-                <div className="nav-item top-module_partition"> </div>
-            )}
-
-            {modulesForUser.some(
-              (module) => module.moduleName === "REPORTS"
-            ) && (
-                <IconButton className="mainTopButton" style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  flexDirection: 'column',
-                  flexWrap: 'wrap',
-                  fontSize: '0.6125em',
-                  color: '#fff',
-                  minWidth: 66,
-                  maxWidth:70
-                }} component={Link} to="/reports">
-                  <SummarizeOutlinedIcon />
-                  REPORTS
-                </IconButton>
-              )}
-
-            {modulesForUser.some(
-              (module) => module.moduleName === "ADMIN FUNCTIONS"
-            ) && (
-                <div className="nav-item top-module_partition"> </div>
-            )}
-
-            {modulesForUser.some(
-              (module) => module.moduleName === "ADMIN FUNCTIONS"
-            ) && (
-                <Stack className="mainTopButton" direction="row" spacing={2}>
-                <div style={{display: 'flex',alignItems: 'center'}}>
-                <IconButton className="mainTopButton" style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  flexDirection: 'column',
-                  flexWrap: 'wrap',
-                  fontSize: '0.6125em',
-                  color: '#fff',
-                  minWidth: 66,
-                  maxWidth:70
+                  maxWidth: 70,
                 }}
+                component={Link}
+                to="/dine-in"
+              >
+                <FastfoodOutlinedIcon />
+                DINE-IN
+              </IconButton>
+            )}
+
+            {modulesForUser.some(
+              (module) => module.moduleName === "DASHBOARD"
+            ) && <div className="nav-item top-module_partition"> </div>}
+
+            {modulesForUser.some(
+              (module) => module.moduleName === "DASHBOARD"
+            ) && (
+              <IconButton
+                className="mainTopButton"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  flexDirection: "column",
+                  flexWrap: "wrap",
+                  fontSize: "0.6125em",
+                  // backgroundColor:'#555555',
+                  color: "#fff",
+                  minWidth: 66,
+                  maxWidth: 70,
+                }}
+                component={Link}
+                to="/dashboard"
+              >
+                <SpeedOutlinedIcon />
+                DASHBOARD
+              </IconButton>
+            )}
+
+            {modulesForUser.some(
+              (module) => module.moduleName === "ORDER BY SOURCE"
+            ) && <div className="nav-item top-module_partition"> </div>}
+
+            {modulesForUser.some(
+              (module) => module.moduleName === "ORDER BY SOURCE"
+            ) && (
+              <IconButton
+                className="mainTopButton"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  flexDirection: "column",
+                  flexWrap: "wrap",
+                  fontSize: "0.6125em",
+                  color: "#fff",
+                  minWidth: 66,
+                  maxWidth: 70,
+                }}
+                component={Link}
+                to="/order-source"
+              >
+                <MultipleStopOutlinedIcon />
+                ORDER SOURCE
+              </IconButton>
+            )}
+
+            {modulesForUser.some(
+              (module) => module.moduleName === "ORDERS"
+            ) && <div className="nav-item top-module_partition"> </div>}
+
+            {modulesForUser.some(
+              (module) => module.moduleName === "ORDERS"
+            ) && (
+              <IconButton
+                className="mainTopButton"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  flexDirection: "column",
+                  flexWrap: "wrap",
+                  fontSize: "0.6125em",
+                  color: "#fff",
+                  minWidth: 66,
+                  maxWidth: 70,
+                }}
+                component={Link}
+                to="/orders"
+              >
+                <ContentPasteOutlinedIcon />
+                ORDERS
+              </IconButton>
+            )}
+
+            {modulesForUser.some((module) => module.moduleName === "KDS") && (
+              <div className="nav-item top-module_partition"> </div>
+            )}
+
+            {modulesForUser.some((module) => module.moduleName === "KDS") && (
+              <IconButton
+                className="mainTopButton"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  flexDirection: "column",
+                  flexWrap: "wrap",
+                  fontSize: "0.6125em",
+                  color: "#fff",
+                  minWidth: 66,
+                  maxWidth: 70,
+                }}
+                component={Link}
+                to="/kds"
+              >
+                <SoupKitchenOutlinedIcon />
+                KDS
+              </IconButton>
+            )}
+
+            {modulesForUser.some(
+              (module) => module.moduleName === "DELIVERY MGMT"
+            ) && <div className="nav-item top-module_partition"> </div>}
+
+            {modulesForUser.some(
+              (module) => module.moduleName === "DELIVERY MGMT"
+            ) && (
+              <IconButton
+                className="mainTopButton"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  flexDirection: "column",
+                  flexWrap: "wrap",
+                  fontSize: "0.6125em",
+                  color: "#fff",
+                  minWidth: 66,
+                  maxWidth: 70,
+                }}
+                component={Link}
+                to="/delivery-management"
+              >
+                <AccountTreeOutlinedIcon />
+                ORDER MGMT
+              </IconButton>
+            )}
+
+            {modulesForUser.some(
+              (module) => module.moduleName === "DELIVERY BOY"
+            ) && <div className="nav-item top-module_partition"> </div>}
+
+            {modulesForUser.some(
+              (module) => module.moduleName === "DELIVERY BOY"
+            ) && (
+              <IconButton
+                className="mainTopButton"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  flexDirection: "column",
+                  flexWrap: "wrap",
+                  fontSize: "0.6125em",
+                  color: "#fff",
+                  minWidth: 66,
+                  maxWidth: 70,
+                }}
+                component={Link}
+                to="/delivery-boy"
+              >
+                <LocalShippingOutlinedIcon />
+                DELIVERY BOY
+              </IconButton>
+            )}
+
+            {modulesForUser.some(
+              (module) => module.moduleName === "DELIVERY TRACKING"
+            ) && <div className="nav-item top-module_partition"> </div>}
+
+            {modulesForUser.some(
+              (module) => module.moduleName === "DELIVERY TRACKING"
+            ) && (
+              <IconButton
+                className="mainTopButton"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  flexDirection: "column",
+                  flexWrap: "wrap",
+                  fontSize: "0.6125em",
+                  color: "#fff",
+                  minWidth: 66,
+                  maxWidth: 70,
+                }}
+                component={Link}
+                to="/delivery-tracking"
+              >
+                <AvTimerOutlinedIcon />
+                TRACKING
+              </IconButton>
+            )}
+
+            {modulesForUser.some(
+              (module) => module.moduleName === "REPORTS"
+            ) && <div className="nav-item top-module_partition"> </div>}
+
+            {modulesForUser.some(
+              (module) => module.moduleName === "REPORTS"
+            ) && (
+              <IconButton
+                className="mainTopButton"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  flexDirection: "column",
+                  flexWrap: "wrap",
+                  fontSize: "0.6125em",
+                  color: "#fff",
+                  minWidth: 66,
+                  maxWidth: 70,
+                }}
+                component={Link}
+                to="/reports"
+              >
+                <SummarizeOutlinedIcon />
+                REPORTS
+              </IconButton>
+            )}
+
+            {modulesForUser.some(
+              (module) => module.moduleName === "ADMIN FUNCTIONS"
+            ) && <div className="nav-item top-module_partition"> </div>}
+
+            {modulesForUser.some(
+              (module) => module.moduleName === "ADMIN FUNCTIONS"
+            ) && (
+              <Stack className="mainTopButton" direction="row" spacing={2}>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <IconButton
+                    className="mainTopButton"
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      flexDirection: "column",
+                      flexWrap: "wrap",
+                      fontSize: "0.6125em",
+                      color: "#fff",
+                      minWidth: 66,
+                      maxWidth: 70,
+                    }}
                     ref={anchorRef}
                     id="composition-button"
-                    aria-controls={open ? 'composition-menu' : undefined}
-                    aria-expanded={open ? 'true' : undefined}
+                    aria-controls={open ? "composition-menu" : undefined}
+                    aria-expanded={open ? "true" : undefined}
                     aria-haspopup="true"
-                    onClick={handleToggle}>
-                  <ConstructionOutlinedIcon />
-                  ADMIN
-                </IconButton>
+                    onClick={handleToggle}
+                  >
+                    <ConstructionOutlinedIcon />
+                    ADMIN
+                  </IconButton>
                   <Popper
                     open={open}
                     anchorEl={anchorRef.current}
@@ -557,7 +589,9 @@ export const NewHeader = (props) => {
                         {...TransitionProps}
                         style={{
                           transformOrigin:
-                            placement === 'bottom-start' ? 'left top' : 'left bottom',
+                            placement === "bottom-start"
+                              ? "left top"
+                              : "left bottom",
                         }}
                       >
                         <Paper>
@@ -568,19 +602,93 @@ export const NewHeader = (props) => {
                               aria-labelledby="composition-button"
                               onKeyDown={handleListKeyDown}
                             >
-                              <MenuItem className="menuItemFormatter" onClick={employeeClicked}>Employee</MenuItem>
-                              <MenuItem className="menuItemFormatter" onClick={menuClicked}>Menu</MenuItem>
-                              <MenuItem className="menuItemFormatter" onClick={orderAutomationClicked}>Order Automation</MenuItem>
-                              <MenuItem className="menuItemFormatter" onClick={deliveryChargesClicked}>Delivery Charges</MenuItem>
-                              <MenuItem className="menuItemFormatter" onClick={userEntitlementsClicked}> User Entitlement</MenuItem>
-                              <MenuItem className="menuItemFormatter" onClick={customerClicked}>Customer</MenuItem>
-                              <MenuItem className="menuItemFormatter" onClick={restaurantsClicked}>Restaurants</MenuItem>
-                              <MenuItem className="menuItemFormatter" onClick={inventoryManagementClicked}> Inventory Mgmt</MenuItem>
-                              <MenuItem className="menuItemFormatter" onClick={couponCodeClicked}>Coupon Code</MenuItem>
-                              <MenuItem className="menuItemFormatter" onClick={itemMasterClicked}>Inventory Item Master</MenuItem>
-                              <MenuItem className="menuItemFormatter" onClick={recipeClicked}>Recipe Master</MenuItem>
-                              <MenuItem className="menuItemFormatter" onClick={storeClicked}>Store Master</MenuItem>
-                              <MenuItem className="menuItemFormatter" onClick={eodClicked}> End Of Day</MenuItem>
+                              <MenuItem
+                                className="menuItemFormatter"
+                                onClick={employeeClicked}
+                              >
+                                Employee
+                              </MenuItem>
+                              <MenuItem
+                                className="menuItemFormatter"
+                                onClick={menuClicked}
+                              >
+                                Menu
+                              </MenuItem>
+                              <MenuItem
+                                className="menuItemFormatter"
+                                onClick={orderAutomationClicked}
+                              >
+                                Order Automation
+                              </MenuItem>
+                              <MenuItem
+                                className="menuItemFormatter"
+                                onClick={deliveryChargesClicked}
+                              >
+                                Delivery Charges
+                              </MenuItem>
+                              <MenuItem
+                                className="menuItemFormatter"
+                                onClick={userEntitlementsClicked}
+                              >
+                                {" "}
+                                User Entitlement
+                              </MenuItem>
+                              <MenuItem
+                                className="menuItemFormatter"
+                                onClick={customerClicked}
+                              >
+                                Customer
+                              </MenuItem>
+                              <MenuItem
+                                className="menuItemFormatter"
+                                onClick={restaurantsClicked}
+                              >
+                                Restaurants
+                              </MenuItem>
+                              <MenuItem
+                                className="menuItemFormatter"
+                                onClick={inventoryManagementClicked}
+                              >
+                                {" "}
+                                Inventory Mgmt
+                              </MenuItem>
+                              <MenuItem
+                                className="menuItemFormatter"
+                                onClick={couponCodeClicked}
+                              >
+                                Coupon Code
+                              </MenuItem>
+                              <MenuItem
+                                className="menuItemFormatter"
+                                onClick={itemMasterClicked}
+                              >
+                                Inventory Item Master
+                              </MenuItem>
+                              <MenuItem
+                                className="menuItemFormatter"
+                                onClick={recipeClicked}
+                              >
+                                Recipe Master
+                              </MenuItem>
+                              <MenuItem
+                                className="menuItemFormatter"
+                                onClick={storeClicked}
+                              >
+                                Store Master
+                              </MenuItem>
+                              <MenuItem
+                                className="menuItemFormatter"
+                                onClick={qrClicked}
+                              >
+                                QR Generator
+                              </MenuItem>
+                              <MenuItem
+                                className="menuItemFormatter"
+                                onClick={eodClicked}
+                              >
+                                {" "}
+                                End Of Day
+                              </MenuItem>
                             </MenuList>
                           </ClickAwayListener>
                         </Paper>
@@ -589,51 +697,54 @@ export const NewHeader = (props) => {
                   </Popper>
                 </div>
               </Stack>
-
-
-              )}
-
-            {modulesForUser.some(
-              (module) => module.moduleName === "INVENTORY MGMT"
-            ) && (
-                <div className="nav-item top-module_partition"> </div>
             )}
 
             {modulesForUser.some(
               (module) => module.moduleName === "INVENTORY MGMT"
-            ) && (
-                <IconButton className="mainTopButton" style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  flexDirection: 'column',
-                  flexWrap: 'wrap',
-                  fontSize: '0.6125em',
-                  color: '#fff',
-                  minWidth: 66,
-                  maxWidth:70
-                }} component={Link} to="/inventory">
-                  <Inventory2OutlinedIcon />
-                  INVENTORY MGMT
-                </IconButton>
-              )}
+            ) && <div className="nav-item top-module_partition"> </div>}
 
             {modulesForUser.some(
-              (module) => module.moduleName === "EOD"
+              (module) => module.moduleName === "INVENTORY MGMT"
             ) && (
-                <div className="nav-item top-module_partition"> </div>
+              <IconButton
+                className="mainTopButton"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  flexDirection: "column",
+                  flexWrap: "wrap",
+                  fontSize: "0.6125em",
+                  color: "#fff",
+                  minWidth: 66,
+                  maxWidth: 70,
+                }}
+                component={Link}
+                to="/inventory"
+              >
+                <Inventory2OutlinedIcon />
+                INVENTORY MGMT
+              </IconButton>
             )}
 
             {modulesForUser.some((module) => module.moduleName === "EOD") && (
-              <IconButton className="mainTopButton" style={{
-                display: 'flex',
-                alignItems: 'center',
-                flexDirection: 'column',
-                flexWrap: 'wrap',
-                fontSize: '0.6125em',
-                color: '#fff',
-                minWidth: 66,
-                maxWidth:70
-              }} onClick={handleOpenEOD}>
+              <div className="nav-item top-module_partition"> </div>
+            )}
+
+            {modulesForUser.some((module) => module.moduleName === "EOD") && (
+              <IconButton
+                className="mainTopButton"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  flexDirection: "column",
+                  flexWrap: "wrap",
+                  fontSize: "0.6125em",
+                  color: "#fff",
+                  minWidth: 66,
+                  maxWidth: 70,
+                }}
+                onClick={handleOpenEOD}
+              >
                 <NightlightRoundOutlinedIcon />
                 EOD
               </IconButton>
@@ -643,17 +754,21 @@ export const NewHeader = (props) => {
 
         <div className="nav-item top-module_partition"> </div>
 
-        <IconButton className="mainTopButton" style={{
-          display: 'flex',
-          alignItems: 'center',
-          flexDirection: 'column',
-          flexWrap: 'wrap',
-          fontSize: '0.6125em',
-          color: '#fff',
-          minWidth: 66,
-          maxWidth:70
-        }} onClick={logout}>
-          <SettingsPowerOutlinedIcon/>
+        <IconButton
+          className="mainTopButton"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            flexDirection: "column",
+            flexWrap: "wrap",
+            fontSize: "0.6125em",
+            color: "#fff",
+            minWidth: 66,
+            maxWidth: 70,
+          }}
+          onClick={logout}
+        >
+          <SettingsPowerOutlinedIcon />
           Logout
         </IconButton>
       </Nav>
@@ -748,7 +863,7 @@ export const NewHeader = (props) => {
     <AppBar
       position="fixed"
       sx={{
-        backgroundColor: '#35455E',
+        backgroundColor: "#35455E",
         width: { xxl: `calc(100% - ${drawerWidth}px)` },
         ml: { xxl: `${drawerWidth}px` },
       }}
@@ -787,16 +902,24 @@ export const NewHeader = (props) => {
         </span>
         &nbsp;&nbsp;
         {businessDate ? (
-          <div style={{ backgroundColor: '#ffdb4f', marginLeft: 25, color: '#35455E', borderRadius: 15 }}>
+          <div
+            style={{
+              backgroundColor: "#ffdb4f",
+              marginLeft: 25,
+              color: "#35455E",
+              borderRadius: 15,
+            }}
+          >
             <span>
               <span className="businessDate">Business Date</span>
               <br></br>
-              <span className="businessDate">{`${Number(businessDate.getDate()).toString().length < 2
+              <span className="businessDate">{`${
+                Number(businessDate.getDate()).toString().length < 2
                   ? `0${businessDate.getDate()}`
                   : businessDate.getDate()
-                }-${businessDate.toLocaleString("default", {
-                  month: "short",
-                })}-${businessDate.getFullYear()}`}</span>
+              }-${businessDate.toLocaleString("default", {
+                month: "short",
+              })}-${businessDate.getFullYear()}`}</span>
             </span>
           </div>
         ) : null}

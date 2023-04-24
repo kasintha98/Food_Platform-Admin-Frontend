@@ -230,7 +230,7 @@ function NewLayout(props) {
           </ListItem>
         )}
 
-      {modulesForUser.some(
+        {modulesForUser.some(
           (module) => module.moduleName === "ADMIN FUNCTIONS"
         ) && (
           <ListItem>
@@ -263,6 +263,16 @@ function NewLayout(props) {
           </ListItem>
         )}
 
+        {modulesForUser.some(
+          (module) => module.moduleName === "ADMIN FUNCTIONS"
+        ) && (
+          <ListItem>
+            <NavLink to={"/qr-generator"}>
+              <i className="fa fa-suitcase"></i>
+              &nbsp; QR Generator
+            </NavLink>
+          </ListItem>
+        )}
 
         {modulesForUser.some(
           (module) => module.moduleName === "ADMIN FUNCTIONS"
