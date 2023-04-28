@@ -16,7 +16,7 @@ const QRgenerator = () => {
   const [downloadqr, setDownloadqr] = useState(true);
   console.log("aaa ", storeId, tableId);
 
-  const qrcode = `https://api.qrserver.com/v1/create-qr-code/?data=https://www.hangries.in/?QRcode=true%26storeId=${storeId}%26restaurantId=R001%26tableId=${tableId}&amp;size=250x250`;
+  const qrcode = `https://api.qrserver.com/v1/create-qr-code/?data=https://www.hangries.in/?QRcode=true%26storeId=${storeId}%26restaurantId=R001%26tableId=${tableId}&amp;size=230x230`;
 
   const handleDownload = (qr) => {
     saveAs(qr, "qrcode.png");
@@ -191,7 +191,13 @@ const QRgenerator = () => {
                         </h6>
                       </div>
                     ) : (
-                      <img id="qr-code" src={qrcode} alt="" title="" />
+                      <img
+                        id="qr-code"
+                        src={qrcode}
+                        alt=""
+                        title=""
+                        style={{ width: "230px", height: "230px" }}
+                      />
                     )}
                     <div
                       style={{
