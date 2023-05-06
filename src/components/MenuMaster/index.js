@@ -228,6 +228,8 @@ export const MenuMaster = () => {
   const [isRefreshProducts, setIsRefreshProducts] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  const user = useSelector((state) => state.auth.user);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -967,8 +969,11 @@ export const MenuMaster = () => {
         return;
       }
 
+      //Restaurant related change
       const newSection = {
         section: addNewSectionText,
+        restaurantId: user.restaurantId,
+        storeId: 'ALL',
       };
 
       dispatch(saveSection(newSection)).then((res) => {
@@ -984,8 +989,11 @@ export const MenuMaster = () => {
         return;
       }
 
+      //Restaurant related change
       const newDish = {
         dish: addNewDishText,
+        restaurantId: user.restaurantId,
+        storeId: 'ALL',
       };
 
       dispatch(saveDish(newDish)).then((res) => {

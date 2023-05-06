@@ -472,9 +472,13 @@ export const ProductMappingMaster = () => {
       return;
     }
 
+    //Restaurant related change
     const newProduct = {
       /* restaruantId: newSelectedStoreObj.restaurantId,
       storeId: newSelectedStoreObj.storeId, */
+
+      restaurantId:user.restaurantId,
+      storeId: 'ALL',
       section: newSection,
       dish: newDish,
       dishCategory: newVeg,
@@ -544,9 +548,12 @@ export const ProductMappingMaster = () => {
       size: newSizeTopping,
     }; */
 
+    //Restaurant related change
     const newTopping = {
       /* storeId: selectedStoreObj.storeId,
       restaurantId: selectedStoreObj.restaurantId, */
+      restaurantId: user.restaurantId,
+      storeId: 'ALL',
       ingredientType: newIngredientTypeTopping,
       price: newPriceTopping,
       category: newCategoryTopping,
@@ -689,8 +696,11 @@ export const ProductMappingMaster = () => {
         return;
       }
 
+      //Restaurant related change
       const newSection = {
         section: addNewSectionText,
+        restaurantId: user.restaurantId,
+        storeId: 'ALL',
       };
 
       dispatch(saveSection(newSection)).then((res) => {
@@ -706,8 +716,11 @@ export const ProductMappingMaster = () => {
         return;
       }
 
+      //Restaurant related change
       const newDish = {
         dish: addNewDishText,
+        restaurantId: user.restaurantId,
+        storeId: 'ALL',
       };
 
       dispatch(saveDish(newDish)).then((res) => {
