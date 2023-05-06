@@ -69,7 +69,7 @@ export const KDS = () => {
   };
 
   //--------------START---------------
-
+/*
   useEffect(() => {
 
     if (typeof (EventSource) !== "undefined") {
@@ -107,7 +107,7 @@ export const KDS = () => {
       alert("Sorry, your browser does not support KDS screen autoload feature...");
     }
   }, [])
-  
+  */
   //-------------------END ---------------
 
   return (
