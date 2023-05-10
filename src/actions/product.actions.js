@@ -1139,7 +1139,7 @@ export const getOffersByStatus = (status) => {
   };
 };
 
-export const getConfigOffersAppFlag = (restaurantId) => {
+export const getConfigOffersAppFlag = (restaurantId) => { // STATIC-ROO1
   return async (dispatch) => {
     try {
       dispatch({
@@ -1148,7 +1148,7 @@ export const getConfigOffersAppFlag = (restaurantId) => {
 
       const res = await axios.get(`/getConfigDetailsByCriteria`, {
         params: {
-          restaurantId: "R001",
+          restaurantId: restaurantId,
           storeId: "ALL",
           criteria: "OFFERS_APPLICABLE_FLAG",
         },
@@ -1176,7 +1176,7 @@ export const getConfigOffersAppFlag = (restaurantId) => {
   };
 };
 
-export const getConfigOffersCriteria = (restaurantId) => {
+export const getConfigOffersCriteria = (restaurantId) => { // STATIC-ROO1
   return async (dispatch) => {
     try {
       dispatch({
@@ -1185,7 +1185,7 @@ export const getConfigOffersCriteria = (restaurantId) => {
 
       const res = await axios.get(`/getConfigDetailsByCriteria`, {
         params: {
-          restaurantId: "R001",
+          restaurantId: restaurantId,
           storeId: "ALL",
           criteria: "OFFERS_CRITERIA",
         },
@@ -1213,7 +1213,7 @@ export const getConfigOffersCriteria = (restaurantId) => {
   };
 };
 
-export const getConfigOffersFunction = (restaurantId) => {
+export const getConfigOffersFunction = (restaurantId) => { // STATIC-ROO1
   return async (dispatch) => {
     try {
       dispatch({
@@ -1222,7 +1222,7 @@ export const getConfigOffersFunction = (restaurantId) => {
 
       const res = await axios.get(`/getConfigDetailsByCriteria`, {
         params: {
-          restaurantId: "R001",
+          restaurantId: restaurantId,
           storeId: "ALL",
           criteria: "OFFERS_FUNCTION",
         },

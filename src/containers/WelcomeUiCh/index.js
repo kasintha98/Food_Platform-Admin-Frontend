@@ -14,22 +14,23 @@ import {
   getInventoryUOM,
   getInventoryCategories,
   getInventorySubCategories,
+  getKDSTime,
 } from "../../actions";
 
 export const Welcome = () => {
   const dispatch = useDispatch();
-  
-  useEffect(() => {
-    dispatch(getInventoryUOM());
-    dispatch(getInventoryCategories());
-    dispatch(getInventorySubCategories());
-  }, []);
 
   const user = useSelector((state) => state.auth.user);
   const auth = useSelector((state) => state.auth);
-
-  console.log("user");
-  console.log(user);
+  
+  useEffect(() => {
+    if (user.restaurantId !== undefined) {
+      dispatch(getInventoryUOM(user.restaurantId));
+      dispatch(getInventoryCategories(user.restaurantId));
+      dispatch(getInventorySubCategories(user.restaurantId));
+      dispatch(getKDSTime(user.restaurantId)); // ADDED FOR STATIC-R001
+    }
+  }, []);
 
   if (auth.authenticate !== true) {
     return <Redirect to={"/signin"} />;

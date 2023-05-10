@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import {useSelector, useDispatch } from "react-redux";
 import {
   getInventoryUOM,
   getInventoryCategories,
@@ -22,6 +22,7 @@ import { NonRecipeInventory } from "../../components/NonRecipeInventory";
 
 export const Inventory = () => {
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
 
   const [tabValue, setTabValue] = React.useState("SUPPLIERS MASTER");
 
@@ -30,9 +31,9 @@ export const Inventory = () => {
   };
 
   useEffect(() => {
-    dispatch(getInventoryUOM());
-    dispatch(getInventoryCategories());
-    dispatch(getInventorySubCategories());
+    dispatch(getInventoryUOM(user.restaurantId));
+    dispatch(getInventoryCategories(user.restaurantId));
+    dispatch(getInventorySubCategories(user.restaurantId));
     dispatch(getAllProduct());
   }, []);
 

@@ -146,13 +146,18 @@ const CusTextField = styled(TextField)`
 const StoreMaster = () => {
   const stores = useSelector((state) => state.store.stores);
 
+  const user11 = useSelector((state) => state.auth.user);
+  console.log("@@@@@@@@@@@@@@@@@@@",user11.restaurantId);
+
   // console.log("aaa str", stores);
 
   const now = new Date();
   const dateString = now.toISOString();
 
   const [storeId, setStoreId] = useState("");
-  const [resturantId, setResturantId] = useState("R001");
+  // const [resturantId, setResturantId] = useState("R001");
+  const [resturantId, setResturantId] = useState(user11.restaurantId);
+
   const [storeName, setStoreName] = useState("");
   const [address1, setAddress1] = useState("");
   const [address2, setAddress2] = useState("");
@@ -230,7 +235,9 @@ const StoreMaster = () => {
   const addStore = () => {
     toast.info("Fill Store Information!");
     setStoreId("");
-    setResturantId("R001");
+    // setResturantId("R001");
+    setResturantId(user11.restaurantId);
+
     setStoreName("");
     setAddress1("");
     setAddress2("");

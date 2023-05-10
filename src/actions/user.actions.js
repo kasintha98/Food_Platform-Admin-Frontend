@@ -998,14 +998,14 @@ export const getPaymentModes = () => {
   };
 };
 
-export const getOrderSourceConfigDetails = (restaurantId, storeId) => {
+export const getOrderSourceConfigDetails = (restaurantId, storeId) => { // STATIC-ROO1
   return async (dispatch) => {
     try {
       dispatch({ type: userConstants.GET_ORDER_SOURCE_CONFIG_REQUEST });
 
       const res = await axios.get(`/getConfigDetailsByCriteria`, {
         params: {
-          restaurantId: "R001",
+          restaurantId: restaurantId,
           storeId: "ALL",
           criteria: "ORDER_SOURCE",
         },
@@ -1033,14 +1033,14 @@ export const getOrderSourceConfigDetails = (restaurantId, storeId) => {
   };
 };
 
-export const getPaymentModeConfigDetails = (restaurantId, storeId) => {
+export const getPaymentModeConfigDetails = (restaurantId, storeId) => { // STATIC-ROO1
   return async (dispatch) => {
     try {
       dispatch({ type: userConstants.GET_PAYMENT_MODE_CONFIG_REQUEST });
 
       const res = await axios.get(`/getConfigDetailsByCriteria`, {
         params: {
-          restaurantId: "R001",
+          restaurantId: restaurantId, // 
           storeId: "ALL",
           criteria: "PAYMENT_MODE",
         },
@@ -1068,7 +1068,7 @@ export const getPaymentModeConfigDetails = (restaurantId, storeId) => {
   };
 };
 
-export const getPaymentConfigDetailsCashierReport = (restaurantId) => {
+export const getPaymentConfigDetailsCashierReport = (restaurantId) => { // STATIC-ROO1
   return async (dispatch) => {
     try {
       dispatch({
@@ -1077,7 +1077,7 @@ export const getPaymentConfigDetailsCashierReport = (restaurantId) => {
 
       const res = await axios.get(`/getConfigDetailsByCriteria`, {
         params: {
-          restaurantId: "R001",
+          restaurantId: restaurantId,
           storeId: "ALL",
           criteria: "PAYMENT_MODE_CASHIER_REPORT",
         },
@@ -1105,7 +1105,7 @@ export const getPaymentConfigDetailsCashierReport = (restaurantId) => {
   };
 };
 
-export const getOrderSourceConfigDetailsCashierReport = (
+export const getOrderSourceConfigDetailsCashierReport = ( // STATIC-ROO1
   restaurantId,
   storeId
 ) => {
@@ -1117,7 +1117,7 @@ export const getOrderSourceConfigDetailsCashierReport = (
 
       const res = await axios.get(`/getConfigDetailsByCriteria`, {
         params: {
-          restaurantId: "R001",
+          restaurantId: restaurantId,
           storeId: "ALL",
           criteria: "ORDER_SOURCE_CASHIER_REPORT",
         },
@@ -1145,14 +1145,14 @@ export const getOrderSourceConfigDetailsCashierReport = (
   };
 };
 
-export const getKDSTime = () => {
+export const getKDSTime = (restaurantId) => { // STATIC-ROO1
   return async (dispatch) => {
     try {
       dispatch({ type: userConstants.GET_KDS_TIME_REQUEST });
 
       const res = await axios.get(`/getConfigDetailsByCriteria`, {
         params: {
-          restaurantId: "R001",
+          restaurantId: restaurantId,
           storeId: "ALL",
           criteria: "KDS_REFRESH_TIME",
         },

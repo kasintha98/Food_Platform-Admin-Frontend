@@ -218,7 +218,7 @@ export const RecipeMaster = () => {
     dispatch(getActiveRecipes(user.restaurantId,"ALL"));
     // dispatch(getActiveInventory());
     dispatch(getActiveInventory(user.restaurantId));
-    dispatch(getInventoryUOM());
+    dispatch(getInventoryUOM(user.restaurantId));
     dispatch(getAllProduct());
   }, []);
 
@@ -265,33 +265,6 @@ export const RecipeMaster = () => {
   const handleShowAdd = () => setShowAdd(true);
 
   const saveNewIngredient = () => {
-    /* if (isAddNew) {
-      if (!newItemIngredient || !newItemIngredientObj) {
-        toast.error("Please select ingredient to add new ingredient item!");
-        return;
-      }
-
-      if (!newItemQty) {
-        toast.error("Please select quantity to add new ingredient item!");
-        return;
-      }
-
-      const newItem = {
-        restaurantId: "R001",
-        productId: currentProduct.productId,
-        itemId: newItemIngredientObj.itemId,
-        itemQty: newItemQty,
-        itemCost: newItemCost ? newItemCost : "0.0",
-        itemUom: newItemUOM,
-        itemStatus: "ACTIVE",
-        createdBy: user.loginId,
-        createdDate: new Date(),
-        updatedBy: user.loginId,
-        updatedDate: new Date(),
-      };
-      setChanged(true);
-      dispatch(saveUpdateRecipeItem(newItem));
-    } */
 
     const allList = getIngredientsByProductId(
       currentProduct.productId,

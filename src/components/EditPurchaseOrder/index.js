@@ -151,7 +151,7 @@ export const EditPurchaseOrder = (props) => {
         setLoading(false);
       }
     });
-    dispatch(getInventoryPurchaseCategory());
+    dispatch(getInventoryPurchaseCategory(user.restaurantId));
   }, []);
 
   const clearDataAll = () => {

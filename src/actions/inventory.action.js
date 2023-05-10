@@ -336,14 +336,14 @@ export const getActiveInventory = () => {
 //   };
 // };
 
-export const getInventoryUOM = () => {
+export const getInventoryUOM = (restaurantId) => { // STATIC-ROO1
   return async (dispatch) => {
     try {
       dispatch({ type: inventoryConstants.GET_UOM_REQUEST });
 
       const res = await axios.get(`/getConfigDetailsByCriteria`, {
         params: {
-          restaurantId: "R001",
+          restaurantId: restaurantId,
           storeId: "ALL",
           criteria: "INVENTORY_ITEM_UOM",
         },
@@ -371,14 +371,14 @@ export const getInventoryUOM = () => {
   };
 };
 
-export const getInventoryCategories = () => {
+export const getInventoryCategories = (restaurantId) => { // STATIC-ROO1
   return async (dispatch) => {
     try {
       dispatch({ type: inventoryConstants.GET_INVENTORY_CATEGORIES_REQUEST });
 
       const res = await axios.get(`/getConfigDetailsByCriteria`, {
         params: {
-          restaurantId: "R001",
+          restaurantId: restaurantId,
           storeId: "ALL",
           // criteria: "INVENTORY_ITEM_CATEGORY",
           criteria: "ITEM_CATEGORY",
@@ -408,43 +408,14 @@ export const getInventoryCategories = () => {
   };
 };
 
-// export const getInventorySubCategories = () => { //TODO: This need to check
-//   return async (dispatch) => {
-//     try {
-//       dispatch({ type: inventoryConstants.GET_INVENTORY_SUB_CATEGORIES_REQUEST });
-
-//       const res = await axios.get("/getConfigDetailsByCriteria?restaurantId=R001&storeId=ALL&criteria=ITEM_SUB_CATEGORY");
-
-//       if (res.status === 200 && res.data) {
-//         dispatch({
-//           type: inventoryConstants.GET_INVENTORY_SUB_CATEGORIES_SUCCESS,
-//           payload: res.data,
-//         });
-//         return res.data;
-//       } else {
-//         dispatch({
-//           type: inventoryConstants.GET_INVENTORY_SUB_CATEGORIES_FAILURE,
-//           payload: { error: "Error fetching categories config data!" },
-//         });
-//       }
-//     } catch (error) {
-//       console.log(error);
-//       dispatch({
-//         type: inventoryConstants.GET_INVENTORY_SUB_CATEGORIES_FAILURE,
-//         payload: { error: "Error fetching categories config data!" },
-//       });
-//     }
-//   };
-// };
-
-export const getInventorySubCategories = () => {
+export const getInventorySubCategories = (restaurantId) => { // STATIC-ROO1
   return async (dispatch) => {
     try {
       dispatch({ type: inventoryConstants.GET_INVENTORY_SUB_CATEGORIES_REQUEST });
 
       const res = await axios.get(`/getConfigDetailsByCriteria`, {
         params: {
-          restaurantId: "R001",
+          restaurantId: restaurantId,
           storeId: "ALL",
           criteria: "ITEM_SUB_CATEGORY",
         },
@@ -757,7 +728,7 @@ export const deleteRecipeItem = (id, updatedBy, restaurantId) => {
 //   };
 // };
 
-export const getInventoryPurchaseCategory = () => {
+export const getInventoryPurchaseCategory = (restaurantId) => { // STATIC-ROO1
   return async (dispatch) => {
     try {
       dispatch({
@@ -766,7 +737,7 @@ export const getInventoryPurchaseCategory = () => {
 
       const res = await axios.get(`/getConfigDetailsByCriteria`, {
         params: {
-          restaurantId: "R001",
+          restaurantId: restaurantId,
           storeId: "ALL",
           criteria: "PURCHASE_ORDER_CATEGORY",
         },
