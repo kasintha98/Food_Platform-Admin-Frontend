@@ -7,7 +7,7 @@ if(user){
   userObj = JSON.parse(user)
 }
 
-export const getAllReports = (
+export const getAllReports = (  // STATIC-ROO1
   restaurantId,
   storeId,
   fromDate,
@@ -19,7 +19,7 @@ export const getAllReports = (
       dispatch({ type: reportConstants.GET_ALL_REPORTS_REQUEST });
 
       const reqBody = {
-        restaurantId: "R001",
+        restaurantId: restaurantId,
         storeId,
         fromDate,
         toDate,
@@ -54,14 +54,14 @@ export const getAllReports = (
   };
 };
 
-export const getReportTypes = (restaurantId) => {
+export const getReportTypes = (restaurantId) => {  // STATIC-ROO1
   return async (dispatch) => {
     try {
       dispatch({ type: reportConstants.GET_REPORT_TYPES_REQUEST });
 
       const res = await axios.get("/getConfigDetailsByCriteria", {
         params: {
-          restaurantId: "R001",
+          restaurantId: restaurantId,
           storeId: "ALL",
           criteria: "REPORTS",
         },
@@ -88,7 +88,7 @@ export const getReportTypes = (restaurantId) => {
   };
 };
 
-export const getReportByType = (
+export const getReportByType = ( // THIS IS NOT USED IN CODE
   restaurantId,
   storeId,
   fromDate,
@@ -146,7 +146,7 @@ export const getSalesSummeryByDateListReports = (
       });
 
       const reqBody = {
-        restaurantId: "R001",
+        restaurantId: restaurantId, // CHECK THIS
         storeId,
         fromDate,
         toDate,
@@ -194,7 +194,7 @@ export const getSalesSummeryByOrderSourceReports = (
       });
 
       const reqBody = {
-        restaurantId: "R001",
+        restaurantId: restaurantId, // CHECK THIS
         storeId,
         fromDate,
         toDate,
@@ -242,7 +242,7 @@ export const getSalesSummeryByPaymentModeReports = (
       });
 
       const reqBody = {
-        restaurantId: "R001",
+        restaurantId: restaurantId, // CHECK THIS
         storeId,
         fromDate,
         toDate,
@@ -291,7 +291,7 @@ export const getDashboardSummary = (
       });
 
       const reqBody = {
-        restaurantId: "R001",
+        restaurantId: restaurantId,
         storeId,
         fromDate,
         toDate,

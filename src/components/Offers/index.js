@@ -354,9 +354,9 @@ export const Offers = () => {
 
   useEffect(() => {
     dispatch(getOffersByStatus("ACTIVE"));
-    dispatch(getConfigOffersFunction());
-    dispatch(getConfigOffersCriteria());
-    dispatch(getConfigOffersAppFlag());
+    dispatch(getConfigOffersFunction(user.restaurantId));
+    dispatch(getConfigOffersCriteria(user.restaurantId));
+    dispatch(getConfigOffersAppFlag(user.restaurantId));
     dispatch(getAllProduct())
     dispatch(getAllSections(user.restaurantId, user.storeId));
     /* dispatch(getProductsNew(user.restaurantId, user.storeId)); */

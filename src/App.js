@@ -64,6 +64,7 @@ function App() {
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
   const modulesForUser = useSelector((state) => state.user.modulesForUser);
+  const user = useSelector((state) => state.auth.user);
 
   //checking user logging and getting initial data
   useEffect(() => {
@@ -73,7 +74,9 @@ function App() {
     dispatch(updateCart());
     dispatch(getAllStores());
     dispatch(getPaymentModes());
-    dispatch(getKDSTime());
+    if (user.restaurantId !== undefined) {
+      dispatch(getKDSTime(user.restaurantId));
+    }
 
     if (localStorage.getItem("user")) {
       const user = JSON.parse(localStorage.getItem("user"));

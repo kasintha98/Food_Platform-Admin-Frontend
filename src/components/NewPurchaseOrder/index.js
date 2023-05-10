@@ -215,7 +215,7 @@ export const NewPurchaseOrder = () => {
     dispatch(getActiveSuppliers( user.restaurantId,
       "ALL"));
     dispatch(getActiveInventory(user.restaurantId));
-    dispatch(getInventoryPurchaseCategory());
+    dispatch(getInventoryPurchaseCategory(user.restaurantId));
     // dispatch(getBusinessDate(user.restaurantId, user.storeId)); -- If needed can call for fetching Purchase Date
   }, []);
 
