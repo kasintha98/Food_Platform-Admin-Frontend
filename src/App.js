@@ -72,10 +72,12 @@ function App() {
       dispatch(isUserLoggedIn());
     }
     dispatch(updateCart());
-    dispatch(getAllStores());
+    // dispatch(getAllStores());
     dispatch(getPaymentModes());
     if (user.restaurantId !== undefined) {
+      dispatch(getAllStores(user.restaurantId));
       dispatch(getKDSTime(user.restaurantId));
+
     }
 
     if (localStorage.getItem("user")) {

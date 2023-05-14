@@ -90,7 +90,8 @@ export default function NewMenu(props) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getAllStores());
+    // dispatch(getAllStores());
+    dispatch(getAllStores(props.restaurantId));
     dispatch(GetDeliveryPrice(props.restaurantId, props.storeId));
     dispatch(GetTaxDetails(props.restaurantId, props.storeId));
     dispatch(getProductsNew(props.restaurantId, props.storeId));

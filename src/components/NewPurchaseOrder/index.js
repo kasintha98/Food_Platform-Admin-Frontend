@@ -208,6 +208,8 @@ export const NewPurchaseOrder = () => {
     setBillDate(newValue);
   };
 
+  const [saveDisable, setSaveDisable] = useState(false);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -389,6 +391,11 @@ export const NewPurchaseOrder = () => {
       return;
     }
 
+    if (saveDisable) {
+      return;
+    }
+    setSaveDisable(true);
+
     for (let i = 0; i < Object.keys(addedList).length; i++) {
       let newObj = {
         restaurantId: selectedStoreObj.restaurantId,
@@ -420,6 +427,7 @@ export const NewPurchaseOrder = () => {
           if (i === Object.keys(addedList).length - 1) {
             clearDataAll();
             toast.success("All items saved to database!");
+            setSaveDisable(false);
           }
         }
       });
@@ -1204,8 +1212,10 @@ export const NewPurchaseOrder = () => {
               <SaveButton
                 className="mt-4"
                 onClick={saveUpdatePurchaseOrderToDB}
+                disabled={saveDisable}
               >
-                SAVE
+                {/* SAVE */}
+                {saveDisable ? 'Saving' : 'SAVE'}
               </SaveButton>
             </Col>
             <Col sm={4}>

@@ -276,7 +276,7 @@ export const getAllInventory = () => {
   };
 };
 
-export const getActiveInventory = () => {
+export const getActiveInventory = (restaurantId) => {
   return async (dispatch) => {
     try {
       dispatch({ type: inventoryConstants.GET_ACTIVE_INVENTORY_ITEMS_REQUEST });
