@@ -424,10 +424,10 @@ export const NewPurchaseOrder = () => {
 
       dispatch(saveUpdatePurchaseOrder(newObj)).then((res) => {
         if (res) {
+          setSaveDisable(false);
           if (i === Object.keys(addedList).length - 1) {
             clearDataAll();
             toast.success("All items saved to database!");
-            setSaveDisable(false);
           }
         }
       });
