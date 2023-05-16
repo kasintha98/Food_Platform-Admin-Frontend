@@ -281,7 +281,7 @@ export const getActiveInventory = (restaurantId) => {
     try {
       dispatch({ type: inventoryConstants.GET_ACTIVE_INVENTORY_ITEMS_REQUEST });
 
-      const res = await axios.get("/getItemsByStatus", { params: { status: "ACTIVE", restaurantId: userObj.restaurantId, storeId: "ALL" } });
+      const res = await axios.get("/getItemsByStatus", { params: { status: "ACTIVE", restaurantId: restaurantId, storeId: "ALL" } });
       if (res.status === 200) {
         dispatch({
           type: inventoryConstants.GET_ACTIVE_INVENTORY_ITEMS_SUCCESS,
