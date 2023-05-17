@@ -787,7 +787,7 @@ export const saveUpdatePurchaseOrder = (item, isPullPo) => {
           " Saved Successfully!"
         );
         if (isPullPo) {
-          dispatch(getSubmittedRecievedPurchaseOrders());
+          dispatch(getSubmittedRecievedPurchaseOrders(user.restaurantId));
         }
         return res.data;
       } else {
@@ -938,13 +938,18 @@ export const saveAllItemConsumptionSummery = (items) => {
   };
 };
 
-export const getSubmittedRecievedPurchaseOrders = () => {
+export const getSubmittedRecievedPurchaseOrders = (restaurantId) => {
   return async (dispatch) => {
     try {
       dispatch({ type: inventoryConstants.GET_CLOSED_PURCHASE_ORDERS_REQUEST });
 
       /* const res = await axios.get("/getPurchaseOrdersByStatus?status=CLOSED"); */
-      const res = await axios.get("/getAllPurchaseOrders");
+      const res = await axios.get("/getAllPurchaseOrders", {
+          params: {
+            restaurantId: restaurantId,
+          },
+      });
+
       if (res.status === 200) {
         let data = res.data.filter(function (el) {
           return (
