@@ -45,6 +45,7 @@ export const AssignRole = (props) => {
   const modules = useSelector((state) => state.user.modules);
   const rolesWithModules = useSelector((state) => state.user.rolesWithModules);
   const stores = useSelector((state) => state.store.stores);
+  const userObj = useSelector((state) => state.auth.user);
 
   const [checked, setChecked] = useState(true);
   const [selectedRole, setSelectedRole] = useState("");
@@ -58,7 +59,7 @@ export const AssignRole = (props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getUsersByRole("ALL"));
+    dispatch(getUsersByRole("ALL",userObj.restaurantId, userObj.storeId));
   }, []);
 
   const handleRoleChange = (event) => {

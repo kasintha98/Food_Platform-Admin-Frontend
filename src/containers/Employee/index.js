@@ -47,6 +47,7 @@ export default function Employee(props) {
   const employeesByRes = useSelector((state) => state.employees.employeesByRes);
   const rolesWithModules = useSelector((state) => state.user.rolesWithModules);
   const allRoles = useSelector((state) => state.user.roles);
+  const user = useSelector((state) => state.auth.user);
 
   const [selectedStore, setSelectedStore] = useState("");
   const [selectedStoreObj, setSelectedStoreObj] = useState(null);
@@ -77,8 +78,8 @@ export default function Employee(props) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getUsersByRole("ALL"));
-    dispatch(getRoles());
+    dispatch(getUsersByRole("ALL",user.restaurantId, user.storeId));
+    dispatch(getRoles(user.restaurantId));
   }, []);
 
   const handleChangeStore = (event) => {

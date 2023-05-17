@@ -357,7 +357,7 @@ export const Offers = () => {
     dispatch(getConfigOffersFunction(user.restaurantId));
     dispatch(getConfigOffersCriteria(user.restaurantId));
     dispatch(getConfigOffersAppFlag(user.restaurantId));
-    dispatch(getAllProduct())
+    dispatch(getAllProduct(user.restaurantId))
     dispatch(getAllSections(user.restaurantId, user.storeId));
     /* dispatch(getProductsNew(user.restaurantId, user.storeId)); */
   }, []);

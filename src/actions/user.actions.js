@@ -3,6 +3,13 @@ import { userConstants, taxConstants } from "./constants";
 import { resetCart } from "./cart.action";
 import { toast } from "react-toastify";
 
+
+const user = localStorage.getItem("user");
+let userObj = {};
+if (user) {
+  userObj = JSON.parse(user)
+}
+
 //action to signup
 export const signup = (user) => {
   return async (dispatch) => {
@@ -34,12 +41,16 @@ export const signup = (user) => {
 };
 
 //action get roles
-export const getRoles = () => {
+export const getRoles = (restaurantId) => { // STATIC-ROO1
   return async (dispatch) => {
     try {
       dispatch({ type: userConstants.GET_ROLES_REQUEST });
 
-      const res = await axios.get(`/getAllRoles`);
+      const res = await axios.get(`/getAllRoles`,{
+        params: {
+          restaurantId: restaurantId,
+        },
+      });
 
       if (res.status === 200) {
         dispatch({
@@ -105,7 +116,7 @@ export const saveRoleWithModules = (payload) => {
           payload: res.data,
         });
         toast.success("Role saved successfully!");
-        dispatch(getRoles());
+        dispatch(getRoles(user.restaurantId));
         return true;
       } else {
         dispatch({
@@ -131,7 +142,8 @@ export const getUsersByRole = (roleCategory, restaurantId, storeId) => {
       dispatch({ type: userConstants.GET_USERS_BY_ROLE_REQUEST });
 
       const res = await axios.get(`/getUsersByRoleCategory`, {
-        params: { roleCategory },
+        params: { restaurantId: restaurantId,
+          roleCategory : roleCategory },
       });
 
       if (res.status === 200) {
@@ -216,7 +228,7 @@ export const deleteRoleWithModuleAccess = (payload) => {
           payload: res.data,
         });
         toast.success("Role deleted successfully!");
-        dispatch(getRoles());
+        dispatch(getRoles(user.restaurantId));
         return true;
       } else {
         dispatch({
@@ -842,12 +854,16 @@ export const getBusinessDate = (restaurantId, storeId) => {
   };
 };
 
-export const getAllBusinessDates = () => {
+export const getAllBusinessDates = (restaurantId) => { // STATIC-ROO1
   return async (dispatch) => {
     try {
       dispatch({ type: userConstants.GET_ALL_BUSINESS_DATES_REQUEST });
 
-      const res = await axios.get("/getAllBusinessDates");
+      const res = await axios.get("/getAllBusinessDates",{
+        params: {
+          restaurantId: restaurantId,
+        },
+      });
 
       if (res.status === 200 && res.data) {
         dispatch({
@@ -884,7 +900,7 @@ export const updateBusinessDate = (body) => {
           type: userConstants.UPDATE_BUSINESS_DATE_SUCCESS,
           payload: res.data,
         });
-        dispatch(getAllBusinessDates());
+        dispatch(getAllBusinessDates(user.restaurantId));
         toast.success("Business date updated!");
         return res.data;
       } else {
@@ -968,12 +984,16 @@ export const SaveDeliveryPrice = (newdelivery) => {
   };
 };
 
-export const getPaymentModes = () => {
+export const getPaymentModes = (restaurantId) => {
   return async (dispatch) => {
     try {
       dispatch({ type: userConstants.GET_PAYMENT_MODES_REQUEST });
 
-      const res = await axios.get("/getPaymentModes");
+      const res = await axios.get("/getPaymentModes",{
+        params: {
+          restaurantId: restaurantId,
+        },
+      });
 
       if (res.status === 200 && res.data) {
         dispatch({

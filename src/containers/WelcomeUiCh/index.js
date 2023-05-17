@@ -15,6 +15,7 @@ import {
   getInventoryCategories,
   getInventorySubCategories,
   getKDSTime,
+  getPaymentModes,
 } from "../../actions";
 
 export const Welcome = () => {
@@ -29,6 +30,7 @@ export const Welcome = () => {
       dispatch(getInventoryCategories(user.restaurantId));
       dispatch(getInventorySubCategories(user.restaurantId));
       dispatch(getKDSTime(user.restaurantId)); // ADDED FOR STATIC-R001
+      dispatch(getPaymentModes(user.restaurantId));
     }
   }, []);
 

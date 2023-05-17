@@ -227,7 +227,7 @@ export const AdminDashboard = () => {
 
     dispatch(
       getPaymentModeConfigDetails(
-        selectedStoreObj ? selectedStoreObj.restaurantId : "ALL"
+        selectedStoreObj ? user.restaurantId : "ALL"
       )
     );
   }, [dateState]);

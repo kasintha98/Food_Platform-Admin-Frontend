@@ -34,7 +34,7 @@ export const Inventory = () => {
     dispatch(getInventoryUOM(user.restaurantId));
     dispatch(getInventoryCategories(user.restaurantId));
     dispatch(getInventorySubCategories(user.restaurantId));
-    dispatch(getAllProduct());
+    dispatch(getAllProduct(user.restaurantId));
   }, []);
 
 

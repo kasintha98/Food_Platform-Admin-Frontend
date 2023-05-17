@@ -256,7 +256,7 @@ export const MenuMaster = () => {
       );
     }
 
-    dispatch(getAllSectionsFromMaster());
+    dispatch(getAllSectionsFromMaster(user.restaurantId));
     dispatch(getAllDishesFromMaster());
   }, [selectedStoreObj]);
 

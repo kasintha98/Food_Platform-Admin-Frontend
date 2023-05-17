@@ -219,7 +219,7 @@ export const RecipeMaster = () => {
     // dispatch(getActiveInventory());
     dispatch(getActiveInventory(user.restaurantId));
     dispatch(getInventoryUOM(user.restaurantId));
-    dispatch(getAllProduct());
+    dispatch(getAllProduct(user.restaurantId));
   }, []);
 
   useEffect(() => {

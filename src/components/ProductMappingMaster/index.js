@@ -217,7 +217,7 @@ export const ProductMappingMaster = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getAllProduct());
+    dispatch(getAllProduct(user.restaurantId));
   }, []);
 
   useEffect(() => {
@@ -253,7 +253,8 @@ export const ProductMappingMaster = () => {
       );
     }
 
-    dispatch(getAllSectionsFromMaster());
+    console.log("------------------",user.restaurantId)
+    dispatch(getAllSectionsFromMaster(user.restaurantId));
     dispatch(getAllDishesFromMaster());
   }, [selectedStoreObj]);
 
@@ -509,7 +510,7 @@ export const ProductMappingMaster = () => {
         dispatch(uploadImage(formDataImage)).then((res)=>{
           if(res){
             console.log("Uploaded");
-            dispatch(getAllProduct());
+            dispatch(getAllProduct(user.restaurantId));
             if (selectedStoreObj) {
               dispatch(
                 getProductsNew(selectedStoreObj.restaurantId, selectedStoreObj.storeId)

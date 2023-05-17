@@ -705,14 +705,18 @@ export const deleteDishToToppingMapping = (topping) => {
   };
 };
 
-export const getAllSectionsFromMaster = () => {
+export const getAllSectionsFromMaster = (restaurantId) => { // STATIC-ROO1
   return async (dispatch) => {
     try {
       dispatch({
         type: productConstants.GET_ALL_SECTIONS_MASTER_REQUEST,
       });
 
-      const res = await axios.get(`/getAllSectionsFromMaster`);
+      const res = await axios.get(`/getAllSectionsFromMaster`,{
+        params: {
+          restaurantId: restaurantId,
+        },
+      });
 
       if (res && res.status === 200) {
         dispatch({
@@ -777,7 +781,7 @@ export const saveSection = (section) => {
           type: productConstants.SAVE_NEW_SECTION_SUCCESS,
           payload: res.data,
         });
-        dispatch(getAllSectionsFromMaster());
+        dispatch(getAllSectionsFromMaster(user.restaurantId));
         toast.success("Section added successfully!");
         return res.data;
       } else {
@@ -936,14 +940,18 @@ export const saveSubProductNew = (topping) => {
   };
 };
 
-export const getAllProduct = () => {
+export const getAllProduct = (restaurantId) => { // STATIC-ROO1
   return async (dispatch) => {
     try {
       dispatch({
         type: productConstants.GET_MASTER_PRODUCTS_REQUEST,
       });
 
-      const res = await axios.get(`/getAllProduct`);
+      const res = await axios.get(`/getAllProduct`,{
+        params: {
+          restaurantId: restaurantId
+        }
+      });
 
       if (res && res.status === 200) {
         dispatch({
