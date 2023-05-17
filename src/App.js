@@ -73,11 +73,11 @@ function App() {
     }
     dispatch(updateCart());
     // dispatch(getAllStores());
-    dispatch(getPaymentModes());
+    
     if (user.restaurantId !== undefined) {
       dispatch(getAllStores(user.restaurantId));
       dispatch(getKDSTime(user.restaurantId));
-
+      dispatch(getPaymentModes(user.restaurantId));
     }
 
     if (localStorage.getItem("user")) {

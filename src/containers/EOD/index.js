@@ -47,7 +47,7 @@ export const EOD = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getAllBusinessDates());
+    dispatch(getAllBusinessDates(user.restaurantId));
   }, []);
 
   const onChangeDate = (date, id) => {

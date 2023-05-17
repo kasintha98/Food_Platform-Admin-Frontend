@@ -19,11 +19,12 @@ import { AssignRole } from "../../components/AssignRole";
 export const UserEntitlement = () => {
   const [decision, setDecision] = useState("");
   const [showActionPage, setShowActionPage] = useState(false);
+  const userObj = useSelector((state) => state.auth.user);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getRoles());
+    dispatch(getRoles(userObj.restaurantId));
     dispatch(getModules());
   }, []);
 
