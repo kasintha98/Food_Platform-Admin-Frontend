@@ -37,6 +37,10 @@ export const SalesRevenueByChanelChart = () => {
   );
   const orderSources = useSelector((state) => state.user.orderSources);
 
+  console.log("================orderSources");
+  console.log(orderSources);
+  console.log(salesSummeryByOrderSource.salesSummeryByOrderSource);
+
   const ref = React.createRef();
 
   // const getFilteredOrders = () => {

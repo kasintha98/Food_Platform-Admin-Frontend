@@ -51,6 +51,7 @@ import {
 } from "../../actions";
 import DropdownMenu from "@atlaskit/dropdown-menu";
 import "./style.css";
+import { UserEntitlement } from "../UserEntitlement";
 
 const CusMenuItem = styled(MenuItem)``;
 
@@ -181,45 +182,49 @@ export const AdminDashboard = () => {
     if (selectedStoreObj) {
       dispatch(
         getSalesSummeryByPaymentModeReports(
-          selectedStoreObj.restaurantId,
+          user.restaurantId,
           selectedStoreObj.storeId,
           `${dateState[0].startDate.getFullYear()}-${dateState[0].startDate.getMonth() + 1
           }-${dateState[0].startDate.getDate()}`,
           `${dateState[0].endDate.getFullYear()}-${dateState[0].endDate.getMonth() + 1
-          }-${dateState[0].endDate.getDate()}`
+          }-${dateState[0].endDate.getDate()}`,
+          user.loginId
         )
       );
 
       dispatch(
         getSalesSummeryByOrderSourceReports(
-          selectedStoreObj.restaurantId,
+          user.restaurantId,
           selectedStoreObj.storeId,
           `${dateState[0].startDate.getFullYear()}-${dateState[0].startDate.getMonth() + 1
           }-${dateState[0].startDate.getDate()}`,
           `${dateState[0].endDate.getFullYear()}-${dateState[0].endDate.getMonth() + 1
-          }-${dateState[0].endDate.getDate()}`
+          }-${dateState[0].endDate.getDate()}`,
+          user.loginId
         )
       );
 
       dispatch(
         getSalesSummeryByDateListReports(
-          selectedStoreObj.restaurantId,
+          UserEntitlement.restaurantId,
           selectedStoreObj.storeId,
           `${dateState[0].startDate.getFullYear()}-${dateState[0].startDate.getMonth() + 1
           }-${dateState[0].startDate.getDate()}`,
           `${dateState[0].endDate.getFullYear()}-${dateState[0].endDate.getMonth() + 1
-          }-${dateState[0].endDate.getDate()}`
+          }-${dateState[0].endDate.getDate()}`,
+          user.loginId
         )
       );
 
       dispatch(
         getDashboardSummary(
-          selectedStoreObj.restaurantId,
+          user.restaurantId,
           selectedStoreObj.storeId,
           `${dateState[0].startDate.getFullYear()}-${dateState[0].startDate.getMonth() + 1
           }-${dateState[0].startDate.getDate()}`,
           `${dateState[0].endDate.getFullYear()}-${dateState[0].endDate.getMonth() + 1
-          }-${dateState[0].endDate.getDate()}`
+          }-${dateState[0].endDate.getDate()}`,
+          user.loginId
         )
       );
 
@@ -245,7 +250,7 @@ export const AdminDashboard = () => {
     console.log(event.target.checked);
     if (event.target.checked) {
       handleSelectedStore({
-        restaurantId: "ALL",
+        restaurantId: user.restaurantId, //CHANGE --ALL
         storeId: "ALL",
       });
       setSelectedStore("ALL");
@@ -269,45 +274,49 @@ export const AdminDashboard = () => {
 
     dispatch(
       getSalesSummeryByDateListReports(
-        store.restaurantId,
+        user.restaurantId,
         store.storeId,
         `${dateState[0].startDate.getFullYear()}-${dateState[0].startDate.getMonth() + 1
         }-${dateState[0].startDate.getDate()}`,
         `${dateState[0].endDate.getFullYear()}-${dateState[0].endDate.getMonth() + 1
-        }-${dateState[0].endDate.getDate()}`
+        }-${dateState[0].endDate.getDate()}`,
+        user.loginId
       )
     );
 
     dispatch(
       getSalesSummeryByOrderSourceReports(
-        store.restaurantId,
+        user.restaurantId,
         store.storeId,
         `${dateState[0].startDate.getFullYear()}-${dateState[0].startDate.getMonth() + 1
         }-${dateState[0].startDate.getDate()}`,
         `${dateState[0].endDate.getFullYear()}-${dateState[0].endDate.getMonth() + 1
-        }-${dateState[0].endDate.getDate()}`
+        }-${dateState[0].endDate.getDate()}`,
+        user.loginId
       )
     );
 
     dispatch(
       getSalesSummeryByPaymentModeReports(
-        store.restaurantId,
+        user.restaurantId,
         store.storeId,
         `${dateState[0].startDate.getFullYear()}-${dateState[0].startDate.getMonth() + 1
         }-${dateState[0].startDate.getDate()}`,
         `${dateState[0].endDate.getFullYear()}-${dateState[0].endDate.getMonth() + 1
-        }-${dateState[0].endDate.getDate()}`
+        }-${dateState[0].endDate.getDate()}`,
+        user.loginId
       )
     );
 
     dispatch(
       getDashboardSummary(
-        store.restaurantId,
+        user.restaurantId,
         store.storeId,
         `${dateState[0].startDate.getFullYear()}-${dateState[0].startDate.getMonth() + 1
         }-${dateState[0].startDate.getDate()}`,
         `${dateState[0].endDate.getFullYear()}-${dateState[0].endDate.getMonth() + 1
-        }-${dateState[0].endDate.getDate()}`
+        }-${dateState[0].endDate.getDate()}`,
+        user.loginId
       )
     );
 
@@ -638,7 +647,7 @@ export const AdminDashboard = () => {
                   <CusMenuItem
                     onClick={() => {
                       handleSelectedStore({
-                        restaurantId: "ALL",
+                        restaurantId: user.restaurantId, // CHANGE --ALL
                         storeId: "ALL",
                       });
                     }}
