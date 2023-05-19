@@ -137,7 +137,8 @@ export const getSalesSummeryByDateListReports = (
   restaurantId,
   storeId,
   fromDate,
-  toDate
+  toDate,
+  loginId
 ) => {
   return async (dispatch) => {
     try {
@@ -151,7 +152,7 @@ export const getSalesSummeryByDateListReports = (
         fromDate,
         toDate,
         reportName: "SALES_SUMMARY_BY_DATE_LIST",
-        userLoginId: userObj.loginId
+        userLoginId: loginId
       };
 
       console.log(reqBody);
@@ -185,7 +186,8 @@ export const getSalesSummeryByOrderSourceReports = (
   restaurantId,
   storeId,
   fromDate,
-  toDate
+  toDate,
+  loginId
 ) => {
   return async (dispatch) => {
     try {
@@ -199,7 +201,7 @@ export const getSalesSummeryByOrderSourceReports = (
         fromDate,
         toDate,
         reportName: "SALES_SUMMARY_BY_ORDER_SOURCE",
-        userLoginId: userObj.loginId
+        userLoginId: loginId
       };
 
       console.log(reqBody);
@@ -233,7 +235,8 @@ export const getSalesSummeryByPaymentModeReports = (
   restaurantId,
   storeId,
   fromDate,
-  toDate
+  toDate,
+  loginId
 ) => {
   return async (dispatch) => {
     try {
@@ -247,7 +250,7 @@ export const getSalesSummeryByPaymentModeReports = (
         fromDate,
         toDate,
         reportName: "SALES_SUMMARY_BY_PAYMENT_MODE",
-        userLoginId: userObj.loginId
+        userLoginId: loginId
       };
 
       console.log(reqBody);
@@ -282,7 +285,8 @@ export const getDashboardSummary = (
   restaurantId,
   storeId,
   fromDate,
-  toDate
+  toDate,
+  loginId
 ) => {
   return async (dispatch) => {
     try {
@@ -296,7 +300,7 @@ export const getDashboardSummary = (
         fromDate,
         toDate,
         reportName: "DASHBOARD_SUMMARY",
-        userLoginId: userObj.loginId
+        userLoginId: loginId
       };
 
       console.log(reqBody);
