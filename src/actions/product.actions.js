@@ -89,7 +89,7 @@ export const getAllSections = (restaurantId, storeId) => {
     try {
       const res = await axios.get(`/getAllSections`, {
         params: {
-          restaurantId: restaurantId ? restaurantId : "ALL",
+          restaurantId: restaurantId,
           storeId: storeId ? storeId : "ALL",
         },
       });
@@ -124,7 +124,8 @@ export const getDishesBySection = (section, restaurantId, storeId) => {
       const res = await axios.get(`/getDishesBySection`, {
         params: {
           section: section,
-          restaurantId: restaurantId ? restaurantId : "ALL",
+          // restaurantId: restaurantId ? restaurantId : "ALL",
+          restaurantId : restaurantId,
           storeId: storeId ? storeId : "ALL",
         },
       });
