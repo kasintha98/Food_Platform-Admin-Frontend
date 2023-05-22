@@ -255,7 +255,7 @@ export const ProductMappingMaster = () => {
 
     console.log("------------------",user.restaurantId)
     dispatch(getAllSectionsFromMaster(user.restaurantId));
-    dispatch(getAllDishesFromMaster());
+    dispatch(getAllDishesFromMaster(user.restaurantId));
   }, [selectedStoreObj]);
 
   useEffect(() => {
@@ -1188,6 +1188,7 @@ export const ProductMappingMaster = () => {
     if (foundProduct) {
       let obj = {
         productId: foundProduct.productId,
+        restaurantId:user.restaurantId,
         storeId: foundProduct.storeId,
         menuAvailable: !check.target.checked ? "N" : "Y",
       };
@@ -1202,6 +1203,7 @@ export const ProductMappingMaster = () => {
     } else {
       let obj = {
         productId: product.productId,
+        restaurantId:user.restaurantId,
         storeId: selectedStoreObj.storeId,
         menuAvailable: !check.target.checked ? "N" : "Y",
       };

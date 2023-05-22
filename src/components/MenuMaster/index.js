@@ -257,7 +257,7 @@ export const MenuMaster = () => {
     }
 
     dispatch(getAllSectionsFromMaster(user.restaurantId));
-    dispatch(getAllDishesFromMaster());
+    dispatch(getAllDishesFromMaster(user.restaurantId));
   }, [selectedStoreObj]);
 
   useEffect(() => {
