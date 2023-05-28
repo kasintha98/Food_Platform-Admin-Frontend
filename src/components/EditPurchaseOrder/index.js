@@ -278,7 +278,7 @@ export const EditPurchaseOrder = (props) => {
 
     console.log(newObj);
 
-    dispatch(saveUpdatePurchaseOrder(newObj, true)).then((res) => {
+    dispatch(saveUpdatePurchaseOrder(newObj, true,user)).then((res) => {
       if (res) {
         onSaveClickHandle(item.itemId);
       }

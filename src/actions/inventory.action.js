@@ -765,7 +765,7 @@ export const getInventoryPurchaseCategory = (restaurantId) => { // STATIC-ROO1
   };
 };
 
-export const saveUpdatePurchaseOrder = (item, isPullPo) => {
+export const saveUpdatePurchaseOrder = (item, isPullPo,userObj) => {
   return async (dispatch) => {
     dispatch({ type: inventoryConstants.SAVE_UPDATE_PURCHASE_ORDER_REQUEST });
 
@@ -787,7 +787,7 @@ export const saveUpdatePurchaseOrder = (item, isPullPo) => {
           " Saved Successfully!"
         );
         if (isPullPo) {
-          dispatch(getSubmittedRecievedPurchaseOrders(user.restaurantId));
+          dispatch(getSubmittedRecievedPurchaseOrders(userObj.restaurantId,userObj.storeId));
         }
         return res.data;
       } else {
@@ -938,7 +938,7 @@ export const saveAllItemConsumptionSummery = (items) => {
   };
 };
 
-export const getSubmittedRecievedPurchaseOrders = (restaurantId) => {
+export const getSubmittedRecievedPurchaseOrders = (restaurantId,storeId) => {
   return async (dispatch) => {
     try {
       dispatch({ type: inventoryConstants.GET_CLOSED_PURCHASE_ORDERS_REQUEST });
@@ -947,6 +947,7 @@ export const getSubmittedRecievedPurchaseOrders = (restaurantId) => {
       const res = await axios.get("/getAllPurchaseOrders", {
           params: {
             restaurantId: restaurantId,
+            storeId: storeId
           },
       });
 
