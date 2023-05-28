@@ -230,7 +230,7 @@ export const SearchPurchaseOrder = () => {
         searchPurchaseOrders();
       }
     }); */
-    dispatch(getSubmittedRecievedPurchaseOrders(user.restaurantId,)).then((res) => {
+    dispatch(getSubmittedRecievedPurchaseOrders(user.restaurantId,user.storeId)).then((res) => {
       if (res) {
         searchPurchaseOrders();
       }
@@ -293,7 +293,7 @@ export const SearchPurchaseOrder = () => {
       dispatch(savePurchaseOrderStatus(obj)).then((res) => {
         if (res) {
           setPOStatus("");
-          dispatch(getSubmittedRecievedPurchaseOrders(user.restaurantId,)).then((res) => {
+          dispatch(getSubmittedRecievedPurchaseOrders(user.restaurantId,user.storeId)).then((res) => {
             if (res) {
               setIsSave({});
               searchPurchaseOrders(res);
@@ -366,7 +366,7 @@ export const SearchPurchaseOrder = () => {
 
     console.log(newObj);
 
-    dispatch(saveUpdatePurchaseOrder(newObj, true)).then((res) => {
+    dispatch(saveUpdatePurchaseOrder(newObj, true,user)).then((res) => {
       if (res) {
         onSaveClickHandle(item.purchaseOrderId+item.itemId);
       }
