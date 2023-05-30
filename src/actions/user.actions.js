@@ -989,9 +989,11 @@ export const getPaymentModes = (restaurantId) => {
     try {
       dispatch({ type: userConstants.GET_PAYMENT_MODES_REQUEST });
 
-      const res = await axios.get("/getPaymentModes",{
+      const res = await axios.get(`/getConfigDetailsByCriteria`, {
         params: {
-          restaurantId: restaurantId,
+          restaurantId: restaurantId, // 
+          storeId: "ALL",
+          criteria: "PAYMENT_MODE",
         },
       });
 
@@ -1017,6 +1019,40 @@ export const getPaymentModes = (restaurantId) => {
     }
   };
 };
+
+// export const getPaymentModes = (restaurantId) => {
+//   return async (dispatch) => {
+//     try {
+//       dispatch({ type: userConstants.GET_PAYMENT_MODES_REQUEST });
+
+//       const res = await axios.get("/getPaymentModes",{
+//         params: {
+//           restaurantId: restaurantId,
+//         },
+//       });
+
+//       if (res.status === 200 && res.data) {
+//         dispatch({
+//           type: userConstants.GET_PAYMENT_MODES_SUCCESS,
+//           payload: res.data,
+//         });
+//         return res.data;
+//       } else {
+//         dispatch({
+//           type: userConstants.GET_PAYMENT_MODES_FAILURE,
+//           payload: null,
+//         });
+//         toast.error("There was an error getting payment modes!");
+//       }
+//     } catch (error) {
+//       dispatch({
+//         type: userConstants.GET_PAYMENT_MODES_FAILURE,
+//         payload: null,
+//       });
+//       toast.error("There was an error getting payment modes!");
+//     }
+//   };
+// };
 
 export const getOrderSourceConfigDetails = (restaurantId, storeId) => { // STATIC-ROO1
   return async (dispatch) => {
