@@ -2926,7 +2926,7 @@ export default function NewCheckout(props) {
                           >
                             {paymentModes.map((option) => (
                               <FormControlLabel
-                                value={option.value}
+                                value={option.configCriteriaValue}
                                 control={<Radio color="success" />}
                                 label={
                                   <Typography
@@ -2937,7 +2937,7 @@ export default function NewCheckout(props) {
                                       fontFamily: "Arial",
                                     }}
                                   >
-                                    {option.description}
+                                    {option.configCriteriaDesc}
                                   </Typography>
                                 }
                               />
