@@ -573,8 +573,8 @@ export const DeliveryBoy = () => {
                         >
                           {paymentModes.map((mode) => (
                             <option
-                              key={mode.value}
-                              value={mode.value.toUpperCase()}
+                              key={mode.configCriteriaValue}
+                              value={mode.configCriteriaValue.toUpperCase()}
                               style={{ fontSize: "0.75rem" }}
                             >
                               {mode.description}
