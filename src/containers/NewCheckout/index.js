@@ -111,6 +111,10 @@ export default function NewCheckout(props) {
   const paymentModes = useSelector((state) => state.user.paymentModes);
   const businessDateAll = useSelector((state) => state.user.businessDate);
 
+  const offersData = useSelector((state) => state.user.offersData);
+  const [comboOfferReduceKey, setcomboOfferReduceKey] = useState([]);
+  const [offerCost, setOfferCost] = useState(0);
+
   const cart = useSelector((state) => state.cart);
   const [subTotal, setSubtotal] = useState(0);
   const [extraSubTotal, setExtraSubTotal] = useState(0);
@@ -136,7 +140,7 @@ export default function NewCheckout(props) {
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
   const [referenceNo, setReferenceNo] = useState("");
-  const [couponCode, setCouponCode] = useState("BOGO");
+  const [couponCode, setCouponCode] = useState("");
   const [defaultAddress, setDefaultAddress] = useState(false);
   const [currentGetAddress, setCurrentGetAddress] = useState(null);
   const [currentCustomer, setCurrentCustomer] = useState(null);
@@ -244,6 +248,15 @@ export default function NewCheckout(props) {
         );
     }
 
+    console.log(comboOfferReduceKey);
+    if (typeof comboOfferReduceKey !== 'undefined' && comboOfferReduceKey && comboOfferReduceKey.length > 0) {
+      var reduceCost = 0;
+      for (let i = 0; i < comboOfferReduceKey.length; i++) {
+        reduceCost = reduceCost + Number(comboOfferReduceKey[i].reducingCost)
+      }
+      all = all - reduceCost;
+    }
+
     return <span>₹ {all.toFixed(2)}</span>;
   };
 
@@ -286,6 +299,14 @@ export default function NewCheckout(props) {
       all = all - Number(pasta59OfferReduceTotal.reducingCost);
     }
 
+    if (typeof comboOfferReduceKey !== 'undefined' && comboOfferReduceKey && comboOfferReduceKey.length > 0) {
+      var reduceCost = 0;
+      for (let i = 0; i < comboOfferReduceKey.length; i++) {
+        reduceCost = reduceCost + Number(comboOfferReduceKey[i].reducingCost)
+      }
+      all = all - reduceCost;
+    }
+
     return <span>₹ {all.toFixed(2)}</span>;
   };
 
@@ -326,6 +347,14 @@ export default function NewCheckout(props) {
 
     if (pasta59OfferReduceTotal) {
       allSub = allSub - Number(pasta59OfferReduceTotal.reducingCost);
+    }
+
+    if (typeof comboOfferReduceKey !== 'undefined' && comboOfferReduceKey && comboOfferReduceKey.length > 0) {
+      var reduceCost = 0;
+      for (let i = 0; i < comboOfferReduceKey.length; i++) {
+        reduceCost = reduceCost + Number(comboOfferReduceKey[i].reducingCost)
+      }
+      allSub = allSub - reduceCost;
     }
 
     const all = (allSub * (tax.taxPercentage / 100)).toFixed(2);
@@ -372,6 +401,15 @@ export default function NewCheckout(props) {
 
     if (pasta59OfferReduceTotal) {
       allSub = allSub - Number(pasta59OfferReduceTotal.reducingCost);
+    }
+
+    if (typeof comboOfferReduceKey !== 'undefined' && comboOfferReduceKey && comboOfferReduceKey.length > 0) {
+      console.log("IN RENDER GRAND TOTAL NEW");
+      var reduceCost = 0;
+      for (let i = 0; i < comboOfferReduceKey.length; i++) {
+        reduceCost = reduceCost + Number(comboOfferReduceKey[i].reducingCost)
+      }
+      allSub = allSub - reduceCost;
     }
 
     let allTax = 0;
@@ -480,6 +518,14 @@ export default function NewCheckout(props) {
       allSub = allSub - Number(pasta59OfferReduceTotal.reducingCost);
     }
 
+    if (typeof comboOfferReduceKey !== 'undefined' && comboOfferReduceKey && comboOfferReduceKey.length > 0) {
+      var reduceCost = 0;
+    for (let i = 0; i < comboOfferReduceKey.length; i++) {
+      reduceCost = reduceCost + Number(comboOfferReduceKey[i].reducingCost)
+    }
+      allSub = allSub - reduceCost;
+    }
+
     let deliveryCharge = 0;
 
     if (deliveryPrice) {
@@ -568,6 +614,14 @@ export default function NewCheckout(props) {
 
       if (pasta59OfferReduceTotal) {
         total = total - Number(pasta59OfferReduceTotal.reducingCost);
+      }
+
+      if (typeof comboOfferReduceKey !== 'undefined' && comboOfferReduceKey && comboOfferReduceKey.length > 0) {
+        var reduceCost = 0;
+        for (let i = 0; i < comboOfferReduceKey.length; i++) {
+          reduceCost = reduceCost + Number(comboOfferReduceKey[i].reducingCost)
+        }
+        total = total - reduceCost;
       }
 
       let orderDetails = [];
@@ -723,6 +777,10 @@ export default function NewCheckout(props) {
     }
   };
 
+  var isComboCouponApplied = false;
+  var offerString = "";
+  localStorage.setItem("offerList",offerString);
+
   const validateCouponCode = () => {
     if (!couponCode) {
       toast.error("Please fill the coupon code!");
@@ -732,32 +790,43 @@ export default function NewCheckout(props) {
     if (couponCode === "BOGO") {
       specialOfferCheckBOGO();
       return;
-    }
-
-    if (couponCode === "DRINK29") {
+    }else if (couponCode === "DRINK29") {
       specialOfferCheckDRINK29();
       return;
-    }
-
-    if (couponCode === "FRIES69") {
+    }else if (couponCode === "FRIES69") {
       specialOfferCheckFRIES69();
       return;
-    }
-
-    if (couponCode === "COMBO1") {
+    }else if (couponCode === "COMBO1") {
       specialOfferCheckCOMBO1();
       return;
-    }
-
-    if (couponCode === "COMBO2") {
+    }else if (couponCode === "COMBO2") {
       specialOfferCheckCOMBO2();
       return;
-    }
-
-    if (couponCode === "PASTA59") {
+    }else if (couponCode === "PASTA59") {
       specialOfferCheckPASTA59();
       return;
-    }
+    }else{
+
+      console.log("===============");
+      console.log(offersData);
+
+      for(let i = 0; i < offersData.length; i++) {
+        if (couponCode === (offersData[i].offerCode)){
+          isComboCouponApplied = true;
+          setOfferCost(offersData[i].offerPrice);
+          offerString = offersData[i].offerProductList;
+          // if(offerString != null){ localStorage.setItem("offerList",offersData[i].offerProductList);}else{ localStorage.setItem("offerList","");}
+          localStorage.setItem("offerList",offersData[i].offerProductList);
+          offerCheckForCart(offersData[i].offerProductList);
+
+          console.log("+=+=");
+          console.log(offersData[i].offerCode);
+          break;
+        }
+        console.log(offersData[i].offerCode);
+      }
+      return;
+  }
 
     dispatch(validateCoupon(couponCode)).then((res) => {
       if (res) {
@@ -765,6 +834,348 @@ export default function NewCheckout(props) {
       }
     });
   };
+  //----- Combo offer code new ----
+  var rule1 = "";
+  var rule2 = "";
+  var rule3 = "";
+  var rule4 = "";
+  var rule5 = "";
+  var rule6 = "";
+
+  var rule1Array = [];
+  var rule2Array = [];
+  var rule3Array = [];
+  var rule4Array = [];
+  var rule5Array = [];
+  var rule6Array = [];
+
+  var comboReduceCost = 0;
+
+  var rule1Verified = false;
+  var rule2Verified = false;
+  var rule3Verified = false;
+  var rule4Verified = false;
+  var rule5Verified = false;
+  var rule6Verified = false;
+
+  var isCOMBOOfferVerified = false;
+
+  let comboOfferObjects = [];
+
+  let verifyRule1 = (item,rule_items) => {
+    console.log("verifyRule1 Method called");
+    console.log(item);
+    console.log(rule_items);
+
+    rule_items.forEach(product => {
+      if(product === item){
+        console.log("verifyRule1 Loop called");
+        // setRule1Verified(true);
+        rule1Verified = true;
+        
+      }
+    });
+  }
+
+  let verifyRule = (rule,item,rule_items) => {
+    console.log("verifyRule Method called");
+    console.log(rule);
+    console.log(item);
+    console.log(rule_items);
+
+    if(rule === "rule1"){
+      rule_items.forEach(product => {
+        if(product === item){
+          rule1Verified = true;
+          comboOfferObjects.push(item);
+        }
+      });
+    }
+
+    if(rule === "rule2"){
+      rule_items.forEach(product => {
+        if(product === item){
+          rule2Verified = true;
+          comboOfferObjects.push(item);
+        }
+      });
+    }
+
+    if(rule === "rule3"){
+      rule_items.forEach(product => {
+        if(product === item){
+          rule3Verified = true;
+          comboOfferObjects.push(item);
+        }
+      });
+    }
+
+    if(rule === "rule4"){
+      rule_items.forEach(product => {
+        if(product === item){
+          rule4Verified = true;
+          comboOfferObjects.push(item);
+        }
+      });
+    }
+
+    if(rule === "rule5"){
+      rule_items.forEach(product => {
+        if(product === item){
+          rule5Verified = true;
+          comboOfferObjects.push(item);
+        }
+      });
+    }
+
+    if(rule === "rule6"){
+      rule_items.forEach(product => {
+        if(product === item){
+          rule6Verified = true;
+          comboOfferObjects.push(item);
+        }
+      });
+    }
+  }
+
+  const offerCheckForCart = (offerStr) => {
+    rule1Verified = false;
+    rule2Verified = false;
+    rule3Verified = false;
+    rule4Verified = false;
+    rule5Verified = false;
+    rule6Verified = false;
+
+    // var offerString = "(P046 OR P047 OR PO54 OR P236 OR P237 OR P234)AND(PO76)AND(P022 OR P023)AND(P067 OR P068)AND(P067 OR P068)AND(NA)";
+    // var offerString = "(P046 OR P049 OR P055 OR P052 OR P058)AND(P152 OR P154 OR P153)AND(P125 OR P126)AND(P113 OR P114)AND(P113 OR P114)AND(NA)"
+    
+    // var offerString = "(P046 OR P049 OR P055 OR P052 OR P058)AND(P152 OR P154 OR P153)AND(P125 OR P126)AND(P1808 OR P113 OR P114)AND(NA)AND(NA)"
+
+    console.log("************* offerStr",offerStr);
+    var offerString = offerStr;
+    offerString = offerString.replace(/[{()}]/g, '');
+
+    const rule_Array = offerString.split('AND');
+
+    // console.log(rule_Array);
+
+    for (var i = 0; i < rule_Array.length; i++) {
+        if (i === 0) {
+          rule1 = rule_Array[i];
+          rule1Array = rule1.split(' OR ');
+        } else if (i === 1) {
+          rule2 = rule_Array[i];
+          rule2Array = rule2.split(' OR ');
+        } else if (i === 2) {
+          rule3 = rule_Array[i];
+          rule3Array = rule3.split(' OR ');
+        } else if (i === 3) {
+          rule4 = rule_Array[i];
+          rule4Array = rule4.split(' OR ');
+        } else if (i === 4) {
+          rule5 = rule_Array[i];
+          rule5Array = rule5.split(' OR ');
+        }else if (i === 5) {
+          rule6 = rule_Array[i];
+          rule6Array = rule6.split(' OR ');
+        }
+    }
+
+    console.log("RULE ARRAY LOGS START");
+    console.log("----------------------");
+    console.log( Object.values(cart?.cartItems));
+    console.log( Object.keys(cart?.cartItems));
+    console.log("----------------------");
+    console.log("rule1",rule1Array);
+    console.log("rule2",rule2Array);
+    console.log("rule3",rule3Array);
+    console.log("rule4",rule4Array);
+    console.log("rule5",rule5Array);
+    console.log("rule6",rule6Array);
+    console.log("RULE ARRAY LOGS END");
+
+    // verifyRule1("P055",rule1Array);
+    // verifyRule("rule1","P055",rule1Array);
+
+    for (let i = 0; i < Object.values(cart?.cartItems).length; i++) {
+      if(rule1Verified || rule1Array[0] === "NA"){ rule1Verified = true; break;}
+      verifyRule("rule1",Object.values(cart?.cartItems)[i].productId,rule1Array);
+    }
+
+    for (let i = 0; i < Object.values(cart?.cartItems).length; i++) {
+      if(rule2Verified || rule2Array[0] === "NA"){ rule2Verified = true; break;}
+      verifyRule("rule2",Object.values(cart?.cartItems)[i].productId,rule2Array);
+    }
+
+    for (let i = 0; i < Object.values(cart?.cartItems).length; i++) {
+      if(rule3Verified || rule3Array[0] === "NA"){ rule3Verified = true; break;}
+      verifyRule("rule3",Object.values(cart?.cartItems)[i].productId,rule3Array);
+    }
+
+    for (let i = 0; i < Object.values(cart?.cartItems).length; i++) {
+      if(rule4Verified || rule4Array[0] === "NA"){ rule4Verified = true; break;}
+      verifyRule("rule4",Object.values(cart?.cartItems)[i].productId,rule4Array);
+    }
+
+    for (let i = 0; i < Object.values(cart?.cartItems).length; i++) {
+      if(rule5Verified || rule5Array[0] === "NA"){ rule5Verified = true; break;}
+      verifyRule("rule5",Object.values(cart?.cartItems)[i].productId,rule5Array);
+    }
+
+    for (let i = 0; i < Object.values(cart?.cartItems).length; i++) {
+      if(rule6Verified || rule6Array[0] === "NA"){
+        rule6Verified = true;
+        break;}
+      verifyRule("rule6",Object.values(cart?.cartItems)[i].productId,rule6Array);
+    }
+    isCOMBOOfferVerified = false;
+
+    if (isComboCouponApplied && rule1Verified && rule2Verified &&
+      rule3Verified && rule4Verified && rule5Verified && rule6Verified) {
+      isCOMBOOfferVerified = true;
+      calculateCOMBOCartCost();
+      toast.success("Hurray!! COMBO Offer has been applied!");
+    } else {
+        isCOMBOOfferVerified = false;
+        isComboCouponApplied = false;
+        // calculateCOMBOCartCostWithFailedCode();
+
+        toast.error("FAILED!!");
+    }
+
+  }
+
+  const calculateCOMBOCartCost = () => {
+    console.log("CALCULATE CART VALUE START::::");
+    console.log(comboOfferObjects);
+
+    var comboKeys = [];
+    var comboValues = [];
+
+    for (let i = 0; i < Object.keys(cart?.cartItems).length; i++) {
+      comboKeys.push(Object.keys(cart?.cartItems)[i]);
+      comboValues.push({
+          ...Object.values(cart?.cartItems)[i],
+          cost:
+            Object.values(cart?.cartItems)[i].price *
+              Object.values(cart?.cartItems)[i].qty +
+            Object.values(cart?.cartItems)[i].extraSubTotalWithQty +
+            Object.values(cart?.cartItems)[i].choiceIng.choiceTotal,
+          oneItemFullCost:
+            Number(
+              Object.values(cart?.cartItems)[i].price *
+                Object.values(cart?.cartItems)[i].qty +
+                Object.values(cart?.cartItems)[i].extraSubTotalWithQty +
+                Object.values(cart?.cartItems)[i].choiceIng.choiceTotal
+            ) / Number(Object.values(cart?.cartItems)[i].qty),
+        });
+    }
+
+    // console.log("COMBO VALUES::::");
+    // console.log(comboValues);
+
+    const COMBOValuesSortByPrice = comboValues.sort(
+      (a, b) => a.oneItemFullCost - b.oneItemFullCost
+    );
+
+    // console.log(COMBOValuesSortByPrice);
+    var offerProduct = [];
+
+    for (let j = 0; j < comboOfferObjects.length; j++) {
+
+      for (let i = 0; i < Object.values(cart?.cartItems).length; i++) {
+        if(comboOfferObjects[j] === Object.values(cart?.cartItems)[i].productId) {
+          comboReduceCost = comboReduceCost + Object.values(cart?.cartItems)[i].price;
+          offerProduct.push(Object.values(cart?.cartItems)[i]);
+        }
+      }
+    }
+
+    // console.log("CALCULATED COST::::");
+    // console.log(comboReduceCost);
+    // console.log(offerProduct);
+
+    //----------
+    let comboValuesWithReduceQty = [];
+
+    for (let j = 0; j < offerProduct.length; j++) {
+
+      comboReduceCost =
+      comboReduceCost +
+      offerProduct[j].oneItemFullCost;
+      let obj2 = {
+        ...offerProduct[j],
+        qty: offerProduct[j].qty,
+        extraSubTotalWithQty: Number(
+          offerProduct[j].extraSubTotal *
+            (offerProduct[j].qty)
+        ),
+        choiceIng: {
+          ...offerProduct[j].choiceIng,
+          choiceTotal: Number(
+            offerProduct[j].choiceIng.price *
+              (offerProduct[j].qty)
+          ),
+        },
+      };
+      comboValuesWithReduceQty.push(obj2);
+
+      // console.log("comboValuesWithReduceQty::::");
+      // console.log(comboValuesWithReduceQty);
+      // console.log(((Number(comboValuesWithReduceQty[0].price)* comboValuesWithReduceQty[0].qty)-Number(comboValuesWithReduceQty[0].price)));
+    }   
+
+    var comboOfferArray = [];
+
+    var finalArray = [];
+
+    for (let i = 0; i < Object.values(cart?.cartItems).length; i++) {
+      comboOfferArray.push(Object.values(cart?.cartItems)[i])
+    }
+
+    for (let i = 0; i < comboOfferArray.length; i++) {
+      if (comboValuesWithReduceQty.some(person => person.productId === comboOfferArray[i].productId)) {
+        // if(comboValuesWithReduceQty.indexOf(comboOfferArray[i])) {
+        if (comboOfferArray[i].qty > 1) {
+          let object = {
+            key: comboOfferArray[i].key,
+            price: Number((comboOfferArray[i].qty * comboOfferArray[i].price) - Number(comboOfferArray[i].price)),
+            reducingCost: Number(comboOfferArray[i].price),
+          }
+          finalArray.push(object);
+        } else {
+          let object = {
+            key: comboOfferArray[i].key,
+            price: 0,
+            reducingCost: Number(comboOfferArray[i].price),
+          }
+          finalArray.push(object);
+        }
+      }else{
+        let object = {
+          key: comboOfferArray[i].key,
+          price: Number(comboOfferArray[i].price),
+          reducingCost: 0,
+        }
+        finalArray.push(object);
+      }
+    }
+
+    console.log("---------------");
+    console.log(comboOfferArray);
+    console.log(finalArray);
+
+    setcomboOfferReduceKey(finalArray);
+
+    console.log("CART VALUE AFTER REDUCE::::");
+    console.log( Object.values(cart?.cartItems));
+  }
+
+  const calculateCOMBOCartCostWithFailedCode = () => {
+    window.location.reload(true);
+ }
+
+  //--------------------
 
   const specialOfferCheckBOGO = () => {
     if (couponCode === "BOGO") {
@@ -2203,6 +2614,9 @@ export default function NewCheckout(props) {
                       combo1OfferReduceTotal={combo1OfferReduceTotal}
                       combo2OfferReduceTotal={combo2OfferReduceTotal}
                       friesOfferReduceTotal={friesOfferReduceTotal}
+                      
+                      comboOfferReduceKey={comboOfferReduceKey}
+                      offerPriceToAdd={offerCost}
                     ></CartCard>
                     {Object.keys(cart.cartItems).length > 0 ? (
                       <Typography>

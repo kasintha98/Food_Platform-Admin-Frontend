@@ -15,7 +15,8 @@ import NewCheckout from "../NewCheckout";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 import {
-  getPaymentModes
+  getPaymentModes,
+  getOffersByStatusCall
 } from "../../actions";
 
 const CusMenuItem = styled(MenuItem)``;
@@ -39,6 +40,8 @@ export const DineIn = () => {
   const user = useSelector((state) => state.auth.user);
   const auth = useSelector((state) => state.auth);
   const stores = useSelector((state) => state.store.stores);
+  const offersData = useSelector((state) => state.user.offersData);
+
 
   const dispatch = useDispatch();
 
@@ -70,7 +73,10 @@ export const DineIn = () => {
   useEffect(() => {
     if (user.restaurantId !== undefined) {
       dispatch(getPaymentModes(user.restaurantId));
+      dispatch(getOffersByStatusCall(user.restaurantId,user.storeId));
     }
+
+
   },[]);
 
   /* useEffect(() => {

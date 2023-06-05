@@ -102,7 +102,13 @@ export default function CartCard(props) {
     for (let key of Object.keys(cart?.cartItems)) {
       total = total + cart?.cartItems[key].qty * cart?.cartItems[key].price;
     }
-    props.onChangeSubTotal(total);
+
+    if(typeof props.comboOfferReduceKey !== 'undefined' && props.comboOfferReduceKey && props.comboOfferReduceKey.length > 0){
+      props.onChangeSubTotal(total + props.offerPriceToAdd);
+    }else{
+      props.onChangeSubTotal(total);
+    }
+    // props.onChangeSubTotal(total);
   };
 
   const calculateExtraTotal = () => {
@@ -172,7 +178,27 @@ export default function CartCard(props) {
           ).toFixed(2)}
         </>
       );
-    } else if (props.pastaReduceKey && props.pastaReduceKey.pastaKey === key) {
+    } 
+    // else if (props.comboOfferReduceKey !== 'undefined' && props.comboOfferReduceKey && props.comboOfferReduceKey.length > 0) {
+    //   return (
+    //     <>
+    //     {1 *
+    //     (props.comboOfferReduceKey &&
+    //       props.comboOfferReduceKey[0].key === key
+    //       ? props.comboOfferReduceKey[0].price
+    //       : cart?.cartItems[key].price) +
+    //     (cart?.cartItems[key].extraSubTotalWithQty
+    //       ? cart?.cartItems[key].extraSubTotalWithQty
+    //       : 0) +
+    //     (Object.keys(cart?.cartItems[key]?.choiceIng)
+    //       .length > 0
+    //       ? cart?.cartItems[key]?.choiceIng
+    //           .choiceTotal
+    //       : 0).toFixed(2)}
+    //       </>
+    //   );
+    // }
+    else if (props.pastaReduceKey && props.pastaReduceKey.pastaKey === key) {
       return (
         <>
           {/* {cart?.cartItems[key].qty * props.pastaReduceKey.newPrice +
@@ -572,6 +598,38 @@ export default function CartCard(props) {
                           </IncButton>
                         </ButtonGroup>
                       </div>
+                      {typeof props.comboOfferReduceKey !== 'undefined' && props.comboOfferReduceKey && props.comboOfferReduceKey.length > 0
+                      ?(
+                      <Col className="col-3" style={{ paddingLeft: 0 }}>
+                        <div>
+                          <p
+                            style={{
+                              fontSize: "0.75rem",
+                              fontWeight: "600",
+                              marginTop: "auto",
+                              marginBottom: "auto",
+                              color: "#2e7d32",
+                            }}
+                          >
+                            ₹ <>
+                            {1 *
+                                  (props.comboOfferReduceKey &&
+                                    props.comboOfferReduceKey[index].key === key
+                                    ? props.comboOfferReduceKey[index].price
+                                    : cart?.cartItems[key].price) +
+                                  (cart?.cartItems[key].extraSubTotalWithQty
+                                    ? cart?.cartItems[key].extraSubTotalWithQty
+                                    : 0) +
+                                  (Object.keys(cart?.cartItems[key]?.choiceIng)
+                                    .length > 0
+                                    ? cart?.cartItems[key]?.choiceIng
+                                        .choiceTotal
+                                    : 0)}
+                              </>
+                          </p>
+                        </div>
+                      </Col>
+                      ):(
                       <Col className="col-3" style={{ paddingLeft: 0 }}>
                         <div>
                           <p
@@ -587,6 +645,7 @@ export default function CartCard(props) {
                           </p>
                         </div>
                       </Col>
+                      )}
                     </Row>
                   </div>
                   {cart?.cartItems[key].ingredientExistsFalg === "Y" ? (

@@ -412,6 +412,13 @@ export default (state = initState, action) => {
       };
       break;
 
+      case userConstants.GET_OFFER_SUCCESS:
+      state = {
+        ...state,
+        offersData: action.payload,
+      };
+      break;
+
     case userConstants.GET_ORDER_SOURCE_CONFIG_FAILURE:
       state = {
         ...state,
