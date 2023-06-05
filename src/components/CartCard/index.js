@@ -67,6 +67,9 @@ export default function CartCard(props) {
     props.onChangeSpecialOfferCheckCOMBO1 &&
       props.onChangeSpecialOfferCheckCOMBO1();
 
+    props.onChangeSpecialOfferCheckCOMBONew &&
+      props.onChangeSpecialOfferCheckCOMBONew();
+
     props.onChangeSpecialOfferCheckCOMBO2 &&
       props.onChangeSpecialOfferCheckCOMBO2();
 
@@ -89,6 +92,9 @@ export default function CartCard(props) {
 
     props.onChangeSpecialOfferCheckCOMBO1 &&
       props.onChangeSpecialOfferCheckCOMBO1();
+
+    props.onChangeSpecialOfferCheckCOMBONew &&
+      props.onChangeSpecialOfferCheckCOMBONew();
 
     props.onChangeSpecialOfferCheckCOMBO2 &&
       props.onChangeSpecialOfferCheckCOMBO2();

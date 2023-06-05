@@ -114,6 +114,7 @@ export default function NewCheckout(props) {
   const offersData = useSelector((state) => state.user.offersData);
   const [comboOfferReduceKey, setcomboOfferReduceKey] = useState([]);
   const [offerCost, setOfferCost] = useState(0);
+  const [applicableTo, setapplicableTo] = useState("");
 
   const cart = useSelector((state) => state.cart);
   const [subTotal, setSubtotal] = useState(0);
@@ -812,8 +813,14 @@ export default function NewCheckout(props) {
 
       for(let i = 0; i < offersData.length; i++) {
         if (couponCode === (offersData[i].offerCode)){
+          if(offersData[i].offerApplicability !== 'DINE_IN'){
+            toast.info("This code is not valid for DINE-IN");
+            break;
+          }
+
           isComboCouponApplied = true;
           setOfferCost(offersData[i].offerPrice);
+          setapplicableTo(offersData[i].offerApplicability);
           offerString = offersData[i].offerProductList;
           // if(offerString != null){ localStorage.setItem("offerList",offersData[i].offerProductList);}else{ localStorage.setItem("offerList","");}
           localStorage.setItem("offerList",offersData[i].offerProductList);
@@ -1033,12 +1040,14 @@ export default function NewCheckout(props) {
     if (isComboCouponApplied && rule1Verified && rule2Verified &&
       rule3Verified && rule4Verified && rule5Verified && rule6Verified) {
       isCOMBOOfferVerified = true;
+      localStorage.setItem("VERIFIED_OFFER", "V");
       calculateCOMBOCartCost();
       toast.success("Hurray!! COMBO Offer has been applied!");
     } else {
         isCOMBOOfferVerified = false;
         isComboCouponApplied = false;
-        // calculateCOMBOCartCostWithFailedCode();
+        
+          // calculateCOMBOCartCostWithFailedCode();
 
         toast.error("FAILED!!");
     }
@@ -1172,7 +1181,10 @@ export default function NewCheckout(props) {
   }
 
   const calculateCOMBOCartCostWithFailedCode = () => {
-    window.location.reload(true);
+    if(localStorage.getItem("VERIFIED_OFFER") === "V"){
+      localStorage.setItem("VERIFIED_OFFER", "N");
+      window.location.reload(true);
+    }
  }
 
   //--------------------
@@ -2605,6 +2617,7 @@ export default function NewCheckout(props) {
                         specialOfferCheckFRIES69
                       }
                       onChangeSpecialOfferCheckCOMBO1={specialOfferCheckCOMBO1}
+                      onChangeSpecialOfferCheckCOMBONew={calculateCOMBOCartCostWithFailedCode}
                       onChangeSpecialOfferCheckCOMBO2={specialOfferCheckCOMBO2}
                       onChangeSpecialOfferCheckPASTA59={
                         specialOfferCheckPASTA59
