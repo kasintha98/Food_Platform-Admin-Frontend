@@ -422,6 +422,7 @@ export const saveNewOrder = (payload) => {
         console.log(res);
         dispatch(resetCart());
         localStorage.removeItem("cart");
+        localStorage.setItem("VERIFIED_OFFER", "N");
         //dispatch(getCartItems());
         toast.success("Order Placed Successfully!");
         return res;
@@ -781,6 +782,39 @@ export const getAllCoupons = (restaurantId, storeId) => {
     }
   };
 };
+
+//--------------  OFFER API CALL -------------
+export const getOffersByStatusCall = (restaurantId,storeId) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: userConstants.GET_OFFER_REQUEST });
+
+      const res = await axios.get("/getOffersByStatus", {
+        params: { restaurantId, storeId: storeId, status: "ACTIVE"},
+      });
+
+      if (res.status === 200 && res.data) {
+        dispatch({
+          type: userConstants.GET_OFFER_SUCCESS,
+          payload: res.data,
+        });
+
+        return res.data;
+      } else {
+        dispatch({
+          type: userConstants.GET_OFFER_FAILURE,
+          payload: null,
+        });
+      }
+    } catch (error) {
+      dispatch({
+        type: userConstants.GET_OFFER_FAILURE,
+        payload: null,
+      });
+    }
+  };
+};
+
 
 export const performEOD = (restaurantId, storeId) => {
   return async (dispatch) => {
