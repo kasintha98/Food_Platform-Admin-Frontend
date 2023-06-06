@@ -422,6 +422,7 @@ export const saveNewOrder = (payload) => {
         console.log(res);
         dispatch(resetCart());
         localStorage.removeItem("cart");
+        localStorage.setItem("VERIFIED_OFFER", "N");
         //dispatch(getCartItems());
         toast.success("Order Placed Successfully!");
         return res;

@@ -466,6 +466,15 @@ export default function NewCheckout(props) {
       allSub = allSub - Number(pasta59OfferReduceTotal.reducingCost);
     }
 
+    if (typeof comboOfferReduceKey !== 'undefined' && comboOfferReduceKey && comboOfferReduceKey.length > 0) {
+      console.log("IN RENDER GRAND TOTAL NEW");
+      var reduceCost = 0;
+      for (let i = 0; i < comboOfferReduceKey.length; i++) {
+        reduceCost = reduceCost + Number(comboOfferReduceKey[i].reducingCost)
+      }
+      allSub = allSub - reduceCost;
+    }
+
     let allTax = 0;
 
     if (taxDetails) {
@@ -813,10 +822,9 @@ export default function NewCheckout(props) {
 
       for(let i = 0; i < offersData.length; i++) {
         if (couponCode === (offersData[i].offerCode)){
-          if(offersData[i].offerApplicability !== 'DINE_IN'){
-            toast.info("This code is not valid for DINE-IN");
-            break;
-          }
+          if(offersData[i].offerApplicability === 'DINE_IN' || offersData[i].offerApplicability !== 'BOTH'){
+
+          calculateCOMBOCartCostWithFailedCode();
 
           isComboCouponApplied = true;
           setOfferCost(offersData[i].offerPrice);
@@ -829,7 +837,12 @@ export default function NewCheckout(props) {
           console.log("+=+=");
           console.log(offersData[i].offerCode);
           break;
+        }else {
+          toast.info("This code is not valid for DINE-IN");
+          calculateCOMBOCartCostWithFailedCode();
+          break;
         }
+      }
         console.log(offersData[i].offerCode);
       }
       return;
