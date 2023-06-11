@@ -817,14 +817,27 @@ export default function NewCheckout(props) {
       return;
     }else{
 
-      console.log("===============");
-      console.log(offersData);
+      // console.log("===============");
+      // console.log(offersData);
+
+      const dateOfOffer = new Date(businessDateAll && businessDateAll.businessDate);
+      const day = dateOfOffer.getDay();
+      // var dayOfOffer ="";// dateOfOffer.toLocaleDateString("en-IN", { weekday: 'long' }).toLowerCase().toString();
+      var dayOfferFlag ="";
+
 
       for(let i = 0; i < offersData.length; i++) {
         if (couponCode === (offersData[i].offerCode)){
-          if(offersData[i].offerApplicability === 'DINE_IN' || offersData[i].offerApplicability !== 'BOTH'){
+          if(day === 0){dayOfferFlag = offersData[i].sunday }else if(day === 1){dayOfferFlag = offersData[i].monday}else if(day === 2){dayOfferFlag = offersData[i].tuesday}else if(day === 3){dayOfferFlag = offersData[i].wednesday}else if(day === 4){dayOfferFlag = offersData[i].thursday}else if(day === 5){dayOfferFlag = offersData[i].friday}else if(day === 6){dayOfferFlag = offersData[i].saturday}else{dayOfferFlag = ''}
 
-          calculateCOMBOCartCostWithFailedCode();
+          if(dayOfferFlag === "N"){
+            toast.info("This code is not valid for the Day");
+            break;
+          }
+
+          if(offersData[i].offerApplicability === 'DINE_IN' || offersData[i].offerApplicability === 'BOTH'){
+
+          // calculateCOMBOCartCostWithFailedCode();
 
           isComboCouponApplied = true;
           setOfferCost(offersData[i].offerPrice);
@@ -834,8 +847,8 @@ export default function NewCheckout(props) {
           localStorage.setItem("offerList",offersData[i].offerProductList);
           offerCheckForCart(offersData[i].offerProductList);
 
-          console.log("+=+=");
-          console.log(offersData[i].offerCode);
+          
+          // console.log(offersData[i].offerCode);
           break;
         }else {
           toast.info("This code is not valid for DINE-IN");
