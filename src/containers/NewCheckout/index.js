@@ -141,7 +141,7 @@ export default function NewCheckout(props) {
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
   const [referenceNo, setReferenceNo] = useState("");
-  const [couponCode, setCouponCode] = useState("");
+  const [couponCode, setCouponCode] = useState("BOGO");
   const [defaultAddress, setDefaultAddress] = useState(false);
   const [currentGetAddress, setCurrentGetAddress] = useState(null);
   const [currentCustomer, setCurrentCustomer] = useState(null);
