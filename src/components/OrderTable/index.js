@@ -585,7 +585,7 @@ export const OrderTable = (props) => {
                               value={mode.configCriteriaValue.toUpperCase()}
                               style={{ fontSize: "0.75rem" }}
                             >
-                              {mode.description}
+                              {mode.configCriteriaDesc}
                             </option>
                           ))}
                         </NativeSelect>
