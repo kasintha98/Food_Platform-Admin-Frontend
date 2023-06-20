@@ -1189,7 +1189,7 @@ export default function NewCheckout(props) {
       }else{
         let object = {
           key: comboOfferArray[i].key,
-          price: Number(comboOfferArray[i].price),
+          price: (Number(comboOfferArray[i].price)* (comboOfferArray[i].qty)),
           reducingCost: 0,
         }
         finalArray.push(object);
@@ -2659,6 +2659,32 @@ export default function NewCheckout(props) {
                     ></CartCard>
                     {Object.keys(cart.cartItems).length > 0 ? (
                       <Typography>
+                        <Row className="pl-2">
+                          <div className="w75">
+                            <Typography
+                              sx={{
+                                fontSize: "0.9rem",
+                                fontWeight: "600",
+                                fontFamily: "Arial",
+                                color: "#595959",
+                              }}
+                            >
+                              Offer cost
+                            </Typography>
+                          </div>
+                          <div className="w25">
+                            <Typography
+                              sx={{
+                                fontSize: "0.9rem",
+                                fontWeight: "600",
+                                color: "#2e7d32",
+                              }}
+                            >
+                              ₹ {offerCost}.00
+                            </Typography>
+                          </div>
+                        </Row>
+
                         <Row className="pl-2">
                           <div className="w75">
                             <Typography
