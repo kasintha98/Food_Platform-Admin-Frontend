@@ -1964,11 +1964,11 @@ export default function NewCheckout(props) {
   };
 
   const setFoundCustomer = (userObj) => {
-    setFirstName(userObj.firstName);
-    setLastName(userObj.lastName);
-    setPhoneNo(userObj.mobileNumber);
-    setEmailId(userObj.emailId);
-    setCurrentCustomer(userObj);
+    setFirstName(userObj[0].firstName);
+    setLastName(userObj[0].lastName);
+    setPhoneNo(userObj[0].mobileNumber);
+    setEmailId(userObj[0].emailId);
+    setCurrentCustomer(userObj[0]);
   };
 
   const onKeyDownHandler = (e) => {
