@@ -17,7 +17,8 @@ import {
   getKDSTime,
   getPaymentModes,
   getOrderSourceConfigDetails,
-  getAllStores
+  getAllStores,
+  getReportTypes
 } from "../../actions";
 
 export const Welcome = () => {
@@ -35,6 +36,7 @@ export const Welcome = () => {
       dispatch(getPaymentModes(user.restaurantId));
       dispatch(getOrderSourceConfigDetails(user.restaurantId, user.storeId));
       dispatch(getAllStores(user.restaurantId));
+      dispatch(getReportTypes(user.restaurantId))
     }
   }, []);
 
