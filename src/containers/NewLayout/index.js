@@ -98,7 +98,7 @@ function NewLayout(props) {
                 color="success"
                 onClick={() => {
                   dispatch(
-                    performEOD(auth.user.restaurantId, auth.user.storeId)
+                    performEOD(auth.user.restaurantId, auth.user.storeId, auth.user.loginId)
                   ).then((res) => {
                     if (res) {
                       dispatch(

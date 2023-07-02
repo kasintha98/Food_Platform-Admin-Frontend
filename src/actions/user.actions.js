@@ -816,7 +816,7 @@ export const getOffersByStatusCall = (restaurantId,storeId) => {
 };
 
 
-export const performEOD = (restaurantId, storeId) => {
+export const performEOD = (restaurantId, storeId, loginId) => {
   return async (dispatch) => {
     try {
       dispatch({ type: userConstants.PERFORM_EOD_REQUEST });
@@ -825,6 +825,7 @@ export const performEOD = (restaurantId, storeId) => {
         params: {
           restaurantId,
           storeId,
+          loginId,
         },
       });
 
