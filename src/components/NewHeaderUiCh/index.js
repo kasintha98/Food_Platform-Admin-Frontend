@@ -833,7 +833,7 @@ export const NewHeader = (props) => {
                 onClick={() => {
                   setIsButtonDisabled(true);
                   dispatch(
-                    performEOD(auth.user.restaurantId, auth.user.storeId)
+                    performEOD(auth.user.restaurantId, auth.user.storeId, auth.user.loginId)
                   ).then((res) => {
                     if (res) {
                       dispatch(
