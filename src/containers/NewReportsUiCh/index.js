@@ -214,10 +214,10 @@ export const NewReports = () => {
         <div>
           <Row style={{ maxWidth: "100vw" }}>
             {!isPresetHide ? (
-            <Col md={4}>
+            <Col md={4} style={{marginTop:'5px'}}>
               <Row className="align-items-center">
                 <div style={{ maxWidth: "125px !important" }}>
-                  <Typography sx={{ color: "#7F7F7F", fontWeight: "bold" }}>
+                  <Typography sx={{ color: "#7F7F7F", fontWeight: "bold",fontSize:"0.875rem", fontFamily: 'Roboto' }}>
                     Select Date Range
                   </Typography>
                 </div>
@@ -267,17 +267,17 @@ export const NewReports = () => {
               </Row>
             </Col>):null}
             {!isPresetHide ? (
-            <Col md={4}>
+            <Col md={4} style={{marginTop:'5px'}}>
               <Row className="align-items-center">
                 <div style={{ maxWidth: "125px !important" }}>
-                  <Typography sx={{ color: "#7F7F7F", fontWeight: "bold", top: "8px" }}>
+                  <Typography sx={{ color: "#7F7F7F", fontWeight: "bold",fontSize:"0.875rem", fontFamily: 'Roboto', marginTop:'10px' }}>
                     Select Store
                   </Typography>
                 </div>
                 <Col className="col-8" style={{ display: "flex" }}>
                   <FormControl fullWidth>
                     <InputLabel
-                      sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
+                      sx={{ fontSize: "0.7rem", lineHeight: "0.6rem" }}
                       id="demo-simple-select-label"
                     >
                       Please select the store
@@ -319,10 +319,10 @@ export const NewReports = () => {
                 </Col>
               </Row>
             </Col>):null}
-            <Col md={4}>
+            <Col md={4} style={{marginTop:'9px'}}>
               <Row className="align-items-center">
                 <div style={{ maxWidth: "125px !important" }}>
-                  <Typography sx={{ color: "#7F7F7F", fontWeight: "bold" }}>
+                  <Typography sx={{ color: "#7F7F7F", fontWeight: "bold",fontSize:"0.875rem", fontFamily: 'Roboto' }}>
                     Select Report
                   </Typography>
                 </div>
@@ -330,8 +330,7 @@ export const NewReports = () => {
                   <FormControl fullWidth>
                     <InputLabel
                       sx={{
-                        fontSize: "0.75rem",
-                        lineHeight: "1rem",
+                        fontSize: "0.7rem", lineHeight: "0.6rem" ,
                         top: "-4px",
                       }}
                       id="demo-simple-select-label"
