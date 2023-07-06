@@ -75,7 +75,7 @@ function App() {
     // dispatch(getAllStores());
     
     if (user.restaurantId !== undefined) {
-      dispatch(getAllStores(user.restaurantId));
+      // dispatch(getAllStores(user.restaurantId));
       dispatch(getKDSTime(user.restaurantId));
       dispatch(getPaymentModes(user.restaurantId));
     }
@@ -87,6 +87,7 @@ function App() {
       );
 
       dispatch(getBusinessDate(user.restaurantId, user.storeId));
+      dispatch(getAllStores(user.restaurantId));
     }
 
     if (localStorage.getItem("user")) {
