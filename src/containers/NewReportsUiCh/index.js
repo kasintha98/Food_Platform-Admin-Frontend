@@ -33,6 +33,8 @@ import { SalesSummeryByPaymentMode } from "../../components/SalesSummeryByPaymen
 import { RecipeConsumptionReport } from "../../components/RecipeConsumptionReport";
 import { NonRecipeConsumptionReport } from "../../components/NonRecipeConsumptionReport";
 import { CashierSalesByDishReport } from "../../components/CashierSalesByDishReport";
+import IconButton from "@mui/material/IconButton";
+import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
 
 const CusDDT = styled(Dropdown.Toggle)`
   font-weight: 500;
@@ -90,6 +92,23 @@ export const NewReports = () => {
   const businessDateAll = useSelector((state) => state.user.businessDate);
   const stores = useSelector((state) => state.store.stores);
   const user = useSelector((state) => state.auth.user);
+  var selected_date = [];
+  const [dateState1, setDateState1] = useState([
+    {
+      startDate:
+        businessDateAll && businessDateAll.businessDate
+          ? new Date(businessDateAll.businessDate)
+          : new Date(),
+      endDate: addDays(
+        businessDateAll && businessDateAll.businessDate
+          ? new Date(businessDateAll.businessDate)
+          : new Date(),
+        0
+      ),
+      key: "selection",
+    },
+  ]);
+
   const [dateState, setDateState] = useState([
     {
       startDate:
@@ -185,6 +204,10 @@ export const NewReports = () => {
     setSelectedReportObj(type);
   };
 
+  const handleClick = () => {
+    setDateState(dateState1);
+  }
+
   return (
     <Layout sidebar headerTitle="Reports">
       <div>
@@ -224,11 +247,22 @@ export const NewReports = () => {
                   >
                     <CusDateRangePicker
                       editableDateInputs={true}
-                      onChange={(item) => setDateState([item.selection])}
+                      onChange={(item) => setDateState1([item.selection])}
                       moveRangeOnFirstSelection={false}
-                      ranges={dateState}
+                      ranges={dateState1}
                     />
                   </DropdownMenu>
+                  <IconButton  size="medium"
+                  style={{
+                  backgroundColor:'#60a8d8',
+                  marginLeft: '5px',
+                  maxHeight:'35px',
+                  maxWidth:'35px',
+                  color:'white',
+                }} 
+                 onClick={handleClick}>
+                    <RefreshOutlinedIcon  />
+                  </IconButton>
                 </Col>
               </Row>
             </Col>):null}
@@ -236,7 +270,7 @@ export const NewReports = () => {
             <Col md={4}>
               <Row className="align-items-center">
                 <div style={{ maxWidth: "125px !important" }}>
-                  <Typography sx={{ color: "#7F7F7F", fontWeight: "bold" }}>
+                  <Typography sx={{ color: "#7F7F7F", fontWeight: "bold", top: "8px" }}>
                     Select Store
                   </Typography>
                 </div>
@@ -249,7 +283,7 @@ export const NewReports = () => {
                       Please select the store
                     </InputLabel>
                     <CusSelect
-                      sx={{ fontSize: "0.75rem", lineHeight: "1rem" }}
+                      sx={{ fontSize: "0.75rem", lineHeight: "1rem", top: "4px" }}
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
                       value={selectedStore}
