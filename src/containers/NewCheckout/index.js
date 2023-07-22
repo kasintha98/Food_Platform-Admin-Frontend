@@ -163,6 +163,8 @@ export default function NewCheckout(props) {
   const [changeAddressObj, setChangeAddressObj] = useState(null);
   const [disableSaveBtn, setDisableSaveBtn] = useState(false);
 
+  const [comboOfferCode, setcomboOfferCode] = useState("");
+
   const dispatch = useDispatch();
   const ref = React.createRef();
   const refH = useRef(null);
@@ -756,15 +758,18 @@ export default function NewCheckout(props) {
         createdBy: user.loginId,
         updatedBy: user.loginId,
         paymentTxnReference: referenceNo,
+        // couponCode: couponReduxObj
+        //   ? couponReduxObj.couponDetails.couponCode
+        //   : "",
         couponCode: couponReduxObj
           ? couponReduxObj.couponDetails.couponCode
-          : "",
+          : comboOfferCode,
         discountPercentage: couponReduxObj
           ? couponReduxObj.couponDetails.discountPercentage
           : 0,
       };
 
-      console.log(NewOrder);
+      console.log("New Order ===========",NewOrder);
 
       const result = await dispatch(saveNewOrder(NewOrder)).then((res) => {
         if (res && res.data) {
@@ -828,6 +833,7 @@ export default function NewCheckout(props) {
 
       for(let i = 0; i < offersData.length; i++) {
         if (couponCode === (offersData[i].offerCode)){
+          setcomboOfferCode(offersData[i].offerCode);
           if(day === 0){dayOfferFlag = offersData[i].sunday }else if(day === 1){dayOfferFlag = offersData[i].monday}else if(day === 2){dayOfferFlag = offersData[i].tuesday}else if(day === 3){dayOfferFlag = offersData[i].wednesday}else if(day === 4){dayOfferFlag = offersData[i].thursday}else if(day === 5){dayOfferFlag = offersData[i].friday}else if(day === 6){dayOfferFlag = offersData[i].saturday}else{dayOfferFlag = ''}
 
           if(dayOfferFlag === "N"){
@@ -836,8 +842,6 @@ export default function NewCheckout(props) {
           }
 
           if(offersData[i].offerApplicability === 'DINE_IN' || offersData[i].offerApplicability === 'BOTH'){
-
-          // calculateCOMBOCartCostWithFailedCode();
 
           isComboCouponApplied = true;
           setOfferCost(offersData[i].offerPrice);
