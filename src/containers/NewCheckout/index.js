@@ -1206,6 +1206,13 @@ export default function NewCheckout(props) {
     rule5Verified = false;
     rule6Verified = false;
 
+    rule1AddQty = 0;
+    rule2AddQty = 0;
+    rule3AddQty = 0;
+    rule4AddQty = 0;
+    rule5AddQty = 0;
+    rule6AddQty = 0;
+
     // var offerString = "(P046 OR P047 OR PO54 OR P236 OR P237 OR P234)AND(PO76)AND(P022 OR P023)AND(P067 OR P068)AND(P067 OR P068)AND(NA)";
     // var offerString = "(P046 OR P049 OR P055 OR P052 OR P058)AND(P152 OR P154 OR P153)AND(P125 OR P126)AND(P113 OR P114)AND(P113 OR P114)AND(NA)"
     
@@ -1343,6 +1350,12 @@ export default function NewCheckout(props) {
     
     isCOMBOOfferVerified = false;
 
+    console.log("Verify Rule Count=== ", "1== ", rule1_qty, "2== ", rule2_qty, "3== ",
+    rule3_qty, "4== ", rule4_qty, "5== ", rule5_qty, "6== ", rule6_qty)
+
+    console.log("Verify Rule Log=== ", isComboCouponApplied, "1== ", rule1Verified, "2== ", rule2Verified, "3== ",
+      rule3Verified, "4== ", rule4Verified, "5== ", rule5Verified, "6== ", rule6Verified)
+
     if (isComboCouponApplied && rule1Verified && rule2Verified &&
       rule3Verified && rule4Verified && rule5Verified && rule6Verified) {
       isCOMBOOfferVerified = true;
@@ -1352,6 +1365,8 @@ export default function NewCheckout(props) {
     } else {
         isCOMBOOfferVerified = false;
         isComboCouponApplied = false;
+
+        setOfferCost(0);
         
           // calculateCOMBOCartCostWithFailedCode();
 
