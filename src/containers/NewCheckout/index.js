@@ -805,22 +805,24 @@ export default function NewCheckout(props) {
     if (couponCode === "BOGO") {
       specialOfferCheckBOGO();
       return;
-    }else if (couponCode === "DRINK29") {
-      specialOfferCheckDRINK29();
-      return;
-    }else if (couponCode === "FRIES69") {
-      specialOfferCheckFRIES69();
-      return;
-    }else if (couponCode === "COMBO1") {
-      specialOfferCheckCOMBO1();
-      return;
-    }else if (couponCode === "COMBO2") {
-      specialOfferCheckCOMBO2();
-      return;
-    }else if (couponCode === "PASTA59") {
-      specialOfferCheckPASTA59();
-      return;
-    }else{
+    }
+    // else if (couponCode === "DRINK29") {
+    //   specialOfferCheckDRINK29();
+    //   return;
+    // }else if (couponCode === "FRIES69") {
+    //   specialOfferCheckFRIES69();
+    //   return;
+    // }else if (couponCode === "COMBO1") {
+    //   specialOfferCheckCOMBO1();
+    //   return;
+    // }else if (couponCode === "COMBO2") {
+    //   specialOfferCheckCOMBO2();
+    //   return;
+    // }else if (couponCode === "PASTA59") {
+    //   specialOfferCheckPASTA59();
+    //   return;
+    // }
+    else{
 
       // console.log("===============");
       // console.log(offersData);
