@@ -281,6 +281,55 @@ export const getSalesSummeryByPaymentModeReports = (
 };
 
 
+export const getSalesSummeryByOfferCodeReports = (
+  restaurantId,
+  storeId,
+  fromDate,
+  toDate,
+  loginId
+) => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: reportConstants.GET_REPORT_SALES_SUMMARY_BY_OFFER_CODE_REQUEST,
+      });
+
+      const reqBody = {
+        restaurantId: restaurantId, // CHECK THIS
+        storeId,
+        fromDate,
+        toDate,
+        reportName: "SALES_SUMMARY_BY_OFFER_CODE",
+        userLoginId: loginId
+      };
+
+      console.log(reqBody);
+
+      const res = await axios.post(`/getReports`, reqBody);
+
+      if (res.status === 200) {
+        dispatch({
+          type: reportConstants.GET_REPORT_SALES_SUMMARY_BY_OFFER_CODE_SUCCESS,
+          payload: res.data.reportSalesSummaryByOfferCode,
+        });
+
+        return res.data.reportSalesSummaryByOfferCode;
+      } else {
+        dispatch({
+          type: reportConstants.GET_REPORT_SALES_SUMMARY_BY_OFFER_CODE_FAILURE,
+          payload: { error: "Error fetching data!" },
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch({
+        type: reportConstants.GET_REPORT_SALES_SUMMARY_BY_OFFER_CODE_FAILURE,
+        payload: { error: "Error fetching data!" },
+      });
+    }
+  };
+};
+
 export const getDashboardSummary = (
   restaurantId,
   storeId,

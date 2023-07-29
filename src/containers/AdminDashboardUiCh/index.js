@@ -48,6 +48,7 @@ import {
   getSalesSummeryByPaymentModeReports,
   getPaymentModeConfigDetails,
   getDashboardSummary,
+  getSalesSummeryByOfferCodeReports,
 } from "../../actions";
 import DropdownMenu from "@atlaskit/dropdown-menu";
 import "./style.css";
@@ -118,6 +119,10 @@ export const AdminDashboard = () => {
     (state) => state.report.salesSummeryByPaymentMode
   );
 
+  const reportSalesSummaryByOfferCode = useSelector(
+    (state) => state.report.reportSalesSummaryByOfferCode
+  );
+
   const dashboardSummaryReport = useSelector(
     (state) => state.report.dashboardSummaryReport
   );
@@ -182,6 +187,18 @@ export const AdminDashboard = () => {
     if (selectedStoreObj) {
       dispatch(
         getSalesSummeryByPaymentModeReports(
+          user.restaurantId,
+          selectedStoreObj.storeId,
+          `${dateState[0].startDate.getFullYear()}-${dateState[0].startDate.getMonth() + 1
+          }-${dateState[0].startDate.getDate()}`,
+          `${dateState[0].endDate.getFullYear()}-${dateState[0].endDate.getMonth() + 1
+          }-${dateState[0].endDate.getDate()}`,
+          user.loginId
+        )
+      );
+
+      dispatch(
+        getSalesSummeryByOfferCodeReports(
           user.restaurantId,
           selectedStoreObj.storeId,
           `${dateState[0].startDate.getFullYear()}-${dateState[0].startDate.getMonth() + 1
@@ -309,6 +326,18 @@ export const AdminDashboard = () => {
     );
 
     dispatch(
+      getSalesSummeryByOfferCodeReports(
+        user.restaurantId,
+        store.storeId,
+        `${dateState[0].startDate.getFullYear()}-${dateState[0].startDate.getMonth() + 1
+        }-${dateState[0].startDate.getDate()}`,
+        `${dateState[0].endDate.getFullYear()}-${dateState[0].endDate.getMonth() + 1
+        }-${dateState[0].endDate.getDate()}`,
+        user.loginId
+      )
+    );
+
+    dispatch(
       getDashboardSummary(
         user.restaurantId,
         store.storeId,
@@ -350,6 +379,101 @@ export const AdminDashboard = () => {
   //   return primaryData;
 
   // }
+
+  /**
+   * Offer Code Graph
+   */
+  const offer_data = [["offercode", "Sales",{ role: "annotation", type: "number" }]];
+  const offerCodesList = ["BOGO","COMBO1","COMBO2","COMBO3","COMBO4","COMBO5","COMBO6"];
+
+  console.log("reportSalesSummaryByOfferCode---", reportSalesSummaryByOfferCode);
+  console.log("salesSummeryByOrderSource---", salesSummeryByOrderSource);
+  
+
+  const getOffersDataFormatted = () => {
+    if(reportSalesSummaryByOfferCode != null || reportSalesSummaryByOfferCode != undefined){
+    if (
+      offerCodesList && reportSalesSummaryByOfferCode != null && 
+      Object.keys(reportSalesSummaryByOfferCode).length > 0 &&
+      reportSalesSummaryByOfferCode &&
+      reportSalesSummaryByOfferCode.length > 0
+    ) {
+      for (let i = 0; i < offerCodesList.length; i++) {
+        var source = offerCodesList[i];
+        var value = 0;
+        let foundMatch = reportSalesSummaryByOfferCode
+          .filter(function (el) {
+            return el.coupon_code === offerCodesList[i];
+          })
+          .map((a) => a.order_value);
+          
+        if (foundMatch.length > 0) {
+          value = foundMatch.reduce((a, b) => a + b, 0);
+        } else {
+          value = 0;
+        }
+        offer_data.push([source,value,value]);
+      }
+    }
+  }
+  
+
+    console.log(" offer_data --->");
+    console.log(offer_data);
+
+    return offer_data;
+  };
+
+  const finalOfferData = getOffersDataFormatted();
+
+  console.log("finalOfferData ==== ");
+  console.log(finalOfferData);
+
+  var OfferOptionsBar = {
+    title: "Sales by Offer Code",
+    bar: {groupWidth: "50%"},
+    // colors: ['#86BEDA','#007AA2'],
+    colors: ['#007AA2'],
+
+    width:'100%',
+    height:'350',
+    legend: 'none',
+    hAxis: {
+      titleTextStyle: {
+          fontName: 'Roboto Condensed, sans-serif',
+          fontSize: 9,
+          bold: true,
+          italic: false
+      },
+      textStyle : {
+            fontSize: 9,
+            fontName:'Roboto Condensed, sans-serif',
+            bold: true,
+        }
+  },
+  vAxis: {
+    textPosition: 'none',
+    gridlines: {
+        color: 'transparent'
+    }
+  },
+  annotations: {
+    textStyle: {
+      fontName:'Roboto Condensed, sans-serif',
+      bold: true,
+      fontSize: 11,
+      color: '#000',
+    }
+  },
+  chartArea: {
+    height: "80%",
+    width: "95%"
+},
+  };
+
+
+  //---------
+
 
   const primaryData = [["store","orders",{ role: "annotation", type: "number" }]];
   const getOrdersData = () =>{
@@ -894,7 +1018,7 @@ export const AdminDashboard = () => {
 
             <div style={{height:'520px', backgroundColor: '', marginTop: '0px' }}>
               <Row>
-                <Col style={{ maxWidth: '45%',height:'500px', backgroundColor: '', marginTop:'0px'}}>
+                <Col style={{ maxWidth: '50%',height:'500px', backgroundColor: '', marginTop:'0px'}}>
                   {salesSummeryByPaymentMode &&
                     configPaymentModes &&
                     salesSummeryByPaymentMode.length > 0 ? (
@@ -909,6 +1033,40 @@ export const AdminDashboard = () => {
                       </Alert>
                     </div>
                   )}
+                </Col>
+                <Col style={{ maxWidth: '50%', backgroundColor:''}}>
+                  {reportSalesSummaryByOfferCode != undefined || reportSalesSummaryByOfferCode != null ? (<>
+                        {offerCodesList &&
+                          Object.keys(reportSalesSummaryByOfferCode).length > 0 && finalOfferData.length > 1 &&
+                          reportSalesSummaryByOfferCode &&
+                          reportSalesSummaryByOfferCode.length > 0
+                           ? (
+                        <>
+                        <div >
+                          <Chart
+                            chartType="ColumnChart"
+                            data={finalOfferData}
+                            options={OfferOptionsBar}
+                          />
+                        </div>
+                      </>
+                    ) : (
+                      <div className="mb-3 pl-3 pt-3">
+                        <Typography sx={{ fontWeight: "bold", color: "#7F7F7F" }}>
+                          Sales by Offer Code
+                        </Typography>
+                        <Alert severity="warning" className="mt-4">
+                          No reports to show!
+                        </Alert>
+                      </div>
+                    )}</>):(<div className="mb-3 pl-3 pt-3">
+                    <Typography sx={{ fontWeight: "bold", color: "#7F7F7F" }}>
+                      Sales by Offer Code
+                    </Typography>
+                    <Alert severity="warning" className="mt-4">
+                      No reports to show!
+                    </Alert>
+                  </div>)}
                 </Col>
               </Row>
             </div>
