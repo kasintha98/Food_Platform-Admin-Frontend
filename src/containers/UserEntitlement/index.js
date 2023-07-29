@@ -25,7 +25,7 @@ export const UserEntitlement = () => {
 
   useEffect(() => {
     dispatch(getRoles(userObj.restaurantId));
-    dispatch(getModules());
+    dispatch(getModules(userObj.restaurantId));
   }, []);
 
   const handleChangeDecision = (event) => {

@@ -106,6 +106,7 @@ export const AdminDashboard = () => {
   const orderSources = useSelector((state) => state.user.orderSources);
   const businessDateAll = useSelector((state) => state.user.businessDate);
   const allReports = useSelector((state) => state.report.allReports);
+  const offersData = useSelector((state) => state.user.offersData);
   const configPaymentModes = useSelector(
     (state) => state.user.configPaymentModes
   );
@@ -352,58 +353,31 @@ export const AdminDashboard = () => {
     dispatch(getPaymentModeConfigDetails(store ? store.restaurantId : "ALL"));
   };
 
-  // const dataBar = [["store", "Value"], ["Yamuna Nagar",210], ["Delhi", 260],["Pune", 150],["Mumbai",480],["Chennai",399]];
-
-  // console.log("***********THIS**************");
-  // console.log(salesSummeryByDateList.salesSummeryByDateList);
-  // console.log("***********END*******");
-
-  /**
-   * Generate Data for Orders Chart
-   */
-  // const primaryData = [["store","orders",{ role: "annotation", type: "number" }]];
-  // const getOrdersData = () =>{
-
-  //   if (
-  //     Object.keys(salesSummeryByDateList).length > 0 &&
-  //     salesSummeryByDateList.salesSummeryByDateList &&
-  //     salesSummeryByDateList.salesSummeryByDateList.length > 0
-  //   ) {
-  //     for (let i = 0; i < salesSummeryByDateList.salesSummeryByDateList.length; i++) {
-  //       var source = salesSummeryByDateList.salesSummeryByDateList[i].restaurantName;
-  //       var value = salesSummeryByDateList.salesSummeryByDateList[i].noOfOrders;
-  //       primaryData.push([source,value,value]);
-  //     }
-  //   }
-
-  //   return primaryData;
-
-  // }
-
   /**
    * Offer Code Graph
    */
   const offer_data = [["offercode", "Sales",{ role: "annotation", type: "number" }]];
-  const offerCodesList = ["BOGO","COMBO1","COMBO2","COMBO3","COMBO4","COMBO5","COMBO6"];
+  // const offerCodesList = ["BOGO","COMBO1","COMBO2","COMBO3","COMBO4","COMBO5","COMBO6"];
 
-  console.log("reportSalesSummaryByOfferCode---", reportSalesSummaryByOfferCode);
-  console.log("salesSummeryByOrderSource---", salesSummeryByOrderSource);
+  // console.log("reportSalesSummaryByOfferCode---", reportSalesSummaryByOfferCode);
+  // console.log("offersData---", offersData);
+  
   
 
   const getOffersDataFormatted = () => {
     if(reportSalesSummaryByOfferCode != null || reportSalesSummaryByOfferCode != undefined){
     if (
-      offerCodesList && reportSalesSummaryByOfferCode != null && 
+      offersData && reportSalesSummaryByOfferCode != null && 
       Object.keys(reportSalesSummaryByOfferCode).length > 0 &&
       reportSalesSummaryByOfferCode &&
       reportSalesSummaryByOfferCode.length > 0
     ) {
-      for (let i = 0; i < offerCodesList.length; i++) {
-        var source = offerCodesList[i];
+      for (let i = 0; i < offersData.length; i++) {
+        var source = offersData[i].offerCode;
         var value = 0;
         let foundMatch = reportSalesSummaryByOfferCode
           .filter(function (el) {
-            return el.coupon_code === offerCodesList[i];
+            return el.coupon_code === offersData[i].offerCode;
           })
           .map((a) => a.order_value);
           
@@ -416,18 +390,10 @@ export const AdminDashboard = () => {
       }
     }
   }
-  
-
-    console.log(" offer_data --->");
-    console.log(offer_data);
-
     return offer_data;
   };
 
   const finalOfferData = getOffersDataFormatted();
-
-  console.log("finalOfferData ==== ");
-  console.log(finalOfferData);
 
   var OfferOptionsBar = {
     title: "Sales by Offer Code",
@@ -1036,7 +1002,7 @@ export const AdminDashboard = () => {
                 </Col>
                 <Col style={{ maxWidth: '50%', backgroundColor:''}}>
                   {reportSalesSummaryByOfferCode != undefined || reportSalesSummaryByOfferCode != null ? (<>
-                        {offerCodesList &&
+                        {offersData &&
                           Object.keys(reportSalesSummaryByOfferCode).length > 0 && finalOfferData.length > 1 &&
                           reportSalesSummaryByOfferCode &&
                           reportSalesSummaryByOfferCode.length > 0
