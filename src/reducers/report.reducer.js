@@ -118,6 +118,12 @@ export default (state = initState, action) => {
         salesSummeryByPaymentMode: action.payload,
       };
       break;
+    case reportConstants.GET_REPORT_SALES_SUMMARY_BY_OFFER_CODE_SUCCESS:
+      state = {
+        ...state,
+        reportSalesSummaryByOfferCode: action.payload,
+      };
+      break;
     case reportConstants.GET_REPORT_SALES_SUMMARY_BY_PAYMENT_MODE_FAILURE:
       state = {
         ...state,
