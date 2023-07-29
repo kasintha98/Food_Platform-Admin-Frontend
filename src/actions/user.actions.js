@@ -74,12 +74,17 @@ export const getRoles = (restaurantId) => { // STATIC-ROO1
 };
 
 //action get modules
-export const getModules = () => {
+export const getModules = (restaurantId) => {
   return async (dispatch) => {
     try {
       dispatch({ type: userConstants.GET_MODULES_REQUEST });
 
-      const res = await axios.get(`/getAllModule`);
+      const res = await axios.get(`/getAllModule`,{
+        params: {
+          restaurantId: restaurantId,
+          storeId:"ALL"
+        },
+      });
 
       if (res.status === 200) {
         dispatch({
