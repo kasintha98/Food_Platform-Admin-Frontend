@@ -49,6 +49,7 @@ import {
   getPaymentModeConfigDetails,
   getDashboardSummary,
   getSalesSummeryByOfferCodeReports,
+  getOffersByStatusCall
 } from "../../actions";
 import DropdownMenu from "@atlaskit/dropdown-menu";
 import "./style.css";
@@ -253,6 +254,8 @@ export const AdminDashboard = () => {
         selectedStoreObj ? user.restaurantId : "ALL"
       )
     );
+
+    dispatch(getOffersByStatusCall(user.restaurantId,selectedStoreObj.storeId));
   }, [dateState]);
 
   const open = Boolean(anchorEl);
@@ -351,6 +354,7 @@ export const AdminDashboard = () => {
     );
 
     dispatch(getPaymentModeConfigDetails(store ? store.restaurantId : "ALL"));
+    dispatch(getOffersByStatusCall(user.restaurantId,store.storeId));
   };
 
   /**
