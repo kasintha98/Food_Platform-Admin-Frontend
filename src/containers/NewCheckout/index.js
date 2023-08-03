@@ -1526,7 +1526,7 @@ export default function NewCheckout(props) {
   const specialOfferCheckBOGO = () => {
     if (couponCode === "BOGO") {
       const d = new Date(businessDateAll && businessDateAll.businessDate);
-      const day = 3;//d.getDay();
+      const day = d.getDay();
       const wednesday = 3;
       let pizzaCount = 0;
       let pizzaKeys = [];
