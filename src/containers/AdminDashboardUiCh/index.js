@@ -160,11 +160,17 @@ export const AdminDashboard = () => {
           el.restaurantId === user.restaurantId && el.storeId === user.storeId
       )?.resturantName
   );
+  // const [selectedStoreObj, setSelectedStoreObj] = useState({
+  //   restaurantId:
+  //     user.roleCategory === "SUPER_ADMIN" ? null : user.restaurantId,
+  //   storeId: user.roleCategory === "SUPER_ADMIN" ? null : user.storeId,
+  // });
+
   const [selectedStoreObj, setSelectedStoreObj] = useState({
-    restaurantId:
-      user.roleCategory === "SUPER_ADMIN" ? null : user.restaurantId,
-    storeId: user.roleCategory === "SUPER_ADMIN" ? null : user.storeId,
+    restaurantId: user.restaurantId,
+    storeId: user.roleCategory === "SUPER_ADMIN" ? "ALL" : user.storeId,
   });
+
   const [checked, setChecked] = useState(
     user.roleCategory === "SUPER_ADMIN" ? true : false
   );
@@ -361,27 +367,51 @@ export const AdminDashboard = () => {
    * Offer Code Graph
    */
   const offer_data = [["offercode", "Sales",{ role: "annotation", type: "number" }]];
-  // const offerCodesList = ["BOGO","COMBO1","COMBO2","COMBO3","COMBO4","COMBO5","COMBO6"];
+  
+  // const getOffersDataFormatted = () => {
+  //   if(reportSalesSummaryByOfferCode != null || reportSalesSummaryByOfferCode != undefined){
+  //   if (
+  //     offersData && reportSalesSummaryByOfferCode != null && 
+  //     Object.keys(reportSalesSummaryByOfferCode).length > 0 &&
+  //     reportSalesSummaryByOfferCode &&
+  //     reportSalesSummaryByOfferCode.length > 0
+  //   ) {
+  //     for (let i = 0; i < offersData.length; i++) {
+  //       var source = offersData[i].offerCode;
+  //       var value = 0;
+  //       let foundMatch = reportSalesSummaryByOfferCode
+  //         .filter(function (el) {
+  //           return el.coupon_code === offersData[i].offerCode;
+  //         })
+  //         .map((a) => a.order_value);
+          
+  //       if (foundMatch.length > 0) {
+  //         value = foundMatch.reduce((a, b) => a + b, 0);
+  //       } else {
+  //         value = 0;
+  //       }
+  //       offer_data.push([source,value,value]);
+  //     }
+  //   }
+  // }
+  //   return offer_data;
+  // };
 
-  // console.log("reportSalesSummaryByOfferCode---", reportSalesSummaryByOfferCode);
-  // console.log("offersData---", offersData);
-  
-  
 
   const getOffersDataFormatted = () => {
     if(reportSalesSummaryByOfferCode != null || reportSalesSummaryByOfferCode != undefined){
     if (
-      offersData && reportSalesSummaryByOfferCode != null && 
+      reportSalesSummaryByOfferCode != null && 
       Object.keys(reportSalesSummaryByOfferCode).length > 0 &&
       reportSalesSummaryByOfferCode &&
       reportSalesSummaryByOfferCode.length > 0
     ) {
-      for (let i = 0; i < offersData.length; i++) {
-        var source = offersData[i].offerCode;
+      for (let i = 0; i < reportSalesSummaryByOfferCode.length; i++) {
+        var source = reportSalesSummaryByOfferCode[i].coupon_code;
         var value = 0;
         let foundMatch = reportSalesSummaryByOfferCode
           .filter(function (el) {
-            return el.coupon_code === offersData[i].offerCode;
+            return el.coupon_code;
           })
           .map((a) => a.order_value);
           
@@ -1006,7 +1036,7 @@ export const AdminDashboard = () => {
                 </Col>
                 <Col style={{ maxWidth: '50%', backgroundColor:''}}>
                   {reportSalesSummaryByOfferCode != undefined || reportSalesSummaryByOfferCode != null ? (<>
-                        {offersData &&
+                        { 
                           Object.keys(reportSalesSummaryByOfferCode).length > 0 && finalOfferData.length > 1 &&
                           reportSalesSummaryByOfferCode &&
                           reportSalesSummaryByOfferCode.length > 0
