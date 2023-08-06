@@ -35,6 +35,7 @@ import { NonRecipeConsumptionReport } from "../../components/NonRecipeConsumptio
 import { CashierSalesByDishReport } from "../../components/CashierSalesByDishReport";
 import IconButton from "@mui/material/IconButton";
 import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
+import { OfferReportTable } from "../../components/OfferReportTable";
 
 const CusDDT = styled(Dropdown.Toggle)`
   font-weight: 500;
@@ -373,6 +374,17 @@ export const NewReports = () => {
               selectedReport={selectedReport}
             ></OrderReportTable>
           )}
+
+           {selectedReport === "SALES_SUMMARY_BY_OFFER_CODE" && (
+            <OfferReportTable
+              startDate={dateState[0].startDate}
+              endDate={dateState[0].endDate}
+              storeId={selectedStoreObj.storeId}
+              restaurantId={selectedStoreObj.restaurantId}
+              selectedReport={selectedReport}
+            ></OfferReportTable>
+          )}
+
           {selectedReport === "SALES_BY_DISH_ITEM" && (
             <SalesByDishReportTable
               startDate={dateState[0].startDate}
