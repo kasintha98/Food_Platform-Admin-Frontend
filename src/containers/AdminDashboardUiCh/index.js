@@ -1276,6 +1276,41 @@ export const AdminDashboard = () => {
                       </div>
                     )}
                   </Col>
+
+                  <Col style={{ maxWidth: '100%',height:'500px', backgroundColor: '', marginTop:'0px'}}>
+                  {reportSalesSummaryByOfferCode != undefined || reportSalesSummaryByOfferCode != null ? (<>
+                        { 
+                          Object.keys(reportSalesSummaryByOfferCode).length > 0 && finalOfferData.length > 1 &&
+                          reportSalesSummaryByOfferCode &&
+                          reportSalesSummaryByOfferCode.length > 0
+                           ? (
+                        <>
+                        <div >
+                          <Chart
+                            chartType="ColumnChart"
+                            data={finalOfferData}
+                            options={OfferOptionsBar}
+                          />
+                        </div>
+                      </>
+                    ) : (
+                      <div className="mb-3 pl-3 pt-3">
+                        <Typography sx={{ fontWeight: "bold", color: "#7F7F7F" }}>
+                          Sales by Offer Code
+                        </Typography>
+                        <Alert severity="warning" className="mt-4">
+                          No reports to show!
+                        </Alert>
+                      </div>
+                    )}</>):(<div className="mb-3 pl-3 pt-3">
+                    <Typography sx={{ fontWeight: "bold", color: "#7F7F7F" }}>
+                      Sales by Offer Code
+                    </Typography>
+                    <Alert severity="warning" className="mt-4">
+                      No reports to show!
+                    </Alert>
+                  </div>)}
+                  </Col>
                 </Col>
               </div>
   
