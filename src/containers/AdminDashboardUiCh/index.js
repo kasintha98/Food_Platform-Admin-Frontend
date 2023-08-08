@@ -368,36 +368,6 @@ export const AdminDashboard = () => {
    */
   const offer_data = [["offercode", "Sales",{ role: "annotation", type: "number" }]];
   
-  // const getOffersDataFormatted = () => {
-  //   if(reportSalesSummaryByOfferCode != null || reportSalesSummaryByOfferCode != undefined){
-  //   if (
-  //     offersData && reportSalesSummaryByOfferCode != null && 
-  //     Object.keys(reportSalesSummaryByOfferCode).length > 0 &&
-  //     reportSalesSummaryByOfferCode &&
-  //     reportSalesSummaryByOfferCode.length > 0
-  //   ) {
-  //     for (let i = 0; i < offersData.length; i++) {
-  //       var source = offersData[i].offerCode;
-  //       var value = 0;
-  //       let foundMatch = reportSalesSummaryByOfferCode
-  //         .filter(function (el) {
-  //           return el.coupon_code === offersData[i].offerCode;
-  //         })
-  //         .map((a) => a.order_value);
-          
-  //       if (foundMatch.length > 0) {
-  //         value = foundMatch.reduce((a, b) => a + b, 0);
-  //       } else {
-  //         value = 0;
-  //       }
-  //       offer_data.push([source,value,value]);
-  //     }
-  //   }
-  // }
-  //   return offer_data;
-  // };
-
-
   const getOffersDataFormatted = () => {
     if(reportSalesSummaryByOfferCode != null || reportSalesSummaryByOfferCode != undefined){
     if (
@@ -408,18 +378,7 @@ export const AdminDashboard = () => {
     ) {
       for (let i = 0; i < reportSalesSummaryByOfferCode.length; i++) {
         var source = reportSalesSummaryByOfferCode[i].coupon_code;
-        var value = 0;
-        let foundMatch = reportSalesSummaryByOfferCode
-          .filter(function (el) {
-            return el.coupon_code;
-          })
-          .map((a) => a.order_value);
-          
-        if (foundMatch.length > 0) {
-          value = foundMatch.reduce((a, b) => a + b, 0);
-        } else {
-          value = 0;
-        }
+        var value = reportSalesSummaryByOfferCode[i].order_value;
         offer_data.push([source,value,value]);
       }
     }
@@ -432,13 +391,13 @@ export const AdminDashboard = () => {
   var OfferOptionsBar = {
     title: "Sales by Offer Code",
     bar: {groupWidth: "50%"},
-    // colors: ['#86BEDA','#007AA2'],
     colors: ['#007AA2'],
 
     width:'100%',
     height:'350',
     legend: 'none',
     hAxis: {
+      // title: 'Offer Codes',
       titleTextStyle: {
           fontName: 'Roboto Condensed, sans-serif',
           fontSize: 9,
@@ -470,9 +429,7 @@ export const AdminDashboard = () => {
     width: "95%"
 },
   };
-
-
-  //---------
+  //--------- OFFER CHART CODE END
 
 
   const primaryData = [["store","orders",{ role: "annotation", type: "number" }]];
@@ -504,34 +461,7 @@ export const AdminDashboard = () => {
    * Generate Data for Avg Order Value Chart
    */
   const avgPrimaryData = [["store","orders",{ role: "annotation", type: "number" }]];
-  // const getAvgOrderValuesData = () =>{
-
-  //   if (
-  //     Object.keys(salesSummeryByDateList).length > 0 &&
-  //     salesSummeryByDateList.salesSummeryByDateList &&
-  //     salesSummeryByDateList.salesSummeryByDateList.length > 0
-  //   ) {
-  //     for (let i = 0; i < salesSummeryByDateList.salesSummeryByDateList.length; i++) {
-  //       var source = salesSummeryByDateList.salesSummeryByDateList[i].restaurantName;
-  //       var value = Number(
-  //         Number(
-  //           salesSummeryByDateList.salesSummeryByDateList[i].orderValue
-  //         ) /
-  //           Number(
-  //             salesSummeryByDateList.salesSummeryByDateList[i].noOfOrders
-  //           )
-  //       ).toFixed(2);
-  //       avgPrimaryData.push([source,Number(value),value]);
-  //     }
-  //   }
-
-  //   return avgPrimaryData;
-
-  // }
-  // const avgOrdersValueData = getAvgOrderValuesData();
-
-
-
+  
   const getAvgOrderValuesData = () =>{
 
     if (
@@ -550,11 +480,6 @@ export const AdminDashboard = () => {
 
   }
   const avgOrdersValueData = getAvgOrderValuesData();
-
-  // console.log("***********avgOrdersValueData**************");
-  // console.log(avgOrdersValueData);
-  // console.log("***********END*******");
-
 
   /**
    * Data Format for Sale over Time
@@ -578,10 +503,6 @@ export const AdminDashboard = () => {
 
   }
   const salesChartData = getSalesData();
-
-  // console.log("***********salesChartData**************");
-  // console.log(salesChartData);
-  // console.log("***********END*******");
 
   var optionsSales = {
     title: "Sales",
