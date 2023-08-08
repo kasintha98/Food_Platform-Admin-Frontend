@@ -37,56 +37,11 @@ export const SalesRevenueByChanelChart = () => {
   );
   const orderSources = useSelector((state) => state.user.orderSources);
 
-  console.log("================orderSources");
-  console.log(orderSources);
-  console.log(salesSummeryByOrderSource.salesSummeryByOrderSource);
+  // console.log("================orderSources");
+  // console.log(orderSources);
+  // console.log(salesSummeryByOrderSource.salesSummeryByOrderSource);
 
   const ref = React.createRef();
-
-  // const getFilteredOrders = () => {
-  //   let allData = [];
-
-  //   console.log("##########");
-  //   console.log(salesSummeryByOrderSource.salesSummeryByOrderSource);
-
-  //   if (
-  //     orderSources &&
-  //     Object.keys(salesSummeryByOrderSource).length > 0 &&
-  //     salesSummeryByOrderSource.salesSummeryByOrderSource &&
-  //     salesSummeryByOrderSource.salesSummeryByOrderSource.length > 0
-  //   ) {
-  //     for (let i = 0; i < orderSources.length; i++) {
-  //       let foundMatch = salesSummeryByOrderSource.salesSummeryByOrderSource
-  //         .filter(function (el) {
-  //           return el.orderSource === orderSources[i].configCriteriaValue;
-  //         })
-  //         .map((a) => a.orderValue);
-  //       if (foundMatch.length > 0) {
-  //         allData.push(foundMatch.reduce((a, b) => a + b, 0));
-  //       } else {
-  //         allData.push(0);
-  //       }
-  //     }
-  //   }
-
-  //   console.log("Sales Revenue Channel");
-  //   console.log(allData);
-
-  //   return allData;
-  // };
-
-  // const data = {
-  //   labels: orderSources
-  //     ? orderSources.map((value) => value.configCriteriaDesc)
-  //     : [],
-  //   datasets: [
-  //     {
-  //       label: "Order",
-  //       data: getFilteredOrders(),
-  //       backgroundColor: "rgba(53, 162, 235, 0.5)",
-  //     },
-  //   ],
-  // };
 
 // ------Data Formatting Start ------------
   const data_formatted = [["channel", "Sales",{ role: "annotation", type: "number" }]];
@@ -118,8 +73,8 @@ export const SalesRevenueByChanelChart = () => {
       }
     }
 
-    console.log("Sales Revenue Channel data_formatted");
-    console.log(data_formatted);
+    // console.log("Sales Revenue Channel data_formatted");
+    // console.log(data_formatted);
 
     return data_formatted;
   };
@@ -181,32 +136,6 @@ export const SalesRevenueByChanelChart = () => {
   // console.log(finalData);
 
   // -----------------Data Formatting End --------------
-
-  // const getOrderNum = (lable) => {
-  //   if (
-  //     orderSources &&
-  //     Object.keys(salesSummeryByOrderSource).length > 0 &&
-  //     salesSummeryByOrderSource.salesSummeryByOrderSource &&
-  //     salesSummeryByOrderSource.salesSummeryByOrderSource.length > 0
-  //   ) {
-  //     if (lable) {
-  //       let found = salesSummeryByOrderSource.salesSummeryByOrderSource.find(
-  //         (x) => x.orderSourceDescription === lable
-  //       );
-
-  //       if (found) {
-  //         return found.noOfOrders;
-  //       } else {
-  //         return "";
-  //       }
-  //     } else {
-  //       return "";
-  //     }
-  //   } else {
-  //     return "";
-  //   }
-  // };
-
 
   return (
     <div className="mainDivStyle">
