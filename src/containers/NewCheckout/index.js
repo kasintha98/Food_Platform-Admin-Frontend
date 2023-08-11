@@ -795,6 +795,7 @@ export default function NewCheckout(props) {
   var isComboCouponApplied = false;
   var offerString = "";
   localStorage.setItem("offerList",offerString);
+  var offerCodeStr = "";
 
   const validateCouponCode = () => {
     if (!couponCode) {
@@ -803,7 +804,6 @@ export default function NewCheckout(props) {
     }
 
     if (couponCode === "BOGO") {
-      setcomboOfferCode("BOGO");
       specialOfferCheckBOGO();
       return;
     }
@@ -836,7 +836,7 @@ export default function NewCheckout(props) {
 
       for(let i = 0; i < offersData.length; i++) {
         if (couponCode === (offersData[i].offerCode)){
-          setcomboOfferCode(offersData[i].offerCode);
+          offerCodeStr = offersData[i].offerCode;
           if(day === 0){dayOfferFlag = offersData[i].sunday }else if(day === 1){dayOfferFlag = offersData[i].monday}else if(day === 2){dayOfferFlag = offersData[i].tuesday}else if(day === 3){dayOfferFlag = offersData[i].wednesday}else if(day === 4){dayOfferFlag = offersData[i].thursday}else if(day === 5){dayOfferFlag = offersData[i].friday}else if(day === 6){dayOfferFlag = offersData[i].saturday}else{dayOfferFlag = ''}
 
           if(dayOfferFlag === "N"){
@@ -1364,6 +1364,7 @@ export default function NewCheckout(props) {
       isCOMBOOfferVerified = true;
       localStorage.setItem("VERIFIED_OFFER", "V");
       calculateCOMBOCartCost();
+      setcomboOfferCode(offerCodeStr);
       toast.success("Hurray!! COMBO Offer has been applied!");
     } else {
         isCOMBOOfferVerified = false;
@@ -1652,6 +1653,7 @@ export default function NewCheckout(props) {
 
           setAllBogoReduceCost(allReduceCost);
           setBOGOLowestPizzaKey(pizzaValuesWithReduceQty);
+          setcomboOfferCode("BOGO");
           toast.success("Hurray!! BOGO Offer has been applied!");
         } else {
           setBOGOLowestPizzaKey(null);
