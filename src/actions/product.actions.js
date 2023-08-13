@@ -1083,7 +1083,7 @@ export const getAllOffers = () => {
   };
 };
 
-export const saveOffer = (offer, isDelete) => {
+export const saveOffer = (offer, isDelete, user) => {
   return async (dispatch) => {
     try {
       dispatch({
@@ -1102,7 +1102,9 @@ export const saveOffer = (offer, isDelete) => {
           ? toast.success("Offer deleted successfully!")
           : toast.success("Offer added successfully!");
 
-        dispatch(getOffersByStatus("ACTIVE"));
+        if(offer.storeId){ dispatch(getOffersByStatus(offer.restaurantId, offer.storeId,"ACTIVE"));}
+        else{dispatch(getOffersByStatus(user.restaurantId, user.storeId,"ACTIVE"));}
+        
         return res.data;
       } else {
         dispatch({
@@ -1121,14 +1123,47 @@ export const saveOffer = (offer, isDelete) => {
   };
 };
 
-export const getOffersByStatus = (status) => {
+// export const getOffersByStatus = (status) => {
+//   return async (dispatch) => {
+//     try {
+//       dispatch({
+//         type: productConstants.GET_ALL_OFFERS_BY_STATUS_REQUEST,
+//       });
+
+//       const res = await axios.get(`/getOffersByStatus`, {params: {status:status, restaurantId:userObj.restaurantId, storeId:userObj.storeId}});
+
+//       if (res && res.status === 200) {
+//         dispatch({
+//           type: productConstants.GET_ALL_OFFERS_BY_STATUS_SUCCESS,
+//           payload: res.data,
+//         });
+
+//         return res.data;
+//       } else {
+//         console.log("error");
+//         dispatch({
+//           type: productConstants.GET_ALL_OFFERS_BY_STATUS_FAILURE,
+//         });
+//       }
+//     } catch (error) {
+//       console.log(error);
+//       dispatch({
+//         type: productConstants.GET_ALL_OFFERS_BY_STATUS_FAILURE,
+//       });
+//     }
+//   };
+// };
+
+export const getOffersByStatus = (restaurantId,storeId,status) => {
   return async (dispatch) => {
     try {
       dispatch({
         type: productConstants.GET_ALL_OFFERS_BY_STATUS_REQUEST,
       });
 
-      const res = await axios.get(`/getOffersByStatus`, {params: {status:status, restaurantId:userObj.restaurantId, storeId:userObj.storeId}});
+      const res = await axios.get("/getOffersByStatus", {
+        params: { restaurantId, storeId: storeId, status: status},
+      });
 
       if (res && res.status === 200) {
         dispatch({
