@@ -863,16 +863,17 @@ export default function NewCheckout(props) {
           break;
         }
       }
+      dispatch(validateCoupon(couponCode)).then((res) => {
+        if (res) {
+          setCouponLocalObj(res);
+        }
+      });
         console.log(offersData[i].offerCode);
       }
       return;
   }
 
-    dispatch(validateCoupon(couponCode)).then((res) => {
-      if (res) {
-        setCouponLocalObj(res);
-      }
-    });
+    
   };
   //----- Combo offer code new ----
   var rule1 = "";
@@ -1374,7 +1375,7 @@ export default function NewCheckout(props) {
         
           // calculateCOMBOCartCostWithFailedCode();
 
-        toast.error("FAILED!!");
+        // toast.error("FAILED!!");
     }
 
   }
