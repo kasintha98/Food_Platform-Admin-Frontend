@@ -89,8 +89,9 @@ export const AssignRole = (props) => {
   };
 
   const handleSelectedStore = (store) => {
+    dispatch(getUsersByRole("ALL",userObj.restaurantId, store.storeId));
     setSelectedStoreObj(store);
-    console.log(store);
+    // console.log(store.storeId);
   };
 
   const handleRoleObj = (role) => {

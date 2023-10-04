@@ -1,0 +1,47 @@
+.divStyle {
+    display: flex;
+    justify-content: left;
+    align-items: left;
+    margin-bottom: 10px;
+    width: 100%;
+  }
+
+  .imgStyle{
+    /* margin-top: -10px; */
+    height: 30px;
+    width: 30px;
+    margin-right: 10px;
+  }
+
+  .labelStyle{
+    width: 250px;
+    font-family: 'Roboto Condensed', sans-serif !important;
+    font-size: 15px;
+    height: 30px;
+    align-items: center;
+    /* background-color: blue; */
+
+  }
+
+  .selectBtnStyle{
+    width: 100px;
+    height: 30px;
+    font-size: 11px;
+    background-color: #3a4c6b;
+    border-radius: 5px;
+    color: #fff;
+    font-family: 'Roboto', sans-serif !important;
+    font-weight: 700;
+  }
+
+  .inputTextStyle{
+    height: 30px;
+    width: 550px;
+    font-size: 14px;
+    font-family: 'Roboto Condensed', sans-serif !important;
+    background-color: #E4E4E4;
+    color: #3a4c6b;
+    /* background-color: transparent; */
+    border: none;
+    margin-right: 10px;
+  }

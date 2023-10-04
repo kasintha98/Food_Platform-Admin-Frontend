@@ -912,6 +912,74 @@ export const saveProduct = (product) => {
   };
 };
 
+//----- SAVE CSS
+export const saveCSS = (object) => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: productConstants.SAVE_CSS_REQUEST,
+      });
+
+      console.log("CSS OBJ", object);
+
+      const res = await axios.post(`/saveCss`, object);
+
+      if (res.status === 200) {
+        dispatch({
+          type: productConstants.SAVE_CSS_SUCCESS,
+          payload: res.data,
+        });
+        toast.success("CSS Data Saved successfully!");
+
+        console.log(res.data);
+        return res.data;
+      } else {
+        dispatch({
+          type: productConstants.SAVE_CSS_FAILURE,
+        });
+        console.log("error");
+        toast.error("Error when adding CSS, please try again!");
+      }
+    } catch (error) {
+      dispatch({
+        type: productConstants.SAVE_NEW_PRODUCT_FAILURE,
+      });
+      toast.error("Error when adding product, please try again!");
+      console.log(error);
+    }
+  };
+};
+
+export const getAllActiveCSS = (restaurantId,storeId) => {
+  return async (dispatch) => {
+    try {
+      const res = await axios.get(`/getActiveCSSByRestoIdAndStoreId`, {
+        params: {
+          restaurantId: restaurantId,
+          storeId: storeId,
+        },
+      });
+
+      if (res && res.status === 200) {
+        dispatch({
+          type: productConstants.GET_ALL_ACTIVE_CSS_SUCCESS,
+          payload: res.data,
+        });
+        console.log(res.data);
+        return res.data;
+      } else {
+        dispatch({
+          type: productConstants.GET_ALL_ACTIVE_CSS_FAILURE,
+          payload: [],
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+//---------
 export const saveSubProductNew = (topping) => {
   return async (dispatch) => {
     try {
