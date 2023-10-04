@@ -25,7 +25,8 @@ const initState = {
   offersByStatusLoading: false,
   offersAppFlagConfig: [],
   offersCriteriaConfig: [],
-  offersFunctionConfig: []
+  offersFunctionConfig: [],
+  allActiveCSS: []
 };
 
 export default (state = initState, action) => {
@@ -375,6 +376,27 @@ export default (state = initState, action) => {
                 offersFunctionConfig: [],
               };
               break;
+
+              case productConstants.GET_ALL_ACTIVE_CSS_REQUEST:
+                state = {
+                  ...state,
+                  loading: true,
+                };
+                break;
+              case productConstants.GET_ALL_ACTIVE_CSS_SUCCESS:
+                state = {
+                  ...state,
+                  allActiveCSS: action.payload,
+                  loading: false,
+                };
+                break;
+              case productConstants.GET_ALL_ACTIVE_CSS_FAILURE:
+                state = {
+                  ...state,
+                  allActiveCSS: [],
+                  loading: false,
+                };
+                break;
   }
   return state;
 };

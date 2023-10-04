@@ -148,7 +148,8 @@ export const getUsersByRole = (roleCategory, restaurantId, storeId) => {
 
       const res = await axios.get(`/getUsersByRoleCategory`, {
         params: { restaurantId: restaurantId,
-          roleCategory : roleCategory },
+          roleCategory : roleCategory,
+          storeId:storeId },
       });
 
       if (res.status === 200) {
@@ -513,7 +514,7 @@ export const updateCustomerDetails = (payload) => {
   };
 };
 
-export const GetCustomerAddress = (mobileNumber) => {
+export const GetCustomerAddress = (mobileNumber,restaurantId) => {
   return async (dispatch) => {
     try {
       dispatch({ type: userConstants.GET_CUSTOMER_ADDRESS_REQUEST });
@@ -523,7 +524,7 @@ export const GetCustomerAddress = (mobileNumber) => {
       }
 
       const res = await axios.get("/getCustomerAddressDtlsByMobNum", {
-        params: { mobno: mobileNumber },
+        params: { restaurantId:restaurantId, mobno: mobileNumber },
       });
 
       if (res.status === 200) {
@@ -572,7 +573,7 @@ export const AddUpdateCustomerAddress = (payload) => {
       const res = await axios.post("/saveCustomerDtls", payload);
 
       if (res.status === 200) {
-        dispatch(GetCustomerAddress(payload.mobileNumber));
+        dispatch(GetCustomerAddress(payload.mobileNumber,user.restaurantId));
 
         dispatch({
           type: userConstants.ADD_UPDATE_CUSTOMER_ADDRESS_SUCCESS,

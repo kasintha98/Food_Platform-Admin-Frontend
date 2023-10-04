@@ -25,6 +25,7 @@ import Products from "./containers/Products";
 import Employee from "./containers/Employee";
 import StoreMaster from "./containers/StoreMaster";
 import QRgenerator from "./containers/QRgenerator";
+import { SEO } from "./containers/SEO";
 import { Inventory } from "./containers/Inventory";
 import Purchases from "./containers/Purchases";
 import PrivateRoute from "./HOC/PrivateRoute";
@@ -268,6 +269,10 @@ function App() {
 
         {modulesForUser.some((module) => module.moduleName === "REPORTS") && (
           <PrivateRoute path="/reports" component={NewReports}></PrivateRoute>
+        )}
+
+        {modulesForUser.some((module) => module.moduleName === "SEO MARKETING") && (
+          <PrivateRoute path="/seo" component={SEO}></PrivateRoute>
         )}
 
         {modulesForUser.some(

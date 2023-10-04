@@ -6,3 +6,5 @@ export const generatePublicUrl = (filename) => {
   return `hangariesapp-okfvqdwi7q-el.a.run.app/public/${filename}`;
 };
 export const imagePath = "https://storage.googleapis.com/hangries/images";
+export const imagePathHome = "https://storage.googleapis.com/hangries";
+// export const imagePathHome = "https://storage.googleapis.com/hangries-dev";

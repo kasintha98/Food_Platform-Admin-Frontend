@@ -30,6 +30,8 @@ import MultipleStopOutlinedIcon from "@mui/icons-material/MultipleStopOutlined";
 import SettingsPowerOutlinedIcon from "@mui/icons-material/SettingsPowerOutlined"; //Sign out
 import { red } from "@mui/material/colors";
 
+import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined';
+
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import Grow from "@mui/material/Grow";
 import Paper from "@mui/material/Paper";
@@ -319,8 +321,8 @@ export const NewHeader = (props) => {
                   flexWrap: "wrap",
                   fontSize: "0.6125em",
                   color: "#fff",
-                  minWidth: 66,
-                  maxWidth: 70,
+                  minWidth: 61,
+                  maxWidth: 65,
                 }}
                 component={Link}
                 to="/dine-in"
@@ -347,8 +349,8 @@ export const NewHeader = (props) => {
                   fontSize: "0.6125em",
                   // backgroundColor:'#555555',
                   color: "#fff",
-                  minWidth: 66,
-                  maxWidth: 70,
+                  minWidth: 61,
+                  maxWidth: 65,
                 }}
                 component={Link}
                 to="/dashboard"
@@ -374,8 +376,8 @@ export const NewHeader = (props) => {
                   flexWrap: "wrap",
                   fontSize: "0.6125em",
                   color: "#fff",
-                  minWidth: 66,
-                  maxWidth: 70,
+                  minWidth: 61,
+                  maxWidth: 65,
                 }}
                 component={Link}
                 to="/order-source"
@@ -401,8 +403,8 @@ export const NewHeader = (props) => {
                   flexWrap: "wrap",
                   fontSize: "0.6125em",
                   color: "#fff",
-                  minWidth: 66,
-                  maxWidth: 70,
+                  minWidth: 61,
+                  maxWidth: 65,
                 }}
                 component={Link}
                 to="/orders"
@@ -426,8 +428,8 @@ export const NewHeader = (props) => {
                   flexWrap: "wrap",
                   fontSize: "0.6125em",
                   color: "#fff",
-                  minWidth: 66,
-                  maxWidth: 70,
+                  minWidth: 61,
+                  maxWidth: 65,
                 }}
                 component={Link}
                 to="/kds"
@@ -453,8 +455,8 @@ export const NewHeader = (props) => {
                   flexWrap: "wrap",
                   fontSize: "0.6125em",
                   color: "#fff",
-                  minWidth: 66,
-                  maxWidth: 70,
+                  minWidth: 61,
+                  maxWidth: 65,
                 }}
                 component={Link}
                 to="/delivery-management"
@@ -480,8 +482,8 @@ export const NewHeader = (props) => {
                   flexWrap: "wrap",
                   fontSize: "0.6125em",
                   color: "#fff",
-                  minWidth: 66,
-                  maxWidth: 70,
+                  minWidth: 61,
+                  maxWidth: 65,
                 }}
                 component={Link}
                 to="/delivery-boy"
@@ -507,8 +509,8 @@ export const NewHeader = (props) => {
                   flexWrap: "wrap",
                   fontSize: "0.6125em",
                   color: "#fff",
-                  minWidth: 66,
-                  maxWidth: 70,
+                  minWidth: 61,
+                  maxWidth: 65,
                 }}
                 component={Link}
                 to="/delivery-tracking"
@@ -534,8 +536,8 @@ export const NewHeader = (props) => {
                   flexWrap: "wrap",
                   fontSize: "0.6125em",
                   color: "#fff",
-                  minWidth: 66,
-                  maxWidth: 70,
+                  minWidth: 61,
+                  maxWidth: 65,
                 }}
                 component={Link}
                 to="/reports"
@@ -544,6 +546,33 @@ export const NewHeader = (props) => {
                 REPORTS
               </IconButton>
             )}
+            {modulesForUser.some(
+              (module) => module.moduleName === "SEO MARKETING"
+            ) && <div className="nav-item top-module_partition"> </div>}
+
+            {modulesForUser.some(
+              (module) => module.moduleName === "SEO MARKETING"
+            ) && (
+              <IconButton
+                className="mainTopButton"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  flexDirection: "column",
+                  flexWrap: "wrap",
+                  fontSize: "0.6125em",
+                  color: "#fff",
+                  minWidth: 61,
+                  maxWidth: 65,
+                }}
+                component={Link}
+                to="/seo"
+              >
+                <ManageAccountsOutlinedIcon />
+                SEO
+              </IconButton>
+            )}
+
 
             {modulesForUser.some(
               (module) => module.moduleName === "ADMIN FUNCTIONS"
@@ -715,8 +744,8 @@ export const NewHeader = (props) => {
                   flexWrap: "wrap",
                   fontSize: "0.6125em",
                   color: "#fff",
-                  minWidth: 66,
-                  maxWidth: 70,
+                  minWidth: 61,
+                  maxWidth: 65,
                 }}
                 component={Link}
                 to="/inventory"
@@ -740,8 +769,8 @@ export const NewHeader = (props) => {
                   flexWrap: "wrap",
                   fontSize: "0.6125em",
                   color: "#fff",
-                  minWidth: 66,
-                  maxWidth: 70,
+                  minWidth: 61,
+                  maxWidth: 65,
                 }}
                 onClick={handleOpenEOD}
               >
