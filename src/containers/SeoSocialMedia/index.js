@@ -14,7 +14,10 @@ import { getAllActiveCSS, saveCSS } from "../../actions";
 
 export const SeoSocialMedia = () => {
     const user = useSelector((state) => state.auth.user);
-    const allCss = useSelector((state) => state.product.allActiveCSS);
+    // const allCss = useSelector((state) => state.product.allActiveCSS);
+
+    const[allCss, setAllCss] = useState([]);
+
     const dispatch = useDispatch();
 
     const [youtubeUrl, setYouTubeUrl] = useState('');
@@ -23,9 +26,46 @@ export const SeoSocialMedia = () => {
     const [facebookUrl, setFacebookUrl] = useState('');
     const [whatsappUrl, setWhatsAppUrl] = useState('');
 
-    useEffect(()=>{
-        dispatch(getAllActiveCSS(user.restaurantId , "ALL")).then((resp) => {
+    const saveCssData = (subCat, sorting, url, id) => {
+        var cssObj = null;
+        if (id == null) {
+            cssObj = {
+                restaurantId: user.restaurantId,
+                storeId: "ALL",
+                category: "HOME",
+                subCategory: subCat,
+                sorting: sorting,
+                folderName: user.restaurantId,
+                imagePath: url,
+                status: "ACTIVE",
+            }
+        } else {
+            cssObj = {
+                id: id,
+                restaurantId: user.restaurantId,
+                storeId: "ALL",
+                category: "HOME",
+                subCategory: subCat,
+                sorting: sorting,
+                folderName: user.restaurantId,
+                imagePath: url,
+                status: "ACTIVE",
+            }
+        }
+
+        console.log("cssObj --- ", cssObj);
+        dispatch(saveCSS(cssObj)).then((resp) => {
+            if (resp) {
+                console.log("saveCss resp ", resp);
+                getCssData(); // Fetch latest Css after successful upload of Image and Css update
+            }
+        });
+    };
+
+    function getCssData(){
+         dispatch(getAllActiveCSS(user.restaurantId , "ALL")).then((resp) => {
             if(resp){
+                setAllCss(resp);
                 console.log("GETALLCSS:::: ", resp);
                 resp.forEach((category)=>{
                     if(category.subCategory === "Youtube"){setYouTubeUrl(category.imagePath);}
@@ -37,7 +77,27 @@ export const SeoSocialMedia = () => {
                 
             }
         });
+    }
+//https://www.youtube.com/channel/UCJPY7XvcOOMWNlZcgmxAJLg/featured
+    useEffect(()=>{
+        getCssData();
     },[])
+
+    // useEffect(()=>{
+    //     dispatch(getAllActiveCSS(user.restaurantId , "ALL")).then((resp) => {
+    //         if(resp){
+    //             console.log("GETALLCSS:::: ", resp);
+    //             resp.forEach((category)=>{
+    //                 if(category.subCategory === "Youtube"){setYouTubeUrl(category.imagePath);}
+    //                 else if(category.subCategory === "Twitter"){setTwitterUrl(category.imagePath);}
+    //                 else if(category.subCategory === "Instagram"){setInstaUrl(category.imagePath);}
+    //                 else if(category.subCategory === "Facebook"){setFacebookUrl(category.imagePath);}
+    //                 else if(category.subCategory === "Whatapp"){setWhatsAppUrl(category.imagePath);}
+    //             })
+                
+    //         }
+    //     });
+    // },[])
 
     const handleYoutubeaUrl = (event) =>{
         setYouTubeUrl(event.target.value);
@@ -60,98 +120,58 @@ export const SeoSocialMedia = () => {
     }
 
     const saveYouTubeUrl = () => {
-        const cssYoutubeObj = {
-            restaurantId: user.restaurantId,
-            storeId: "ALL",
-            category: "HOME",
-            subCategory: "Youtube",
-            sorting: 1,
-            folderName: user.restaurantId,
-            imagePath: youtubeUrl,
-            status: "ACTIVE",
-        }
-        console.log("cssYoutubeObj --- ",cssYoutubeObj);
-        dispatch(saveCSS(cssYoutubeObj)).then((resp) => {
-            if (resp) {
-                console.log("saveCss resp ",resp);
+
+        var ids = null;
+        allCss.forEach((cssObj) => {
+            if (cssObj.subCategory === "Youtube") {
+                ids = cssObj.id;
             }
         });
+        saveCssData("Youtube", 1, youtubeUrl, ids);
     }
 
     const saveTwitterUrl = () => {
-        const cssTwitterObj = {
-            restaurantId: user.restaurantId,
-            storeId: "ALL",
-            category: "HOME",
-            subCategory: "Twitter",
-            sorting: 1,
-            folderName: user.restaurantId,
-            imagePath: twitterUrl,
-            status: "ACTIVE",
-        }
-        console.log("cssTwitterObj --- ",cssTwitterObj);
-        dispatch(saveCSS(cssTwitterObj)).then((resp) => {
-            if (resp) {
-                console.log("saveCss resp ",resp);
+
+        var ids = null;
+        allCss.forEach((cssObj) => {
+            if (cssObj.subCategory === "Twitter") {
+                ids = cssObj.id;
             }
         });
+        saveCssData("Twitter", 1, twitterUrl, ids);
     }
 
     const saveInstaUrl = () => {
-        const cssInstaObj = {
-            restaurantId: user.restaurantId,
-            storeId: "ALL",
-            category: "HOME",
-            subCategory: "Instagram",
-            sorting: 1,
-            folderName: user.restaurantId,
-            imagePath: instaeUrl,
-            status: "ACTIVE",
-        }
-        console.log("cssInstaObj --- ",cssInstaObj);
-        dispatch(saveCSS(cssInstaObj)).then((resp) => {
-            if (resp) {
-                console.log("saveCss resp ",resp);
+
+        var ids = null;
+        allCss.forEach((cssObj) => {
+            if (cssObj.subCategory === "Instagram") {
+                ids = cssObj.id;
             }
         });
+        saveCssData("Instagram", 1, instaeUrl, ids);
     }
 
     const saveFBUrl = () => {
-        const cssFBObj = {
-            restaurantId: user.restaurantId,
-            storeId: "ALL",
-            category: "HOME",
-            subCategory: "Facebook",
-            sorting: 1,
-            folderName: user.restaurantId,
-            imagePath: facebookUrl,
-            status: "ACTIVE",
-        }
-        console.log("cssFBObj --- ",cssFBObj);
-        dispatch(saveCSS(cssFBObj)).then((resp) => {
-            if (resp) {
-                console.log("saveCss resp ",resp);
+
+        var ids = null;
+        allCss.forEach((cssObj) => {
+            if (cssObj.subCategory === "Facebook") {
+                ids = cssObj.id;
             }
         });
+        saveCssData("Facebook", 1, facebookUrl, ids);
     }
 
     const saveWhatsappUrl = () => {
-        const cssWAObj = {
-            restaurantId: user.restaurantId,
-            storeId: "ALL",
-            category: "HOME",
-            subCategory: "Whatapp",
-            sorting: 1,
-            folderName: user.restaurantId,
-            imagePath: whatsappUrl,
-            status: "ACTIVE",
-        }
-        console.log("cssWAObj --- ",cssWAObj);
-        dispatch(saveCSS(cssWAObj)).then((resp) => {
-            if (resp) {
-                console.log("saveCss resp ",resp);
+
+        var ids = null;
+        allCss.forEach((cssObj) => {
+            if (cssObj.subCategory === "Whatapp") {
+                ids = cssObj.id;
             }
         });
+        saveCssData("Whatapp", 1, whatsappUrl, ids);
     }
 
     return (

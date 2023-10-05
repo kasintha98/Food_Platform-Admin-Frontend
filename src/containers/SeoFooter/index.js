@@ -47,10 +47,6 @@ export const SeoFooter = () => {
 
     function handleChangeforFooter(e) {
         if (e.target.files[0] != undefined) {
-            if (e.target.files[0].size > 1 * 1000 * 1024) {
-                toast.warn('File with maximum size of 1MB is allowed');
-                return false;
-              }
             setFooterFileName(e.target.files[0].name);
             setFooterFile(e.target.files[0]);
         }
@@ -112,6 +108,11 @@ export const SeoFooter = () => {
         formDataImage.append("files", footerFile);
         formDataImage.append("restaurantId", user.restaurantId);
 
+        if (footerFile.size > 5 * 1000 * 1024) {
+            toast.warn('File with maximum size of 5MB is allowed !');
+            return false;
+        }
+
         var ids = null;
         dispatch(uploadImage(formDataImage)).then((res) => {
             if (res) {
@@ -142,7 +143,7 @@ export const SeoFooter = () => {
                 </IconButton>
             </div>
 
-            <div className="container">
+            <div className="footerImgcontainer">
                 {dialog && (
                     <div className="dialog">
                         <div className="dialog-content">

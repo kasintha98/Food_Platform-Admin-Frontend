@@ -16,6 +16,7 @@ import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 
 import pizzaPic from "../../img/pizzaPic.jpg";
 import noImg from "../../img/no-img.png";
+import { toast } from "react-toastify";
 
 
 export const SeoBanners = () => {
@@ -175,11 +176,16 @@ export const SeoBanners = () => {
         formDataImage.append("files", banner1File);
         formDataImage.append("restaurantId", user.restaurantId);
 
+        if (banner1File.size > 5 * 1000 * 1024) {
+            toast.warn('File with maximum size of 5MB is allowed !');
+            return false;
+        }
+
         var ids = null;
         dispatch(uploadImage(formDataImage)).then((res) => {
             if (res) {
                 allCss.forEach((cssObj) => {
-                    if (cssObj.subCategory === "Banner") {
+                    if (cssObj.subCategory === "Banner" && cssObj.sorting === 1) {
                         ids = cssObj.id;
                     }
                 });
@@ -204,11 +210,16 @@ export const SeoBanners = () => {
         formDataImage.append("files", banner2File);
         formDataImage.append("restaurantId", user.restaurantId);
 
+        if (banner2File.size > 5 * 1000 * 1024) {
+            toast.warn('File with maximum size of 5MB is allowed !');
+            return false;
+        }
+
         var ids = null;
         dispatch(uploadImage(formDataImage)).then((res) => {
             if (res) {
                 allCss.forEach((cssObj) => {
-                    if (cssObj.subCategory === "Banner") {
+                    if (cssObj.subCategory === "Banner"  && cssObj.sorting === 2) {
                         ids = cssObj.id;
                     }
                 });
@@ -233,11 +244,16 @@ export const SeoBanners = () => {
         formDataImage.append("files", banner3File);
         formDataImage.append("restaurantId", user.restaurantId);
 
+        if (banner3File.size > 5 * 1000 * 1024) {
+            toast.warn('File with maximum size of 5MB is allowed !');
+            return false;
+        }
+
         var ids = null;
         dispatch(uploadImage(formDataImage)).then((res) => {
             if (res) {
                 allCss.forEach((cssObj) => {
-                    if (cssObj.subCategory === "Banner") {
+                    if (cssObj.subCategory === "Banner" && cssObj.sorting === 3) {
                         ids = cssObj.id;
                     }
                 });
@@ -261,11 +277,16 @@ export const SeoBanners = () => {
         formDataImage.append("files", banner4File);
         formDataImage.append("restaurantId", user.restaurantId);
 
+        if (banner4File.size > 5 * 1000 * 1024) {
+            toast.warn('File with maximum size of 5MB is allowed !');
+            return false;
+        }
+
         var ids = null;
         dispatch(uploadImage(formDataImage)).then((res) => {
             if (res) {
                 allCss.forEach((cssObj) => {
-                    if (cssObj.subCategory === "Banner") {
+                    if (cssObj.subCategory === "Banner" && cssObj.sorting === 4) {
                         ids = cssObj.id;
                     }
                 });
@@ -309,11 +330,16 @@ export const SeoBanners = () => {
         formDataImage.append("files", banner5File);
         formDataImage.append("restaurantId", user.restaurantId);
 
+        if (banner5File.size > 5 * 1000 * 1024) {
+            toast.warn('File with maximum size of 5MB is allowed !');
+            return false;
+        }
+
         var ids = null;
         dispatch(uploadImage(formDataImage)).then((res) => {
             if (res) {
                 allCss.forEach((cssObj) => {
-                    if (cssObj.subCategory === "Banner") {
+                    if (cssObj.subCategory === "Banner" && cssObj.sorting === 5) {
                         ids = cssObj.id;
                     }
                 });
@@ -332,6 +358,11 @@ export const SeoBanners = () => {
         const formDataImage = new FormData();
         formDataImage.append("files", aboutFile);
         formDataImage.append("restaurantId", user.restaurantId);
+
+        if (aboutFile.size > 5 * 1000 * 1024) {
+            toast.warn('File with maximum size of 5MB is allowed !');
+            return false;
+        }
 
         var ids = null;
         dispatch(uploadImage(formDataImage)).then((res) => {
@@ -357,6 +388,11 @@ export const SeoBanners = () => {
         formDataImage.append("files", offersFile);
         formDataImage.append("restaurantId", user.restaurantId);
 
+        if (offersFile.size > 5 * 1000 * 1024) {
+            toast.warn('File with maximum size of 5MB is allowed !');
+            return false;
+        }
+
         var ids = null;
         dispatch(uploadImage(formDataImage)).then((res) => {
             if (res) {
@@ -380,6 +416,11 @@ export const SeoBanners = () => {
         const formDataImage = new FormData();
         formDataImage.append("files", restAddressFile);
         formDataImage.append("restaurantId", user.restaurantId);
+
+        if (restAddressFile.size > 5 * 1000 * 1024) {
+            toast.warn('File with maximum size of 5MB is allowed !');
+            return false;
+        }
 
         var ids = null;
         dispatch(uploadImage(formDataImage)).then((res) => {
@@ -514,7 +555,7 @@ export const SeoBanners = () => {
                 </IconButton>
             </div>
 
-            <div className="container">
+            <div className="others-container">
                 {dialog && (
                     <div className="dialog">
                         <div className="dialog-content">
