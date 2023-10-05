@@ -75,13 +75,12 @@
 
 
 
-  .container {
+  .others-container {
     text-align: center;
     margin: 0px auto;
     height: 50px;
     width: 50px;
   }
-  /* Style for the popup button */
   .popup-button {
     background-color: #007BFF;
     color: #fff;
@@ -95,7 +94,6 @@
   .popup-button:hover {
     background-color: #0056b3;
   }
-  /* Style for the dialog container */
   .dialog {
     display: flex;
     justify-content: center;
@@ -108,7 +106,6 @@
     background-color: rgba(0, 0, 0, 0.7);
     z-index: 1;
   }
-  /* Style for the dialog content */
   .dialog-content {
     background-color: #fff;
     border-radius: 10px;
@@ -118,7 +115,6 @@
     max-width: 500px;
     padding: 0 15px;
   }
-  /* Style for the close icon */
   .close-icon {
     position: absolute;
     top: 10px;

@@ -16,6 +16,7 @@ import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 
 
 import {imagePathHome} from "../../urlConfig";
+import { toast } from "react-toastify";
 
 // import pizzaPic from "../../img/pizzaPic.jpg"
 
@@ -175,6 +176,11 @@ export const SeoHeader = () => {
         formDataImage.append("files", logoFile);
         formDataImage.append("restaurantId", user.restaurantId);
 
+        if (logoFile.size > 500 * 1000) {
+            toast.warn('File with maximum size of 500KB is allowed !');
+            return false;
+        }
+
         var ids = null;
         dispatch(uploadImage(formDataImage)).then((res) => {
             if (res) {
@@ -187,21 +193,22 @@ export const SeoHeader = () => {
             }
         })
     }
-    const deleteLogoClicked = () => {
-        setLogoFile(null);
-        console.log("deleteLogoClicked Clicked");
-    }
 
     const saveOrderCofirmationClicked = () => {
         const formDataImage = new FormData();
         formDataImage.append("files", orderConfirmationFile);
         formDataImage.append("restaurantId", user.restaurantId);
 
+        if (orderConfirmationFile.size > 500 * 1000) {
+            toast.warn('File with maximum size of 500KB is allowed !');
+            return false;
+        }
+
         var ids = null;
         dispatch(uploadImage(formDataImage)).then((res) => {
             if (res) {
                 allCss.forEach((cssObj) => {
-                    if (cssObj.subCategory === "Logo") {
+                    if (cssObj.subCategory === "Order_Information") {
                         ids = cssObj.id;
                     }
                 });
@@ -209,14 +216,16 @@ export const SeoHeader = () => {
             }
         })
     }
-    const deleteOrderCofirmationClicked = () => {
-        console.log("deleteOrderCofirmationClicked Clicked");
-    }
 
     const saveOrderTrackClicked = () => {
         const formDataImage = new FormData();
         formDataImage.append("files", orderTrackingFile);
         formDataImage.append("restaurantId", user.restaurantId);
+
+        if (orderTrackingFile.size > 500 * 1000) {
+            toast.warn('File with maximum size of 500KB is allowed !');
+            return false;
+        }
 
         dispatch(uploadImage(formDataImage)).then((res) => {
             if (res) {
@@ -242,30 +251,28 @@ export const SeoHeader = () => {
             }
         })
     }
-    const deleteOrderTrackClicked = () => {
-        console.log("deleteOrderTrackClicked Clicked");
-    }
 
     const saveOfferClicked = () => {
         const formDataImage = new FormData();
         formDataImage.append("files", offerFile);
         formDataImage.append("restaurantId", user.restaurantId);
 
+        if (offerFile.size > 500 * 1000) {
+            toast.warn('File with maximum size of 500KB is allowed !');
+            return false;
+        }
+
         var ids = null;
         dispatch(uploadImage(formDataImage)).then((res) => {
             if (res) {
                 allCss.forEach((cssObj) => {
-                    if (cssObj.subCategory === "Logo") {
+                    if (cssObj.subCategory === "Offer") {
                         ids = cssObj.id;
                     }
                 });
                 saveCssData("Offer", 1, offerFileName, ids);
             }
         })
-    }
-
-    const deleteOfferClicked = () => {
-        console.log("deleteOfferClicked Clicked");
     }
 
     return (
@@ -334,7 +341,7 @@ export const SeoHeader = () => {
                 </IconButton>
             </div>
 
-            <div className="container">
+            <div className="main-container">
                 {/* <button className="popup-button" onClick={toggleDialog}>Show Popup Image</button> */}
                 {dialog && (
                     <div className="dialog">
