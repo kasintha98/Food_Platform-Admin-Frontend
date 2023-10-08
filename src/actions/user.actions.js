@@ -449,13 +449,13 @@ export const saveNewOrder = (payload) => {
   };
 };
 
-export const addNewCustomer = (mobileNumber) => {
+export const addNewCustomer = (mobileNumber, restaurantId) => {
   return async (dispatch) => {
     try {
       dispatch({ type: userConstants.ADD_NEW_CUSTOMER_REQUEST });
 
       const res = await axios.get("/customer/register", {
-        params: { mobno: mobileNumber },
+        params: {restaurantId:restaurantId, mobno: mobileNumber },
       });
 
       if (res.data) {
@@ -565,7 +565,7 @@ export const GetCustomerAddress = (mobileNumber,restaurantId) => {
   };
 };
 
-export const AddUpdateCustomerAddress = (payload) => {
+export const AddUpdateCustomerAddress = (payload,restaurantId) => {
   return async (dispatch) => {
     try {
       dispatch({ type: userConstants.ADD_UPDATE_CUSTOMER_ADDRESS_REQUEST });
@@ -573,7 +573,7 @@ export const AddUpdateCustomerAddress = (payload) => {
       const res = await axios.post("/saveCustomerDtls", payload);
 
       if (res.status === 200) {
-        dispatch(GetCustomerAddress(payload.mobileNumber,user.restaurantId));
+        dispatch(GetCustomerAddress(payload.mobileNumber,restaurantId));
 
         dispatch({
           type: userConstants.ADD_UPDATE_CUSTOMER_ADDRESS_SUCCESS,
@@ -598,7 +598,7 @@ export const AddUpdateCustomerAddress = (payload) => {
   };
 };
 
-export const GetCustomerDetails = (mobileNumber) => {
+export const GetCustomerDetails = (mobileNumber, restaurantId) => {
   return async (dispatch) => {
     try {
       dispatch({ type: userConstants.GET_CUSTOMER_DETAILS_REQUEST });
@@ -607,7 +607,7 @@ export const GetCustomerDetails = (mobileNumber) => {
         encodeURIComponent(mobileNumber);
       }
       const res = await axios.get("/getCustomerDtlsByMobNum", {
-        params: { mobno: mobileNumber },
+        params: {restaurantId:restaurantId, mobno: mobileNumber },
       });
 
       if (res.status === 200) {
