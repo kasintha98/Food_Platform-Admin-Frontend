@@ -2147,7 +2147,7 @@ export default function NewCheckout(props) {
     }
 
     if (!currentCustomer) {
-      dispatch(addNewCustomer(phoneNo, firstName, lastName, emailId)).then(
+      dispatch(addNewCustomer(phoneNo,user.restaurantId, firstName, lastName, emailId)).then(
         (res) => {
           if (res /* && !defaultAddress */) {
             const custObj = {
@@ -2172,7 +2172,7 @@ export default function NewCheckout(props) {
               landmark: landMark,
               zipCode: parseInt(zipCode),
             };
-            dispatch(AddUpdateCustomerAddress(addressObj)).then((res) => {
+            dispatch(AddUpdateCustomerAddress(addressObj,user.restaurantId)).then((res) => {
               if (res) {
                 setCurrentGetAddress(res);
               }
@@ -2205,7 +2205,7 @@ export default function NewCheckout(props) {
             landmark: landMark,
             zipCode: parseInt(zipCode),
           };
-          dispatch(AddUpdateCustomerAddress(addressObj)).then((res) => {
+          dispatch(AddUpdateCustomerAddress(addressObj,user.restaurantId)).then((res) => {
             if (res) {
               setCurrentGetAddress(res);
             }
@@ -2306,7 +2306,7 @@ export default function NewCheckout(props) {
           handleShowAddress();
         }
       });
-      dispatch(GetCustomerDetails(phoneNo)).then((res) => {
+      dispatch(GetCustomerDetails(phoneNo, user.restaurantId)).then((res) => {
         if (res) {
           setFoundCustomer(res);
           setIsNewCustomerFunc(false);
