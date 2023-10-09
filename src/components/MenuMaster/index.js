@@ -516,6 +516,7 @@ export const MenuMaster = () => {
 
     const formDataImage = new FormData();
     formDataImage.append("files", productImage[product.id]);
+    formDataImage.append("restaurantId", user.restaurantId);
 
     dispatch(updateMenuItem(newProduct)).then((res) => {
       if (res && productImage[product.id]) {
@@ -593,6 +594,7 @@ export const MenuMaster = () => {
 
     const formDataImage = new FormData();
     formDataImage.append("files", newProductImage);
+    formDataImage.append("restaurantId", user.restaurantId);
 
     dispatch(saveMenuItem(newProduct)).then((res) => {
       if (res) {
