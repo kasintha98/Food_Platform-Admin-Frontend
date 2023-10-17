@@ -425,9 +425,12 @@ export const ProductMappingMaster = () => {
       price: currentPrice[product.id]
         ? currentPrice[product.id]
         : product.price,
+      // imagePath: productImage[product.id]
+      //   ? productImage[product.id].name.split(".").slice(0, -1).join(".")
+      //   : product.imagePath,
       imagePath: productImage[product.id]
-        ? productImage[product.id].name.split(".").slice(0, -1).join(".")
-        : product.imagePath,
+      ? productImage[product.id].name
+      : product.imagePath,
       menuAvailableFlag: currentMenuFlag
         ? currentMenuFlag
         : product.menuAvailableFlag,

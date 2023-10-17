@@ -31,6 +31,8 @@ import {
 import { addToCartNew, getMenuIngredientsByProductId } from "../../actions";
 import { useDispatch, useSelector } from "react-redux";
 import { imagePath } from "../../urlConfig";
+import { imagePathHome } from "../../urlConfig";
+
 import "./style.css";
 
 const imageExt = ".jpg";
@@ -165,6 +167,7 @@ export default function ProductCard(props) {
   const [specialText, setSpecialText] = React.useState("");
   const [qty, setQty] = React.useState(1);
 
+  const user = useSelector((state) => state.auth.user);
   const cart = useSelector((state) => state.cart);
   let ingredients = useSelector((state) => state.product.ingredients);
 
@@ -940,11 +943,13 @@ export default function ProductCard(props) {
         ) : (
           <CusCardMedia
             component="img"
-            image={`${imagePath}/${currentProduct?.imagePath}${imageExt}`}
+            // image={`${imagePathHome}/${"R001"}/${currentProduct?.imagePath}${imageExt}`}
+            image={`${imagePathHome}/${user.restaurantId}/${currentProduct?.imagePath}`}
             alt="product"
             onClick={() => {
               handleShowPictureModal();
-              setImage(`${imagePath}/${currentProduct?.imagePath}${imageExt}`);
+              // setImage(`${imagePathHome}/${"R001"}/${currentProduct?.imagePath}${imageExt}`);
+              setImage(`${imagePathHome}/${user.restaurantId}/${currentProduct?.imagePath}`);
               setImageName(props.product?.dishType);
             }}
           />
