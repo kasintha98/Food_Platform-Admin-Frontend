@@ -496,8 +496,11 @@ export const MenuMaster = () => {
       price: currentPrice[product.id]
         ? currentPrice[product.id]
         : product.price,
+      // imagePath: productImage[product.id]
+      //   ? productImage[product.id].name.split(".").slice(0, -1).join(".")
+      //   : product.imagePath,
       imagePath: productImage[product.id]
-        ? productImage[product.id].name.split(".").slice(0, -1).join(".")
+        ? productImage[product.id].name
         : product.imagePath,
       menuAvailableFlag: currentMenuFlag
         ? currentMenuFlag
@@ -584,7 +587,8 @@ export const MenuMaster = () => {
       dishDescriptionId: newDishDesc,
       productSize: newSize,
       price: newPrice,
-      imagePath: newProductImage.name.split(".").slice(0, -1).join("."),
+      // imagePath: newProductImage.name.split(".").slice(0, -1).join("."),
+      imagePath: newProductImage.name,
       menuAvailableFlag: newMenuFlag,
       commonImage: newCommonImage,
       ingredientExistsFalg: newIngredientFlag,
