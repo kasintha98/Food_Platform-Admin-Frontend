@@ -944,7 +944,7 @@ export const MenuMaster = () => {
             <Form.Control
               type="file"
               size="sm"
-              accept=".jpg"
+              accept="image/*"
               maxFileSize={400000}
               onChange={(e) => {
                 handleProductImageNew(e);
@@ -1413,7 +1413,7 @@ export const MenuMaster = () => {
               <Form.Control
                 type="file"
                 size="sm"
-                accept=".jpg"
+                accept="image/*"
                 maxFileSize={400000}
                 onChange={(e) => {
                   handleProductImageNew(e);
@@ -2103,7 +2103,7 @@ export const MenuMaster = () => {
                                 disabled={!isSave[product.id]}
                                 type="file"
                                 size="sm"
-                                accept=".jpg"
+                                accept="image/*"
                                 maxFileSize={400000}
                                 onChange={(e) => {
                                   handleProductImage(e, product.id);
